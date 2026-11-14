@@ -55,27 +55,32 @@ export const ServicesSection: React.FC = () => {
                 </div>
               </div>
 
-              {/* Lower Body with Image 3 text effect and lighter gradient background */}
-              <div className="p-5 pt-3 flex flex-col justify-between flex-1 relative z-10 min-h-[195px]">
-                {/* Icon & Title Row */}
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-[#116b70] shadow-[0_2px_8px_rgba(17,107,112,0.12)] border border-[#d8e7e8]">
-                    <Icon name={(service.icon as IconName) || 'stethoscope'} className="h-5 w-5" />
+              {/* Lower Body with refined clinical typography and balanced spacing */}
+              <div className="p-5 flex flex-col justify-between flex-1 relative z-10 bg-white">
+                <div>
+                  {/* Icon & Title Row */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#eef7f7] text-[#116b70] border border-[#d8e7e8] shadow-xs">
+                      <Icon name={(service.icon as IconName) || 'stethoscope'} className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-heading text-base font-extrabold leading-snug text-[#11191b] transition group-hover:text-[#116b70]">
+                      {service.title}
+                    </h3>
                   </div>
-                  <h3 className="font-heading text-[15px] font-bold leading-snug text-[#11191b] transition group-hover:text-[#116b70]">
-                    {service.title}
-                  </h3>
+
+                  {/* Description Text */}
+                  <p className="mt-3 text-[12.5px] leading-relaxed text-[#55696d]">
+                    {service.description}
+                  </p>
                 </div>
 
-                {/* Description Text */}
-                <p className="mt-3 text-xs leading-relaxed text-[#4c6066] flex-1">
-                  {service.description}
-                </p>
-
-                {/* Bottom Right Arrow Button */}
-                <div className="mt-3 flex justify-end">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#116b70] text-white shadow-xs transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#0c5357]">
-                    <Icon name="arrow-right" className="h-4 w-4" />
+                {/* Bottom Action Footer Row */}
+                <div className="mt-4 pt-3 border-t border-[#edf3f4] flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#116b70] tracking-wide flex items-center gap-1 group-hover:gap-1.5 transition-all">
+                    Explore Service <span>→</span>
+                  </span>
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#116b70] text-white shadow-xs transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0c5357]">
+                    <Icon name="arrow-right" className="h-3.5 w-3.5" />
                   </div>
                 </div>
               </div>

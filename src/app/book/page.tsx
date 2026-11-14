@@ -140,53 +140,94 @@ function BookAppointmentContent() {
       {/* Light, Clean Header */}
       <Header theme="light" />
 
-      {/* Premium Light Hero Section */}
-      <div className="border-b border-[#e5ecec] bg-gradient-to-b from-[#f2f8f8] via-[#f7fafb] to-[#fcfdfd] py-10 md:py-12 text-center">
-        <div className="container max-w-4xl">
-          <p className="text-[11px] font-bold tracking-widest text-[#116b70] uppercase mb-2 animate-hero-trust">
-            DOORSTEP CLINICAL RESERVATION
-          </p>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#11191b] tracking-tight leading-tight animate-hero-title">
-            Book an Appointment
+      {/* Premium Light Hero & Step Navigation Section */}
+      <div className="relative border-b border-[#e5ecec] bg-gradient-to-b from-[#f0f6f6] via-[#f7fafb] to-[#fcfdfd] py-12 md:py-16 text-center overflow-hidden">
+        {/* Subtle geometric dot texture */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#116b70_0.75px,transparent_0.75px)] [background-size:20px_20px] opacity-[0.035]" />
+
+        <div className="container relative z-10 max-w-4xl">
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center justify-center gap-2 text-xs text-[#55696d] mb-3 font-medium">
+            <Link href="/" className="hover:text-[#116b70] transition-colors">Home</Link>
+            <span className="text-gray-300">/</span>
+            <span className="text-[#11191b] font-semibold">Book Bedside Care</span>
+          </div>
+
+          {/* Clinical Trust Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full bg-white border border-[#d2e5e6] px-3.5 py-1 text-xs font-semibold text-[#116b70] mb-3 shadow-xs animate-hero-trust">
+            <span className="flex h-2 w-2 rounded-full bg-[#116b70] animate-pulse" />
+            <span>DOORSTEP CLINICAL RESERVATION • 100% HIPAA COMPLIANT</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#11191b] tracking-tight leading-[1.15] animate-hero-title">
+            Schedule Bedside Clinical Care
           </h1>
-          <p className="mx-auto mt-2 max-w-xl text-xs sm:text-sm text-[#4d5f63] animate-hero-detail">
-            Schedule a council-registered doctor, licensed nurse, bedside caretaker, or home blood test in under 2 minutes.
+          <p className="mx-auto mt-3 max-w-xl text-xs sm:text-sm text-[#4d5f63] leading-relaxed animate-hero-detail">
+            Council-registered doctors, licensed nurses, compassionate caretakers, and diagnostic phlebotomy dispatched directly to your home in under 2 minutes.
           </p>
 
-          {/* Step Progress Indicator (Hidden on Success) */}
+          {/* Elevated Segmented Step Progress Indicator (Hidden on Success) */}
           {!bookingConfirmed && (
-            <div className="mt-7 flex items-center justify-center gap-2 sm:gap-4 max-w-2xl mx-auto">
-              {[
-                { num: 1, label: 'Service' },
-                { num: 2, label: 'Patient' },
-                { num: 3, label: 'Schedule & Address' },
-                { num: 4, label: 'Clinical Notes' },
-                { num: 5, label: 'Confirm' },
-              ].map((s) => (
-                <div key={s.num} className="flex items-center gap-1.5 sm:gap-2">
-                  <button
-                    type="button"
-                    onClick={() => s.num < currentStep && setCurrentStep(s.num)}
-                    className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all ${
-                      currentStep === s.num
-                        ? 'bg-[#11191b] text-white ring-4 ring-[#11191b]/15 shadow-sm'
-                        : currentStep > s.num
-                        ? 'bg-teal-700 text-white cursor-pointer'
-                        : 'bg-white border border-gray-300 text-gray-500'
-                    }`}
-                  >
-                    {currentStep > s.num ? '✓' : s.num}
-                  </button>
-                  <span
-                    className={`hidden sm:inline text-xs font-medium ${
-                      currentStep === s.num ? 'text-gray-900 font-bold' : 'text-gray-500'
-                    }`}
-                  >
-                    {s.label}
-                  </span>
-                  {s.num < 5 && <div className="h-0.5 w-4 sm:w-8 bg-gray-200" />}
-                </div>
-              ))}
+            <div className="mt-8 mx-auto max-w-3xl rounded-2xl bg-white p-4 sm:p-5 border border-[#dce8e8] shadow-sm animate-hero-actions">
+              {/* Progress Bar & Header Row */}
+              <div className="mb-4 flex items-center justify-between text-xs">
+                <span className="font-bold text-[#116b70] tracking-wide uppercase">
+                  Step {currentStep} of 5 &bull; {
+                    currentStep === 1 ? 'Select Service & Shift' :
+                    currentStep === 2 ? 'Patient Information' :
+                    currentStep === 3 ? 'Schedule & Address' :
+                    currentStep === 4 ? 'Clinical Notes & Doctor' :
+                    'Review, PIN & Confirm'
+                  }
+                </span>
+                <span className="font-semibold text-[#55696d]">
+                  {currentStep * 20}% Complete
+                </span>
+              </div>
+
+              {/* Linear Progress Bar */}
+              <div className="h-1.5 w-full bg-[#e8efef] rounded-full overflow-hidden mb-4">
+                <div 
+                  className="h-full bg-gradient-to-r from-[#116b70] to-[#0d5357] transition-all duration-500 ease-out rounded-full"
+                  style={{ width: `${currentStep * 20}%` }}
+                />
+              </div>
+
+              {/* Segmented Step Buttons */}
+              <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+                {[
+                  { num: 1, label: 'Service', icon: '🩺' },
+                  { num: 2, label: 'Patient', icon: '👤' },
+                  { num: 3, label: 'Schedule', icon: '📍' },
+                  { num: 4, label: 'Clinical', icon: '📋' },
+                  { num: 5, label: 'Confirm', icon: '🛡️' },
+                ].map((s) => {
+                  const isCompleted = currentStep > s.num;
+                  const isActive = currentStep === s.num;
+                  return (
+                    <button
+                      key={s.num}
+                      type="button"
+                      onClick={() => isCompleted && setCurrentStep(s.num)}
+                      disabled={!isCompleted && !isActive}
+                      className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 rounded-xl text-xs font-semibold transition-all ${
+                        isActive
+                          ? 'bg-[#11191b] text-white shadow-xs'
+                          : isCompleted
+                          ? 'bg-[#eef7f7] text-[#116b70] border border-[#d0e5e6] cursor-pointer hover:bg-[#e4f2f3]'
+                          : 'bg-[#f7fafb] text-gray-400 border border-gray-100 cursor-not-allowed'
+                      }`}
+                    >
+                      <span className="text-xs">
+                        {isCompleted ? '✓' : s.icon}
+                      </span>
+                      <span className="text-[11px] sm:text-xs truncate font-medium">
+                        {s.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
