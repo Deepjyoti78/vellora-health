@@ -30,52 +30,18 @@ export default function FacilitiesPage() {
         {/* Light, Clean Header */}
         <Header theme="light" />
 
-        {/* Premium Light Hero Section */}
-        <div className="relative border-b border-[#e5ecec] bg-gradient-to-b from-[#f0f6f6] via-[#f7fafb] to-[#fcfdfd] py-16 md:py-20 text-center overflow-hidden">
-          {/* Subtle geometric background dot texture */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#116b70_0.75px,transparent_0.75px)] [background-size:20px_20px] opacity-[0.035]" />
-
-          <div className="container relative z-10 max-w-4xl">
-            {/* Breadcrumb Navigation */}
-            <div className="flex items-center justify-center gap-2 text-xs text-[#55696d] mb-4 font-medium">
-              <Link href="/" className="hover:text-[#116b70] transition-colors">Home</Link>
-              <span className="text-gray-300">/</span>
-              <span className="text-[#11191b] font-semibold">Facilities &amp; Standards</span>
-            </div>
-
-            {/* Clinical Trust Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-white border border-[#d2e5e6] px-3.5 py-1 text-xs font-semibold text-[#116b70] mb-4 shadow-xs animate-hero-trust">
-              <span className="flex h-2 w-2 rounded-full bg-[#116b70] animate-pulse" />
-              <span>HOSPITAL STANDARDS &amp; ACCREDITED INFRASTRUCTURE</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#11191b] tracking-tight leading-[1.15] animate-hero-title">
-              State-of-the-Art Facilities &amp; Clinical Infrastructure
-            </h1>
-
-            <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base text-[#4d5f63] leading-relaxed animate-hero-detail">
-              From our accredited partner reference laboratories to portable ICU equipment suites and active cold-chain phlebotomy fleets, we deliver hospital-grade patient safety right to your doorstep.
+        {/* Minimal, Sleek Top Hero Section */}
+        <div className="border-b border-[#e5ecec] bg-white py-10 sm:py-12 text-center">
+          <div className="container max-w-3xl">
+            <p className="text-[11px] font-bold tracking-widest text-[#116b70] uppercase mb-2 animate-hero-trust">
+              CLINICAL INFRASTRUCTURE
             </p>
-
-            {/* Quick Metrics Bar (Clean Light Clinical Style) */}
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 max-w-3xl mx-auto animate-hero-actions">
-              <div className="rounded-2xl bg-white p-3.5 border border-[#e1e9e9] shadow-sm">
-                <p className="text-xl sm:text-2xl font-extrabold text-[#116b70]">100%</p>
-                <p className="text-[11px] text-[#55696d] mt-0.5 font-medium">NABL &amp; CAP Accredited</p>
-              </div>
-              <div className="rounded-2xl bg-white p-3.5 border border-[#e1e9e9] shadow-sm">
-                <p className="text-xl sm:text-2xl font-extrabold text-[#116b70]">2°C – 8°C</p>
-                <p className="text-[11px] text-[#55696d] mt-0.5 font-medium">Cold-Chain Calibrated</p>
-              </div>
-              <div className="rounded-2xl bg-white p-3.5 border border-[#e1e9e9] shadow-sm">
-                <p className="text-xl sm:text-2xl font-extrabold text-[#116b70]">&lt; 15 min</p>
-                <p className="text-[11px] text-[#55696d] mt-0.5 font-medium">ER Escalation Window</p>
-              </div>
-              <div className="rounded-2xl bg-white p-3.5 border border-[#e1e9e9] shadow-sm">
-                <p className="text-xl sm:text-2xl font-extrabold text-[#116b70]">24 / 7</p>
-                <p className="text-[11px] text-[#55696d] mt-0.5 font-medium">Physician Command Desk</p>
-              </div>
-            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#11191b] tracking-tight leading-tight animate-hero-title">
+              State-of-the-Art Facilities &amp; Hospital Standards
+            </h1>
+            <p className="mx-auto mt-2.5 max-w-xl text-xs sm:text-sm text-[#55696d] leading-relaxed animate-hero-detail">
+              From accredited partner laboratories to portable ICU equipment suites and active cold-chain phlebotomy fleets.
+            </p>
           </div>
         </div>
 

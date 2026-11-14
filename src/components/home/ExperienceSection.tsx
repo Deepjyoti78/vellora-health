@@ -5,160 +5,94 @@ import { EXPERIENCE_ITEMS } from '@/data/site-content';
 import { Icon, IconName } from '@/components/common/Icon';
 
 export const ExperienceSection: React.FC = () => {
-  const safetyPillars = [
+  const safetyCards = [
     {
-      step: '01',
-      title: 'Sterile Single-Use & Cold-Chain Kits',
-      badge: 'STERILE HOSPITAL STANDARDS',
-      desc: 'All syringes, wound dressings, and diagnostics are vacuum-sealed in single-use packs and opened in front of the patient. Lab samples travel in active 2°C–8°C calibrated cold-chain carriers.',
-      icon: 'shield',
-      illustration: (
-        <div className="mt-4 rounded-xl bg-[#f4f9f9] p-3.5 border border-[#d9ebeb] text-xs">
-          <div className="flex items-center justify-between font-bold text-[#11191b] mb-2">
-            <span className="flex items-center gap-1.5 text-[#116b70]">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              Sterile Kit #VT-8840
-            </span>
-            <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-[#cbe2e2] text-[#116b70]">
-              2°C - 8°C ✓
-            </span>
-          </div>
-          <div className="space-y-1.5 text-[11px] text-[#55696d]">
-            <div className="flex items-center justify-between bg-white px-2.5 py-1 rounded-md border border-[#e4eeef]">
-              <span>Single-use sterile field pack</span>
-              <span className="font-semibold text-emerald-700">Sealed</span>
-            </div>
-            <div className="flex items-center justify-between bg-white px-2.5 py-1 rounded-md border border-[#e4eeef]">
-              <span>Calibrated diagnostic phlebotomy</span>
-              <span className="font-semibold text-emerald-700">Verified</span>
-            </div>
-          </div>
-        </div>
-      ),
+      num: '001',
+      title: 'Sterile Single-Use Kits',
+      subtitle: 'Hospital-grade infection control protocols',
+      desc: 'Work with certified, vacuum-sealed single-use clinical packs for all cannulas, sterile dressings, and diagnostic sets — opened in front of the patient in the comfort of your home.',
     },
     {
-      step: '02',
-      title: 'Dual 4-Digit Bedside PIN Handshake',
-      badge: '100% IDENTITY PROTECTED',
-      desc: 'Never open your door to uncertainty. You receive a unique 4-digit verification PIN via SMS. The visiting clinician must enter this code on their device before physical entry and treatment begin.',
-      icon: 'lock',
-      illustration: (
-        <div className="mt-4 rounded-xl bg-[#f4f9f9] p-3.5 border border-[#d9ebeb] text-xs">
-          <div className="flex items-center justify-between font-bold text-[#11191b] mb-2">
-            <span className="text-[#116b70] text-[11px] uppercase tracking-wider">Bedside Security Handshake</span>
-            <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
-              OTP MATCHED ✓
-            </span>
-          </div>
-          <div className="flex items-center justify-center gap-2 py-1">
-            {['4', '8', '2', '9'].map((digit, i) => (
-              <div key={i} className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-[#cbe2e2] font-mono text-sm font-black text-[#11191b] shadow-xs">
-                {digit}
-              </div>
-            ))}
-          </div>
-          <p className="mt-1 text-center text-[10px] text-[#55696d]">Clinician identity confirmed before bedside entry</p>
-        </div>
-      ),
+      num: '002',
+      title: 'Dual 4-Digit Bedside PIN',
+      subtitle: '100% verified provider identity handshake',
+      desc: 'Never open your door to uncertainty. You receive a unique 4-digit verification PIN via SMS. The visiting clinician must enter this code on their device before physical entry and examination begins.',
     },
     {
-      step: '03',
-      title: 'Real-Time Dispatch & 15-Min ER Backup',
-      badge: 'RAPID DOORSTEP RESPONSE',
-      desc: 'Live GPS vehicle dispatch tracks your clinician’s route in real time. For acute escalations, our field team has direct tele-ICU connection and prioritized emergency hospital escalation.',
-      icon: 'clock',
-      illustration: (
-        <div className="mt-4 rounded-xl bg-[#f4f9f9] p-3.5 border border-[#d9ebeb] text-xs">
-          <div className="flex items-center justify-between font-bold text-[#11191b] mb-2">
-            <span className="text-[#116b70] flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#116b70] animate-ping" />
-              Live Route Telemetry
-            </span>
-            <span className="font-mono text-xs font-bold text-[#11191b]">ETA: 34 mins</span>
-          </div>
-          <div className="space-y-1.5 text-[11px] text-[#55696d]">
-            <div className="flex items-center justify-between bg-white px-2.5 py-1 rounded-md border border-[#e4eeef]">
-              <span>Dr. Maya Patel (MD Geriatrics)</span>
-              <span className="font-semibold text-[#116b70]">En Route</span>
-            </div>
-            <div className="flex items-center justify-between bg-white px-2.5 py-1 rounded-md border border-[#e4eeef]">
-              <span>Hospital Intensive Care Hotline</span>
-              <span className="font-semibold text-emerald-700">Standby &lt; 15m</span>
-            </div>
-          </div>
-        </div>
-      ),
+      num: '003',
+      title: 'Cold-Chain Calibrated Transit',
+      subtitle: 'Active 2°C–8°C specimen temperature control',
+      desc: 'Phlebotomy blood samples and biologics travel in calibrated temperature-monitored cold carriers directly to accredited NABL partner laboratories for pristine diagnostic accuracy.',
     },
     {
-      step: '04',
-      title: 'Digital E-Prescriptions & Direct Lab Sync',
-      badge: 'INSTANT CLINICAL RECORDS',
-      desc: 'Immediately following the visit, complete consultation notes, signed e-prescriptions, and barcoded diagnostic requisition orders appear in your secure patient portal and via instant WhatsApp.',
-      icon: 'file',
-      illustration: (
-        <div className="mt-4 rounded-xl bg-[#f4f9f9] p-3.5 border border-[#d9ebeb] text-xs">
-          <div className="flex items-center justify-between font-bold text-[#11191b] mb-2">
-            <span className="text-[#116b70] text-[11px] uppercase tracking-wider">Digital Health Record</span>
-            <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-[#cbe2e2] text-[#116b70]">
-              QR-Signed
-            </span>
-          </div>
-          <div className="space-y-1.5 text-[11px] text-[#55696d]">
-            <div className="flex items-center justify-between bg-white px-2.5 py-1 rounded-md border border-[#e4eeef]">
-              <span>Electronic Prescription (e-Rx)</span>
-              <span className="font-semibold text-emerald-700">Generated ✓</span>
-            </div>
-            <div className="flex items-center justify-between bg-white px-2.5 py-1 rounded-md border border-[#e4eeef]">
-              <span>NABL Barcoded Lab Specimen</span>
-              <span className="font-semibold text-[#116b70]">In Transit</span>
-            </div>
-          </div>
-        </div>
-      ),
+      num: '004',
+      title: 'Real-Time GPS Fleet Tracking',
+      subtitle: 'Immediate dispatch with live route updates',
+      desc: 'Track your assigned visiting physician or registered nurse with live map telemetry and accurate arrival ETAs, eliminating anxious waiting and uncertain arrival windows.',
+    },
+    {
+      num: '005',
+      title: 'Instant Bedside E-Prescriptions',
+      subtitle: 'Encrypted digital records sent to WhatsApp & Portal',
+      desc: 'Immediately following the consultation, digital prescriptions with QR doctor signatures and visit summaries sync directly to your patient portal and phone with optional home pharmacy delivery.',
+    },
+    {
+      num: '006',
+      title: '24/7 Command Desk & ICU Escalation',
+      subtitle: 'Standby emergency intensive care backup',
+      desc: 'Every home clinician maintains continuous communication with senior board intensivists and priority ambulance transfer pipelines with a strict < 15-minute emergency escalation protocol.',
     },
   ];
 
   return (
-    <section className="section section-experience" aria-labelledby="experienceTitle">
+    <section className="section bg-white py-20 border-b border-[#e5e9e9]" id="standards" aria-labelledby="experienceTitle">
       <div className="container">
-        <div className="section-heading-row experience-header scroll-reveal">
+        {/* Section Heading */}
+        <div className="section-heading-row experience-header scroll-reveal mb-12">
           <div>
-            <p className="eyebrow">WHY CHOOSE VELLORA HEALTH</p>
-            <h2 id="experienceTitle">
+            <p className="eyebrow text-[#116b70]">WHY CHOOSE VELLORA HEALTH</p>
+            <h2 id="experienceTitle" className="font-heading text-3xl font-extrabold text-[#11191b] md:text-5xl tracking-tight leading-tight">
               Hospital-Standard Safety.<br />Doorstep Convenience.
             </h2>
           </div>
-          <p className="experience-intro">
+          <p className="experience-intro text-sm md:text-base text-[#55696d] leading-relaxed max-w-xl">
             We bring verified medical excellence directly to your residence, prioritizing patient dignity, family peace of mind, and transparent clinical standards.
           </p>
         </div>
 
-        {/* Illustrated Safety & Convenience Modules */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 stagger-container mb-10">
-          {safetyPillars.map((pillar) => (
+        {/* 6 Cards Grid - Matching Image 2 (3 columns x 2 rows) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-container mb-12">
+          {safetyCards.map((card) => (
             <div
-              key={pillar.step}
-              className="flex flex-col justify-between rounded-2xl bg-white p-6 border border-[#e1e9ea] shadow-xs transition-all duration-300 hover:shadow-md hover:border-[#c5ddde] scroll-reveal-card"
+              key={card.num}
+              className="flex flex-col justify-between rounded-3xl bg-white p-8 border border-[#e5e9ea] shadow-xs hover:border-[#b8dcde] hover:shadow-md transition-all duration-300 scroll-reveal-card"
             >
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#116b70] bg-[#eef7f7] px-2.5 py-1 rounded-full border border-[#d2e7e8]">
-                    {pillar.badge}
-                  </span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f0f6f6] text-[#116b70]">
-                    <Icon name={pillar.icon as IconName} size="xs" />
+                {/* Top Row: Star Sparkle Badge + Monospace Number */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#eef7f7] text-[#116b70] text-base font-black shadow-xs">
+                    ✦
                   </div>
+                  <span className="font-mono text-xs font-bold text-gray-400 tracking-wider">
+                    {card.num}
+                  </span>
                 </div>
 
-                <h3 className="font-heading text-[15px] font-bold text-[#11191b] leading-snug mb-2">
-                  {pillar.title}
+                {/* Title */}
+                <h3 className="font-heading text-xl font-bold text-[#11191b] mb-1.5 leading-snug">
+                  {card.title}
                 </h3>
+
+                {/* Subtitle */}
+                <p className="text-xs font-semibold text-[#116b70] mb-3 leading-snug">
+                  {card.subtitle}
+                </p>
+
+                {/* Description */}
                 <p className="text-xs leading-relaxed text-[#55696d]">
-                  {pillar.desc}
+                  {card.desc}
                 </p>
               </div>
-
-              {pillar.illustration}
             </div>
           ))}
         </div>

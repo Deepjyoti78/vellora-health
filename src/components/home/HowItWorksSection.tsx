@@ -1,214 +1,104 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useBooking } from '@/context/BookingContext';
 import { Icon } from '@/components/common/Icon';
 
 export const HowItWorksSection: React.FC = () => {
   const { openBooking } = useBooking();
 
-  const processStages = [
+  const workflowSteps = [
     {
-      num: '01',
-      title: 'Select Service & Schedule',
-      subtitle: 'Instant online reservation in < 2 mins',
-      desc: 'Pick your required service — doctor visit, 12h/24h nursing, attendant care, or home blood draw. Choose an immediate or scheduled doorstep arrival time slot.',
-      badge: 'Step 1: Rapid Request',
-      mockup: (
-        <div className="rounded-xl bg-[#f8fbfb] p-3.5 border border-[#e2eeee] text-xs">
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#e2eeee]">
-            <span className="font-bold text-[#11191b] flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#116b70]" />
-              Doctor Home Visit
-            </span>
-            <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-[#d2e5e6] text-[#116b70] font-semibold">
-              Today, 10:30 AM
-            </span>
-          </div>
-          <div className="space-y-1.5 text-[11px] text-[#55696d]">
-            <div className="flex justify-between bg-white px-2.5 py-1.5 rounded-md border border-[#e8f1f1]">
-              <span>Clinical Category:</span>
-              <span className="font-bold text-[#11191b]">Internal Medicine</span>
-            </div>
-            <div className="flex justify-between bg-white px-2.5 py-1.5 rounded-md border border-[#e8f1f1]">
-              <span>Triage Queue:</span>
-              <span className="font-semibold text-emerald-700">Immediate Dispatch ✓</span>
-            </div>
-          </div>
-        </div>
-      ),
+      num: '1',
+      title: 'Find a Specialist',
+      desc: 'Use filters to choose the best clinical match for your needs — board-certified visiting doctors, nurses, or lab technicians.',
+      icon: 'shield',
+      href: '/doctors',
     },
     {
-      num: '02',
-      title: 'Council Clinician Dispatched',
-      subtitle: 'GPS fleet tracking & route ETA',
-      desc: 'A licensed, council-registered healthcare practitioner is assigned. Receive clinician profile credentials, hospital affiliations, and active GPS transit updates.',
-      badge: 'Step 2: Live Dispatch',
-      mockup: (
-        <div className="rounded-xl bg-[#f8fbfb] p-3.5 border border-[#e2eeee] text-xs">
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#e2eeee]">
-            <span className="font-bold text-[#11191b] flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#116b70] animate-ping" />
-              Dr. Maya Patel En Route
-            </span>
-            <span className="text-[10px] bg-emerald-50 px-2 py-0.5 rounded-full text-emerald-800 font-bold border border-emerald-200">
-              ETA 38 min
-            </span>
-          </div>
-          <div className="space-y-1.5 text-[11px] text-[#55696d]">
-            <div className="flex justify-between bg-white px-2.5 py-1.5 rounded-md border border-[#e8f1f1]">
-              <span>License ID:</span>
-              <span className="font-mono font-bold text-[#11191b]">#MD-49201-CA</span>
-            </div>
-            <div className="flex justify-between bg-white px-2.5 py-1.5 rounded-md border border-[#e8f1f1]">
-              <span>Sterile Kit:</span>
-              <span className="font-semibold text-emerald-700">Sealed &amp; Calibrated ✓</span>
-            </div>
-          </div>
-        </div>
-      ),
+      num: '2',
+      title: 'Book an Appointment',
+      desc: 'Pick a time that works for you — on-demand immediate arrival or scheduled bedside shifts tailored to your family.',
+      icon: 'calendar',
+      href: '/book',
     },
     {
-      num: '03',
-      title: 'Bedside Care with PIN Security',
-      subtitle: 'Dual-key OTP handshake & exam',
-      desc: 'Your clinician arrives in full PPE with sterilized equipment. Validate their identity via your secret 4-digit PIN before comprehensive, unhurried bedside examination begins.',
-      badge: 'Step 3: Clinical Care',
-      mockup: (
-        <div className="rounded-xl bg-[#f8fbfb] p-3.5 border border-[#e2eeee] text-xs">
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#e2eeee]">
-            <span className="font-bold text-[#11191b] flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Bedside Examination
-            </span>
-            <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
-              PIN [4829] ✓
-            </span>
-          </div>
-          <div className="space-y-1.5 text-[11px] text-[#55696d]">
-            <div className="flex justify-between bg-white px-2.5 py-1.5 rounded-md border border-[#e8f1f1]">
-              <span>Vitals Monitored:</span>
-              <span className="font-bold text-[#11191b]">BP 120/80 &bull; SpO2 99%</span>
-            </div>
-            <div className="flex justify-between bg-white px-2.5 py-1.5 rounded-md border border-[#e8f1f1]">
-              <span>Consultation Time:</span>
-              <span className="font-semibold text-[#116b70]">45 Mins Unhurried</span>
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      num: '04',
-      title: 'Digital E-Rx & Laboratory Sync',
-      subtitle: 'Instant records & coordinated follow-up',
-      desc: 'Receive digital prescriptions directly on WhatsApp and your Vellora Portal. Lab results sync electronically with automated medication delivery and 24/7 care coordination.',
-      badge: 'Step 4: Care Continuity',
-      mockup: (
-        <div className="rounded-xl bg-[#f8fbfb] p-3.5 border border-[#e2eeee] text-xs">
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#e2eeee]">
-            <span className="font-bold text-[#11191b] flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#116b70]" />
-              Digital Care Summary
-            </span>
-            <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-[#d2e5e6] text-[#116b70] font-semibold">
-              QR Verified
-            </span>
-          </div>
-          <div className="space-y-1.5 text-[11px] text-[#55696d]">
-            <div className="flex justify-between bg-white px-2.5 py-1.5 rounded-md border border-[#e8f1f1]">
-              <span>e-Prescription:</span>
-              <span className="font-bold text-emerald-700">Issued to WhatsApp ✓</span>
-            </div>
-            <div className="flex justify-between bg-white px-2.5 py-1.5 rounded-md border border-[#e8f1f1]">
-              <span>Lab Diagnostics:</span>
-              <span className="font-semibold text-[#116b70]">Direct Portal Sync</span>
-            </div>
-          </div>
-        </div>
-      ),
+      num: '3',
+      title: 'Start Your Healing Journey',
+      desc: 'Experience unhurried care at home verified by secret 4-digit PIN, with digital prescriptions and continuous follow-up.',
+      icon: 'star',
+      href: '/book',
     },
   ];
 
   return (
-    <section id="how-it-works" className="section bg-white py-20 border-b border-[#e5e9e9]" aria-labelledby="howItWorksTitle">
+    <section id="how-it-works" className="section bg-gradient-to-b from-white via-[#fbfdfe] to-[#f4f9f9]/50 py-20 border-b border-[#e5e9e9]" aria-labelledby="howItWorksTitle">
       <div className="container">
-        {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-14 scroll-reveal">
-          <p className="eyebrow text-[#116b70]">STREAMLINED CLINICAL PROCESS</p>
-          <h2 id="howItWorksTitle" className="font-heading text-3xl font-extrabold text-[#11191b] md:text-4xl">
-            How Home Healthcare Works
-          </h2>
-          <p className="mt-3 text-sm text-[#55696d] leading-relaxed">
-            From initial request to bedside consultation and electronic prescription follow-up — simple, transparent, and completely verified.
+        {/* Section Heading - Matching Image 3 layout */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 scroll-reveal">
+          <div>
+            <p className="eyebrow text-[#116b70]">STREAMLINED CLINICAL PROCESS</p>
+            <h2 id="howItWorksTitle" className="font-heading text-3xl font-extrabold text-[#11191b] md:text-5xl tracking-tight leading-tight">
+              Doctors Who Listen.<br />Experts You Can Trust.
+            </h2>
+          </div>
+          <p className="text-sm md:text-base text-[#55696d] leading-relaxed max-w-md">
+            Meet our dedicated team of healthcare professionals committed to providing exceptional, hospital-grade care tailored to your needs.
           </p>
         </div>
 
-        {/* Connected Process Pathway Illustration */}
-        <div className="relative">
-          {/* Connecting Pathway Line for Desktop */}
-          <div className="hidden lg:block absolute top-[28px] left-[10%] right-[10%] h-[3px] bg-gradient-to-r from-[#116b70]/20 via-[#116b70] to-[#116b70]/20 z-0" />
-
-          {/* 4 Process Milestone Stations */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10 stagger-container">
-            {processStages.map((stage) => (
-              <div
-                key={stage.num}
-                className="flex flex-col justify-between rounded-2xl bg-white p-6 border border-[#e2eeee] shadow-xs hover:border-[#b8dcde] hover:shadow-md transition-all duration-300 scroll-reveal-card"
-              >
-                <div>
-                  {/* Step Bead Indicator */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#116b70] text-white font-heading font-black text-base shadow-sm ring-4 ring-[#116b70]/15">
-                      {stage.num}
-                    </span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#116b70] bg-[#eef7f7] px-2.5 py-1 rounded-full border border-[#d2e7e8]">
-                      {stage.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="font-heading text-base font-bold text-[#11191b] mb-1">
-                    {stage.title}
-                  </h3>
-                  <p className="text-[11px] font-semibold text-[#116b70] mb-2.5">
-                    {stage.subtitle}
-                  </p>
-                  <p className="text-xs leading-relaxed text-[#55696d] mb-4">
-                    {stage.desc}
-                  </p>
+        {/* 3 Large Cards - Matching Image 3 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-container mb-12">
+          {workflowSteps.map((step) => (
+            <div
+              key={step.num}
+              className="relative flex flex-col justify-between rounded-3xl bg-white p-8 border border-[#e8eeee] shadow-xs hover:border-[#b8dcde] hover:shadow-md transition-all duration-300 scroll-reveal-card"
+            >
+              {/* Top Row: Icon Badge + Huge Light Watermark Number */}
+              <div className="flex items-start justify-between">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef7f7] text-[#116b70] border border-[#d2e7e8] shadow-xs">
+                  <Icon name={step.icon === 'shield' ? 'shield' : step.icon === 'calendar' ? 'calendar' : 'star'} size="sm" />
                 </div>
-
-                {/* Illustrated Interactive Device Mockup */}
-                {stage.mockup}
+                <span className="font-heading text-6xl font-light text-gray-200 select-none leading-none -mt-2">
+                  {step.num}
+                </span>
               </div>
-            ))}
-          </div>
+
+              {/* Title & Description */}
+              <div className="mt-8 mb-6">
+                <h3 className="font-heading text-xl font-bold text-[#11191b] mb-2 leading-snug">
+                  {step.title}
+                </h3>
+                <p className="text-xs sm:text-[13px] leading-relaxed text-[#55696d]">
+                  {step.desc}
+                </p>
+              </div>
+
+              {/* Bottom "Learn More" Link */}
+              <div className="pt-4 border-t border-[#f2f6f6]">
+                <Link
+                  href={step.href}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#116b70] hover:text-[#0b494c] transition-colors"
+                >
+                  <span>Learn More</span>
+                  <Icon name="arrow-right" size="xs" />
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Bottom Trust Assurance & Booking CTA */}
-        <div className="mt-12 rounded-2xl bg-[#f4f9f9] border border-[#d9ebeb] p-6 text-center max-w-3xl mx-auto scroll-reveal">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-[#44585c] mb-5">
-            <span className="flex items-center gap-1.5">
-              <span className="text-[#116b70]">⚡</span> Average Doorstep Dispatch: <strong>42 Mins</strong>
-            </span>
-            <span className="text-gray-300">•</span>
-            <span className="flex items-center gap-1.5">
-              <span className="text-[#116b70]">🛡️</span> 100% Council-Registered Clinicians
-            </span>
-            <span className="text-gray-300">•</span>
-            <span className="flex items-center gap-1.5">
-              <span className="text-[#116b70]">🔒</span> Dual-Key Bedside PIN Protected
-            </span>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => openBooking()}
+        {/* Centered "Get Started" Button - Matching Image 3 */}
+        <div className="text-center scroll-reveal">
+          <Link
+            href="/book"
+            prefetch={true}
             className="button button-dark"
           >
-            <span>Request Home Visit Now</span>
+            <span>Get Started</span>
             <Icon name="arrow-right" size="xs" />
-          </button>
+          </Link>
         </div>
       </div>
     </section>
