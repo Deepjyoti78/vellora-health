@@ -89,15 +89,17 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
         })}
       </nav>
 
-      <Link
-        href="/book"
-        prefetch={true}
+      <button
+        type="button"
         className="header-book button button-white"
-        onClick={closeMenu}
+        onClick={() => {
+          closeMenu();
+          openBooking();
+        }}
       >
         <span>Book Appointment</span>
         <Icon name="arrow-right" size="sm" />
-      </Link>
+      </button>
 
       <button
         ref={toggleRef}

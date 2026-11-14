@@ -3,8 +3,6 @@
 import React, { useState, use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { db, UserRecord } from '@/lib/db';
 import { BookingProgress } from '@/components/booking/BookingProgress';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
@@ -219,10 +217,8 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F9F7]">
-      <Header theme="light" />
-
-      {/* Progress Header */}
+    <div className="min-h-screen bg-[#F5F9F7] flex flex-col justify-between">
+      {/* Integrated Booking Header */}
       <BookingProgress
         currentStep={submittedBooking ? 3 : step}
         totalSteps={3}
@@ -1068,7 +1064,10 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
         )}
       </div>
 
-      <Footer />
+      {/* Minimal Privacy & Compliance Note */}
+      <footer className="py-6 text-center text-[11px] text-slate-400 border-t border-[#E2EBE7] bg-white">
+        Vellora Health Care Platform • HIPAA Compliant &amp; 256-Bit Encrypted Clinical Dispatch
+      </footer>
     </div>
   );
 }

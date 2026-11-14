@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { db } from '@/lib/db';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
 import {
@@ -123,7 +121,30 @@ export default function QuickEnquiryPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F9F7] flex flex-col justify-between">
-      <Header theme="light" />
+      {/* Integrated Booking Header */}
+      <header className="border-b border-[#E2EBE7] bg-white">
+        <div className="container max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 group"
+            aria-label="Vellora Health Home"
+          >
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-white font-black text-sm shadow-2xs group-hover:bg-[#065F46] transition-colors">
+              +
+            </div>
+            <span className="font-heading text-lg font-black tracking-tight text-[#102820]">
+              Vellora Health
+            </span>
+          </Link>
+
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#CBDCD5] bg-white px-3.5 py-1.5 text-xs font-bold text-[#102820] hover:bg-[#F2F8F5] transition-all shadow-2xs"
+          >
+            <span>Exit to Home</span>
+          </Link>
+        </div>
+      </header>
 
       <main className="flex-1 flex items-center justify-center py-10 sm:py-16 px-4">
         {submittedRecord ? (
@@ -296,7 +317,9 @@ export default function QuickEnquiryPage() {
         )}
       </main>
 
-      <Footer />
+      <footer className="py-6 text-center text-[11px] text-slate-400 border-t border-[#E2EBE7] bg-white">
+        Vellora Health Care Platform • HIPAA Compliant &amp; 256-Bit Encrypted Dispatch
+      </footer>
     </div>
   );
 }

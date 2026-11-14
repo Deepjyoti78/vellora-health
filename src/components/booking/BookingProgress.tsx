@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Phone } from 'lucide-react';
 
 interface StepItem {
   number: number;
@@ -29,30 +29,58 @@ export const BookingProgress: React.FC<BookingProgressProps> = ({
   subtitle,
 }) => {
   return (
-    <div className="border-b border-[#E2EBE7] bg-white py-6 sm:py-7">
-      <div className="container max-w-5xl mx-auto px-4 sm:px-6">
-        {/* Back Link & Step Counter */}
-        <div className="flex items-center justify-between mb-3">
+    <header className="border-b border-[#E2EBE7] bg-white sticky top-0 z-30 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+      {/* Top Branding & Direct Navigation Row */}
+      <div className="border-b border-[#F2F8F5]">
+        <div className="container max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          {/* Vellora Health Brand Identity */}
           <Link
-            href={backHref}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] hover:text-[#064E3B] transition-colors"
+            href="/"
+            className="inline-flex items-center gap-2 group"
+            aria-label="Vellora Health Home"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>{backLabel}</span>
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-white font-black text-sm shadow-2xs group-hover:bg-[#065F46] transition-colors">
+              +
+            </div>
+            <span className="font-heading text-lg font-black tracking-tight text-[#102820]">
+              Vellora Health
+            </span>
           </Link>
 
-          <span className="text-xs font-semibold text-slate-400">
-            Step {currentStep} of {totalSteps}
-          </span>
-        </div>
+          {/* Clinical Support & Back Action */}
+          <div className="flex items-center gap-3 sm:gap-5">
+            <a
+              href="tel:18008355672"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-[#065F46] transition-colors"
+            >
+              <Phone className="h-3.5 w-3.5 text-[#065F46]" />
+              <span>Need help? +1 (800) 835-5672</span>
+            </a>
 
-        {/* Title, Subtitle & Integrated Progress Bar */}
+            <Link
+              href={backHref}
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#CBDCD5] bg-white px-3 sm:px-3.5 py-1.5 text-xs font-bold text-[#102820] hover:bg-[#F2F8F5] hover:border-[#064E3B] transition-all shadow-2xs"
+            >
+              <ArrowLeft className="h-3 w-3 text-[#065F46]" />
+              <span>{backLabel}</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Title & 3-Step Progress Indicators */}
+      <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="font-heading text-2xl sm:text-[26px] font-extrabold tracking-tight text-[#102820]">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-semibold text-slate-400">
+                Step {currentStep} of {totalSteps}
+              </span>
+            </div>
+            <h1 className="font-heading text-xl sm:text-2xl lg:text-[26px] font-extrabold tracking-tight text-[#102820]">
               {title}
             </h1>
-            <p className="mt-1 text-xs sm:text-[13px] text-slate-500">
+            <p className="mt-0.5 text-xs sm:text-[13px] text-slate-500">
               {subtitle}
             </p>
           </div>
@@ -96,6 +124,6 @@ export const BookingProgress: React.FC<BookingProgressProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
