@@ -83,12 +83,12 @@ export const ServicesSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Bottom Action: Explore Service -> */}
-                <div className="mt-5 pt-2 flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#0b5c43] tracking-wide flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
+                {/* Bottom Action: Explore Service -> matching reference image */}
+                <div className="mt-5 pt-1">
+                  <div className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-full bg-[#e8f5ee] text-[#0b5c43] text-xs sm:text-[13px] font-bold border border-[#d6ede2] transition-all duration-300 group-hover:bg-[#d8efe2] group-hover:border-[#c2e7d3] group-hover:shadow-xs">
                     <span>Explore Service</span>
-                    <Icon name="arrow-right" size="xs" />
-                  </span>
+                    <span className="text-sm font-bold leading-none transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </div>
                 </div>
 
                 {/* Subtle organic mint glow in bottom-right corner matching reference */}
