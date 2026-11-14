@@ -8,13 +8,13 @@ export const ExperienceSection: React.FC = () => {
       <div className="container">
         <div className="section-heading-row experience-header">
           <div>
-            <p className="eyebrow">CARE, WITHOUT THE COMPLEXITY</p>
+            <p className="eyebrow">WHY CHOOSE VELLORA HEALTH</p>
             <h2 id="experienceTitle">
-              Healthcare that<br />respects your time.
+              Hospital-Standard Safety.<br />Doorstep Convenience.
             </h2>
           </div>
           <p className="experience-intro">
-            We believe great care should feel simple, considered, and human from your first visit onward.
+            We bring verified medical excellence directly to your residence, prioritizing patient dignity, family peace of mind, and transparent care standards.
           </p>
         </div>
 

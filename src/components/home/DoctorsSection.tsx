@@ -15,12 +15,12 @@ export const DoctorsSection: React.FC = () => {
       <div className="container">
         <div className="section-heading-row">
           <div>
-            <p className="eyebrow">THE PEOPLE BEHIND YOUR CARE</p>
+            <p className="eyebrow">LICENSED HOME CARE CLINICIANS</p>
             <h2 id="doctorsTitle">
-              Meet our<br />specialists.
+              Meet Our Medical<br />Specialists &amp; Physicians
             </h2>
             <p className="section-lead">
-              A team approach that brings expertise and kindness together.
+              Board-certified doctors dedicated to compassionate, unhurried examinations right at your bedside.
             </p>
           </div>
           <SliderArrows

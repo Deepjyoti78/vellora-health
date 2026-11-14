@@ -39,22 +39,32 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="footer-col">
-            <h3>Patient Care</h3>
-            <Link href="/services">Specialties & Care</Link>
-            <Link href="/contact">Patient Support</Link>
+            <h3>Core Services</h3>
+            <Link href="/services/home-doctor-visit">Home Doctor Visit</Link>
+            <Link href="/services/home-nursing-care">At-Home Nursing Care</Link>
+            <Link href="/services/patient-caretakers-medical-maids">Patient Caretakers</Link>
+            <Link href="/services/home-lab-investigations">Home Lab Tests</Link>
+            <Link href="/services">View All Services</Link>
+          </div>
+
+          <div className="footer-col">
+            <h3>Portals &amp; Access</h3>
             <Link href="/patient/login">Patient Portal</Link>
-            <button type="button" onClick={() => openBooking()}>
-              Book Appointment
+            <Link href="/provider/login">Clinician Workstation</Link>
+            <Link href="/admin/dashboard">Admin Command Desk</Link>
+            <Link href="/contact">24/7 Care Helpline</Link>
+            <button type="button" onClick={() => openBooking()} className="text-left font-semibold text-[#116b70] hover:underline">
+              Book Home Appointment &rarr;
             </button>
           </div>
 
           <div className="footer-col">
-            <h3>Popular Specialties</h3>
-            <Link href="/services">Internal Medicine</Link>
-            <Link href="/services">Home Nursing Care</Link>
-            <Link href="/services">Patient Caretakers</Link>
-            <Link href="/services">Lab Investigations</Link>
-            <Link href="/doctors">Meet Our Specialists</Link>
+            <h3>Specialties &amp; Doctors</h3>
+            <Link href="/doctors">General Medicine</Link>
+            <Link href="/doctors">Geriatric Care</Link>
+            <Link href="/doctors">Post-Surgical Nursing</Link>
+            <Link href="/facilities">Accredited Labs</Link>
+            <Link href="/about">Clinical Governance</Link>
           </div>
         </div>
 

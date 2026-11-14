@@ -12,9 +12,9 @@ export const ReviewsSection: React.FC = () => {
       <div className="container">
         <div className="section-heading-row">
           <div>
-            <p className="eyebrow">WORDS THAT MATTER</p>
+            <p className="eyebrow">PATIENT &amp; FAMILY EXPERIENCES</p>
             <h2 id="reviewsTitle">
-              Trusted by<br />thousands of patients.
+              Compassionate Care<br />Right in the Living Room
             </h2>
           </div>
           <SliderArrows

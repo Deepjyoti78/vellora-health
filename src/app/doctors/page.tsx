@@ -91,8 +91,8 @@ export default function DoctorsDirectoryPage() {
 
               <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
                 <div>
-                  <span className="text-[11px] text-gray-400">Home Visit Fee</span>
-                  <p className="text-sm font-extrabold text-gray-900">${doc.hourlyRate}</p>
+                  <span className="text-[11px] text-gray-400">Home Visit (Demo)</span>
+                  <p className="text-sm font-extrabold text-gray-900">${doc.hourlyRate} / ₹1,499</p>
                 </div>
                 <button
                   type="button"
@@ -105,6 +105,10 @@ export default function DoctorsDirectoryPage() {
             </article>
           ))}
         </div>
+
+        <p className="mt-8 text-center text-xs text-gray-400">
+          *Demonstration physician directory and rate cards for prototype evaluation.
+        </p>
       </div>
 
       <Footer />

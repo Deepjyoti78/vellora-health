@@ -58,6 +58,24 @@ export interface FaqItem {
   answer: string;
 }
 
+export interface HowItWorksItem {
+  step: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface CareOptionItem {
+  id: string;
+  serviceSlug: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  features: string[];
+  duration: string;
+  demoPrice: string;
+}
+
 export interface NavLink {
   label: string;
   href: string;

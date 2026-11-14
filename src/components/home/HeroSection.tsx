@@ -15,7 +15,7 @@ export const HeroSection: React.FC = () => {
 
       <div className="hero-main container">
         <div className="hero-copy">
-          <div className="trust-row">
+          <div className="trust-row" aria-label="Demonstration trust indicator">
             <div className="trust-avatars" aria-hidden="true">
               {TRUST_DATA.avatars.map((src, idx) => (
                 <img
@@ -28,18 +28,13 @@ export const HeroSection: React.FC = () => {
               ))}
             </div>
             <span>
-              Trusted by <strong>{TRUST_DATA.count}</strong> {TRUST_DATA.label}
+              Trusted Home Healthcare · <strong>Certified Clinicians</strong>
             </span>
           </div>
 
           <h1 id="heroTitle" className="hero-title">
             EXCEPTIONAL<br />
-            <span className="hero-title-row">
-              <span className="hero-title-thumb" aria-hidden="true">
-                <img src="/assets/avatar-1.webp" alt="" />
-              </span>
-              HEALTHCARE
-            </span><br />
+            HEALTHCARE<br />
             ALWAYS
           </h1>
 
@@ -52,37 +47,18 @@ export const HeroSection: React.FC = () => {
               <Icon name="calendar" size="xs" /> Book Appointment{' '}
               <Icon name="arrow-right" size="xs" />
             </button>
-            <a className="button button-outline button-sm" href="#doctors">
+            <a className="button button-outline button-sm" href="/doctors">
               <Icon name="search" size="xs" /> Find a Doctor
             </a>
           </div>
         </div>
 
-        {/* Right side stats column matching reference design */}
-        <div className="hero-stats" aria-label="Key Medical Statistics">
-          <div className="hero-stat-item">
-            <span className="hero-stat-number">20K+</span>
-            <span className="hero-stat-label">Patients Served Successfully</span>
-          </div>
-          <div className="hero-stat-item">
-            <span className="hero-stat-number">30+</span>
-            <span className="hero-stat-label">Board-Certified Specialists</span>
-          </div>
-          <div className="hero-stat-item">
-            <span className="hero-stat-number">18</span>
-            <span className="hero-stat-label">Medical Departments</span>
-          </div>
-          <div className="hero-stat-item">
-            <span className="hero-stat-number">4.9/5</span>
-            <span className="hero-stat-label">Average Patient Satisfaction</span>
-          </div>
-        </div>
-
         <div className="hero-detail">
+          <h3 className="hero-detail-heading">Comprehensive Care</h3>
           <p className="hero-detail-text">
-            Accessible Modern Medical Care — where technology meets compassion.
-            From routine checkups to specialized treatment, our physicians bring
-            expertise and human kindness together under one roof.
+            Accessible, modern healthcare designed around you. From routine
+            consultations to nursing and diagnostic services, experience
+            compassionate care delivered to your doorstep.
           </p>
         </div>
       </div>

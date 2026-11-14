@@ -46,9 +46,9 @@ export default function ContactPage() {
             </div>
 
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="text-base font-bold text-gray-900">Emergency Protocol Note</h3>
+              <h3 className="text-base font-bold text-gray-900">Emergency Protocol Notice</h3>
               <p className="mt-2 text-xs leading-relaxed text-gray-600">
-                Vellora Health is a planned scheduled healthcare service. For life-threatening emergencies, severe trauma, or acute chest pain, please call <strong>911</strong> or visit the nearest hospital emergency department immediately.
+                Vellora Health is an on-demand scheduled home clinical care service. For acute, life-threatening medical emergencies or severe trauma, please dial your local emergency services immediately (such as 112 / 108 / local ambulance) or visit the nearest hospital emergency ICU.
               </p>
             </div>
 
