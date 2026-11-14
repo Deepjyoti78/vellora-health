@@ -20,14 +20,14 @@ export default function HomePage() {
         {/* 2. Four Core Doorstep Services */}
         <ServicesSection />
 
-        {/* 3. How Home Healthcare Works (4-step clinical flow) */}
-        <HowItWorksSection />
+        {/* 3. Healthcare Professionals & Visiting Doctors ("Meet Our Medical Specialists") */}
+        <DoctorsSection />
 
-        {/* 4. Why Choose Vellora Health (Hospital-Standard Safety at Home) */}
+        {/* 4. Why Choose Vellora Health ("Hospital-Standard Safety Protocols & Convenience") */}
         <ExperienceSection />
 
-        {/* 5. Healthcare Professionals & Visiting Doctors */}
-        <DoctorsSection />
+        {/* 5. How Home Healthcare Works (4-step clinical flow) */}
+        <HowItWorksSection />
 
         {/* 6. Care Options & Shift Packages (Doctor visit, 12h/24h nursing, caretakers, labs) */}
         <CareOptionsSection />

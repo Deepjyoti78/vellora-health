@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import Link from 'next/link';
-import { SERVICES_DATA, VALUE_PILLARS } from '@/data/site-content';
+import { SERVICES_DATA } from '@/data/site-content';
 import { SliderArrows } from '@/components/common/SliderArrows';
 import { Icon, IconName } from '@/components/common/Icon';
 
@@ -80,20 +80,6 @@ export const ServicesSection: React.FC = () => {
                 </div>
               </div>
             </Link>
-          ))}
-        </div>
-
-        <div className="service-values mt-14" id="values">
-          {VALUE_PILLARS.map((pillar) => (
-            <div key={pillar.title} className="value-item">
-              <div className="value-icon text-[#116b70]">
-                <Icon name={pillar.icon as IconName} />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-[#11191b]">{pillar.title}</h3>
-                <p className="mt-1 text-xs text-[#687476]">{pillar.description}</p>
-              </div>
-            </div>
           ))}
         </div>
       </div>
