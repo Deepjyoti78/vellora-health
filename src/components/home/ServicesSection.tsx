@@ -12,16 +12,21 @@ export const ServicesSection: React.FC = () => {
   return (
     <section id="services" className="section section-services" aria-labelledby="servicesTitle">
       <div className="container">
-        <div className="section-heading-row scroll-reveal">
-          <div>
-            <p className="eyebrow">FOUR CORE HEALTHCARE SERVICES</p>
-            <h2 id="servicesTitle">
-              Hospital-Grade Clinical Care<br />Delivered to Your Doorstep
-            </h2>
-            <p className="section-lead">
-              Avoid hospital waiting rooms and travel stress. Licensed physicians, registered nurses, compassionate caretakers, and diagnostic phlebotomy — in the comfort of your home.
-            </p>
-          </div>
+        {/* Centered Main Heading */}
+        <div className="text-center max-w-3xl mx-auto mb-10 scroll-reveal">
+          <p className="eyebrow text-center uppercase tracking-widest text-[#116b70] text-xs font-bold mb-2">
+            Four Core Healthcare Services
+          </p>
+          <h2 id="servicesTitle" className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#11191b] mb-3">
+            Our Services
+          </h2>
+          <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Avoid hospital waiting rooms with licensed physician visits, registered nursing, and diagnostics delivered to your home.
+          </p>
+        </div>
+
+        {/* Mobile slide controls if needed */}
+        <div className="flex justify-end mb-3 md:hidden">
           <SliderArrows
             trackRef={trackRef}
             prevLabel="Previous service"

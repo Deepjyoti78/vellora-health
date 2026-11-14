@@ -15,7 +15,7 @@ export const FacilitiesSection: React.FC = () => {
           <div>
             <p className="eyebrow">A BETTER CARE EXPERIENCE</p>
             <h2 id="facilitiesTitle">
-              Designed around<br />comfort and care.
+              Designed around <span className="whitespace-nowrap">Comfort and Care.</span>
             </h2>
             <p className="section-lead">Every detail designed to help you feel at ease.</p>
           </div>

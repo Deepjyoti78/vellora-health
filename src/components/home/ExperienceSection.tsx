@@ -55,7 +55,7 @@ export const ExperienceSection: React.FC = () => {
               Hospital-Standard Safety.<br />Doorstep Convenience.
             </h2>
           </div>
-          <p className="experience-intro text-sm md:text-base text-[#55696d] leading-relaxed max-w-xl">
+          <p className="experience-intro text-sm md:text-base text-[#55696d] leading-relaxed !max-w-[580px]">
             We bring verified medical excellence directly to your residence, prioritizing patient dignity, family peace of mind, and transparent clinical standards.
           </p>
         </div>
