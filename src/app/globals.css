@@ -285,18 +285,18 @@ h1, h2 {
   scroll-snap-align: start;
 }
 
-/* Full-bleed hero with clear, visible characters */
+/* Full-bleed hero with shifted right background characters */
 .hero {
   position: relative;
   height: min(925px, 100svh);
   min-height: 750px;
-  background-color: #0b1416;
+  background-color: #0c1517;
   background-image: 
-    linear-gradient(90deg, rgba(8, 17, 19, 0.94) 0%, rgba(8, 17, 19, 0.85) 30%, rgba(9, 18, 20, 0.42) 50%, rgba(9, 18, 20, 0.08) 64%, transparent 72%),
-    linear-gradient(180deg, rgba(8, 17, 19, 0.55) 0%, transparent 16%),
+    linear-gradient(90deg, rgba(8, 17, 19, 0.95) 0%, rgba(8, 17, 19, 0.86) 32%, rgba(9, 18, 20, 0.45) 52%, rgba(9, 18, 20, 0.08) 66%, transparent 75%),
+    linear-gradient(180deg, rgba(8, 17, 19, 0.5) 0%, transparent 16%),
     url("/assets/compassionate-hospital-care.png");
   background-size: cover;
-  background-position: center right;
+  background-position: calc(50% + 140px) center;
   background-repeat: no-repeat;
   overflow: hidden;
   color: white;
@@ -418,12 +418,11 @@ h1, h2 {
   z-index: 1;
 }
 
-/* Elevated vertical position */
 .hero-copy {
   position: absolute;
-  top: clamp(75px, 9.8vh, 120px);
+  top: clamp(80px, 10.5vh, 125px);
   left: 0;
-  max-width: 680px;
+  max-width: 620px;
 }
 
 .trust-row {
@@ -432,7 +431,7 @@ h1, h2 {
   gap: 12px;
   font-size: 14px;
   font-weight: 500;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
   color: #f1f4f3;
 }
 
@@ -456,34 +455,34 @@ h1, h2 {
   box-shadow: 0 2px 6px rgba(0,0,0,0.25);
 }
 
-/* Main heading matching the reference design */
+/* Scaled-down, balanced headline */
 .hero h1,
 .hero-title {
   font-family: var(--font-manrope), sans-serif;
   font-weight: 800;
-  font-size: clamp(56px, 5.4vw, 86px);
-  letter-spacing: -0.05em;
-  line-height: 1.02;
-  margin: 0 0 30px;
+  font-size: clamp(44px, 4.3vw, 66px);
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+  margin: 0 0 26px;
   color: #ffffff;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
 }
 
 .hero-title-row {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .hero-title-thumb {
   display: inline-block;
-  width: clamp(54px, 5.2vw, 84px);
-  height: clamp(34px, 3.4vw, 54px);
-  border-radius: 12px;
+  width: clamp(48px, 4.2vw, 66px);
+  height: clamp(30px, 2.7vw, 42px);
+  border-radius: 10px;
   overflow: hidden;
   vertical-align: middle;
   border: 2px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
 }
 
@@ -501,20 +500,20 @@ h1, h2 {
   flex-wrap: wrap;
 }
 
-/* Bottom left text matching the reference design (unboxed, clean, elegant) */
+/* Bottom left text: multi-line clean typography without background card */
 .hero-detail {
   position: absolute;
   left: 0;
-  bottom: 48px;
-  max-width: 440px;
+  bottom: 42px;
+  max-width: 480px;
   z-index: 2;
 }
 
 .hero-detail-text {
   margin: 0;
-  color: rgba(240, 246, 247, 0.84);
+  color: rgba(235, 243, 244, 0.82);
   font-size: 13.5px;
-  line-height: 1.65;
+  line-height: 1.68;
   letter-spacing: -0.01em;
   font-weight: 400;
   background: none !important;
@@ -523,27 +522,7 @@ h1, h2 {
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
-}
-
-.hero-index {
-  z-index: 2;
-  position: absolute;
-  right: 56px;
-  bottom: 34px;
-  color: #e5eff0aa;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-}
-
-.hero-index-line {
-  display: block;
-  width: 64px;
-  height: 1px;
-  background: #fff5;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* Services */
@@ -1522,6 +1501,9 @@ h1, h2 {
   .section-heading-row h2 {
     font-size: clamp(34px, 4vw, 50px);
   }
+  .hero {
+    background-position: calc(50% + 100px) center;
+  }
   .specialty-tile {
     font-size: 12px;
     gap: 10px;
@@ -1590,6 +1572,7 @@ h1, h2 {
   .hero {
     min-height: 720px;
     height: 820px;
+    background-position: calc(50% + 60px) center;
   }
   .hero-main {
     height: calc(100% - 82px);
@@ -1599,7 +1582,7 @@ h1, h2 {
   }
   .hero h1,
   .hero-title {
-    font-size: clamp(44px, 6vw, 64px);
+    font-size: clamp(38px, 5.5vw, 54px);
   }
   .service-photo-card {
     flex-basis: calc((100% - 18px)/2.3);
@@ -1695,13 +1678,13 @@ h1, h2 {
   }
   .hero h1,
   .hero-title {
-    font-size: clamp(38px, 9.5vw, 50px);
-    line-height: 1.05;
-    margin-bottom: 20px;
+    font-size: clamp(34px, 8.5vw, 44px);
+    line-height: 1.06;
+    margin-bottom: 18px;
   }
   .hero-title-thumb {
-    width: 46px;
-    height: 30px;
+    width: 42px;
+    height: 28px;
     border-radius: 8px;
   }
   .hero-actions {
@@ -1714,15 +1697,12 @@ h1, h2 {
     gap: 5px;
   }
   .hero-detail {
-    bottom: 24px;
+    bottom: 22px;
     max-width: 320px;
   }
   .hero-detail-text {
     font-size: 12px;
     line-height: 1.5;
-  }
-  .hero-index {
-    display: none;
   }
   .section {
     padding-block: 70px;

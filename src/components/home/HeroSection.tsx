@@ -61,14 +61,10 @@ export const HeroSection: React.FC = () => {
         <div className="hero-detail">
           <p className="hero-detail-text">
             Accessible Modern Medical Care — where technology meets compassion.
+            From routine checkups to specialized treatment, our physicians bring
+            expertise and human kindness together under one roof.
           </p>
         </div>
-      </div>
-
-      <div className="hero-index" aria-hidden="true">
-        <span>01</span>
-        <span className="hero-index-line"></span>
-        <span>07</span>
       </div>
     </section>
   );
