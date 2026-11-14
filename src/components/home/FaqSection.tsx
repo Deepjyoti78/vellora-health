@@ -25,25 +25,38 @@ export const FaqSection: React.FC = () => {
           </a>
         </div>
 
-        <div className="faq-list stagger-container">
+        <div className="faq-list stagger-container" role="region" aria-label="Frequently Asked Questions list">
           {FAQ_DATA.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <details
+              <div
                 key={index}
-                className="scroll-reveal-card"
-                open={isOpen}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleToggle(index);
-                }}
+                className={`faq-item ${isOpen ? 'is-open' : ''}`}
               >
-                <summary>
-                  {faq.question}
-                  <Icon name="chevron-down" />
-                </summary>
-                <p>{faq.answer}</p>
-              </details>
+                <button
+                  type="button"
+                  className="faq-button"
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${index}`}
+                  id={`faq-question-${index}`}
+                  onClick={() => handleToggle(index)}
+                >
+                  <span>{faq.question}</span>
+                  <span className="faq-chevron" aria-hidden="true">
+                    <Icon name="chevron-down" />
+                  </span>
+                </button>
+                <div
+                  id={`faq-answer-${index}`}
+                  role="region"
+                  aria-labelledby={`faq-question-${index}`}
+                  className="faq-collapse"
+                >
+                  <div className="faq-collapse-inner">
+                    <p>{faq.answer}</p>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>

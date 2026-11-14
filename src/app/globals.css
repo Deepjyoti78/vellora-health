@@ -704,7 +704,7 @@ h1, h2 {
 /* Services */
 .section-services {
   width: 100%;
-  padding-bottom: 113px;
+  padding-bottom: 76px;
   background: #ffffff;
   border-bottom: 1px solid #e9eeee;
 }
@@ -712,7 +712,7 @@ h1, h2 {
 .service-track {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  gap: 22px;
   width: 100%;
 }
 
@@ -934,17 +934,20 @@ h1, h2 {
   width: 100%;
   background: #ffffff;
   border-bottom: 1px solid #e9eeee;
-  padding-block: 120px 122px;
+  padding-block: 58px 90px;
 }
 
 .doctor-track {
-  gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
 }
 
 .doctor-card {
-  height: 450px;
+  height: 430px;
   position: relative;
-  flex: 0 0 calc((100% - 36px)/3);
+  width: 100%;
   border-radius: 20px;
   overflow: hidden;
   background: #11191b;
@@ -1334,7 +1337,7 @@ h1, h2 {
 .faq-list summary svg {
   width: 18px;
   height: 18px;
-  transition: transform 0.2s;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .faq-list details[open] summary svg {
@@ -1346,6 +1349,73 @@ h1, h2 {
   line-height: 1.8;
   margin: 0 40px 24px 0;
   color: #637172;
+  max-width: 570px;
+}
+
+/* Smooth Accordion Classes */
+.faq-item {
+  border-bottom: 1px solid #dce2e2;
+  transition: border-color 0.2s;
+  opacity: 1;
+}
+
+.faq-button {
+  width: 100%;
+  cursor: pointer;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+  color: #11191b;
+  transition: color 0.25s ease;
+}
+
+.faq-button:hover {
+  color: var(--teal);
+}
+
+.faq-chevron {
+  width: 18px;
+  height: 18px;
+  color: #637172;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
+  flex-shrink: 0;
+}
+
+.faq-item.is-open .faq-chevron {
+  transform: rotate(180deg);
+  color: var(--teal);
+}
+
+.faq-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 0;
+}
+
+.faq-item.is-open .faq-collapse {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.faq-collapse-inner {
+  overflow: hidden;
+}
+
+.faq-collapse-inner p {
+  font-size: 13.5px;
+  line-height: 1.8;
+  margin: 0 40px 24px 0;
+  color: #55696d;
   max-width: 570px;
 }
 

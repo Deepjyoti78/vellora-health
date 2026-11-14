@@ -231,6 +231,15 @@ export const DOCTORS_DATA: DoctorItem[] = [
     image: '/assets/doctor-daniel-reed.jpg',
     alt: 'Dr. Daniel Reed, Male physician reviewing medical records',
   },
+  {
+    id: 'sofia-morgan',
+    name: 'Dr. Sofia Morgan',
+    specialty: 'REHABILITATION & ORTHOPEDICS',
+    quote: 'Comprehensive bedside mobility assessments and personalized post-surgical recovery care.',
+    rating: '4.9',
+    image: '/assets/doctor-sofia-morgan.jpg',
+    alt: 'Dr. Sofia Morgan, Female physician in clinical coat with stethoscope and tablet',
+  },
 ];
 
 export const EXPERIENCE_ITEMS: ExperienceItem[] = [
