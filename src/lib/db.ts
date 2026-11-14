@@ -216,7 +216,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.maya@vellora.com',
     phone: '+1 (555) 345-6789',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-maya-patel.jpg',
+    avatar: '/assets/doctor-maya-patel.webp',
     specialty: 'Internal Medicine & Geriatrics',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -233,7 +233,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.ethan@vellora.com',
     phone: '+1 (555) 456-7890',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-ethan-park.jpg',
+    avatar: '/assets/doctor-ethan-park.webp',
     specialty: 'Pediatrics & Family Medicine',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -250,7 +250,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.daniel@vellora.com',
     phone: '+1 (555) 567-8912',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-daniel-reed.jpg',
+    avatar: '/assets/doctor-daniel-reed.webp',
     specialty: 'Cardiology & Chronic Disease Management',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -365,7 +365,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Comprehensive medical assessment in the comfort and privacy of your home.",
     "description": "Avoid clinic queues and travel stress. Board-certified physicians provide unhurried physical examinations, acute illness diagnosis, chronic condition reviews, digital prescriptions, and direct specialist coordination.",
-    "image": "/assets/doorstep-1.png",
+    "image": "/assets/doorstep-1.webp",
     "basePrice": 95,
     "duration": "45 - 60 mins",
     "features": [
@@ -390,7 +390,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Specialized medical assessment for seniors, polypharmacy review, and cognitive screening.",
     "description": "Elderly care evaluation conducted by experienced geriatric physicians. Includes medication reconciliation, fall risk assessment, cognitive health checks, and chronic disease optimization.",
-    "image": "/assets/doctor-daniel-reed.jpg",
+    "image": "/assets/doctor-daniel-reed.webp",
     "basePrice": 120,
     "duration": "60 mins",
     "features": [
@@ -438,7 +438,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Bedside cardiac consultation, digital rhythm analysis, and hypertension management.",
     "description": "Consult a cardiologist without visiting the hospital. Includes stethoscope heart sound analysis, blood pressure mapping, digital ECG telemetry, and medication optimization.",
-    "image": "/assets/doctor-maya-patel.jpg",
+    "image": "/assets/doctor-maya-patel.webp",
     "basePrice": 145,
     "duration": "50 - 60 mins",
     "features": [
@@ -462,7 +462,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Focused medical checkup for diabetes, insulin titration, and diabetic neuropathy screening.",
     "description": "Comprehensive chronic disease doctor visits designed to stabilize blood sugars, prevent diabetic foot complications, and review kidney health.",
-    "image": "/assets/doctor-ethan-park.jpg",
+    "image": "/assets/doctor-ethan-park.webp",
     "basePrice": 100,
     "duration": "45 mins",
     "features": [
@@ -582,7 +582,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Rapid doorstep doctor visit for sudden illness, high fevers, and acute infections.",
     "description": "Rapid dispatch physician visits for urgent medical issues that do not require an emergency room visit. Prompt diagnosis, bedside treatment, and symptom relief.",
-    "image": "/assets/Warm Home Visit Healthcare Scene.png",
+    "image": "/assets/Warm Home Visit Healthcare Scene.webp",
     "basePrice": 135,
     "duration": "45 mins",
     "features": [
@@ -606,7 +606,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Certified nursing support for wound care, IV therapy, injections, and vitals.",
     "description": "Hospital-grade clinical nursing at home. From surgical wound dressing and suture removal to IV catheter administration, catheterization, and post-operative vitals monitoring by licensed nurses.",
-    "image": "/assets/doorstep-3.png",
+    "image": "/assets/doorstep-3.webp",
     "basePrice": 55,
     "duration": "Per procedure or 2-4 hours",
     "features": [
@@ -656,7 +656,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Dedicated daytime bedside clinical nursing for high-dependency recovery.",
     "description": "A licensed registered nurse (RN/BSN) stationed at your home for 12 continuous daytime hours (8 AM to 8 PM) managing medications, infusions, catheterization, and hygiene.",
-    "image": "/assets/doorstep-3.png",
+    "image": "/assets/doorstep-3.webp",
     "basePrice": 220,
     "duration": "12 Hours (8 AM - 8 PM)",
     "features": [
@@ -680,7 +680,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Peace of mind overnight nursing care with active vitals monitoring and oxygen care.",
     "description": "Overnight nursing support from 8 PM to 8 AM. Ensures uninterrupted sleep for family members while a licensed nurse supervises oxygen, monitors IV infusions, and assists with nocturnal mobility.",
-    "image": "/assets/doorstep-1.png",
+    "image": "/assets/doorstep-1.webp",
     "basePrice": 240,
     "duration": "12 Hours (8 PM - 8 AM)",
     "features": [
@@ -704,7 +704,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "24/7 dedicated round-the-clock hospital-grade nursing care in your home.",
     "description": "Round-the-clock clinical care provided by paired registered nurses on rotational 12-hour shifts. Ideal for intensive recovery, complex wounds, or advanced palliative care.",
-    "image": "/assets/compassionate-hospital-care.png",
+    "image": "/assets/compassionate-hospital-care.webp",
     "basePrice": 420,
     "duration": "24 Hours (Rotational)",
     "features": [
@@ -728,7 +728,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Safe in-home intravenous catheter placement, saline hydration, and antibiotic drips.",
     "description": "Avoid emergency department visits just for IV lines. A certified infusion nurse visits your home with sterile catheterization kits to start and monitor intravenous therapy.",
-    "image": "/assets/doorstep-2.png",
+    "image": "/assets/doorstep-2.webp",
     "basePrice": 75,
     "duration": "60 mins",
     "features": [
@@ -800,7 +800,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Sterile NG tube placement, position verification, and enteral feeding administration.",
     "description": "Safe enteral nutrition management. Registered nurses insert or replace nasogastric (NG/Ryles) tubes, verify gastric placement with pH testing, and guide family members.",
-    "image": "/assets/Warm Home Visit Healthcare Scene.png",
+    "image": "/assets/Warm Home Visit Healthcare Scene.webp",
     "basePrice": 80,
     "duration": "45 mins",
     "features": [
@@ -848,7 +848,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Trained attendants for daily living assistance, hygiene, mobility, and feeding.",
     "description": "Dedicated bedside caretakers who ensure your loved ones are safe, clean, nourished, and supported around the clock. Ideal for bedridden patients, stroke recovery, and seniors needing mobility support.",
-    "image": "/assets/doorstep-4.png",
+    "image": "/assets/doorstep-4.webp",
     "basePrice": 40,
     "duration": "12-Hour or 24-Hour Shifts",
     "features": [
@@ -873,7 +873,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Compassionate daytime support for walking, bathing, dressing, and companionship.",
     "description": "A trained personal care attendant helps your elderly parent with balance, walking, bathing, meal assistance, and medication reminders from morning to evening.",
-    "image": "/assets/doorstep-4.png",
+    "image": "/assets/doorstep-4.webp",
     "basePrice": 110,
     "duration": "12 Hours (8 AM - 8 PM)",
     "features": [
@@ -945,7 +945,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Patient, trained attendants skilled in wandering prevention and memory reassurance.",
     "description": "Caregivers certified in memory care. They employ gentle redirection techniques, maintain structured routines, and safeguard seniors prone to wandering or sundowning.",
-    "image": "/assets/doctor-daniel-reed.jpg",
+    "image": "/assets/doctor-daniel-reed.webp",
     "basePrice": 130,
     "duration": "12 Hours (Day or Night)",
     "features": [
@@ -969,7 +969,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Assistance for hemiplegic stroke survivors: transfers, feeding, and limb support.",
     "description": "Dedicated support for stroke recovery. Attendants assist with one-sided weakness, safe transfers using gait belts, aspiration-safe upright feeding, and range of motion.",
-    "image": "/assets/doorstep-1.png",
+    "image": "/assets/doorstep-1.webp",
     "basePrice": 120,
     "duration": "12 Hours",
     "features": [
@@ -1041,7 +1041,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Gentle, respectful bedside presence focusing on dignity, pain relief, and comfort.",
     "description": "Compassionate attendants trained in end-of-life and palliative comfort. They provide quiet reassurance, gentle mouth care, skin relief, and support to grieving families.",
-    "image": "/assets/Warm Home Visit Healthcare Scene.png",
+    "image": "/assets/Warm Home Visit Healthcare Scene.webp",
     "basePrice": 140,
     "duration": "12 Hours (Day or Night)",
     "features": [
@@ -1089,7 +1089,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "Painless sample collection at home with digital reports within 12 to 24 hours.",
     "description": "NABL-accredited laboratory diagnostics delivered to your doorstep. Certified phlebotomists collect blood, urine, or swab samples using vacuum sterile barcoded vials with cold-chain transport.",
-    "image": "/assets/doorstep-2.png",
+    "image": "/assets/doorstep-2.webp",
     "basePrice": 35,
     "duration": "15 mins sample collection",
     "features": [
@@ -1140,7 +1140,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "HbA1c 3-month sugar average, fasting glucose, urine microalbumin & kidney check.",
     "description": "Essential quarterly blood tests for diabetic patients. Measures average blood sugar over 90 days (HbA1c), fasting insulin, and checks for early kidney protein leakage.",
-    "image": "/assets/doorstep-2.png",
+    "image": "/assets/doorstep-2.webp",
     "basePrice": 45,
     "duration": "15 mins",
     "features": [
@@ -1284,7 +1284,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "In-home administration of Flu, Pneumococcal, Shingles, and Hepatitis vaccines.",
     "description": "Stay immunized without clinic exposure. Certified nurses bring cold-chain stored vaccines to your home, administer the shot safely, and observe for 15 minutes post-vaccination.",
-    "image": "/assets/doorstep-4.png",
+    "image": "/assets/doorstep-4.webp",
     "basePrice": 60,
     "duration": "30 mins",
     "features": [
@@ -1358,7 +1358,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Critical Care & Monitoring",
     "shortDesc": "Advanced home ICU installation with multipara monitors, oxygen, and continuous critical care nursing.",
     "description": "Transition hospitalized patients safely home. Complete ICU infrastructure including hospital-grade electric beds, continuous vitals monitoring, oxygen concentrators, and 24/7 dedicated critical care nurses supervised by intensivists.",
-    "image": "/assets/compassionate-hospital-care.png",
+    "image": "/assets/compassionate-hospital-care.webp",
     "basePrice": 180,
     "duration": "12-Hour or 24-Hour Continuous Care",
     "features": [

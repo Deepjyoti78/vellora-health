@@ -55,12 +55,12 @@ export const ServicesSection: React.FC = () => {
                   loading="eager"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                {/* White pill with green number badge & category name matching reference image */}
-                <div className="absolute left-3.5 top-3.5 z-20 flex items-center gap-2 rounded-full bg-white/95 px-2.5 py-1.5 shadow-sm border border-white/80 backdrop-blur-md">
-                  <span className="flex items-center justify-center rounded-full bg-[#0b5c43] px-2.5 py-0.5 text-xs font-bold text-white shadow-xs">
+                {/* White pill with green number badge & category name matching reference image exactly */}
+                <div className="absolute left-3.5 top-3.5 z-20 flex items-center gap-2.5 rounded-full bg-white p-1 pl-1.5 pr-4 shadow-sm border border-white/90 backdrop-blur-sm">
+                  <span className="flex items-center justify-center rounded-full bg-[#065F46] px-3 py-1 text-xs sm:text-[13px] font-bold text-white shadow-xs">
                     {service.number}
                   </span>
-                  <span className="pr-1 text-xs font-bold text-[#11191b] tracking-tight">
+                  <span className="text-xs sm:text-[13px] font-bold text-[#102820] tracking-tight">
                     {service.category}
                   </span>
                 </div>

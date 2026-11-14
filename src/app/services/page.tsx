@@ -141,6 +141,8 @@ function ServicesContent() {
                   <img
                     src={service.image}
                     alt={service.name}
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
