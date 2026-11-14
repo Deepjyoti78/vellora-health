@@ -1,10 +1,29 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/db';
 import { PatientLayout } from '@/components/layout/PatientLayout';
-import { Icon } from '@/components/common/Icon';
+import {
+  User,
+  ShieldCheck,
+  Phone,
+  Mail,
+  MapPin,
+  HeartPulse,
+  Activity,
+  FileText,
+  CreditCard,
+  AlertCircle,
+  CheckCircle2,
+  Calendar,
+  Clock,
+  Plus,
+  Trash2,
+  Edit2,
+  Stethoscope,
+} from 'lucide-react';
 
 export default function PatientAccountPage() {
   const { currentUser } = useAuth();
@@ -65,75 +84,202 @@ export default function PatientAccountPage() {
 
   return (
     <PatientLayout>
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        {/* Header */}
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#116b70]">
-            Personal Preferences
-          </span>
-          <h1 className="text-2xl font-black text-gray-900 sm:text-3xl">
-            Account & Delivery Addresses
-          </h1>
-          <p className="mt-1 text-xs text-gray-500">
-            Manage your personal contact info, saved residences for home medical dispatch, and emergency contacts.
-          </p>
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
-          {/* Left Column: Personal info & Emergency Contact */}
-          <div className="space-y-6 lg:col-span-1">
-            {/* User Profile Card */}
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-              <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#116b70] text-2xl font-black text-white">
-                  {currentUser.name.split(' ').map((n) => n[0]).join('')}
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 animate-fade-in-up">
+        {/* Customer Profile Header Banner */}
+        <div className="overflow-hidden rounded-3xl border border-[#E2EBE7] bg-white p-6 sm:p-8 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#064E3B] text-2xl font-black text-white shadow-xs">
+                {currentUser.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')}
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-xl sm:text-2xl font-black text-[#102820]">
+                    {currentUser.name}
+                  </h1>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2.5 py-0.5 text-[11px] font-bold text-[#065F46]">
+                    <ShieldCheck className="h-3 w-3" />
+                    Verified Customer Account
+                  </span>
                 </div>
-                <div>
-                  <h3 className="text-base font-bold text-gray-900">{currentUser.name}</h3>
-                  <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
-                    Verified Patient Account
+                <p className="mt-1 text-xs text-slate-500">
+                  Customer ID: <strong className="font-mono text-slate-700">VEL-PAT-2026-89</strong> • Enrolled since Jan 2025
+                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
+                  <span className="inline-flex items-center gap-1">
+                    <Mail className="h-3.5 w-3.5 text-[#065F46]" />
+                    {currentUser.email}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <Phone className="h-3.5 w-3.5 text-[#065F46]" />
+                    {currentUser.phone}
                   </span>
                 </div>
               </div>
+            </div>
 
-              <form onSubmit={handleSaveProfile} className="mt-6 space-y-3">
+            <div className="flex flex-wrap items-center gap-2.5 sm:self-start">
+              <Link
+                href="/book"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors"
+              >
+                <Calendar className="h-3.5 w-3.5" />
+                <span>Book Home Visit</span>
+              </Link>
+              <Link
+                href="/patient/dashboard"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#CBDCD5] bg-white px-4 py-2 text-xs font-bold text-[#102820] hover:bg-[#F2F8F5] transition-colors"
+              >
+                <span>View Visits</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Quick Clinical Team Overview Strip */}
+          <div className="mt-6 pt-5 border-t border-[#F2F8F5] grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="flex items-center gap-3 rounded-2xl bg-[#F8FAF9] p-3 border border-[#E2EBE7]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white border border-[#CBDCD5] text-[#065F46]">
+                <Stethoscope className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Primary Visiting Doctor</p>
+                <p className="text-xs font-bold text-[#102820]">Dr. Maya Patel, MD</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 rounded-2xl bg-[#F8FAF9] p-3 border border-[#E2EBE7]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white border border-[#CBDCD5] text-[#065F46]">
+                <HeartPulse className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Care Coordinator</p>
+                <p className="text-xs font-bold text-[#102820]">Nurse Sarah Jenkins, RN</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 rounded-2xl bg-[#F8FAF9] p-3 border border-[#E2EBE7]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white border border-[#CBDCD5] text-[#065F46]">
+                <ShieldCheck className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Plan Status</p>
+                <p className="text-xs font-bold text-[#065F46]">Active Premium Care • 24/7 Priority</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Customer Vitals & Clinical Metrics Strip */}
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">
+              Recorded Clinical Vitals (Latest Home Visit)
+            </h2>
+            <span className="text-[11px] font-medium text-slate-400">Verified by Visiting Clinician</span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <div className="rounded-2xl border border-[#E2EBE7] bg-white p-4 shadow-2xs">
+              <span className="text-[11px] font-semibold text-slate-500 block">Blood Pressure</span>
+              <div className="mt-1 flex items-baseline gap-1.5">
+                <span className="text-xl font-extrabold text-[#102820]">120/80</span>
+                <span className="text-[10px] font-bold text-slate-400">mmHg</span>
+              </div>
+              <span className="mt-1 inline-block text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                Optimal
+              </span>
+            </div>
+
+            <div className="rounded-2xl border border-[#E2EBE7] bg-white p-4 shadow-2xs">
+              <span className="text-[11px] font-semibold text-slate-500 block">Heart Rate</span>
+              <div className="mt-1 flex items-baseline gap-1.5">
+                <span className="text-xl font-extrabold text-[#102820]">72</span>
+                <span className="text-[10px] font-bold text-slate-400">bpm</span>
+              </div>
+              <span className="mt-1 inline-block text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                Normal Resting
+              </span>
+            </div>
+
+            <div className="rounded-2xl border border-[#E2EBE7] bg-white p-4 shadow-2xs">
+              <span className="text-[11px] font-semibold text-slate-500 block">Blood Oxygen</span>
+              <div className="mt-1 flex items-baseline gap-1.5">
+                <span className="text-xl font-extrabold text-[#102820]">99%</span>
+                <span className="text-[10px] font-bold text-slate-400">SpO2</span>
+              </div>
+              <span className="mt-1 inline-block text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                Excellent
+              </span>
+            </div>
+
+            <div className="rounded-2xl border border-[#E2EBE7] bg-white p-4 shadow-2xs">
+              <span className="text-[11px] font-semibold text-slate-500 block">Blood Type &amp; Allergy</span>
+              <div className="mt-1 flex items-baseline gap-1.5">
+                <span className="text-xl font-extrabold text-[#102820]">O+</span>
+                <span className="text-[10px] font-bold text-slate-400">Positive</span>
+              </div>
+              <span className="mt-1 inline-block text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                Penicillin Allergy
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 3-Column Detailed Information Grid */}
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
+          {/* Left Column: Personal Information & Emergency Contact */}
+          <div className="space-y-6 lg:col-span-1">
+            {/* User Edit Form */}
+            <div className="rounded-3xl border border-[#E2EBE7] bg-white p-6 shadow-xs">
+              <h3 className="text-base font-bold text-[#102820]">Personal Information</h3>
+              <p className="text-xs text-slate-500 mt-0.5 mb-4">
+                Update your contact details for bedside appointment confirmations.
+              </p>
+
+              <form onSubmit={handleSaveProfile} className="space-y-3.5">
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Full Name</label>
+                  <label className="text-xs font-semibold text-slate-700">Full Name</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 text-xs font-medium"
+                    className="mt-1 block w-full rounded-xl border border-[#CBDCD5] bg-white p-2.5 text-xs font-medium text-[#102820] focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B]"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Email Address</label>
+                  <label className="text-xs font-semibold text-slate-700">Email Address</label>
                   <input
                     type="email"
                     disabled
                     value={currentUser.email}
-                    className="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 p-2.5 text-xs text-gray-500"
+                    className="mt-1 block w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs text-slate-500 cursor-not-allowed"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Mobile Phone</label>
+                  <label className="text-xs font-semibold text-slate-700">Mobile Phone</label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 text-xs font-medium"
+                    className="mt-1 block w-full rounded-xl border border-[#CBDCD5] bg-white p-2.5 text-xs font-medium text-[#102820] focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B]"
                   />
                 </div>
 
                 {savedSuccess && (
-                  <p className="text-xs font-bold text-emerald-700">Profile saved successfully!</p>
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] p-2 rounded-lg">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span>Profile saved successfully!</span>
+                  </div>
                 )}
 
                 <button
                   type="submit"
-                  className="w-full rounded-xl bg-[#116b70] py-2.5 text-xs font-bold text-white hover:bg-[#0d5559] transition-colors"
+                  className="w-full rounded-full bg-[#064E3B] py-2.5 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-xs"
                 >
-                  Save Profile
+                  Save Profile Changes
                 </button>
               </form>
             </div>
@@ -141,95 +287,103 @@ export default function PatientAccountPage() {
             {/* Emergency SOS Contact */}
             <div className="rounded-3xl border border-red-200 bg-red-50/40 p-6 shadow-xs">
               <div className="flex items-center gap-2">
-                <Icon name="phone" className="h-4 w-4 text-red-600" />
+                <Phone className="h-4 w-4 text-red-600" />
                 <h3 className="text-sm font-bold text-red-950">Emergency SOS Contact</h3>
               </div>
-              <p className="mt-1 text-[11px] text-red-700">
-                Contacted automatically if a visiting clinician marks an in-home vital emergency.
+              <p className="mt-1 text-[11px] text-red-700 leading-relaxed">
+                Contacted immediately if a visiting clinician triggers bedside vital triage.
               </p>
 
-              <div className="mt-4 space-y-2 text-xs">
+              <div className="mt-4 space-y-2.5 text-xs">
                 <div>
-                  <label className="text-gray-600">Contact Name:</label>
+                  <label className="text-slate-600">Contact Name</label>
                   <input
                     type="text"
                     value={emergencyName}
                     onChange={(e) => setEmergencyName(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-red-200 bg-white p-2 text-xs"
+                    className="mt-1 block w-full rounded-lg border border-red-200 bg-white p-2 text-xs text-[#102820]"
                   />
                 </div>
                 <div>
-                  <label className="text-gray-600">Relation:</label>
+                  <label className="text-slate-600">Relationship</label>
                   <input
                     type="text"
                     value={emergencyRelation}
                     onChange={(e) => setEmergencyRelation(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-red-200 bg-white p-2 text-xs"
+                    className="mt-1 block w-full rounded-lg border border-red-200 bg-white p-2 text-xs text-[#102820]"
                   />
                 </div>
                 <div>
-                  <label className="text-gray-600">Emergency Phone:</label>
+                  <label className="text-slate-600">Emergency Phone</label>
                   <input
                     type="tel"
                     value={emergencyPhone}
                     onChange={(e) => setEmergencyPhone(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-red-200 bg-white p-2 text-xs font-mono"
+                    className="mt-1 block w-full rounded-lg border border-red-200 bg-white p-2 text-xs font-mono text-[#102820]"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Delivery Addresses */}
+          {/* Right 2 Columns: Saved Addresses & Insurance */}
           <div className="space-y-6 lg:col-span-2">
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
+            {/* Saved Residences */}
+            <div className="rounded-3xl border border-[#E2EBE7] bg-white p-6 sm:p-7 shadow-xs">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">Saved Care Locations</h3>
-                  <p className="mt-0.5 text-xs text-gray-500">
-                    Clinicians use these addresses and gate instructions when dispatched.
+                  <h3 className="text-base font-bold text-[#102820]">Saved Care Residences</h3>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    Clinicians dispatch to these addresses with gate codes and entry instructions.
                   </p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setShowAddressModal(true)}
-                  className="rounded-xl bg-[#116b70] px-4 py-2 text-xs font-bold text-white hover:bg-[#0d5559] transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-2xs"
                 >
-                  + Add Address
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>Add Address</span>
                 </button>
               </div>
 
-              <div className="mt-6 space-y-4">
+              <div className="mt-5 space-y-3.5">
                 {addresses.map((addr) => (
                   <div
                     key={addr.id}
-                    className="flex flex-col justify-between gap-4 rounded-2xl border border-gray-200 p-4 transition-all hover:border-gray-300 sm:flex-row sm:items-center"
+                    className="flex flex-col justify-between gap-4 rounded-2xl border border-[#E2EBE7] p-4 transition-all hover:border-[#CBDCD5] hover:shadow-2xs sm:flex-row sm:items-center bg-[#FDFEFE]"
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="rounded-md bg-gray-100 px-2 py-0.5 text-[11px] font-bold text-gray-700">
+                        <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700">
                           {addr.tag}
                         </span>
                         {addr.isDefault && (
-                          <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                            Default Address
+                          <span className="rounded-md bg-[#ECFDF5] border border-[#D1FAE5] px-2 py-0.5 text-[10px] font-bold text-[#065F46]">
+                            Primary Residence
                           </span>
                         )}
                       </div>
-                      <p className="mt-2 text-sm font-bold text-gray-900">{addr.streetAddress}</p>
+                      <p className="mt-2 text-sm font-bold text-[#102820] flex items-center gap-1.5">
+                        <MapPin className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
+                        {addr.streetAddress}
+                      </p>
                       {addr.apartment && (
-                        <p className="text-xs text-gray-500">Suite/Apt: {addr.apartment}</p>
+                        <p className="text-xs text-slate-500 ml-5">Apt / Flat: {addr.apartment}</p>
                       )}
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-slate-500 ml-5">
                         {addr.city}, {addr.state} {addr.postalCode}
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-end sm:self-center">
                       <button
+                        type="button"
                         onClick={() => handleDeleteAddress(addr.id)}
-                        className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50"
+                        className="inline-flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-600 hover:bg-rose-100 transition-colors"
                       >
-                        Remove
+                        <Trash2 className="h-3 w-3" />
+                        <span>Remove</span>
                       </button>
                     </div>
                   </div>
@@ -237,32 +391,29 @@ export default function PatientAccountPage() {
               </div>
             </div>
 
-            {/* Notification & Communication Toggles */}
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-              <h3 className="text-base font-bold text-gray-900">Communication Preferences</h3>
-              <div className="mt-4 divide-y divide-gray-100 text-xs">
-                <div className="flex items-center justify-between py-3">
-                  <div>
-                    <span className="font-bold text-gray-900 block">SMS Dispatch Alerts</span>
-                    <span className="text-gray-500">Receive real-time driver ETA and doorstep security PIN via SMS.</span>
-                  </div>
-                  <input type="checkbox" defaultChecked className="h-4 w-4 text-[#116b70] rounded focus:ring-[#116b70]" />
+            {/* Health Insurance & Coverage */}
+            <div className="rounded-3xl border border-[#E2EBE7] bg-white p-6 sm:p-7 shadow-xs">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <CreditCard className="h-4 w-4 text-[#065F46]" />
+                  <h3 className="text-base font-bold text-[#102820]">Health Insurance &amp; Coverage</h3>
+                </div>
+                <span className="rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2.5 py-0.5 text-[10px] font-bold text-[#065F46]">
+                  Verified In-Network
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="rounded-2xl border border-slate-200 p-3.5 bg-slate-50/50">
+                  <span className="text-[11px] font-semibold text-slate-500 block">Insurance Carrier</span>
+                  <span className="text-sm font-bold text-[#102820] block mt-0.5">Blue Cross Blue Shield Premier (PPO)</span>
+                  <span className="text-[11px] text-slate-500 block mt-1">Policy ID: <strong className="font-mono text-slate-700">BCBS-8829-4410</strong></span>
                 </div>
 
-                <div className="flex items-center justify-between py-3">
-                  <div>
-                    <span className="font-bold text-gray-900 block">Diagnostic Lab Release Notifications</span>
-                    <span className="text-gray-500">Instant email & in-app alert when certified lab results are published.</span>
-                  </div>
-                  <input type="checkbox" defaultChecked className="h-4 w-4 text-[#116b70] rounded focus:ring-[#116b70]" />
-                </div>
-
-                <div className="flex items-center justify-between py-3">
-                  <div>
-                    <span className="font-bold text-gray-900 block">Prescription Refill Reminders</span>
-                    <span className="text-gray-500">Helpful automated reminders for ongoing chronic therapy dosages.</span>
-                  </div>
-                  <input type="checkbox" defaultChecked className="h-4 w-4 text-[#116b70] rounded focus:ring-[#116b70]" />
+                <div className="rounded-2xl border border-slate-200 p-3.5 bg-slate-50/50">
+                  <span className="text-[11px] font-semibold text-slate-500 block">Home Visit Copay</span>
+                  <span className="text-sm font-bold text-[#065F46] block mt-0.5">$15 Standard In-Network</span>
+                  <span className="text-[11px] text-slate-500 block mt-1">Group ID: <strong className="font-mono text-slate-700">GRP-99201</strong></span>
                 </div>
               </div>
             </div>
@@ -271,13 +422,14 @@ export default function PatientAccountPage() {
 
         {/* Add Address Modal */}
         {showAddressModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-            <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-fade-in">
+            <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-scale-in">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-gray-900">Add New Care Address</h3>
+                <h3 className="text-lg font-bold text-[#102820]">Add New Care Address</h3>
                 <button
+                  type="button"
                   onClick={() => setShowAddressModal(false)}
-                  className="rounded-lg p-1 text-gray-400 hover:bg-gray-100"
+                  className="rounded-lg p-1 text-slate-400 hover:bg-slate-100"
                 >
                   ✕
                 </button>
@@ -285,11 +437,11 @@ export default function PatientAccountPage() {
 
               <form onSubmit={handleAddAddress} className="mt-4 space-y-3">
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Address Label</label>
+                  <label className="text-xs font-semibold text-slate-700">Address Label</label>
                   <select
                     value={tag}
                     onChange={(e) => setTag(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs"
+                    className="mt-1 block w-full rounded-xl border border-slate-300 p-2 text-xs"
                   >
                     <option value="Home">Home</option>
                     <option value="Parent's House">Parent&apos;s House</option>
@@ -299,54 +451,54 @@ export default function PatientAccountPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Street Address</label>
+                  <label className="text-xs font-semibold text-slate-700">Street Address</label>
                   <input
                     type="text"
                     required
+                    placeholder="e.g. 120 Ocean View Blvd"
                     value={streetAddress}
                     onChange={(e) => setStreetAddress(e.target.value)}
-                    placeholder="e.g. 742 Evergreen Terrace"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs"
+                    className="mt-1 block w-full rounded-xl border border-slate-300 p-2 text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Apartment / Suite (Optional)</label>
+                  <label className="text-xs font-semibold text-slate-700">Apartment / Suite (Optional)</label>
                   <input
                     type="text"
+                    placeholder="e.g. Apt 4B, Gate Code #1234"
                     value={apartment}
                     onChange={(e) => setApartment(e.target.value)}
-                    placeholder="Apt 4B"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs"
+                    className="mt-1 block w-full rounded-xl border border-slate-300 p-2 text-xs"
                   />
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">City</label>
+                    <label className="text-xs font-semibold text-slate-700">City</label>
                     <input
                       type="text"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs"
+                      className="mt-1 block w-full rounded-xl border border-slate-300 p-2 text-xs"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">State</label>
+                    <label className="text-xs font-semibold text-slate-700">State</label>
                     <input
                       type="text"
                       value={state}
                       onChange={(e) => setState(e.target.value)}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs"
+                      className="mt-1 block w-full rounded-xl border border-slate-300 p-2 text-xs"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">Zip Code</label>
+                    <label className="text-xs font-semibold text-slate-700">Postal Code</label>
                     <input
                       type="text"
                       value={postalCode}
                       onChange={(e) => setPostalCode(e.target.value)}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs"
+                      className="mt-1 block w-full rounded-xl border border-slate-300 p-2 text-xs font-mono"
                     />
                   </div>
                 </div>
@@ -357,24 +509,24 @@ export default function PatientAccountPage() {
                     id="isDefault"
                     checked={isDefault}
                     onChange={(e) => setIsDefault(e.target.checked)}
-                    className="h-4 w-4 text-[#116b70] rounded"
+                    className="h-4 w-4 rounded text-[#064E3B] focus:ring-[#064E3B]"
                   />
-                  <label htmlFor="isDefault" className="text-xs font-medium text-gray-700">
-                    Set as default delivery address
+                  <label htmlFor="isDefault" className="text-xs text-slate-700 font-medium">
+                    Set as default visit address
                   </label>
                 </div>
 
-                <div className="mt-6 flex justify-end gap-2">
+                <div className="mt-4 flex items-center justify-end gap-2 pt-2">
                   <button
                     type="button"
                     onClick={() => setShowAddressModal(false)}
-                    className="rounded-xl border border-gray-300 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50"
+                    className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="rounded-xl bg-[#116b70] px-5 py-2 text-xs font-bold text-white hover:bg-[#0d5559]"
+                    className="rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white hover:bg-[#065F46]"
                   >
                     Save Address
                   </button>

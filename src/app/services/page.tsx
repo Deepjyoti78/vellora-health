@@ -87,54 +87,63 @@ export default function ServicesPage() {
       {/* Top Header with active Services pill */}
       <Header theme="light" />
 
-      {/* Top Hero Section matching Image 1 */}
-      <div className="pt-12 pb-8 text-center bg-transparent">
+      {/* Top Hero Section - Streamlined & Elegant */}
+      <div className="pt-6 pb-4 sm:pt-8 sm:pb-5 text-center bg-transparent animate-fade-in-up">
         <div className="container max-w-4xl mx-auto px-4">
-          <p className="text-[11px] font-extrabold tracking-widest text-[#065F46] uppercase mb-2.5">
+          <p className="text-[11px] font-extrabold tracking-widest text-[#065F46] uppercase mb-1.5 animate-fade-in-down">
             SERVICES DIRECTORY
           </p>
-          <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#11191B] tracking-tight leading-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-[38px] font-extrabold text-[#11191B] tracking-tight leading-tight max-w-3xl mx-auto animate-fade-in-up">
             Hospital-Grade Care, Delivered to Your Doorstep
           </h1>
-          <p className="mt-3 max-w-2xl mx-auto text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Comprehensive, professional care at home — from doctor consultations to advanced diagnostics, nursing support, and rehabilitation.
+          <p className="mt-2 max-w-xl mx-auto text-xs sm:text-sm text-slate-600 leading-relaxed animate-fade-in-up animate-delay-1">
+            Doctor visits, registered nursing, diagnostics, and recovery care delivered to your home.
           </p>
 
-          {/* 4 Feature Pills Row matching Image 1 */}
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-4 py-2 text-xs font-bold text-[#065F46] shadow-2xs">
-              <Stethoscope className="h-4 w-4 stroke-[2.2]" />
+          {/* Compact Feature Badges */}
+          <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 animate-fade-in-up animate-delay-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-2xs">
+              <Stethoscope className="h-3.5 w-3.5 stroke-[2.2]" />
               <span>Licensed Doctors</span>
             </div>
 
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-4 py-2 text-xs font-bold text-[#065F46] shadow-2xs">
-              <ShieldCheck className="h-4 w-4 stroke-[2.2]" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-2xs">
+              <ShieldCheck className="h-3.5 w-3.5 stroke-[2.2]" />
               <span>Certified Nurses</span>
             </div>
 
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-4 py-2 text-xs font-bold text-[#065F46] shadow-2xs">
-              <FlaskConical className="h-4 w-4 stroke-[2.2]" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-2xs">
+              <FlaskConical className="h-3.5 w-3.5 stroke-[2.2]" />
               <span>At-Home Diagnostics</span>
             </div>
 
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-4 py-2 text-xs font-bold text-[#065F46] shadow-2xs">
-              <Zap className="h-4 w-4 stroke-[2.2]" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-2xs">
+              <Zap className="h-3.5 w-3.5 stroke-[2.2]" />
               <span>Same-Day Support</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2x2 Category Cards Grid matching Image 1 */}
-      <div className="container max-w-6xl mx-auto px-4 sm:px-6 pb-12 pt-4">
+      {/* 2x2 Category Cards Grid matching Image 1 with Staggered Entrance */}
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6 pb-12 pt-3">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7">
-          {CATEGORIES_DATA.map((cat) => {
+          {CATEGORIES_DATA.map((cat, idx) => {
             const IconComponent = cat.icon;
+            const delayClass =
+              idx === 0
+                ? 'animate-delay-1'
+                : idx === 1
+                ? 'animate-delay-2'
+                : idx === 2
+                ? 'animate-delay-3'
+                : 'animate-delay-4';
+
             return (
               <Link
                 key={cat.number}
                 href={cat.href}
-                className="group flex flex-col justify-between overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white shadow-xs transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-xl hover:-translate-y-1"
+                className={`group flex flex-col justify-between overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white shadow-xs transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-xl hover:-translate-y-1 animate-fade-in-up ${delayClass} card-hover-lift`}
                 aria-label={cat.title}
               >
                 {/* Top Image Media Area */}

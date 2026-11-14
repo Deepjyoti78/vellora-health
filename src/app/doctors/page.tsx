@@ -146,24 +146,24 @@ export default function DoctorsPage() {
       {/* Main Single Continuous Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ================= HERO SECTION ================= */}
-        <section className="pt-6 pb-6 sm:pt-10 sm:pb-8">
+        <section className="pt-6 pb-6 sm:pt-10 sm:pb-8 animate-fade-in-up">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
             {/* Left Column: Eyebrow, Heading, Description, Indicators */}
             <div className="lg:col-span-7">
-              <p className="text-[12px] font-semibold tracking-[0.12em] text-[#065F46] uppercase mb-2 sm:mb-2.5">
+              <p className="text-[12px] font-semibold tracking-[0.12em] text-[#065F46] uppercase mb-2 sm:mb-2.5 animate-fade-in-down">
                 OUR MEDICAL SPECIALISTS
               </p>
 
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#15212B] tracking-tight leading-[1.12] max-w-[570px]">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#15212B] tracking-tight leading-[1.12] max-w-[570px] animate-fade-in-up">
                 Meet Our Visiting<br />Medical Specialists
               </h1>
 
-              <p className="mt-3 sm:mt-3.5 text-sm sm:text-[15px] text-slate-600 leading-relaxed max-w-[500px]">
+              <p className="mt-3 sm:mt-3.5 text-sm sm:text-[15px] text-slate-600 leading-relaxed max-w-[500px] animate-fade-in-up animate-delay-1">
                 Board-certified, experienced doctors bringing comprehensive, compassionate care to your doorstep.
               </p>
 
               {/* Minimal Benefit Indicators */}
-              <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-4 sm:gap-6">
+              <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-4 sm:gap-6 animate-fade-in-up animate-delay-2">
                 <div className="flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]">
                     <Calendar className="h-3 w-3 stroke-[2.2]" />
@@ -262,11 +262,21 @@ export default function DoctorsPage() {
         {/* ================= DOCTOR CARDS GRID ================= */}
         <section className="mt-5 sm:mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {displayedDoctors.map((doc) => (
-              <div
-                key={doc.id}
-                className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E6EBE9] bg-white p-4.5 sm:p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-md hover:-translate-y-0.5"
-              >
+            {displayedDoctors.map((doc, idx) => {
+              const delayClass =
+                idx === 0
+                  ? 'animate-delay-1'
+                  : idx === 1
+                  ? 'animate-delay-2'
+                  : idx === 2
+                  ? 'animate-delay-3'
+                  : 'animate-delay-4';
+
+              return (
+                <div
+                  key={doc.id}
+                  className={`group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E6EBE9] bg-white p-4.5 sm:p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-md hover:-translate-y-0.5 animate-fade-in-up ${delayClass} card-hover-lift`}
+                >
                 <div>
                   {/* Doctor Photo & Badges Header */}
                   <div className="flex items-start gap-3.5">
@@ -346,8 +356,9 @@ export default function DoctorsPage() {
                   </Link>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
           {/* Bottom Centered "View All Specialists →" Button */}
           <div className="mt-7 flex justify-center pb-10 sm:pb-14">
