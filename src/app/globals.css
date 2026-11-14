@@ -1355,8 +1355,8 @@ h1, h2 {
 
 .footer-links-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.12fr;
-  gap: 70px;
+  grid-template-columns: 1.6fr 1fr 1fr 1.05fr 1.05fr;
+  gap: 36px;
 }
 
 .footer-about {
@@ -1709,7 +1709,7 @@ h1, h2 {
     display: none;
   }
   .footer-links-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
   .footer-about {
     grid-column: 1 / -1;

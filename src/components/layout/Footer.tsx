@@ -53,9 +53,9 @@ export const Footer: React.FC = () => {
             <Link href="/provider/login">Clinician Workstation</Link>
             <Link href="/admin/dashboard">Admin Command Desk</Link>
             <Link href="/contact">24/7 Care Helpline</Link>
-            <button type="button" onClick={() => openBooking()} className="text-left font-semibold text-[#116b70] hover:underline">
+            <Link href="/book" prefetch={true} className="text-left font-semibold text-teal-400 hover:text-teal-300 hover:underline">
               Book Home Appointment &rarr;
-            </button>
+            </Link>
           </div>
 
           <div className="footer-col">
