@@ -32,9 +32,14 @@ export const HeroSection: React.FC = () => {
             </span>
           </div>
 
-          <h1 id="heroTitle">
+          <h1 id="heroTitle" className="hero-title">
             EXCEPTIONAL<br />
-            HEALTHCARE<br />
+            <span className="hero-title-row">
+              <span className="hero-title-thumb" aria-hidden="true">
+                <img src="/assets/avatar-1.webp" alt="" />
+              </span>
+              HEALTHCARE
+            </span><br />
             ALWAYS
           </h1>
 
@@ -55,7 +60,7 @@ export const HeroSection: React.FC = () => {
 
         <div className="hero-detail">
           <p className="hero-detail-text">
-            <strong>Accessible Modern Medical Care</strong> — where technology meets compassion.
+            Accessible Modern Medical Care — where technology meets compassion.
           </p>
         </div>
       </div>
