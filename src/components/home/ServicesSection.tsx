@@ -39,31 +39,21 @@ export const ServicesSection: React.FC = () => {
             <Link
               key={service.id}
               href={service.href}
-              className="service-photo-card group block overflow-hidden rounded-2xl border border-gray-100 bg-white transition hover:shadow-xl"
+              className="service-photo-card group"
+              aria-label={service.title}
             >
-              <div className="relative h-60 w-full overflow-hidden bg-gray-100">
-                <img
-                  src={service.image}
-                  alt={service.alt}
-                  loading="eager"
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                />
-                <div className="absolute left-3 top-3 rounded-full bg-[#11191b]/85 px-3 py-1 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-sm">
-                  {service.number} / {service.category}
+              <img
+                src={service.image}
+                alt={service.alt}
+                loading="eager"
+              />
+              {service.id === 'doctor-visit' && (
+                <div className="absolute bottom-6 left-6 z-10">
+                  <span className="text-xs font-extrabold uppercase tracking-widest text-white drop-shadow-md">
+                    01 / DOCTOR VISIT
+                  </span>
                 </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-heading text-lg font-bold text-[#11191b] transition group-hover:text-[#116b70]">
-                  {service.title}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-[#687476]">
-                  {service.description}
-                </p>
-                <div className="mt-4 flex items-center gap-1.5 text-xs font-bold text-[#116b70]">
-                  <span>Explore service &amp; options</span>
-                  <Icon name="arrow-right" size="xs" />
-                </div>
-              </div>
+              )}
             </Link>
           ))}
         </div>

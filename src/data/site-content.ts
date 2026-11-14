@@ -39,8 +39,8 @@ export const SERVICES_DATA: ServiceItem[] = [
     category: 'DOCTOR VISIT',
     title: 'Doctor Home Consultations',
     description: 'Thorough bedside examination, illness diagnosis, and digital prescriptions in your home.',
-    image: '/assets/care.webp',
-    alt: 'Physician examining an elderly patient at home',
+    image: '/assets/doorstep-1.png',
+    alt: 'Doctor providing compassionate home medical visit',
     href: '/services/home-doctor-visit',
   },
   {
@@ -49,8 +49,8 @@ export const SERVICES_DATA: ServiceItem[] = [
     category: 'NURSING CARE',
     title: 'At-Home Nursing Care',
     description: 'Licensed nurses for wound dressing, injections, IV infusions, post-op vitals, and catheter care.',
-    image: '/assets/care-alt.webp',
-    alt: 'Registered nurse providing bedside clinical care',
+    image: '/assets/doorstep-2.png',
+    alt: 'Registered clinician administering specialized home care',
     href: '/services/home-nursing-care',
   },
   {
@@ -59,8 +59,8 @@ export const SERVICES_DATA: ServiceItem[] = [
     category: 'CARETAKERS',
     title: 'Patient Caretakers & Attendants',
     description: 'Trained attendants for daily living mobility, personal hygiene, feeding, and recovery support.',
-    image: '/assets/specialists.webp',
-    alt: 'Care assistant helping an elderly patient with mobility',
+    image: '/assets/doorstep-3.png',
+    alt: 'Caregiver supporting patient with personalized bedside care',
     href: '/services/patient-caretakers-medical-maids',
   },
   {
@@ -69,8 +69,8 @@ export const SERVICES_DATA: ServiceItem[] = [
     category: 'LAB INVESTIGATIONS',
     title: 'Home Diagnostic Blood Tests',
     description: 'Certified phlebotomists collecting samples at your doorstep with sterile barcoded vials.',
-    image: '/assets/diagnostics.webp',
-    alt: 'Phlebotomist collecting diagnostic blood samples at home',
+    image: '/assets/doorstep-4.png',
+    alt: 'Healthcare provider supporting elder mobility at home',
     href: '/services/home-lab-investigations',
   },
 ];
