@@ -16,7 +16,7 @@ import {
   Heart,
   Users,
   Activity,
-  Layers,
+  LayoutGrid,
 } from 'lucide-react';
 
 interface DoctorSpecialist {
@@ -120,7 +120,7 @@ export default function DoctorsPage() {
   const [showAll, setShowAll] = useState<boolean>(false);
 
   const filterTabs = [
-    { id: 'ALL', label: 'All Specialists (48)', icon: Layers },
+    { id: 'ALL', label: 'All Specialists (48)', icon: LayoutGrid },
     { id: 'GENERAL', label: 'General & Acute Care (12)', icon: Stethoscope },
     { id: 'INTERNAL', label: 'Internal & Chronic Care (10)', icon: Heart },
     { id: 'PEDIATRICS', label: 'Pediatrics & Family Care (12)', icon: Users },
@@ -146,24 +146,24 @@ export default function DoctorsPage() {
       {/* Main Single Continuous Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ================= HERO SECTION ================= */}
-        <section className="pt-10 pb-8 sm:pt-14 sm:pb-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+        <section className="pt-6 pb-6 sm:pt-10 sm:pb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
             {/* Left Column: Eyebrow, Heading, Description, Indicators */}
             <div className="lg:col-span-7">
-              <p className="text-[12px] font-semibold tracking-[0.12em] text-[#065F46] uppercase mb-3">
+              <p className="text-[12px] font-semibold tracking-[0.12em] text-[#065F46] uppercase mb-2 sm:mb-2.5">
                 OUR MEDICAL SPECIALISTS
               </p>
 
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#15212B] tracking-tight leading-[1.12] max-w-[570px]">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#15212B] tracking-tight leading-[1.12] max-w-[570px]">
                 Meet Our Visiting<br />Medical Specialists
               </h1>
 
-              <p className="mt-4 text-sm sm:text-[15px] text-slate-600 leading-relaxed max-w-[500px]">
+              <p className="mt-3 sm:mt-3.5 text-sm sm:text-[15px] text-slate-600 leading-relaxed max-w-[500px]">
                 Board-certified, experienced doctors bringing comprehensive, compassionate care to your doorstep.
               </p>
 
               {/* Minimal Benefit Indicators */}
-              <div className="mt-7 flex flex-wrap items-center gap-4 sm:gap-6">
+              <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-4 sm:gap-6">
                 <div className="flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]">
                     <Calendar className="h-3 w-3 stroke-[2.2]" />
@@ -196,13 +196,13 @@ export default function DoctorsPage() {
             {/* Right Column: Hero Asset with Organic Soft Mint Wave & Cross */}
             <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end">
               {/* Organic Soft Mint Wave & Plus Sign */}
-              <div className="absolute -right-8 -top-8 h-72 w-72 rounded-full bg-[#ECFDF5] blur-3xl opacity-80 pointer-events-none" />
+              <div className="absolute -right-8 -top-8 h-64 w-64 rounded-full bg-[#ECFDF5] blur-3xl opacity-80 pointer-events-none" />
               <div className="absolute right-4 top-4 text-[#A7F3D0]/60 pointer-events-none font-light text-5xl select-none">
                 +
               </div>
 
               {/* Provided Hero Image Asset: Transparent cutout sitting naturally */}
-              <div className="relative w-full max-w-[480px]">
+              <div className="relative w-full max-w-[440px]">
                 <img
                   src="/images/doctors-hero.png"
                   alt="Doctor visiting elderly patient at home"
@@ -216,7 +216,7 @@ export default function DoctorsPage() {
         {/* ================= SPECIALTY FILTERS SECTION ================= */}
         <section className="pt-2 sm:pt-4">
           {/* Filter Pills with Horizontal Scrolling on Mobile */}
-          <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1">
+          <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar py-1.5 px-0.5">
             {filterTabs.map((tab) => {
               const IconComponent = tab.icon;
               const isSelected = selectedCategory === tab.id;
@@ -225,16 +225,16 @@ export default function DoctorsPage() {
                   key={tab.id}
                   type="button"
                   onClick={() => setSelectedCategory(tab.id)}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-full px-4.5 py-2.5 text-[13px] font-medium transition-all duration-200 ${
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-[13px] font-medium transition-all duration-200 cursor-pointer ${
                     isSelected
-                      ? 'bg-[#064E3B] text-white shadow-xs'
+                      ? 'bg-[#064E3B] text-white shadow-xs border border-transparent'
                       : 'bg-white text-slate-700 border border-[#E2EBE7] hover:bg-[#F2F8F5]'
                   }`}
                 >
                   <IconComponent
-                    className={`h-3.5 w-3.5 ${isSelected ? 'text-white' : 'text-[#065F46]'}`}
+                    className={`h-3.5 w-3.5 shrink-0 ${isSelected ? 'text-white' : 'text-[#065F46]'}`}
                   />
-                  <span>{tab.label}</span>
+                  <span className="whitespace-nowrap">{tab.label}</span>
                 </button>
               );
             })}
@@ -260,17 +260,17 @@ export default function DoctorsPage() {
         </section>
 
         {/* ================= DOCTOR CARDS GRID ================= */}
-        <section className="mt-7">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="mt-5 sm:mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {displayedDoctors.map((doc) => (
               <div
                 key={doc.id}
-                className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E6EBE9] bg-white p-5 sm:p-5.5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-md hover:-translate-y-0.5"
+                className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E6EBE9] bg-white p-4.5 sm:p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-md hover:-translate-y-0.5"
               >
                 <div>
                   {/* Doctor Photo & Badges Header */}
                   <div className="flex items-start gap-3.5">
-                    <div className="relative h-[104px] w-[104px] shrink-0 overflow-hidden rounded-[14px] border border-[#E6EBE9] bg-slate-50">
+                    <div className="relative h-24 w-24 sm:h-[100px] sm:w-[100px] shrink-0 overflow-hidden rounded-[14px] border border-[#E6EBE9] bg-slate-50">
                       <img
                         src={doc.image}
                         alt={doc.name}
@@ -293,7 +293,7 @@ export default function DoctorsPage() {
                         </div>
                       </div>
 
-                      <h3 className="mt-1.5 truncate font-heading text-base sm:text-[17px] font-semibold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                      <h3 className="mt-1 truncate font-heading text-base sm:text-[17px] font-semibold text-[#15212B] group-hover:text-[#065F46] transition-colors">
                         {doc.name}
                       </h3>
                       <p className="truncate text-xs font-medium text-[#065F46]">
@@ -306,22 +306,22 @@ export default function DoctorsPage() {
                   </div>
 
                   {/* Bio / Description */}
-                  <p className="mt-3.5 text-xs sm:text-[13px] text-slate-600 leading-relaxed line-clamp-2">
+                  <p className="mt-3 text-xs sm:text-[13px] text-slate-600 leading-relaxed line-clamp-2">
                     {doc.bio}
                   </p>
 
                   {/* Tags row */}
-                  <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
+                  <div className="mt-3 flex flex-wrap items-center gap-1.5">
                     {doc.tags.map((tag, i) => (
                       <span
                         key={i}
-                        className="rounded-md bg-[#F2F8F5] border border-[#E2EBE7] px-2.5 py-1 text-[11px] font-medium text-slate-600"
+                        className="rounded-md bg-[#F2F8F5] border border-[#E2EBE7] px-2.5 py-0.5 text-[11px] font-medium text-slate-600"
                       >
                         {tag}
                       </span>
                     ))}
                     {doc.moreTagsCount > 0 && (
-                      <span className="rounded-md bg-[#F2F8F5] px-2 py-1 text-[11px] font-medium text-slate-400">
+                      <span className="rounded-md bg-[#F2F8F5] px-2 py-0.5 text-[11px] font-medium text-slate-400">
                         +{doc.moreTagsCount} more
                       </span>
                     )}
@@ -329,7 +329,7 @@ export default function DoctorsPage() {
                 </div>
 
                 {/* Bottom Actions Row */}
-                <div className="mt-5 flex items-center justify-between border-t border-[#F2F8F5] pt-3.5">
+                <div className="mt-4 flex items-center justify-between border-t border-[#F2F8F5] pt-3">
                   <Link
                     href={`/book/doctor/${doc.id}`}
                     className="text-xs font-bold text-[#065F46] hover:underline"
@@ -339,7 +339,7 @@ export default function DoctorsPage() {
 
                   <Link
                     href={`/book/doctor/${doc.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors"
                   >
                     <span>Book Consultation</span>
                     <ArrowRight className="h-3 w-3" />
@@ -350,14 +350,14 @@ export default function DoctorsPage() {
           </div>
 
           {/* Bottom Centered "View All Specialists →" Button */}
-          <div className="mt-10 flex justify-center pb-14 sm:pb-16">
+          <div className="mt-7 flex justify-center pb-10 sm:pb-14">
             <button
               type="button"
               onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 rounded-full border border-[#CBDCD5] bg-white px-7 py-2.5 text-xs font-bold text-[#102820] shadow-2xs hover:bg-[#F2F8F5] hover:border-[#064E3B] transition-all"
+              className="inline-flex items-center gap-2 rounded-full border border-[#CBDCD5] bg-white px-7 py-2.5 text-xs font-bold text-[#102820] shadow-xs hover:bg-[#F2F8F5] hover:border-[#064E3B] transition-all cursor-pointer active:scale-98"
             >
               <span>{showAll ? 'Show Fewer Specialists' : 'View All Specialists'}</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-3.5 w-3.5 text-[#064E3B]" />
             </button>
           </div>
         </section>
