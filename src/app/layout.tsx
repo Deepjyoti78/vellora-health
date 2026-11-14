@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, Manrope } from 'next/font/google';
+import { DM_Sans, Manrope, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import { BookingProvider } from '@/context/BookingContext';
 import { AuthProvider } from '@/context/AuthContext';
@@ -17,6 +17,13 @@ const manrope = Manrope({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
   variable: '--font-manrope',
+  display: 'swap',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-playfair',
   display: 'swap',
 });
 
@@ -50,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${manrope.variable}`}
+      className={`${dmSans.variable} ${manrope.variable} ${playfair.variable}`}
       suppressHydrationWarning
     >
       <body className="antialiased" suppressHydrationWarning>

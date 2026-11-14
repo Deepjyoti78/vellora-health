@@ -53,20 +53,28 @@ export const HowItWorksSection: React.FC = () => {
           {workflowSteps.map((step) => (
             <div
               key={step.num}
-              className="relative flex flex-col justify-between rounded-3xl bg-white p-8 border border-[#e8eeee] shadow-xs hover:border-[#b8dcde] hover:shadow-md transition-all duration-300 scroll-reveal-card"
+              className="relative overflow-hidden flex flex-col justify-between rounded-3xl bg-white p-8 border border-[#e8eeee] shadow-xs hover:border-[#b8dcde] hover:shadow-md transition-all duration-300 scroll-reveal-card"
             >
-              {/* Top Row: Icon Badge + Huge Light Watermark Number */}
-              <div className="flex items-start justify-between">
+              {/* Designer Watermark Number (Absolute positioned: height extended without affecting card height) */}
+              <span
+                aria-hidden="true"
+                className="absolute top-2 right-7 select-none text-[108px] font-normal leading-none text-slate-200/80 pointer-events-none transition-transform duration-500 group-hover:scale-105"
+                style={{
+                  fontFamily: "var(--font-playfair), 'Playfair Display', Didot, 'Bodoni MT', 'Cinzel', 'Times New Roman', serif",
+                }}
+              >
+                {step.num}
+              </span>
+
+              {/* Top Row: Icon Badge */}
+              <div className="flex items-start justify-between relative z-10">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef7f7] text-[#116b70] border border-[#d2e7e8] shadow-xs">
                   <Icon name={step.icon === 'shield' ? 'shield' : step.icon === 'calendar' ? 'calendar' : 'star'} size="sm" />
                 </div>
-                <span className="font-heading text-6xl font-light text-gray-200 select-none leading-none -mt-2">
-                  {step.num}
-                </span>
               </div>
 
               {/* Title & Description */}
-              <div className="mt-8 mb-6">
+              <div className="mt-8 mb-6 relative z-10">
                 <h3 className="font-heading text-xl font-bold text-[#11191b] mb-2 leading-snug">
                   {step.title}
                 </h3>
@@ -76,7 +84,7 @@ export const HowItWorksSection: React.FC = () => {
               </div>
 
               {/* Bottom "Learn More" Link */}
-              <div className="pt-4 border-t border-[#f2f6f6]">
+              <div className="pt-4 border-t border-[#f2f6f6] relative z-10">
                 <Link
                   href={step.href}
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-[#116b70] hover:text-[#0b494c] transition-colors"

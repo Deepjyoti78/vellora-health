@@ -54,13 +54,10 @@ export const ServicesSection: React.FC = () => {
                   alt={service.alt}
                   loading="eager"
                 />
-                {/* White pill with green number badge matching Image 1 */}
-                <div className="absolute left-3.5 top-3.5 z-20 flex items-center gap-2 rounded-full bg-white/95 px-2 py-1.5 shadow-md border border-white/60 backdrop-blur-md">
-                  <span className="flex items-center justify-center rounded-full bg-[#0b5c43] px-2.5 py-0.5 text-xs font-extrabold text-white shadow-xs">
+                {/* White pill with green number badge */}
+                <div className="absolute left-3.5 top-3.5 z-20 flex items-center justify-center rounded-full bg-white/95 p-1 shadow-md border border-white/70 backdrop-blur-md">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0b5c43] text-xs font-extrabold text-white shadow-xs">
                     {service.number}
-                  </span>
-                  <span className="pr-2 text-xs font-bold text-[#11191b] tracking-tight">
-                    {service.category}
                   </span>
                 </div>
               </div>
