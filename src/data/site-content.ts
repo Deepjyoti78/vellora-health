@@ -11,12 +11,12 @@ import {
 } from '@/types';
 
 export const NAV_LINKS: NavLink[] = [
-  { label: 'Home', href: '#home' },
-  { label: 'Facilities', href: '#facilities' },
-  { label: 'Doctors', href: '#doctors' },
-  { label: 'Services', href: '#services' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Home', href: '/' },
+  { label: 'Facilities', href: '/facilities' },
+  { label: 'Doctors', href: '/doctors' },
+  { label: 'Services', href: '/services' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const TRUST_DATA = {

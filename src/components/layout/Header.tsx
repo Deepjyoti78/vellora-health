@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { NAV_LINKS } from '@/data/site-content';
 import { useBooking } from '@/context/BookingContext';
 import { Icon } from '@/components/common/Icon';
 
 export const Header: React.FC = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [activeHash, setActiveHash] = useState('#home');
+  const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const { openBooking } = useBooking();
@@ -50,20 +51,9 @@ export const Header: React.FC = () => {
     };
   }, [isNavOpen]);
 
-  // Track window hash or scroll position
-  useEffect(() => {
-    const handleHashChange = () => {
-      if (window.location.hash) {
-        setActiveHash(window.location.hash);
-      }
-    };
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
-
   return (
     <header className="site-header" id="siteHeader">
-      <Link href="#home" className="brand" aria-label="Vellora Health, home">
+      <Link href="/" className="brand" aria-label="Vellora Health, home">
         <span className="brand-icon" aria-hidden="true">
           <span></span>
           <span></span>
@@ -78,19 +68,18 @@ export const Header: React.FC = () => {
         aria-label="Main navigation"
       >
         {NAV_LINKS.map((link) => {
-          const isActive = activeHash === link.href;
+          const isActive =
+            pathname === link.href ||
+            (link.href !== '/' && pathname.startsWith(link.href));
           return (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className={isActive ? 'nav-active' : ''}
-              onClick={() => {
-                setActiveHash(link.href);
-                closeMenu();
-              }}
+              onClick={closeMenu}
             >
               {link.label}
-            </a>
+            </Link>
           );
         })}
       </nav>

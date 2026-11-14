@@ -7,7 +7,7 @@ import { FACILITIES_DATA } from '@/data/site-content';
 
 export default function FacilitiesPage() {
   return (
-    <div className="min-h-screen bg-[#f8faf9]">
+    <div className="min-h-screen bg-white">
       <div className="bg-[#11191b] text-white">
         <Header />
         <div className="container py-14 text-center">

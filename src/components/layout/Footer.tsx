@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
     <footer className="site-footer">
       <div className="container">
         <div className="footer-top">
-          <Link className="footer-brand" href="#home">
+          <Link className="footer-brand" href="/">
             VELLORA<span className="footer-cross">+</span>
           </Link>
           <p>Exceptional healthcare, always.</p>
@@ -31,18 +31,18 @@ export const Footer: React.FC = () => {
 
           <div className="footer-col">
             <h3>Explore</h3>
-            <a href="#home">Home</a>
-            <a href="#services">Our Services</a>
-            <a href="#specialties">Specialties</a>
-            <a href="#doctors">Our Doctors</a>
-            <a href="#facilities">Facilities</a>
+            <Link href="/">Home</Link>
+            <Link href="/services">Our Services</Link>
+            <Link href="/doctors">Our Doctors</Link>
+            <Link href="/facilities">Facilities</Link>
+            <Link href="/about">About Us</Link>
           </div>
 
           <div className="footer-col">
             <h3>Patient Care</h3>
-            <a href="#faq">FAQs</a>
-            <a href="#about">How We Care</a>
-            <a href="#contact">Patient Support</a>
+            <Link href="/services">Specialties & Care</Link>
+            <Link href="/contact">Patient Support</Link>
+            <Link href="/patient/login">Patient Portal</Link>
             <button type="button" onClick={() => openBooking()}>
               Book Appointment
             </button>
@@ -50,19 +50,19 @@ export const Footer: React.FC = () => {
 
           <div className="footer-col">
             <h3>Popular Specialties</h3>
-            <a href="#specialties">Internal Medicine</a>
-            <a href="#specialties">Cardiology</a>
-            <a href="#specialties">Orthopedics</a>
-            <a href="#specialties">Pediatrics</a>
-            <a href="#specialties">Diagnostics</a>
+            <Link href="/services">Internal Medicine</Link>
+            <Link href="/services">Home Nursing Care</Link>
+            <Link href="/services">Patient Caretakers</Link>
+            <Link href="/services">Lab Investigations</Link>
+            <Link href="/doctors">Meet Our Specialists</Link>
           </div>
         </div>
 
         <div className="footer-bottom">
           <span>© <span id="footerYear">{currentYear}</span> Vellora Health. Design prototype.</span>
-          <a href="#home" className="back-to-top">
+          <Link href="/" className="back-to-top">
             Back to top ↑
-          </a>
+          </Link>
           <span>Built around better care.</span>
         </div>
       </div>

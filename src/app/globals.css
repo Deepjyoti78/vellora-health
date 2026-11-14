@@ -27,11 +27,7 @@ html {
 
 body {
   margin: 0;
-  background-color: #f8faf9;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(17, 107, 112, 0.035) 0%, transparent 40%),
-    radial-gradient(circle at 90% 60%, rgba(17, 107, 112, 0.03) 0%, transparent 45%);
-  background-attachment: fixed;
+  background-color: #ffffff;
   color: var(--ink);
   font-family: var(--font-dm-sans), Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -567,18 +563,22 @@ h1, h2 {
 
 /* Services */
 .section-services {
+  width: 100%;
   padding-bottom: 113px;
-  background: linear-gradient(180deg, #ffffff 0%, #fbfcfc 100%);
+  background: #ffffff;
   border-bottom: 1px solid #e9eeee;
 }
 
 .service-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 18px;
+  width: 100%;
 }
 
 .service-photo-card {
   position: relative;
-  flex: 0 0 calc((100% - 54px)/4);
+  width: 100%;
   min-height: 420px;
   overflow: hidden;
   border-radius: 16px;
@@ -706,7 +706,8 @@ h1, h2 {
 
 /* Specialties */
 .section-specialties {
-  background: linear-gradient(180deg, #f7faf9 0%, #edf3f2 100%);
+  width: 100%;
+  background: #ffffff;
   border-bottom: 1px solid #dfe6e5;
   padding-block: 110px 121px;
 }
@@ -780,6 +781,7 @@ h1, h2 {
 
 /* Doctors */
 .section-doctors {
+  width: 100%;
   background: #ffffff;
   border-bottom: 1px solid #e9eeee;
   padding-block: 120px 122px;
@@ -909,8 +911,9 @@ h1, h2 {
 
 /* Experience */
 .section-experience {
+  width: 100%;
   padding-block: 100px 105px;
-  background: linear-gradient(180deg, #fbfdfc 0%, #f3f7f6 100%);
+  background: #ffffff;
   border-bottom: 1px solid #e1e8e7;
 }
 
@@ -963,6 +966,7 @@ h1, h2 {
 
 /* Testimonials */
 .section-reviews {
+  width: 100%;
   padding-block: 115px 100px;
   background: #ffffff;
   border-bottom: 1px solid #e9eeee;
@@ -1028,8 +1032,9 @@ h1, h2 {
 
 /* Facilities */
 .section-facilities {
+  width: 100%;
   padding-block: 76px 120px;
-  background: linear-gradient(180deg, #fbfcfc 0%, #f4f7f6 100%);
+  background: #ffffff;
   border-bottom: 1px solid #e2e9e8;
 }
 
@@ -1105,11 +1110,15 @@ h1, h2 {
 
 /* FAQ */
 .section-faq {
+  width: 100%;
   padding-block: 80px 135px;
+  background: #ffffff;
+}
+
+.faq-container {
   display: grid;
   grid-template-columns: 0.85fr 1.25fr;
   gap: 90px;
-  background: #ffffff;
 }
 
 .faq-intro h2 {

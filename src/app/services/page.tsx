@@ -32,7 +32,7 @@ export default function ServicesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8faf9]">
+    <div className="min-h-screen bg-white">
       <div className="bg-[#11191b] text-white">
         <Header />
         <div className="container py-16 text-center">

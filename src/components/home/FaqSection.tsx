@@ -12,38 +12,40 @@ export const FaqSection: React.FC = () => {
   };
 
   return (
-    <section className="section section-faq container" id="faq" aria-labelledby="faqTitle">
-      <div className="faq-intro">
-        <p className="eyebrow">GOOD TO KNOW</p>
-        <h2 id="faqTitle">
-          Frequently asked<br />questions.
-        </h2>
-        <p className="section-lead">Answers to the questions we hear most often.</p>
-        <a className="text-link" href="#contact">
-          Still have questions? <Icon name="arrow-right" size="sm" />
-        </a>
-      </div>
+    <section className="section section-faq" id="faq" aria-labelledby="faqTitle">
+      <div className="container faq-container">
+        <div className="faq-intro">
+          <p className="eyebrow">GOOD TO KNOW</p>
+          <h2 id="faqTitle">
+            Frequently asked<br />questions.
+          </h2>
+          <p className="section-lead">Answers to the questions we hear most often.</p>
+          <a className="text-link" href="/contact">
+            Still have questions? <Icon name="arrow-right" size="sm" />
+          </a>
+        </div>
 
-      <div className="faq-list">
-        {FAQ_DATA.map((faq, index) => {
-          const isOpen = openIndex === index;
-          return (
-            <details
-              key={index}
-              open={isOpen}
-              onClick={(e) => {
-                e.preventDefault();
-                handleToggle(index);
-              }}
-            >
-              <summary>
-                {faq.question}
-                <Icon name="chevron-down" />
-              </summary>
-              <p>{faq.answer}</p>
-            </details>
-          );
-        })}
+        <div className="faq-list">
+          {FAQ_DATA.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <details
+                key={index}
+                open={isOpen}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleToggle(index);
+                }}
+              >
+                <summary>
+                  {faq.question}
+                  <Icon name="chevron-down" />
+                </summary>
+                <p>{faq.answer}</p>
+              </details>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

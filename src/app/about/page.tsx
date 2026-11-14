@@ -6,7 +6,7 @@ import { Icon } from '@/components/common/Icon';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#f8faf9]">
+    <div className="min-h-screen bg-white">
       <div className="bg-[#11191b] text-white">
         <Header />
         <div className="container py-14 text-center">

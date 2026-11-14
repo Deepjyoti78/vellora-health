@@ -6,7 +6,6 @@ import { ExperienceSection } from '@/components/home/ExperienceSection';
 import { ReviewsSection } from '@/components/home/ReviewsSection';
 import { FacilitiesSection } from '@/components/home/FacilitiesSection';
 import { FaqSection } from '@/components/home/FaqSection';
-import { CtaBanner } from '@/components/home/CtaBanner';
 import { Footer } from '@/components/layout/Footer';
 
 export default function HomePage() {
@@ -21,7 +20,6 @@ export default function HomePage() {
         <ReviewsSection />
         <FacilitiesSection />
         <FaqSection />
-        <CtaBanner />
       </main>
       <Footer />
     </>
