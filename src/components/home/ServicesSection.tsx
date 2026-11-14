@@ -47,45 +47,43 @@ export const ServicesSection: React.FC = () => {
               className="service-photo-card group scroll-reveal-card"
               aria-label={service.title}
             >
-              {/* Top Media Area with earlier black pill element */}
+              {/* Top Media Area with Image 1 styled white & green pill badge */}
               <div className="service-card-media">
                 <img
                   src={service.image}
                   alt={service.alt}
                   loading="eager"
                 />
-                {/* Earlier black element at top left */}
-                <div className="absolute left-3.5 top-3.5 z-20 rounded-full bg-black/80 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md border border-white/10 shadow-sm">
-                  {service.number} / {service.category}
+                {/* White pill with green number badge matching Image 1 */}
+                <div className="absolute left-3.5 top-3.5 z-20 flex items-center gap-2 rounded-full bg-white/95 px-2 py-1.5 shadow-md border border-white/60 backdrop-blur-md">
+                  <span className="flex items-center justify-center rounded-full bg-[#0b5c43] px-2.5 py-0.5 text-xs font-extrabold text-white shadow-xs">
+                    {service.number}
+                  </span>
+                  <span className="pr-2 text-xs font-bold text-[#11191b] tracking-tight">
+                    {service.category}
+                  </span>
                 </div>
               </div>
 
-              {/* Lower Body with refined clinical typography and balanced spacing */}
+              {/* Lower Body with clean icon, title, and greener Explore Service button */}
               <div className="p-5 flex flex-col justify-between flex-1 relative z-10 bg-white">
-                <div>
-                  {/* Icon & Title Row */}
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#eef7f7] text-[#116b70] border border-[#d8e7e8] shadow-xs">
-                      <Icon name={(service.icon as IconName) || 'stethoscope'} className="h-5 w-5" />
-                    </div>
-                    <h3 className="font-heading text-base font-extrabold leading-snug text-[#11191b] transition group-hover:text-[#116b70]">
-                      {service.title}
-                    </h3>
+                {/* Icon & Title Row */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#eef7f7] text-[#0b5c43] border border-[#d8e7e8] shadow-xs">
+                    <Icon name={(service.icon as IconName) || 'stethoscope'} className="h-5 w-5" />
                   </div>
-
-                  {/* Description Text */}
-                  <p className="mt-3 text-[12.5px] leading-relaxed text-[#55696d]">
-                    {service.description}
-                  </p>
+                  <h3 className="font-heading text-base font-extrabold leading-snug text-[#11191b] transition group-hover:text-[#0b5c43]">
+                    {service.title}
+                  </h3>
                 </div>
 
-                {/* Bottom Action Footer Row */}
-                <div className="mt-4 pt-3 border-t border-[#edf3f4] flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#116b70] tracking-wide flex items-center gap-1 group-hover:gap-1.5 transition-all">
-                    Explore Service <span>→</span>
-                  </span>
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#116b70] text-white shadow-xs transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0c5357]">
-                    <Icon name="arrow-right" className="h-3.5 w-3.5" />
+                {/* Explore Service Button with Greener Background */}
+                <div className="mt-5 pt-3 border-t border-[#edf3f4]">
+                  <div className="w-full flex items-center justify-between px-4 py-2.5 rounded-full bg-[#0b5c43] text-white font-bold text-xs tracking-wide shadow-sm transition-all duration-300 group-hover:bg-[#07402e] group-hover:shadow-md">
+                    <span>Explore Service</span>
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-white transition-transform duration-300 group-hover:translate-x-1">
+                      <Icon name="arrow-right" className="h-3.5 w-3.5" />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -35,7 +35,7 @@ export const SERVICES_DATA: ServiceItem[] = [
   {
     id: 'doctor-visit',
     number: '01',
-    category: 'DOCTOR VISIT',
+    category: 'Doctor Visit',
     title: 'Doctor Home Consultations',
     description: 'Thorough bedside examination, illness diagnosis, and digital prescriptions in your home.',
     image: '/assets/doorstep-1.png',
@@ -46,7 +46,7 @@ export const SERVICES_DATA: ServiceItem[] = [
   {
     id: 'nursing-care',
     number: '02',
-    category: 'NURSING CARE',
+    category: 'Nursing Care',
     title: 'At-Home Nursing Care',
     description: 'Licensed nurses for wound dressing, injections, IV infusions, post-op vitals, and catheter care.',
     image: '/assets/doorstep-2.png',
@@ -57,7 +57,7 @@ export const SERVICES_DATA: ServiceItem[] = [
   {
     id: 'caretakers',
     number: '03',
-    category: 'CARETAKERS',
+    category: 'Caretakers',
     title: 'Patient Caretakers & Attendants',
     description: 'Trained attendants for daily living mobility, personal hygiene, feeding, and recovery support.',
     image: '/assets/doorstep-3.png',
@@ -68,8 +68,8 @@ export const SERVICES_DATA: ServiceItem[] = [
   {
     id: 'lab-tests',
     number: '04',
-    category: 'LAB INVESTIGATIONS',
-    title: 'Home Diagnostic Blood Tests',
+    category: 'Vaccination',
+    title: 'Home Diagnostic & Vaccination',
     description: 'Certified phlebotomists collecting samples at your doorstep with sterile barcoded vials.',
     image: '/assets/doorstep-4.png',
     alt: 'Healthcare provider supporting elder mobility at home',
