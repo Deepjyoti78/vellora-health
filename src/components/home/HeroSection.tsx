@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { TRUST_DATA } from '@/data/site-content';
 import { useBooking } from '@/context/BookingContext';
 import { Header } from '@/components/layout/Header';
@@ -42,21 +41,22 @@ export const HeroSection: React.FC = () => {
           <div className="hero-actions">
             <button
               type="button"
-              className="button button-white"
+              className="button button-white button-sm"
               onClick={() => openBooking()}
             >
-              <Icon name="calendar" size="sm" /> Book Appointment{' '}
-              <Icon name="arrow-right" size="sm" />
+              <Icon name="calendar" size="xs" /> Book Appointment{' '}
+              <Icon name="arrow-right" size="xs" />
             </button>
-            <a className="button button-outline" href="#doctors">
-              <Icon name="search" size="sm" /> Find a Doctor
+            <a className="button button-outline button-sm" href="#doctors">
+              <Icon name="search" size="xs" /> Find a Doctor
             </a>
           </div>
         </div>
 
         <div className="hero-detail">
-          <h2>Comprehensive Care</h2>
-          <p>Accessible, modern medical care — where technology meets compassion.</p>
+          <p className="hero-detail-text">
+            <strong>Accessible Modern Medical Care</strong> — where technology meets compassion.
+          </p>
         </div>
       </div>
 
