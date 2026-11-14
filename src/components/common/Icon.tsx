@@ -31,6 +31,7 @@ export type IconName =
   | 'plus'
   | 'settings'
   | 'map-pin'
+  | 'syringe'
   | 'check';
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
@@ -236,6 +237,19 @@ const iconPaths: Record<IconName, { viewBox: string; content: React.ReactNode }>
   check: {
     viewBox: '0 0 24 24',
     content: <path d="m4 12 5 5L20 6" />,
+  },
+  syringe: {
+    viewBox: '0 0 24 24',
+    content: (
+      <>
+        <path d="m18 2 4 4" />
+        <path d="m17 7 3-3" />
+        <path d="M19 9 8.7 19.3c-.4.4-1 .6-1.6.6H3v-4.1c0-.6.2-1.2.6-1.6L13.9 3.9" />
+        <path d="m9 11 4 4" />
+        <path d="m5 19-3 3" />
+        <path d="m14 4 6 6" />
+      </>
+    ),
   },
   settings: {
     viewBox: '0 0 24 24',

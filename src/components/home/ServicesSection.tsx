@@ -44,45 +44,55 @@ export const ServicesSection: React.FC = () => {
             <Link
               key={service.id}
               href={service.href}
-              className="service-photo-card group scroll-reveal-card"
+              className="service-photo-card group scroll-reveal-card relative overflow-hidden rounded-[24px] bg-white border border-[#e6eded] shadow-xs hover:border-[#b8dcde] hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               aria-label={service.title}
             >
-              {/* Top Media Area with Image 1 styled white & green pill badge */}
-              <div className="service-card-media">
+              {/* Top Media Area with image and badge matching reference */}
+              <div className="service-card-media relative w-full overflow-hidden bg-[#edf5f5]">
                 <img
                   src={service.image}
                   alt={service.alt}
                   loading="eager"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                {/* White pill with green number badge */}
-                <div className="absolute left-3.5 top-3.5 z-20 flex items-center justify-center rounded-full bg-white/95 p-1 shadow-md border border-white/70 backdrop-blur-md">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0b5c43] text-xs font-extrabold text-white shadow-xs">
+                {/* White pill with green number badge & category name matching reference image */}
+                <div className="absolute left-3.5 top-3.5 z-20 flex items-center gap-2 rounded-full bg-white/95 px-2.5 py-1.5 shadow-sm border border-white/80 backdrop-blur-md">
+                  <span className="flex items-center justify-center rounded-full bg-[#0b5c43] px-2.5 py-0.5 text-xs font-bold text-white shadow-xs">
                     {service.number}
+                  </span>
+                  <span className="pr-1 text-xs font-bold text-[#11191b] tracking-tight">
+                    {service.category}
                   </span>
                 </div>
               </div>
 
-              {/* Lower Body with clean icon, title, and greener Explore Service button */}
+              {/* Lower Body: Icon + Title + Short Description + Explore Service link */}
               <div className="p-5 flex flex-col justify-between flex-1 relative z-10 bg-white">
                 {/* Icon & Title Row */}
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#eef7f7] text-[#0b5c43] border border-[#d8e7e8] shadow-xs">
+                <div className="flex items-start gap-3.5">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#edf7f3] text-[#0b5c43] border border-[#d6ede4] shadow-xs">
                     <Icon name={(service.icon as IconName) || 'stethoscope'} className="h-5 w-5" />
                   </div>
-                  <h3 className="font-heading text-base font-extrabold leading-snug text-[#11191b] transition group-hover:text-[#0b5c43]">
-                    {service.title}
-                  </h3>
-                </div>
-
-                {/* Explore Service Button with Greener Background */}
-                <div className="mt-5 pt-3 border-t border-[#edf3f4]">
-                  <div className="w-full flex items-center justify-between px-4 py-2.5 rounded-full bg-[#0b5c43] text-white font-bold text-xs tracking-wide shadow-sm transition-all duration-300 group-hover:bg-[#07402e] group-hover:shadow-md">
-                    <span>Explore Service</span>
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-white transition-transform duration-300 group-hover:translate-x-1">
-                      <Icon name="arrow-right" className="h-3.5 w-3.5" />
-                    </div>
+                  <div>
+                    <h3 className="font-heading text-sm sm:text-[15px] font-extrabold leading-tight text-[#11191b] transition group-hover:text-[#0b5c43]">
+                      {service.title}
+                    </h3>
+                    <p className="mt-1.5 text-xs text-[#5e7171] leading-relaxed">
+                      {service.description}
+                    </p>
                   </div>
                 </div>
+
+                {/* Bottom Action: Explore Service -> */}
+                <div className="mt-5 pt-2 flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#0b5c43] tracking-wide flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
+                    <span>Explore Service</span>
+                    <Icon name="arrow-right" size="xs" />
+                  </span>
+                </div>
+
+                {/* Subtle organic mint glow in bottom-right corner matching reference */}
+                <div className="pointer-events-none absolute -bottom-5 -right-5 h-20 w-20 rounded-full bg-emerald-100/35 blur-xl" />
               </div>
             </Link>
           ))}
