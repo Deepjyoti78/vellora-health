@@ -48,8 +48,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${manrope.variable}`}>
-      <body className="antialiased">
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${manrope.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="antialiased" suppressHydrationWarning>
         <a className="skip-link" href="#main">
           Skip to content
         </a>
