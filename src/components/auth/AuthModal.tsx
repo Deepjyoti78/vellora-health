@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth, UserRole } from '@/context/AuthContext';
@@ -9,13 +10,11 @@ import {
   Mail,
   Lock,
   User,
-  Phone,
   Eye,
   EyeOff,
   CheckCircle2,
   AlertCircle,
   ArrowRight,
-  ShieldCheck,
   Stethoscope,
   HeartPulse,
 } from 'lucide-react';
@@ -32,7 +31,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   defaultMode = 'signin',
 }) => {
   const router = useRouter();
-  const { login, switchRole, currentUser } = useAuth();
+  const { login, switchRole } = useAuth();
+  const [mounted, setMounted] = useState(false);
 
   const [mode, setMode] = useState<'signin' | 'signup'>(defaultMode);
   const [selectedRole, setSelectedRole] = useState<'PATIENT' | 'DOCTOR' | 'NURSE'>('PATIENT');
@@ -44,7 +44,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !isOpen) return null;
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,14 +135,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }, 300);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       {/* Click outside backdrop */}
       <div className="absolute inset-0" onClick={onClose} />
 
       {/* Modal Card */}
       <div
-        className="relative z-10 w-full max-w-md overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white shadow-2xl p-6 sm:p-8 animate-scale-in"
+        className="relative z-10 w-full max-w-md max-h-[92vh] overflow-y-auto rounded-[26px] border border-[#E2EBE7] bg-white shadow-2xl p-6 sm:p-8 animate-scale-in"
         role="dialog"
         aria-modal="true"
         aria-labelledby="auth-modal-title"
@@ -387,6 +391,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </Link>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -27,7 +27,16 @@ import {
 
 export default function PatientAccountPage() {
   const { currentUser } = useAuth();
-  const [addresses, setAddresses] = useState(db.getAddresses(currentUser.id));
+  const user = currentUser || {
+    id: 'pat-1',
+    name: 'Eleanor Vance',
+    email: 'eleanor.vance@example.com',
+    phone: '+1 (555) 234-5678',
+    role: 'PATIENT' as const,
+    avatar: '/assets/avatar-1.webp',
+  };
+
+  const [addresses, setAddresses] = useState(() => db.getAddresses(user.id));
   const [showAddressModal, setShowAddressModal] = useState(false);
 
   // Address form
@@ -40,9 +49,18 @@ export default function PatientAccountPage() {
   const [isDefault, setIsDefault] = useState(false);
 
   // Profile Form
-  const [name, setName] = useState(currentUser.name);
-  const [phone, setPhone] = useState(currentUser.phone);
+  const [name, setName] = useState(user.name);
+  const [phone, setPhone] = useState(user.phone);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  // Sync state if currentUser changes
+  React.useEffect(() => {
+    if (currentUser) {
+      setName(currentUser.name);
+      setPhone(currentUser.phone);
+      setAddresses(db.getAddresses(currentUser.id));
+    }
+  }, [currentUser]);
 
   // Emergency Contact
   const [emergencyName, setEmergencyName] = useState('Marcus Vance');
@@ -54,7 +72,7 @@ export default function PatientAccountPage() {
     if (!streetAddress.trim()) return;
 
     const newAddr = db.addAddress({
-      patientId: currentUser.id,
+      patientId: user.id,
       tag,
       streetAddress: streetAddress.trim(),
       apartment: apartment.trim() || undefined,
@@ -77,7 +95,7 @@ export default function PatientAccountPage() {
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
-    db.updateUser(currentUser.id, { name, phone });
+    db.updateUser(user.id, { name, phone });
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 3000);
   };
@@ -90,7 +108,7 @@ export default function PatientAccountPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#064E3B] text-2xl font-black text-white shadow-xs">
-                {currentUser.name
+                {user.name
                   .split(' ')
                   .map((n) => n[0])
                   .join('')}
@@ -98,7 +116,7 @@ export default function PatientAccountPage() {
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-xl sm:text-2xl font-black text-[#102820]">
-                    {currentUser.name}
+                    {user.name}
                   </h1>
                   <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2.5 py-0.5 text-[11px] font-bold text-[#065F46]">
                     <ShieldCheck className="h-3 w-3" />
@@ -111,11 +129,11 @@ export default function PatientAccountPage() {
                 <div className="mt-2 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
                   <span className="inline-flex items-center gap-1">
                     <Mail className="h-3.5 w-3.5 text-[#065F46]" />
-                    {currentUser.email}
+                    {user.email}
                   </span>
                   <span className="inline-flex items-center gap-1">
                     <Phone className="h-3.5 w-3.5 text-[#065F46]" />
-                    {currentUser.phone}
+                    {user.phone}
                   </span>
                 </div>
               </div>
@@ -254,7 +272,7 @@ export default function PatientAccountPage() {
                   <input
                     type="email"
                     disabled
-                    value={currentUser.email}
+                    value={user.email}
                     className="mt-1 block w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs text-slate-500 cursor-not-allowed"
                   />
                 </div>

@@ -10,7 +10,15 @@ import { db } from '@/lib/db';
 export const PatientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   const { currentUser } = useAuth();
-  const notifications = db.getNotifications(currentUser.id);
+  const user = currentUser || {
+    id: 'pat-1',
+    name: 'Eleanor Vance',
+    email: 'eleanor.vance@example.com',
+    phone: '+1 (555) 234-5678',
+    role: 'PATIENT' as const,
+    avatar: '/assets/avatar-1.webp',
+  };
+  const notifications = db.getNotifications(user.id);
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const navLinks = [
@@ -74,12 +82,12 @@ export const PatientLayout: React.FC<{ children: React.ReactNode }> = ({ childre
 
             <div className="flex items-center gap-2 pl-2 border-l border-gray-200">
               <img
-                src={currentUser.avatar || '/assets/avatar-1.webp'}
-                alt={currentUser.name}
+                src={user.avatar || '/assets/avatar-1.webp'}
+                alt={user.name}
                 className="h-8 w-8 rounded-full border border-gray-200 object-cover"
               />
               <div className="hidden sm:block text-left text-xs">
-                <p className="font-bold text-gray-900 leading-tight">{currentUser.name}</p>
+                <p className="font-bold text-gray-900 leading-tight">{user.name}</p>
                 <p className="text-[10px] text-teal-700 font-medium">Patient</p>
               </div>
             </div>
