@@ -59,9 +59,11 @@ export interface ServiceRecord {
 export interface BookingRecord {
   id: string;
   bookingNumber: string;
+  bookingType?: 'QUICK_ENQUIRY' | 'SERVICE_REQUEST' | 'DOCTOR_CONSULTATION';
   patientId: string;
   patientName: string;
   patientPhone: string;
+  patientEmail?: string;
   beneficiaryName: string;
   beneficiaryRelation: string;
   serviceId: string;
@@ -294,6 +296,23 @@ const initialUsers: UserRecord[] = [
     hourlyRate: 85,
     bio: 'Veteran emergency clinician focused on rapid acute evaluations, respiratory ailments, and compassionate bedside care.',
     qualification: 'MD, FACEP - Yale School of Medicine',
+  },
+  {
+    id: 'doc-6',
+    name: 'Dr. Ananya Rao',
+    email: 'dr.ananya@vellora.com',
+    phone: '+1 (555) 890-1245',
+    role: 'DOCTOR',
+    avatar: '/assets/avatar-indian-9.jpg',
+    specialty: 'Pediatrics & Neonatal Care',
+    verificationStatus: 'APPROVED',
+    isOnline: true,
+    rating: 4.95,
+    reviewsCount: 135,
+    experienceYears: 10,
+    hourlyRate: 85,
+    bio: 'Specialized neonatal checkups, infant vaccinations, and developmental pediatric wellness delivered in the comfort of home.',
+    qualification: 'MD (Pediatrics) - Stanford Medicine',
   },
   {
     id: 'nur-1',
@@ -1720,6 +1739,16 @@ class DataStore {
   getUsers() { return this.users; }
   getUserById(id: string) { return this.users.find(u => u.id === id); }
   getUsersByRole(role: string) { return this.users.filter(u => u.role === role); }
+  getDoctorBySlugOrId(identifier: string): UserRecord | undefined {
+    if (!identifier) return undefined;
+    const docs = this.getUsersByRole('DOCTOR');
+    const clean = identifier.toLowerCase().replace(/^dr-?/, '').replace(/[^a-z0-9]/g, '');
+    return docs.find(d => {
+      if (d.id.toLowerCase() === identifier.toLowerCase()) return true;
+      const docClean = d.name.toLowerCase().replace(/^dr\.?\s*/, '').replace(/[^a-z0-9]/g, '');
+      return docClean === clean || d.name.toLowerCase().includes(identifier.toLowerCase());
+    });
+  }
   updateUser(id: string, updates: Partial<UserRecord>) {
     const idx = this.users.findIndex(u => u.id === id);
     if (idx !== -1) {
@@ -1733,6 +1762,7 @@ class DataStore {
   getServices() { return this.services; }
   getServiceBySlug(slug: string) { return this.services.find(s => s.slug === slug); }
   getServiceById(id: string) { return this.services.find(s => s.id === id); }
+  getServicesByCategory(category: string) { return this.services.filter(s => s.category === category); }
   updateService(id: string, updates: Partial<ServiceRecord>) {
     const idx = this.services.findIndex(s => s.id === id);
     if (idx !== -1) {

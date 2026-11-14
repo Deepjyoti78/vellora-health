@@ -313,14 +313,14 @@ export default function DoctorsPage() {
               {/* Bottom Actions Row */}
               <div className="mt-6 flex items-center justify-between border-t border-[#F2F8F5] pt-4">
                 <Link
-                  href="/book"
+                  href={`/book/doctor/${doc.id}`}
                   className="text-xs font-bold text-[#065F46] hover:underline"
                 >
                   View Profile
                 </Link>
 
                 <Link
-                  href={`/book?doctor=${doc.id}`}
+                  href={`/book/doctor/${doc.id}`}
                   className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors"
                 >
                   <span>Book Consultation</span>
