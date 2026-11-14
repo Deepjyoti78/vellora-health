@@ -22,12 +22,13 @@ export const ScrollAnimationProvider: React.FC<{ children: React.ReactNode }> = 
       rootMargin: '0px 0px -40px 0px',
     });
 
-    // Select all elements designed for scroll animation
-    const elements = document.querySelectorAll(
-      '.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale, .scroll-reveal-card'
-    );
-
-    elements.forEach((el) => observer.observe(el));
+    // Observe after hydration paint
+    const rafId = requestAnimationFrame(() => {
+      const elements = document.querySelectorAll(
+        '.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale, .scroll-reveal-card'
+      );
+      elements.forEach((el) => observer.observe(el));
+    });
 
     // Also observe newly rendered or lazily mounted nodes
     const mutationObserver = new MutationObserver(() => {
@@ -40,6 +41,7 @@ export const ScrollAnimationProvider: React.FC<{ children: React.ReactNode }> = 
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     return () => {
+      cancelAnimationFrame(rafId);
       observer.disconnect();
       mutationObserver.disconnect();
     };

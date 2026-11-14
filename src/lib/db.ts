@@ -45,7 +45,7 @@ export interface ServiceRecord {
   id: string;
   slug: string;
   name: string;
-  category: 'DOCTOR_VISIT' | 'NURSING_CARE' | 'CARETAKER' | 'LAB_TESTS';
+  category: 'DOCTOR_VISIT' | 'NURSING_CARE' | 'CARETAKER' | 'LAB_TESTS' | 'REHAB_THERAPY' | 'CRITICAL_CARE';
   categoryLabel: string;
   shortDesc: string;
   description: string;
@@ -66,7 +66,7 @@ export interface BookingRecord {
   beneficiaryRelation: string;
   serviceId: string;
   serviceName: string;
-  category: 'DOCTOR_VISIT' | 'NURSING_CARE' | 'CARETAKER' | 'LAB_TESTS';
+  category: 'DOCTOR_VISIT' | 'NURSING_CARE' | 'CARETAKER' | 'LAB_TESTS' | 'REHAB_THERAPY' | 'CRITICAL_CARE';
   providerId?: string;
   providerName?: string;
   providerRole?: string;
@@ -82,18 +82,22 @@ export interface BookingRecord {
     | 'IN_PROGRESS'
     | 'COMPLETED'
     | 'CANCELLED';
-  shiftType?: 'STANDARD_VISIT' | 'SHIFT_12H' | 'SHIFT_24H';
+  shiftType?: 'STANDARD_VISIT' | 'SINGLE_VISIT' | 'SHIFT_12H' | 'SHIFT_24H';
   totalAmount: number;
   discountAmount: number;
   couponCode?: string;
   paymentStatus: 'PAID' | 'PENDING' | 'REFUNDED' | 'FAILED';
   paymentMethod: string;
   notes?: string;
+  clinicalNotes?: string;
   cancellationReason?: string;
   createdAt: string;
   prescriptionId?: string;
   vitalsId?: string;
   labReportId?: string;
+  verificationPin?: string;
+  feedbackRating?: number;
+  feedbackComment?: string;
 }
 
 export interface PrescriptionRecord {
@@ -212,7 +216,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.maya@vellora.com',
     phone: '+1 (555) 345-6789',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-2.webp',
+    avatar: '/assets/doctor-maya-patel.jpg',
     specialty: 'Internal Medicine & Geriatrics',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -229,16 +233,67 @@ const initialUsers: UserRecord[] = [
     email: 'dr.ethan@vellora.com',
     phone: '+1 (555) 456-7890',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-1.webp',
+    avatar: '/assets/doctor-ethan-park.jpg',
     specialty: 'Pediatrics & Family Medicine',
     verificationStatus: 'APPROVED',
-    isOnline: false,
+    isOnline: true,
     rating: 4.8,
     reviewsCount: 112,
     experienceYears: 11,
     hourlyRate: 80,
-    bio: 'Dedicated pediatrician passionate about accessible family care and pediatric neuro-development.',
+    bio: 'Dedicated pediatrician passionate about accessible family care, preventive vaccines, and pediatric developmental health.',
     qualification: 'MD (Pediatrics) - Stanford Medicine',
+  },
+  {
+    id: 'doc-3',
+    name: 'Dr. Daniel Reed',
+    email: 'dr.daniel@vellora.com',
+    phone: '+1 (555) 567-8912',
+    role: 'DOCTOR',
+    avatar: '/assets/doctor-daniel-reed.jpg',
+    specialty: 'Cardiology & Chronic Disease Management',
+    verificationStatus: 'APPROVED',
+    isOnline: true,
+    rating: 4.85,
+    reviewsCount: 129,
+    experienceYears: 16,
+    hourlyRate: 95,
+    bio: 'Dedicated to preventing hospital readmissions through proactive bedside assessments, cardiac telemetry, and hypertension management.',
+    qualification: 'MD (Cardiovascular Disease) - Harvard Medical School',
+  },
+  {
+    id: 'doc-4',
+    name: 'Dr. Sofia Morgan',
+    email: 'dr.sofia@vellora.com',
+    phone: '+1 (555) 678-9123',
+    role: 'DOCTOR',
+    avatar: '/assets/doctor-4.webp',
+    specialty: 'Post-Operative Rehabilitation & Orthopedics',
+    verificationStatus: 'APPROVED',
+    isOnline: true,
+    rating: 4.9,
+    reviewsCount: 104,
+    experienceYears: 12,
+    hourlyRate: 90,
+    bio: 'Guiding surgical recovery, mobility milestones, wound integrity, and physical therapy in the safety and comfort of your home.',
+    qualification: 'MD (Physical Medicine & Rehab) - Columbia University',
+  },
+  {
+    id: 'doc-5',
+    name: 'Dr. Marcus Vance',
+    email: 'dr.marcus@vellora.com',
+    phone: '+1 (555) 789-0134',
+    role: 'DOCTOR',
+    avatar: '/assets/doctor-3.webp',
+    specialty: 'General Practice & Acute Illness',
+    verificationStatus: 'APPROVED',
+    isOnline: false,
+    rating: 4.9,
+    reviewsCount: 98,
+    experienceYears: 15,
+    hourlyRate: 85,
+    bio: 'Veteran emergency clinician focused on rapid acute evaluations, respiratory ailments, and compassionate bedside care.',
+    qualification: 'MD, FACEP - Yale School of Medicine',
   },
   {
     id: 'nur-1',
@@ -311,7 +366,7 @@ const initialServices: ServiceRecord[] = [
     shortDesc: 'Comprehensive medical assessment in the comfort and privacy of your home.',
     description:
       'Avoid clinic queues and travel stress. Our board-certified physicians provide unhurried physical examinations, acute illness diagnosis, chronic condition reviews, digital prescriptions, and direct specialist coordination.',
-    image: '/assets/care.webp',
+    image: '/assets/doorstep-1.png',
     basePrice: 95,
     duration: '45 - 60 mins',
     features: [
@@ -337,7 +392,7 @@ const initialServices: ServiceRecord[] = [
     shortDesc: 'Certified nursing support for wound care, IV therapy, injections, and vitals.',
     description:
       'Hospital-grade clinical nursing at home. From surgical wound dressing and suture removal to IV catheter administration, catheterization, and post-operative vitals monitoring by licensed nurses.',
-    image: '/assets/care-alt.webp',
+    image: '/assets/doorstep-3.png',
     basePrice: 55,
     duration: 'Per procedure or 2-4 hours',
     features: [
@@ -364,7 +419,7 @@ const initialServices: ServiceRecord[] = [
     shortDesc: 'Trained attendants for daily living assistance, hygiene, mobility, and feeding.',
     description:
       'Dedicated bedside caretakers who ensure your loved ones are safe, clean, nourished, and supported around the clock. Ideal for bedridden patients, stroke recovery, and seniors needing mobility support.',
-    image: '/assets/specialists.webp',
+    image: '/assets/doorstep-4.png',
     basePrice: 40,
     duration: '12-Hour or 24-Hour Shifts',
     features: [
@@ -390,7 +445,7 @@ const initialServices: ServiceRecord[] = [
     shortDesc: 'Painless sample collection at home with digital reports within 12 to 24 hours.',
     description:
       'NABL-accredited laboratory diagnostics delivered to your doorstep. Certified phlebotomists collect blood, urine, or swab samples using vacuum sterile barcoded vials with cold-chain transport.',
-    image: '/assets/diagnostics.webp',
+    image: '/assets/doorstep-2.png',
     basePrice: 35,
     duration: '15 mins sample collection',
     features: [
@@ -407,6 +462,58 @@ const initialServices: ServiceRecord[] = [
       'Lipid & Cardiac Risk Profile',
       'Liver & Kidney Function Panel',
       'Thyroid Hormone Panel (T3, T4, TSH)',
+    ],
+  },
+  {
+    id: 'srv-5',
+    slug: 'home-physiotherapy',
+    name: 'Home Physiotherapy & Rehabilitation',
+    category: 'REHAB_THERAPY',
+    categoryLabel: 'Physical Therapy & Rehab',
+    shortDesc: 'Expert physical therapy for stroke recovery, joint replacement, and mobility restoration.',
+    description:
+      'Certified physical therapists bring customized orthopedic, neurological, and geriatric rehabilitation directly to your living room. Accelerate recovery with guided neuromuscular stimulation and gait training.',
+    image: '/assets/wellness.webp',
+    basePrice: 60,
+    duration: '50 - 60 mins',
+    features: [
+      'Personalized mobility assessment and joint range of motion',
+      'Post-total-knee/hip-replacement protocol exercises',
+      'Stroke paralysis rehabilitation & balance retraining',
+      'Pain management with portable TENS & ultrasound units',
+      'Digital exercise compliance chart for treating surgeon',
+    ],
+    supportedOptions: [
+      'Single Targeted Physiotherapy Session',
+      '5-Session Mobility Rehabilitation Pack',
+      '10-Session Comprehensive Post-Op Package',
+      'Elderly Fall-Prevention Conditioning',
+    ],
+  },
+  {
+    id: 'srv-6',
+    slug: 'critical-care-icu-setup',
+    name: 'Critical Care & ICU Step-Down Setup',
+    category: 'CRITICAL_CARE',
+    categoryLabel: 'Critical Care & Monitoring',
+    shortDesc: 'Advanced home ICU installation with multipara monitors, oxygen, and continuous critical care nursing.',
+    description:
+      'Transition hospitalized patients safely home. Complete ICU infrastructure including hospital-grade electric beds, continuous vitals monitoring, oxygen concentrators, and 24/7 dedicated critical care nurses supervised by intensivists.',
+    image: '/assets/compassionate-hospital-care.png',
+    basePrice: 180,
+    duration: '12-Hour or 24-Hour Continuous Care',
+    features: [
+      'Certified ICU trained registered nurse stationed at bedside',
+      'Multipara monitor (SpO2, continuous ECG, NIBP, respiration)',
+      'Medical oxygen concentrator & suction machine setup',
+      'BiPAP / CPAP / tracheostomy tube management protocols',
+      '24/7 tele-intensivist emergency video consultation backup',
+    ],
+    supportedOptions: [
+      '12-Hour ICU Step-Down Nursing Shift',
+      '24-Hour Intensive Care Continuous Package',
+      'Complete Home ICU Equipment Suite Rental',
+      'Palliative & Comfort Care ICU Protocol',
     ],
   },
 ];
@@ -781,11 +888,13 @@ class DataStore {
   getBookingById(id: string) { return this.bookings.find(b => b.id === id); }
   getBookingsByPatient(patientId: string) { return this.bookings.filter(b => b.patientId === patientId); }
   getBookingsByProvider(providerId: string) { return this.bookings.filter(b => b.providerId === providerId); }
-  createBooking(booking: Omit<BookingRecord, 'id' | 'bookingNumber' | 'createdAt'>) {
+  createBooking(booking: Omit<BookingRecord, 'id' | 'bookingNumber' | 'createdAt' | 'discountAmount' | 'paymentMethod'> & { discountAmount?: number; paymentMethod?: string }) {
     const id = `bkg-${Date.now()}`;
     const bookingNumber = `VEL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
     const newRecord: BookingRecord = {
       ...booking,
+      discountAmount: booking.discountAmount ?? 0,
+      paymentMethod: booking.paymentMethod ?? 'CARD',
       id,
       bookingNumber,
       createdAt: new Date().toISOString(),

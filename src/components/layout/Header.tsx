@@ -75,6 +75,7 @@ export const Header: React.FC = () => {
             <Link
               key={link.href}
               href={link.href}
+              prefetch={true}
               className={isActive ? 'nav-active' : ''}
               onClick={closeMenu}
             >
@@ -84,13 +85,15 @@ export const Header: React.FC = () => {
         })}
       </nav>
 
-      <button
-        type="button"
+      <Link
+        href="/book"
+        prefetch={true}
         className="header-book button button-white"
-        onClick={() => openBooking()}
+        onClick={closeMenu}
       >
-        Book Appointment <Icon name="arrow-right" size="sm" />
-      </button>
+        <span>Book Appointment</span>
+        <Icon name="arrow-right" size="sm" />
+      </Link>
 
       <button
         ref={toggleRef}

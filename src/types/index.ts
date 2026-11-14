@@ -52,6 +52,10 @@ export interface FacilityItem {
   image?: string;
   alt?: string;
   isSolid?: boolean;
+  tag?: string;
+  description?: string;
+  specs?: string[];
+  highlight?: string;
 }
 
 export interface FaqItem {

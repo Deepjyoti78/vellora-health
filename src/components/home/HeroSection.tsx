@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { TRUST_DATA } from '@/data/site-content';
 import { useBooking } from '@/context/BookingContext';
 import { Header } from '@/components/layout/Header';
@@ -44,17 +45,21 @@ export const HeroSection: React.FC = () => {
           </h1>
 
           <div className="hero-actions animate-hero-actions">
-            <button
-              type="button"
+            <Link
+              href="/book"
+              prefetch={true}
               className="button button-white button-sm"
-              onClick={() => openBooking()}
             >
               <Icon name="calendar" size="xs" /> Book Appointment{' '}
               <Icon name="arrow-right" size="xs" />
-            </button>
-            <a className="button button-outline button-sm" href="/doctors">
+            </Link>
+            <Link
+              href="/doctors"
+              prefetch={true}
+              className="button button-outline button-sm"
+            >
               <Icon name="search" size="xs" /> Find a Doctor
-            </a>
+            </Link>
           </div>
         </div>
 

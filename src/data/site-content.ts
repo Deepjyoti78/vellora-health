@@ -282,32 +282,69 @@ export const TESTIMONIALS_DATA: TestimonialItem[] = [
 export const FACILITIES_DATA: FacilityItem[] = [
   {
     id: 'fac-1',
-    title: 'Hospital Clinical Network',
-    image: '/assets/facility-1.webp',
-    alt: 'Accredited partner hospital and emergency transfer ward',
+    title: 'Accredited Hospital Clinical Network',
+    tag: 'Hospital Affiliations',
+    highlight: 'Tier-1 Tertiary Care',
+    image: '/assets/compassionate-hospital-care.png',
+    alt: 'Accredited partner hospital ICU and emergency transfer suites',
+    description:
+      'Seamless priority admission agreements with leading tertiary medical centers, enabling swift, friction-free hospital transfers whenever advanced surgical or emergency intensive care is indicated.',
+    specs: ['Direct ER handoff protocol', 'Ambulance telemetry synchronization', 'Shared digital EHR access'],
   },
   {
     id: 'fac-2',
-    title: 'NABL-Accredited\nDiagnostic Labs',
-    isSolid: true,
+    title: 'NABL-Accredited Central Labs',
+    tag: 'Pathology & Genomics',
+    highlight: 'CAP & NABL Certified',
+    image: '/assets/diagnostics.webp',
+    alt: 'High-throughput automated laboratory diagnostic analyzers',
+    description:
+      'Fully automated clinical biochemistry, immunoassay, hematology, and molecular diagnostics with strict internal QC and dual-pathologist verification for every doorstep blood panel.',
+    specs: ['Barcoded vacuum tube tracking', '12-hour turnaround for 94% of panels', 'Digital encrypted PDF delivery'],
   },
   {
     id: 'fac-3',
-    title: 'Critical Care ICU Coordination',
-    image: '/assets/facility-2.webp',
-    alt: 'Clinical nurse coordinating patient transfer',
+    title: 'Mobile ICU Step-Down Suites',
+    tag: 'Critical Care Equipment',
+    highlight: 'Continuous Telemetry',
+    image: '/assets/facility-3.webp',
+    alt: 'Clinical mobile ICU patient room and telemetry monitors',
+    description:
+      'Hospital-grade mobile intensive care hardware installed directly in the patient home: multipara vitals monitors, portable oxygen concentrators, syringe infusion pumps, and suction units.',
+    specs: ['Multipara vitals logging', 'Continuous SpO2 & ECG rhythm feed', 'Bedside emergency backup battery'],
   },
   {
     id: 'fac-4',
-    title: 'Cold-Chain Mobile Phlebotomy',
-    image: '/assets/facility-3.webp',
-    alt: 'Precision diagnostic laboratory analysis equipment',
+    title: 'Cold-Chain Phlebotomy Fleet',
+    tag: 'Diagnostic Logistics',
+    highlight: '2°C – 8°C Calibrated',
+    image: '/assets/facility-1.webp',
+    alt: 'Cold-chain specimen transportation kit and sterile vacutainers',
+    description:
+      'Temperature-calibrated active Peltier cold-chain transport units carried by certified phlebotomists, ensuring specimen viability from patient vein to lab centrifugation without degradation.',
+    specs: ['Real-time temperature telemetry', 'Single-use sterile vacutainer needles', 'Painless pediatric/geriatric micro-draws'],
   },
   {
     id: 'fac-5',
-    title: '24/7 Care Dispatch Center',
+    title: '24/7 Clinical Dispatch & Tele-ICU Desk',
+    tag: 'Operations Command',
+    highlight: '100% Operational Telemetry',
+    image: '/assets/telehealth.webp',
+    alt: 'Operations command desk and telemedicine console',
+    description:
+      'Central medical coordination center staffed around the clock by registered nursing triagers and on-call physicians monitoring clinician dispatch, emergency alarms, and patient vitals feeds.',
+    specs: ['Instant clinician dispatch tracking', 'Emergency physician video escalation', 'Automated security PIN validation'],
+  },
+  {
+    id: 'fac-6',
+    title: 'Sterile Clean-Room & Equipment Depot',
+    tag: 'Hygiene & Biohazard',
+    highlight: 'Class 10,000 Cleanroom',
     image: '/assets/facility-4.webp',
-    alt: 'Coordinated healthcare operations command room',
+    alt: 'Sterilization autoclave and medical kit preparation facility',
+    description:
+      'Certified biomedical equipment hub where all clinical dressing kits, catheterization trays, and diagnostic sensors undergo industrial autoclaving, seal inspection, and biohazard packaging before dispatch.',
+    specs: ['Class-B vacuum autoclave cycle', 'Sterile peel-pouch integrity check', 'Safe biomedical waste collection kits'],
   },
 ];
 

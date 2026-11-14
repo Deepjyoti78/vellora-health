@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Icon } from '@/components/common/Icon';
+import { ScrollAnimationProvider } from '@/components/common/ScrollAnimationProvider';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -11,7 +13,8 @@ export default function ContactPage() {
     name: '',
     email: '',
     phone: '',
-    subject: 'General Inquiry',
+    serviceType: 'Doctor Home Consultation',
+    subject: 'General Clinical Inquiry',
     message: '',
   });
 
@@ -21,155 +24,215 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-[#11191b] text-white">
-        <Header />
-        <div className="container py-14 text-center">
-          <p className="eyebrow text-teal-300">WE ARE HERE FOR YOU</p>
-          <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
-            Contact Vellora Health Support
-          </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-gray-300">
-            Have questions about home clinical care, custom attendant shifts, or corporate wellness? Our dedicated patient coordinators are available daily.
-          </p>
-        </div>
-      </div>
-
-      <div className="container py-14">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-          <div className="space-y-6">
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="text-base font-bold text-gray-900">Direct Patient Helpline</h3>
-              <p className="mt-1 text-xs text-gray-500">Available 7:00 AM – 10:00 PM EST daily</p>
-              <p className="mt-3 text-lg font-extrabold text-teal-700">+1 (800) 555-VELLORA</p>
-              <p className="mt-1 text-xs text-gray-600">support@vellorahealth.com</p>
+    <ScrollAnimationProvider>
+      <div className="min-h-screen bg-[#fcfdfd]">
+        {/* Dark Hero Section matching Vellora aesthetics */}
+        <div className="bg-[#11191b] text-white relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#116b70_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+          <Header />
+          <div className="container py-16 text-center relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full bg-teal-500/20 px-3.5 py-1 text-xs font-semibold text-teal-300 border border-teal-500/30 mb-4 animate-hero-trust">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              PATIENT SUPPORT &amp; CLINICAL COORDINATION
             </div>
-
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="text-base font-bold text-gray-900">Emergency Protocol Notice</h3>
-              <p className="mt-2 text-xs leading-relaxed text-gray-600">
-                Vellora Health is an on-demand scheduled home clinical care service. For acute, life-threatening medical emergencies or severe trauma, please dial your local emergency services immediately (such as 112 / 108 / local ambulance) or visit the nearest hospital emergency ICU.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h3 className="text-base font-bold text-gray-900">Regional Coordination Centers</h3>
-              <div className="mt-3 space-y-3 text-xs text-gray-700">
-                <div>
-                  <p className="font-semibold text-gray-900">Springfield Clinical Hub</p>
-                  <p className="text-gray-500">742 Medical Center Way, Suite 400</p>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Metro Logistics &amp; Lab Hub</p>
-                  <p className="text-gray-500">120 Ocean View Blvd, Building B</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm lg:col-span-2">
-            <h2 className="text-2xl font-bold text-gray-900">Send an Inquiry</h2>
-            <p className="mt-2 text-xs text-gray-600">
-              Fill in your details below and a clinical coordinator will contact you within 2 hours.
+            <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl text-white max-w-4xl mx-auto leading-tight animate-hero-title">
+              We Are Here for You 24 Hours a Day
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base text-gray-300 leading-relaxed animate-hero-detail">
+              Have questions about doorstep physician visits, continuous nursing shifts, or phlebotomy coverage? Our clinical care coordinators are on standby.
             </p>
+          </div>
+        </div>
 
-            {submitted ? (
-              <div className="mt-8 rounded-2xl bg-teal-50 p-8 text-center border border-teal-200">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal-600 text-white">
-                  <Icon name="check" />
-                </div>
-                <h3 className="mt-4 text-lg font-bold text-teal-900">Inquiry Received</h3>
-                <p className="mt-2 text-xs text-teal-800">
-                  Thank you for reaching out to Vellora Health. Our care team has received your message and will contact you shortly.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setSubmitted(false)}
-                  className="button button-dark button-sm mt-6"
-                >
-                  Send Another Message
-                </button>
+        {/* Content Section */}
+        <div className="container py-14">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+            {/* Direct Helpline & Hub Cards */}
+            <div className="space-y-6 scroll-reveal-left">
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+                <span className="rounded-full bg-teal-50 text-teal-800 text-[10px] font-bold px-2 py-0.5 border border-teal-100">
+                  Priority Care Desk
+                </span>
+                <h3 className="text-base font-bold text-gray-900 mt-2">Direct Patient Helpline</h3>
+                <p className="mt-1 text-xs text-gray-500">Live nursing triagers available 24/7</p>
+                <p className="mt-3 text-xl font-extrabold text-teal-700">+1 (800) 555-VELLORA</p>
+                <p className="text-xs text-gray-600 mt-0.5">care@vellorahealth.com</p>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <label className="block text-xs font-bold text-gray-700">
-                    Full Name
+
+              <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-6 shadow-sm">
+                <div className="flex items-center gap-2 text-amber-800 font-bold text-xs">
+                  <Icon name="shield" size="xs" />
+                  <span>EMERGENCY PROTOCOL</span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-amber-900">
+                  Vellora Health is an on-demand scheduled home clinical service. For acute life-threatening medical emergencies or severe trauma, please dial <strong>911 / 112</strong> immediately or visit your nearest emergency room.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 className="text-base font-bold text-gray-900">Regional Coordination Hubs</h3>
+                <div className="mt-3 space-y-3 text-xs text-gray-700">
+                  <div className="border-b border-gray-100 pb-2">
+                    <p className="font-bold text-gray-900">Bay Area Clinical Operations</p>
+                    <p className="text-gray-500">742 Evergreen Terrace, Suite 400, San Francisco, CA</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900">Central Diagnostics &amp; Cold-Chain Depot</p>
+                    <p className="text-gray-500">120 Ocean View Blvd, Building B, San Jose, CA</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-teal-900 p-6 text-white shadow-md">
+                <h3 className="text-base font-bold text-white">Need Urgent Bedside Care?</h3>
+                <p className="text-xs text-teal-200 mt-1 leading-relaxed">
+                  You do not need to wait for an email reply. Book a doctor, nurse, or lab draw instantly through our self-service portal.
+                </p>
+                <Link href="/book" prefetch={true} className="button button-white button-sm mt-4 w-full text-center">
+                  <span>Book Appointment Online</span>
+                  <Icon name="arrow-right" size="xs" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Inquiry Form */}
+            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-lg lg:col-span-2 scroll-reveal-right">
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-700">Online Dispatch &amp; Support</span>
+              <h2 className="text-2xl font-bold text-gray-900 mt-1">Send a Care Coordination Inquiry</h2>
+              <p className="mt-1 text-xs text-gray-600">
+                Fill in your details below and a registered nurse or care coordinator will contact you within 15–30 minutes.
+              </p>
+
+              {submitted ? (
+                <div className="mt-8 rounded-2xl bg-teal-50 p-8 text-center border border-teal-200 scroll-reveal-scale">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-white">
+                    <Icon name="check" size="md" />
+                  </div>
+                  <h3 className="mt-4 text-xl font-bold text-teal-950">Inquiry Received</h3>
+                  <p className="mt-2 text-xs text-teal-800 max-w-md mx-auto leading-relaxed">
+                    Thank you for reaching out to Vellora Health. Our care coordination desk has logged your request and will contact you via phone or email promptly.
+                  </p>
+                  <div className="mt-6 flex justify-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setSubmitted(false)}
+                      className="button button-dark button-sm text-xs"
+                    >
+                      Send Another Message
+                    </button>
+                    <Link href="/book" prefetch={true} className="button button-outline button-sm text-xs">
+                      Book an Appointment Now
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                        Full Name <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Eleanor Vance"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-xs focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                        Primary Phone <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="+1 (555) 234-5678"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-xs focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                        Email Address <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        placeholder="patient@example.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-xs focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                        Service of Interest
+                      </label>
+                      <select
+                        value={formData.serviceType}
+                        onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
+                        className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-xs focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 bg-white"
+                      >
+                        <option value="Doctor Home Consultation">Doctor Home Consultation</option>
+                        <option value="Home Nursing Care">Home Nursing Care</option>
+                        <option value="Patient Caretakers">Patient Caretakers &amp; Medical Maids</option>
+                        <option value="Home Lab Tests">Home Lab Investigations &amp; Blood Tests</option>
+                        <option value="Physiotherapy">Home Physiotherapy &amp; Rehab</option>
+                        <option value="Critical Care ICU">Critical Care &amp; ICU Step-Down</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                      Subject
+                    </label>
                     <input
                       type="text"
-                      required
-                      placeholder="Your full name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="mt-1.5 w-full rounded-xl border border-gray-200 bg-[#fbfcfc] px-3.5 py-2.5 text-xs text-gray-900 focus:border-teal-500 focus:outline-none"
-                    />
-                  </label>
-
-                  <label className="block text-xs font-bold text-gray-700">
-                    Phone Number
-                    <input
-                      type="tel"
-                      required
-                      placeholder="Your contact number"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="mt-1.5 w-full rounded-xl border border-gray-200 bg-[#fbfcfc] px-3.5 py-2.5 text-xs text-gray-900 focus:border-teal-500 focus:outline-none"
-                    />
-                  </label>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <label className="block text-xs font-bold text-gray-700">
-                    Email Address
-                    <input
-                      type="email"
-                      required
-                      placeholder="your.email@example.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="mt-1.5 w-full rounded-xl border border-gray-200 bg-[#fbfcfc] px-3.5 py-2.5 text-xs text-gray-900 focus:border-teal-500 focus:outline-none"
-                    />
-                  </label>
-
-                  <label className="block text-xs font-bold text-gray-700">
-                    Subject / Concern
-                    <select
+                      placeholder="e.g. Inquiring about 24-hour post-op nursing care in San Francisco"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="mt-1.5 w-full rounded-xl border border-gray-200 bg-[#fbfcfc] px-3.5 py-2.5 text-xs text-gray-900 focus:border-teal-500 focus:outline-none"
-                    >
-                      <option>General Inquiry</option>
-                      <option>Doctor Home Visits</option>
-                      <option>Nursing Care Coordination</option>
-                      <option>Long-Term Bedside Attendant</option>
-                      <option>Lab Diagnostic Questions</option>
-                      <option>Corporate Partnership</option>
-                    </select>
-                  </label>
-                </div>
+                      className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-xs focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                    />
+                  </div>
 
-                <label className="block text-xs font-bold text-gray-700">
-                  Message Details
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Describe your medical requirement, patient condition, or questions..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="mt-1.5 w-full rounded-xl border border-gray-200 bg-[#fbfcfc] px-3.5 py-2.5 text-xs text-gray-900 focus:border-teal-500 focus:outline-none"
-                  ></textarea>
-                </label>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">
+                      Clinical Requirements / Message <span className="text-rose-500">*</span>
+                    </label>
+                    <textarea
+                      rows={4}
+                      required
+                      placeholder="Please describe the patient's condition, current symptoms, required dates, or any special medical requirements..."
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-xs focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                    />
+                  </div>
 
-                <button type="submit" className="button button-dark mt-2">
-                  Submit Inquiry <Icon name="arrow-right" size="xs" />
-                </button>
-              </form>
-            )}
+                  <div className="flex items-center justify-between pt-2">
+                    <p className="text-[11px] text-gray-500">
+                      *Strict confidentiality maintained under HIPAA medical privacy regulations.
+                    </p>
+                    <button type="submit" className="button button-dark">
+                      <span>Submit Inquiry</span>
+                      <Icon name="arrow-right" size="xs" />
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </ScrollAnimationProvider>
   );
 }

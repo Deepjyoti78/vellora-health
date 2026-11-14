@@ -54,15 +54,16 @@ export const CareOptionsSection: React.FC = () => {
               </div>
 
               <div className="mt-7 pt-4 border-t border-[#e5e9e9] flex flex-col gap-2">
-                <button
-                  type="button"
-                  onClick={() => openBooking()}
-                  className="w-full rounded-full bg-[#11191b] py-2.5 text-xs font-bold text-white transition hover:bg-[#116b70]"
+                <Link
+                  href={`/book?service=${opt.serviceSlug}`}
+                  prefetch={true}
+                  className="w-full text-center rounded-full bg-[#11191b] py-2.5 text-xs font-bold text-white transition hover:bg-[#116b70]"
                 >
                   Book This Option
-                </button>
+                </Link>
                 <Link
                   href={`/services/${opt.serviceSlug}`}
+                  prefetch={true}
                   className="text-center text-[11px] font-semibold text-[#687476] hover:text-[#11191b]"
                 >
                   View Full Details &rarr;

@@ -6,112 +6,192 @@ import { db } from '@/lib/db';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Icon } from '@/components/common/Icon';
-import { useBooking } from '@/context/BookingContext';
+import { ScrollAnimationProvider } from '@/components/common/ScrollAnimationProvider';
 
 export default function DoctorsDirectoryPage() {
   const doctors = db.getUsersByRole('DOCTOR');
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('ALL');
-  const { openBooking } = useBooking();
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const specialties = ['ALL', 'Internal Medicine & Geriatrics', 'Pediatrics & Family Medicine'];
+  const specialties = [
+    'ALL',
+    'Internal Medicine & Geriatrics',
+    'Pediatrics & Family Medicine',
+    'Cardiology & Chronic Disease Management',
+    'Post-Operative Rehabilitation & Orthopedics',
+    'General Practice & Acute Illness',
+  ];
 
   const filteredDoctors = doctors.filter((doc) => {
-    return selectedSpecialty === 'ALL' || doc.specialty?.includes(selectedSpecialty);
+    const matchesSpec =
+      selectedSpecialty === 'ALL' ||
+      doc.specialty?.toLowerCase().includes(selectedSpecialty.toLowerCase());
+    const matchesSearch =
+      doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.specialty?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.qualification?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSpec && matchesSearch;
   });
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-[#11191b] text-white">
-        <Header />
-        <div className="container py-14 text-center">
-          <p className="eyebrow text-teal-300">CERTIFIED PHYSICIANS &amp; EXPERTS</p>
-          <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
-            Meet Our Medical Specialists
-          </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-gray-300">
-            Every Vellora physician is board-certified, hospital-affiliated, and dedicated to compassionate, personalized care at your bedside.
-          </p>
+    <ScrollAnimationProvider>
+      <div className="min-h-screen bg-[#fcfdfd]">
+        {/* Dark Hero Section matching Vellora aesthetics */}
+        <div className="bg-[#11191b] text-white relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#116b70_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
+          <Header />
+          <div className="container py-16 text-center relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full bg-teal-500/20 px-3.5 py-1 text-xs font-semibold text-teal-300 border border-teal-500/30 mb-4 animate-hero-trust">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              COUNCIL-REGISTERED MEDICAL PRACTITIONERS
+            </div>
+            <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl text-white max-w-4xl mx-auto leading-tight animate-hero-title">
+              Meet Our Visiting Medical Specialists &amp; Physicians
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base text-gray-300 leading-relaxed animate-hero-detail">
+              Every Vellora physician is board-certified, hospital-affiliated, and dedicated to compassionate, unhurried examinations right at your bedside. No rushed 5-minute clinic slots.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="container py-12">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-6">
-          <div className="flex gap-2">
-            {specialties.map((spec) => (
-              <button
-                key={spec}
-                onClick={() => setSelectedSpecialty(spec)}
-                className={`rounded-full px-4 py-1.5 text-xs font-semibold transition ${
-                  selectedSpecialty === spec
-                    ? 'bg-[#11191b] text-white'
-                    : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
-                }`}
+        {/* Directory Content */}
+        <div className="container py-14">
+          {/* Search & Filter Bar */}
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-gray-200 pb-6 scroll-reveal">
+            <div className="flex flex-wrap gap-2">
+              {specialties.map((spec) => (
+                <button
+                  key={spec}
+                  onClick={() => setSelectedSpecialty(spec)}
+                  className={`rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 ${
+                    selectedSpecialty === spec
+                      ? 'bg-[#11191b] text-white shadow-md'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                  }`}
+                >
+                  {spec === 'ALL' ? 'All Specialists' : spec}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative w-full md:w-72">
+              <input
+                type="text"
+                placeholder="Search physician or specialty..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-full border border-gray-200 bg-white px-4 py-2 pl-9 text-xs focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+              />
+              <div className="pointer-events-none absolute left-3 top-2.5 text-gray-400">
+                <Icon name="search" size="xs" />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
+            <p>Showing {filteredDoctors.length} verified physician(s)</p>
+            <p className="text-emerald-700 font-medium">● Same-day home appointments available</p>
+          </div>
+
+          {/* Doctors Grid */}
+          <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 stagger-container">
+            {filteredDoctors.map((doc) => (
+              <article
+                key={doc.id}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 scroll-reveal-card"
               >
-                {spec === 'ALL' ? 'All Specialties' : spec}
-              </button>
+                {/* Doctor Header */}
+                <div className="flex items-start gap-4">
+                  <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 shadow-sm">
+                    <img
+                      src={doc.avatar}
+                      alt={doc.name}
+                      className="h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
+                    />
+                    {doc.isOnline && (
+                      <span className="absolute bottom-1 right-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500" title="Online for On-Demand Dispatch" />
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 border border-emerald-100">
+                        Verified MD
+                      </span>
+                      <span className="flex items-center gap-1 text-xs font-bold text-amber-600">
+                        ★ {doc.rating} ({doc.reviewsCount || 100}+)
+                      </span>
+                    </div>
+                    <h2 className="mt-1.5 text-base font-bold text-gray-900 group-hover:text-teal-700 transition truncate">
+                      {doc.name}
+                    </h2>
+                    <p className="text-xs font-semibold text-teal-700 leading-snug line-clamp-1">
+                      {doc.specialty}
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-gray-500">
+                      {doc.experienceYears} Years Clinical Exp.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Qualification & Bio */}
+                <div className="mt-4 border-t border-gray-100 pt-3 flex-1 flex flex-col justify-between">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                      Accredited Degree
+                    </p>
+                    <p className="text-xs font-medium text-gray-800">
+                      {doc.qualification}
+                    </p>
+                    <p className="mt-2 text-xs leading-relaxed text-gray-600 line-clamp-3">
+                      {doc.bio}
+                    </p>
+                  </div>
+
+                  {/* Pricing & Booking Action */}
+                  <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+                    <div>
+                      <span className="text-[10px] text-gray-400 uppercase font-medium">Home Bedside Exam</span>
+                      <p className="text-sm font-extrabold text-gray-900">
+                        ${doc.hourlyRate} <span className="text-[11px] font-normal text-gray-500">/ visit</span>
+                      </p>
+                    </div>
+                    <Link
+                      href={`/book?doctor=${encodeURIComponent(doc.name)}&service=home-doctor-visit`}
+                      className="button button-dark button-sm text-xs"
+                    >
+                      <span>Book Visit</span>
+                      <Icon name="arrow-right" size="xs" />
+                    </Link>
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
-          <p className="text-xs text-gray-500">
-            Showing {filteredDoctors.length} available physician(s)
-          </p>
+
+          {/* Reassurance Banner */}
+          <div className="mt-14 rounded-3xl bg-teal-50 border border-teal-100 p-8 text-teal-900 md:p-10 scroll-reveal">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="max-w-2xl">
+                <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
+                  Doctor Visit Guarantee
+                </span>
+                <h3 className="text-xl md:text-2xl font-bold text-teal-950 mt-1">
+                  Unhurried Consultations with Complete Digital Prescriptions
+                </h3>
+                <p className="mt-2 text-xs md:text-sm text-teal-800 leading-relaxed">
+                  Every home visit includes a 45–60 minute full clinical review, vitals recording, instant verified e-prescription, and 7-day complimentary telephonic follow-up.
+                </p>
+              </div>
+              <Link href="/book" className="button button-dark whitespace-nowrap">
+                Schedule a Physician Visit <Icon name="arrow-right" size="xs" />
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredDoctors.map((doc) => (
-            <article
-              key={doc.id}
-              className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md"
-            >
-              <div className="flex items-start gap-4">
-                <img
-                  src={doc.avatar}
-                  alt={doc.name}
-                  className="h-20 w-20 rounded-2xl object-cover border border-gray-100 shadow-sm"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                      Verified MD
-                    </span>
-                    <span className="flex items-center gap-1 text-xs font-bold text-amber-600">
-                      ★ {doc.rating} ({doc.reviewsCount})
-                    </span>
-                  </div>
-                  <h2 className="mt-1.5 text-base font-bold text-gray-900">{doc.name}</h2>
-                  <p className="text-xs font-medium text-teal-700">{doc.specialty}</p>
-                  <p className="mt-0.5 text-[11px] text-gray-500">{doc.experienceYears} Years Clinical Exp.</p>
-                </div>
-              </div>
-
-              <div className="mt-4 border-t border-gray-100 pt-3">
-                <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Qualifications:</p>
-                <p className="text-xs text-gray-700 font-medium">{doc.qualification}</p>
-                <p className="mt-2 text-xs leading-relaxed text-gray-600 line-clamp-2">{doc.bio}</p>
-              </div>
-
-              <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
-                <div>
-                  <span className="text-[11px] text-gray-400">Home Visit (Demo)</span>
-                  <p className="text-sm font-extrabold text-gray-900">${doc.hourlyRate} / ₹1,499</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => openBooking({ doctor: doc.name, specialty: doc.specialty })}
-                  className="button button-dark button-sm"
-                >
-                  Request Visit <Icon name="arrow-right" size="xs" />
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <p className="mt-8 text-center text-xs text-gray-400">
-          *Demonstration physician directory and rate cards for prototype evaluation.
-        </p>
+        <Footer />
       </div>
-
-      <Footer />
-    </div>
+    </ScrollAnimationProvider>
   );
 }
