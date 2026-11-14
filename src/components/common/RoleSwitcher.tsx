@@ -24,10 +24,10 @@ export const RoleSwitcher: React.FC = () => {
   return (
     <aside
       aria-label="Platform role switcher"
-      className="fixed bottom-4 left-4 z-50 flex flex-col items-start gap-2"
+      className="fixed bottom-3 left-3 sm:bottom-4 sm:left-4 z-50 flex flex-col items-start gap-2"
     >
       {isOpen && (
-        <div className="w-80 rounded-2xl border border-[#273a3d] bg-[#11191b]/95 p-4 text-white shadow-2xl backdrop-blur-xl">
+        <div className="w-[calc(100vw-24px)] sm:w-80 max-w-sm rounded-2xl border border-[#273a3d] bg-[#11191b]/95 p-4 text-white shadow-2xl backdrop-blur-xl">
           <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-teal-400">

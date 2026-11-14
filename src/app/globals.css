@@ -1922,23 +1922,31 @@ h1, h2 {
 
 @media (max-width: 620px) {
   .container {
-    width: calc(100% - 38px);
+    width: calc(100% - 32px);
   }
   .site-header {
-    width: calc(100% - 38px);
+    width: calc(100% - 32px);
     gap: 8px;
-    height: 71px;
-    grid-template-columns: 1fr auto;
+    height: 66px;
+    grid-template-columns: 1fr auto auto;
   }
   .brand {
-    font-size: 19px;
+    font-size: 17px;
   }
   .brand-icon {
     transform: scale(0.78);
     margin-right: -3px;
   }
   .header-book {
-    display: none;
+    display: inline-flex;
+    padding: 6px 12px;
+    height: 36px;
+    min-height: 36px;
+    font-size: 11px;
+    border-radius: 999px;
+    align-items: center;
+    gap: 4px;
+    justify-self: end;
   }
   .site-nav {
     top: 66px;

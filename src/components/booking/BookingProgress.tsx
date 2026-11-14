@@ -86,7 +86,7 @@ export const BookingProgress: React.FC<BookingProgressProps> = ({
           </div>
 
           {/* Integrated 3-Step Pill Progress */}
-          <div className="flex items-center gap-1.5 self-start md:self-auto">
+          <div className="flex items-center gap-1.5 self-start md:self-auto overflow-x-auto no-scrollbar max-w-full pb-0.5">
             {steps.map((step, idx) => {
               const isDone = currentStep > step.number;
               const isCurrent = currentStep === step.number;
@@ -94,7 +94,7 @@ export const BookingProgress: React.FC<BookingProgressProps> = ({
               return (
                 <React.Fragment key={step.number}>
                   <div
-                    className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                    className={`flex items-center gap-1.5 rounded-full px-2.5 sm:px-3 py-1 text-xs font-bold transition-all shrink-0 ${
                       isCurrent
                         ? 'bg-[#064E3B] text-white shadow-2xs'
                         : isDone
@@ -113,7 +113,7 @@ export const BookingProgress: React.FC<BookingProgressProps> = ({
                     >
                       {isDone ? <Check className="h-2.5 w-2.5 stroke-[3]" /> : step.number}
                     </span>
-                    <span className="hidden sm:inline">{step.label}</span>
+                    <span className={isCurrent ? 'inline' : 'hidden sm:inline'}>{step.label}</span>
                   </div>
                   {idx < steps.length - 1 && (
                     <span className="text-slate-300 text-xs select-none">→</span>

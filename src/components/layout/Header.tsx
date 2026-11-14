@@ -87,6 +87,21 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
             </Link>
           );
         })}
+
+        {/* Mobile-only CTA inside drawer */}
+        <div className="pt-2 border-t border-slate-200/20 mt-2 md:hidden">
+          <button
+            type="button"
+            className="w-full flex items-center justify-center gap-2 rounded-full bg-[#064E3B] text-white py-2.5 px-4 text-xs font-bold shadow-xs hover:bg-[#065F46] transition-colors"
+            onClick={() => {
+              closeMenu();
+              openBooking();
+            }}
+          >
+            <span>Book Appointment</span>
+            <Icon name="arrow-right" size="sm" />
+          </button>
+        </div>
       </nav>
 
       <button
@@ -97,7 +112,8 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
           openBooking();
         }}
       >
-        <span>Book Appointment</span>
+        <span className="hidden sm:inline">Book Appointment</span>
+        <span className="sm:hidden font-bold">Book</span>
         <Icon name="arrow-right" size="sm" />
       </button>
 

@@ -84,14 +84,14 @@ export const HeroSection: React.FC = () => {
           </h1>
 
           <div className="hero-actions animate-hero-actions">
-            <Link
-              href="/book"
-              prefetch={true}
+            <button
+              type="button"
+              onClick={() => openBooking()}
               className="button button-white button-sm"
             >
               <Icon name="calendar" size="xs" /> Book Appointment{' '}
               <Icon name="arrow-right" size="xs" />
-            </Link>
+            </button>
             <Link
               href="/doctors"
               prefetch={true}

@@ -422,7 +422,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                         Preferred Date
                       </label>
-                      <div className="grid grid-cols-3 gap-2.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
                         <button
                           type="button"
                           onClick={() => setDateOption('TODAY')}
