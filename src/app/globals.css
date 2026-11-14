@@ -314,10 +314,10 @@ h1, h2 {
   position: relative;
   height: min(925px, 100svh);
   min-height: 750px;
-  background-color: #0c1618;
+  background-color: #071517;
   background-image: 
-    linear-gradient(180deg, rgba(10, 20, 22, 0.3) 0%, transparent 20%, rgba(10, 20, 22, 0.45) 100%),
-    url("/assets/compassionate-hospital-care.png");
+    linear-gradient(180deg, rgba(7, 21, 23, 0.35) 0%, transparent 22%, rgba(7, 21, 23, 0.5) 100%),
+    url("/assets/warm-home-visit-healthcare.png");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
