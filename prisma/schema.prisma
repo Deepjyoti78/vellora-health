@@ -1,0 +1,270 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String?  @unique
+  phone     String?  @unique
+  name      String
+  role      String   @default("PATIENT") // PATIENT, DOCTOR, NURSE, CARETAKER, PHLEBOTOMIST, ADMIN
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patientProfile  PatientProfile?
+  providerProfile ProviderProfile?
+  bookings        Booking[]        @relation("PatientBookings")
+  assignedVisits  Booking[]        @relation("ProviderAssignedVisits")
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+}
+
+model PatientProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dob         String?
+  gender      String?
+  bloodGroup  String?
+  emergencyContact String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  familyMembers FamilyMember[]
+  addresses     Address[]
+  prescriptions Prescription[]
+  vitals        VitalsRecord[]
+  labReports    LabReport[]
+}
+
+model FamilyMember {
+  id               String         @id @default(uuid())
+  patientProfileId String
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+  fullName         String
+  relationship     String         // Self, Spouse, Child, Parent, Sibling, Other
+  gender           String
+  dob              String?
+  bloodGroup       String?
+  createdAt        DateTime       @default(now())
+}
+
+model Address {
+  id               String         @id @default(uuid())
+  patientProfileId String
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+  tag              String         // Home, Work, Parent's Home, Other
+  streetAddress    String
+  apartment        String?
+  city             String
+  state            String
+  postalCode       String
+  isDefault        Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+}
+
+model ProviderProfile {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerType       String   // DOCTOR, NURSE, CARETAKER, PHLEBOTOMIST
+  specialty          String?
+  experienceYears    Int      @default(0)
+  licenseNumber      String?
+  bio                String?
+  verificationStatus String   @default("PENDING") // PENDING, APPROVED, REJECTED, SUSPENDED
+  isOnline           Boolean  @default(false)
+  rating             Float    @default(5.0)
+  reviewCount        Int      @default(0)
+  hourlyRate         Float    @default(0.0)
+  shiftRate12h       Float?
+  shiftRate24h       Float?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  qualifications     Qualification[]
+  documents          VerificationDocument[]
+  payouts            PayoutRecord[]
+}
+
+model Qualification {
+  id                String          @id @default(uuid())
+  providerProfileId String
+  providerProfile   ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  degree            String
+  institution       String
+  yearOfPassing     Int
+  documentUrl       String?
+}
+
+model VerificationDocument {
+  id                String          @id @default(uuid())
+  providerProfileId String
+  providerProfile   ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  documentType      String          // ID_PROOF, MEDICAL_COUNCIL_REG, NURSING_CERT, POLICE_CLEARANCE
+  documentUrl       String
+  status            String          @default("UNDER_REVIEW") // UNDER_REVIEW, VERIFIED, REJECTED
+  uploadedAt        DateTime        @default(now())
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  category    String   // DOCTOR_VISIT, NURSING_CARE, CARETAKER, LAB_TESTS
+  shortDesc   String
+  description String
+  image       String
+  basePrice   Float
+  duration    String
+  features    String   // JSON string of included care/tasks
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  bookings    Booking[]
+}
+
+model Booking {
+  id                 String    @id @default(uuid())
+  bookingNumber      String    @unique
+  patientId          String
+  patient            User      @relation("PatientBookings", fields: [patientId], references: [id])
+  serviceId          String
+  service            Service   @relation(fields: [serviceId], references: [id])
+  providerId         String?
+  provider           User?     @relation("ProviderAssignedVisits", fields: [providerId], references: [id])
+  
+  beneficiaryName    String
+  beneficiaryRelation String
+  addressText        String
+  scheduledDate      String
+  scheduledTimeSlot  String
+  
+  status             String    @default("REQUESTED") // REQUESTED, CONFIRMED, ASSIGNED, ON_THE_WAY, ARRIVED, IN_PROGRESS, COMPLETED, CANCELLED
+  shiftType          String?   // STANDARD_VISIT, SHIFT_12H, SHIFT_24H
+  
+  totalAmount        Float
+  discountAmount     Float     @default(0.0)
+  couponCode         String?
+  paymentStatus      String    @default("PENDING") // PENDING, PAID, REFUNDED, FAILED
+  paymentMethod      String?   // CARD, UPI, NETBANKING, CASH_ON_SERVICE
+  
+  notes              String?
+  cancellationReason String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  statusHistory      BookingStatusHistory[]
+  prescription       Prescription?
+  vitals             VitalsRecord?
+  labReport          LabReport?
+  review             Review?
+}
+
+model BookingStatusHistory {
+  id        String   @id @default(uuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  status    String
+  note      String?
+  timestamp DateTime @default(now())
+}
+
+model Prescription {
+  id               String         @id @default(uuid())
+  bookingId        String?        @unique
+  booking          Booking?       @relation(fields: [bookingId], references: [id])
+  patientProfileId String
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id])
+  doctorName       String
+  diagnosis        String
+  medications      String         // JSON string: name, dosage, frequency, duration
+  advice           String?
+  issuedAt         DateTime       @default(now())
+}
+
+model VitalsRecord {
+  id               String         @id @default(uuid())
+  bookingId        String?        @unique
+  booking          Booking?       @relation(fields: [bookingId], references: [id])
+  patientProfileId String
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id])
+  recordedBy       String
+  bloodPressure    String?
+  heartRate        Int?
+  spo2             Int?
+  temperature      Float?
+  bloodGlucose     Float?
+  respiratoryRate  Int?
+  clinicalNotes    String?
+  recordedAt       DateTime       @default(now())
+}
+
+model LabReport {
+  id               String         @id @default(uuid())
+  bookingId        String?        @unique
+  booking          Booking?       @relation(fields: [bookingId], references: [id])
+  patientProfileId String
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id])
+  testName         String
+  category         String
+  specimenType     String?
+  collectedAt      DateTime?
+  resultSummary    String
+  reportFileUrl    String?
+  status           String         @default("COMPLETED") // PENDING_COLLECTION, IN_LAB, COMPLETED
+  releasedAt       DateTime       @default(now())
+}
+
+model PayoutRecord {
+  id                String          @id @default(uuid())
+  providerProfileId String
+  providerProfile   ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  amount            Float
+  commissionAmount  Float
+  netPayout         Float
+  period            String
+  status            String          @default("PAID") // PENDING, PROCESSED, PAID
+  transactionRef    String?
+  paidAt            DateTime?
+  createdAt         DateTime        @default(now())
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  bookingId String   @unique
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?
+  author    String
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  category  String   // BOOKING, CLINICAL, BILLING, SYSTEM
+  isRead    Boolean  @default(false)
+  linkUrl   String?
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  resource  String
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}

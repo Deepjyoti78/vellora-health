@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import { DM_Sans, Manrope } from 'next/font/google';
 import './globals.css';
 import { BookingProvider } from '@/context/BookingContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { BookingModal } from '@/components/common/BookingModal';
+import { RoleSwitcher } from '@/components/common/RoleSwitcher';
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -19,16 +21,16 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: 'Vellora Health | Exceptional Healthcare, Always',
+  title: 'Vellora Health | Complete Healthcare Platform',
   description:
-    'Vellora Health — exceptional healthcare, always. Discover services, specialties, doctors, facilities, and personalized care.',
+    'Comprehensive healthcare platform connecting patients, licensed physicians, nurses, caretakers, and diagnostic phlebotomy at home.',
   icons: {
     icon: '/assets/favicon.svg',
   },
   openGraph: {
-    title: 'Vellora Health | Exceptional Healthcare, Always',
+    title: 'Vellora Health | Complete Healthcare Platform',
     description:
-      'Accessible, modern medical care — where technology meets compassion. Discover services, specialties, doctors, and facilities.',
+      'Accessible, modern medical care — where technology meets compassion. Discover services, book visits, and manage health records.',
     siteName: 'Vellora Health',
     type: 'website',
   },
@@ -51,10 +53,13 @@ export default function RootLayout({
         <a className="skip-link" href="#main">
           Skip to content
         </a>
-        <BookingProvider>
-          {children}
-          <BookingModal />
-        </BookingProvider>
+        <AuthProvider>
+          <BookingProvider>
+            {children}
+            <BookingModal />
+            <RoleSwitcher />
+          </BookingProvider>
+        </AuthProvider>
       </body>
     </html>
   );
