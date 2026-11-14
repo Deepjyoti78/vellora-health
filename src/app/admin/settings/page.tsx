@@ -2,7 +2,16 @@
 
 import React, { useState } from 'react';
 import { AdminLayout } from '@/components/layout/AdminLayout';
-import { Icon } from '@/components/common/Icon';
+import {
+  ShieldCheck,
+  Sliders,
+  CheckCircle2,
+  Lock,
+  Cpu,
+  Save,
+  Radio,
+  FileText,
+} from 'lucide-react';
 
 export default function AdminSettingsPage() {
   const [autoDispatch, setAutoDispatch] = useState(true);
@@ -48,34 +57,47 @@ export default function AdminSettingsPage() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    setTimeout(() => setSavedSuccess(false), 2500);
   };
 
   return (
     <AdminLayout>
       <div className="space-y-6 max-w-7xl mx-auto">
+        {/* Header */}
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#116b70]">
-            System Configuration
-          </span>
-          <h1 className="text-2xl font-black text-gray-900 sm:text-3xl">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#065F46]">
+              System Governance
+            </span>
+            <span className="rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-[11px] font-bold text-[#065F46]">
+              SOC 2 Compliant
+            </span>
+          </div>
+          <h1 className="font-heading text-2xl font-black text-[#102820] sm:text-3xl mt-0.5">
             Settings & Security Audit Trail
           </h1>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-slate-500">
             Platform governance rules, testing switches, and immutable compliance audit records.
           </p>
         </div>
 
         {/* System Settings Form */}
-        <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-          <h3 className="text-base font-bold text-gray-900">Platform Core Parameters</h3>
+        <div className="rounded-2xl border border-[#E2EBE7] bg-white p-6 shadow-xs">
+          <div className="flex items-center gap-2 border-b border-[#F2F8F5] pb-3">
+            <Sliders className="h-4 w-4 text-[#065F46]" />
+            <h3 className="font-heading text-base font-bold text-[#102820]">
+              Platform Core Parameters
+            </h3>
+          </div>
 
           <form onSubmit={handleSave} className="mt-4 space-y-4">
-            <div className="divide-y divide-gray-100 text-xs">
-              <div className="flex items-center justify-between py-3">
+            <div className="divide-y divide-[#F2F8F5] text-xs">
+              <div className="flex items-center justify-between py-3.5">
                 <div>
-                  <span className="font-bold text-gray-900 block">Algorithmic Auto-Dispatch</span>
-                  <span className="text-gray-500">
+                  <span className="font-bold text-[#102820] block">
+                    Algorithmic Auto-Dispatch
+                  </span>
+                  <span className="text-slate-500 text-[11px]">
                     Automatically matches incoming patient bookings to nearest available verified practitioner within 60 seconds.
                   </span>
                 </div>
@@ -83,14 +105,16 @@ export default function AdminSettingsPage() {
                   type="checkbox"
                   checked={autoDispatch}
                   onChange={(e) => setAutoDispatch(e.target.checked)}
-                  className="h-4 w-4 rounded text-[#116b70]"
+                  className="h-4 w-4 rounded accent-[#064E3B]"
                 />
               </div>
 
-              <div className="flex items-center justify-between py-3">
+              <div className="flex items-center justify-between py-3.5">
                 <div>
-                  <span className="font-bold text-gray-900 block">Peak Hours Surge Multiplier (1.5x)</span>
-                  <span className="text-gray-500">
+                  <span className="font-bold text-[#102820] block">
+                    Peak Hours Surge Multiplier (1.5x)
+                  </span>
+                  <span className="text-slate-500 text-[11px]">
                     Applies surge incentives for night shifts and inclement weather emergency calls.
                   </span>
                 </div>
@@ -98,21 +122,23 @@ export default function AdminSettingsPage() {
                   type="checkbox"
                   checked={surgeActive}
                   onChange={(e) => setSurgeActive(e.target.checked)}
-                  className="h-4 w-4 rounded text-[#116b70]"
+                  className="h-4 w-4 rounded accent-[#064E3B]"
                 />
               </div>
 
-              <div className="flex items-center justify-between py-3">
+              <div className="flex items-center justify-between py-3.5">
                 <div>
-                  <span className="font-bold text-gray-900 block">SMS Gateway Mode</span>
-                  <span className="text-gray-500">
-                    Current test OTP code is fixed to <strong className="font-mono text-[#116b70]">4829</strong> for development and demonstration.
+                  <span className="font-bold text-[#102820] block">
+                    SMS Gateway Mode
+                  </span>
+                  <span className="text-slate-500 text-[11px]">
+                    Current test OTP code is fixed to <strong className="font-mono text-[#065F46]">4829</strong> for development and demonstration.
                   </span>
                 </div>
                 <select
                   value={smsGateway}
                   onChange={(e) => setSmsGateway(e.target.value)}
-                  className="rounded-lg border border-gray-300 p-1.5 text-xs font-bold"
+                  className="rounded-xl border border-[#E2EBE7] bg-white p-2 text-xs font-semibold text-[#102820] focus:border-[#064E3B] focus:outline-none"
                 >
                   <option value="SIMULATED_TEST">Simulated Sandbox (OTP: 4829)</option>
                   <option value="TWILIO_PROD">Twilio Production SMS</option>
@@ -122,54 +148,63 @@ export default function AdminSettingsPage() {
             </div>
 
             {savedSuccess && (
-              <p className="text-xs font-bold text-emerald-700">Settings saved and synced across cluster!</p>
+              <p className="rounded-lg bg-[#ECFDF5] p-2 text-xs font-bold text-[#065F46] text-center">
+                Settings saved and synced across cluster!
+              </p>
             )}
 
-            <div className="flex justify-end pt-3 border-t border-gray-100">
+            <div className="flex justify-end pt-3 border-t border-[#F2F8F5]">
               <button
                 type="submit"
-                className="rounded-xl bg-[#116b70] px-5 py-2 text-xs font-bold text-white shadow-md hover:bg-[#0d5559]"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#064E3B] px-5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#065F46] transition-colors"
               >
-                Save Configuration
+                <Save className="h-3.5 w-3.5" />
+                <span>Save Configuration</span>
               </button>
             </div>
           </form>
         </div>
 
         {/* Security Audit Trail */}
-        <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xs">
-          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+        <div className="overflow-hidden rounded-2xl border border-[#E2EBE7] bg-white shadow-xs">
+          <div className="p-5 border-b border-[#E2EBE7] flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-gray-900">Immutable Compliance Audit Logs</h3>
-              <p className="text-xs text-gray-500">HIPAA & SOC 2 Type II audit logging trail.</p>
+              <h3 className="font-heading text-base font-bold text-[#102820]">
+                Immutable Compliance Audit Logs
+              </h3>
+              <p className="text-xs text-slate-400">
+                HIPAA & SOC 2 Type II audit logging trail.
+              </p>
             </div>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 font-mono text-[10px] font-bold text-emerald-800">
+            <span className="rounded-full bg-[#ECFDF5] px-3 py-1 font-mono text-[10px] font-bold text-[#065F46]">
               LOG STREAM SECURED
             </span>
           </div>
 
-          <table className="min-w-full divide-y divide-gray-200 text-left text-xs">
-            <thead className="bg-gray-50 font-bold text-gray-700">
-              <tr>
-                <th className="px-4 py-3">Timestamp (UTC)</th>
-                <th className="px-4 py-3">Authenticated Actor</th>
-                <th className="px-4 py-3">Security Action</th>
-                <th className="px-4 py-3">Target Entity</th>
-                <th className="px-4 py-3 text-right">Source IP / Host</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 bg-white font-mono">
-              {auditLogs.map((log) => (
-                <tr key={log.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-500">{log.timestamp}</td>
-                  <td className="px-4 py-3 font-bold text-gray-900">{log.actor}</td>
-                  <td className="px-4 py-3 text-[#116b70] font-bold">{log.action}</td>
-                  <td className="px-4 py-3 text-gray-800">{log.target}</td>
-                  <td className="px-4 py-3 text-gray-400 text-right">{log.ip}</td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-[#E2EBE7] text-left text-xs">
+              <thead className="bg-[#F2F8F5] font-extrabold uppercase tracking-wider text-[11px] text-slate-500">
+                <tr>
+                  <th className="px-5 py-3.5">Timestamp (UTC)</th>
+                  <th className="px-5 py-3.5">Authenticated Actor</th>
+                  <th className="px-5 py-3.5">Security Action</th>
+                  <th className="px-5 py-3.5">Target Entity</th>
+                  <th className="px-5 py-3.5 text-right">Source IP / Host</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#F2F8F5] bg-white font-mono text-[11px]">
+                {auditLogs.map((log) => (
+                  <tr key={log.id} className="hover:bg-[#F9FCFA] transition-colors">
+                    <td className="px-5 py-3.5 text-slate-400">{log.timestamp}</td>
+                    <td className="px-5 py-3.5 font-bold text-[#102820]">{log.actor}</td>
+                    <td className="px-5 py-3.5 text-[#065F46] font-bold">{log.action}</td>
+                    <td className="px-5 py-3.5 text-slate-700">{log.target}</td>
+                    <td className="px-5 py-3.5 text-slate-400 text-right">{log.ip}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </AdminLayout>

@@ -2,9 +2,22 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { db, BookingRecord } from '@/lib/db';
 import { AdminLayout } from '@/components/layout/AdminLayout';
-import { Icon } from '@/components/common/Icon';
+import {
+  MapPin,
+  Clock,
+  User,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
+  Repeat,
+  Radio,
+  Filter,
+  Search,
+  Navigation,
+} from 'lucide-react';
 
 export default function AdminDispatchPage() {
   const [bookings, setBookings] = useState<BookingRecord[]>(db.getBookings());
@@ -14,13 +27,44 @@ export default function AdminDispatchPage() {
   const [selectedBooking, setSelectedBooking] = useState<BookingRecord | null>(null);
   const [selectedProviderId, setSelectedProviderId] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const columns: { key: BookingRecord['status']; label: string; bg: string }[] = [
-    { key: 'REQUESTED', label: 'Unassigned Queue', bg: 'bg-amber-500/10 text-amber-900 border-amber-200' },
-    { key: 'ASSIGNED', label: 'Assigned / Scheduled', bg: 'bg-blue-500/10 text-blue-900 border-blue-200' },
-    { key: 'ON_THE_WAY', label: 'Clinician En Route', bg: 'bg-emerald-500/10 text-emerald-900 border-emerald-200' },
-    { key: 'IN_PROGRESS', label: 'In-Home Care Delivery', bg: 'bg-purple-500/10 text-purple-900 border-purple-200' },
-    { key: 'COMPLETED', label: 'Concluded Today', bg: 'bg-gray-500/10 text-gray-900 border-gray-200' },
+  const columns: {
+    key: BookingRecord['status'];
+    label: string;
+    badgeColor: string;
+    accentBorder: string;
+  }[] = [
+    {
+      key: 'REQUESTED',
+      label: 'Unassigned Queue',
+      badgeColor: 'bg-amber-50 text-amber-800 border-amber-200',
+      accentBorder: 'border-t-amber-400',
+    },
+    {
+      key: 'ASSIGNED',
+      label: 'Clinician Assigned',
+      badgeColor: 'bg-blue-50 text-blue-800 border-blue-200',
+      accentBorder: 'border-t-blue-500',
+    },
+    {
+      key: 'ON_THE_WAY',
+      label: 'En Route (Live GPS)',
+      badgeColor: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+      accentBorder: 'border-t-emerald-500',
+    },
+    {
+      key: 'IN_PROGRESS',
+      label: 'In-Home Care Delivery',
+      badgeColor: 'bg-purple-50 text-purple-800 border-purple-200',
+      accentBorder: 'border-t-purple-500',
+    },
+    {
+      key: 'COMPLETED',
+      label: 'Concluded Today',
+      badgeColor: 'bg-slate-100 text-slate-700 border-slate-200',
+      accentBorder: 'border-t-slate-400',
+    },
   ];
 
   const handleOpenReassign = (b: BookingRecord) => {
@@ -38,38 +82,68 @@ export default function AdminDispatchPage() {
     setTimeout(() => {
       setSuccessMessage('');
       setSelectedBooking(null);
-    }, 2000);
+    }, 1800);
   };
+
+  const filteredBookings = bookings.filter((b) => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      b.bookingNumber.toLowerCase().includes(q) ||
+      b.beneficiaryName.toLowerCase().includes(q) ||
+      b.serviceName.toLowerCase().includes(q) ||
+      (b.providerName && b.providerName.toLowerCase().includes(q))
+    );
+  });
 
   return (
     <AdminLayout>
       <div className="space-y-6 max-w-full">
-        {/* Header */}
+        {/* Board Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#116b70]">
-              Real-Time Fleet Routing
-            </span>
-            <h1 className="text-2xl font-black text-gray-900 sm:text-3xl">
-              Live Medical Dispatch Command Board
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#065F46]">
+                Real-Time Telemetry
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-[11px] font-bold text-[#065F46]">
+                <Radio className="h-3 w-3 animate-pulse text-emerald-500" />
+                <span>Auto-Dispatch Active</span>
+              </span>
+            </div>
+            <h1 className="font-heading text-2xl font-black text-[#102820] sm:text-3xl mt-0.5">
+              Live Medical Dispatch Board
             </h1>
-            <p className="mt-1 text-xs text-gray-500">
-              Drag, reassign, and track clinicians navigating across regional mobile care zones.
+            <p className="mt-1 text-xs text-slate-500">
+              Live routing command center for doorstep physicians, nurses, phlebotomists, and elderly caretakers.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-xs font-bold text-gray-700 shadow-2xs">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-              Auto-Routing Active
-            </span>
+          {/* Quick Search & Filter */}
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search dispatch queue..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="rounded-xl border border-[#E2EBE7] bg-white py-1.5 pl-9 pr-3 text-xs text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none"
+              />
+            </div>
+            <Link
+              href="/admin/bookings"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#E2EBE7] bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-[#F2F8F5] transition-colors"
+            >
+              <span>Master Bookings</span>
+            </Link>
           </div>
         </div>
 
-        {/* Dispatch Kanban Columns */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 min-h-[500px]">
+        {/* 5 Column Kanban Grid */}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 min-h-[600px] items-start">
           {columns.map((col) => {
-            const colBookings = bookings.filter((b) => {
+            const colBookings = filteredBookings.filter((b) => {
               if (col.key === 'IN_PROGRESS') {
                 return b.status === 'IN_PROGRESS' || b.status === 'ARRIVED';
               }
@@ -79,61 +153,83 @@ export default function AdminDispatchPage() {
             return (
               <div
                 key={col.key}
-                className="rounded-3xl border border-gray-200 bg-white/70 p-4 shadow-xs flex flex-col"
+                className={`rounded-2xl border border-[#E2EBE7] border-t-4 ${col.accentBorder} bg-white p-3.5 shadow-xs flex flex-col`}
               >
-                {/* Column Header */}
-                <div className={`rounded-xl border p-2.5 text-center font-bold text-xs ${col.bg}`}>
+                {/* Column Top Pill */}
+                <div className={`rounded-xl border p-2.5 text-xs font-bold ${col.badgeColor}`}>
                   <div className="flex items-center justify-between">
-                    <span>{col.label}</span>
-                    <span className="rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-black">
+                    <span className="truncate">{col.label}</span>
+                    <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black shadow-2xs">
                       {colBookings.length}
                     </span>
                   </div>
                 </div>
 
                 {/* Cards Container */}
-                <div className="mt-3 flex-1 space-y-3 overflow-y-auto">
+                <div className="mt-3.5 flex-1 space-y-3">
                   {colBookings.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-gray-200 p-8 text-center text-[11px] text-gray-400">
-                      Empty queue
+                    <div className="rounded-xl border border-dashed border-[#E2EBE7] p-8 text-center text-xs text-slate-400">
+                      No visits in queue
                     </div>
                   ) : (
                     colBookings.map((b) => (
                       <div
                         key={b.id}
-                        className="rounded-2xl border border-gray-200 bg-white p-4 shadow-2xs transition-shadow hover:shadow-md"
+                        className="rounded-xl border border-[#E2EBE7] bg-white p-3.5 shadow-2xs hover:border-[#CBDCD5] hover:shadow-xs transition-all duration-150"
                       >
-                        <div className="flex items-start justify-between">
-                          <span className="font-mono text-[11px] font-bold text-gray-500">
+                        {/* Top bar with booking ID & Service Tag */}
+                        <div className="flex items-start justify-between gap-1">
+                          <span className="font-mono text-[11px] font-bold text-slate-500">
                             {b.bookingNumber}
                           </span>
-                          <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[9px] font-bold text-gray-600">
+                          <span className="rounded-md bg-[#F2F8F5] px-1.5 py-0.5 text-[9px] font-bold text-[#065F46] uppercase truncate max-w-[100px]">
                             {b.category.replace(/_/g, ' ')}
                           </span>
                         </div>
 
-                        <h4 className="mt-2 text-xs font-bold text-gray-900">{b.serviceName}</h4>
-                        <p className="mt-1 text-[11px] text-gray-600">
-                          Patient: <strong>{b.beneficiaryName}</strong>
-                        </p>
-                        <p className="text-[10px] text-gray-400 truncate mt-0.5">{b.addressText}</p>
+                        {/* Service Title */}
+                        <h4 className="mt-2 text-xs font-bold text-[#102820] leading-snug">
+                          {b.serviceName}
+                        </h4>
 
-                        <div className="mt-3 border-t border-gray-100 pt-2 flex items-center justify-between text-[11px]">
-                          <div>
+                        {/* Patient & Address */}
+                        <div className="mt-2 space-y-1 text-[11px] text-slate-600">
+                          <div className="flex items-center gap-1.5">
+                            <User className="h-3 w-3 text-slate-400 shrink-0" />
+                            <span className="font-semibold text-[#102820] truncate">
+                              {b.beneficiaryName}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-slate-500">
+                            <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
+                            <span className="truncate">{b.addressText}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-slate-500">
+                            <Clock className="h-3 w-3 text-slate-400 shrink-0" />
+                            <span>{b.scheduledTimeSlot || b.scheduledDate}</span>
+                          </div>
+                        </div>
+
+                        {/* Footer: Clinician assignment & reassign button */}
+                        <div className="mt-3.5 border-t border-[#F2F8F5] pt-2.5 flex items-center justify-between text-xs">
+                          <div className="min-w-0 flex-1">
                             {b.providerName ? (
-                              <span className="font-bold text-[#116b70] truncate block max-w-[110px]">
+                              <span className="font-bold text-[#065F46] truncate block text-[11px]">
                                 {b.providerName}
                               </span>
                             ) : (
-                              <span className="text-amber-600 font-bold">Unassigned</span>
+                              <span className="text-amber-700 font-bold text-[11px]">
+                                Unassigned
+                              </span>
                             )}
                           </div>
                           <button
                             type="button"
                             onClick={() => handleOpenReassign(b)}
-                            className="text-[10px] font-bold text-gray-700 hover:text-[#116b70] hover:underline"
+                            className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold text-[#064E3B] hover:bg-[#ECFDF5] transition-colors"
                           >
-                            Reassign ⇄
+                            <Repeat className="h-3 w-3" />
+                            <span>Reassign</span>
                           </button>
                         </div>
                       </div>
@@ -147,49 +243,49 @@ export default function AdminDispatchPage() {
 
         {/* Reassignment Modal */}
         {selectedBooking && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-            <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
+            <div className="w-full max-w-md rounded-2xl border border-[#E2EBE7] bg-white p-6 shadow-2xl animate-in fade-in zoom-in-95">
+              <div className="flex items-center justify-between border-b border-[#E2EBE7] pb-3">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#116b70]">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#065F46]">
                     Dispatch Override
                   </span>
-                  <h3 className="text-base font-bold text-gray-900">
+                  <h3 className="font-heading text-base font-bold text-[#102820]">
                     Reassign {selectedBooking.bookingNumber}
                   </h3>
                 </div>
                 <button
                   onClick={() => setSelectedBooking(null)}
-                  className="rounded-lg p-1 text-gray-400 hover:bg-gray-100"
+                  className="rounded-lg p-1 text-slate-400 hover:bg-[#F2F8F5] transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               <form onSubmit={handleConfirmReassign} className="mt-4 space-y-4">
-                <div className="rounded-xl bg-gray-50 p-3 text-xs space-y-1">
+                <div className="rounded-xl bg-[#F5F9F7] p-3 text-xs space-y-1.5 border border-[#E2EBE7]">
                   <p>
-                    <span className="text-gray-500">Service:</span>{' '}
-                    <strong>{selectedBooking.serviceName}</strong>
+                    <span className="text-slate-500">Service:</span>{' '}
+                    <strong className="text-[#102820]">{selectedBooking.serviceName}</strong>
                   </p>
                   <p>
-                    <span className="text-gray-500">Patient:</span>{' '}
-                    <strong>{selectedBooking.beneficiaryName}</strong>
+                    <span className="text-slate-500">Patient:</span>{' '}
+                    <strong className="text-[#102820]">{selectedBooking.beneficiaryName}</strong>
                   </p>
                   <p>
-                    <span className="text-gray-500">Destination:</span>{' '}
-                    {selectedBooking.addressText}
+                    <span className="text-slate-500">Destination:</span>{' '}
+                    <span className="text-slate-700">{selectedBooking.addressText}</span>
                   </p>
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">
+                  <label className="text-xs font-bold text-[#102820]">
                     Select Replacement Practitioner
                   </label>
                   <select
                     value={selectedProviderId}
                     onChange={(e) => setSelectedProviderId(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 text-xs font-medium"
+                    className="mt-1.5 block w-full rounded-xl border border-[#E2EBE7] bg-white p-2.5 text-xs font-semibold text-[#102820] focus:border-[#064E3B] focus:outline-none"
                   >
                     {allProviders.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -200,7 +296,7 @@ export default function AdminDispatchPage() {
                 </div>
 
                 {successMessage && (
-                  <p className="text-xs font-bold text-emerald-700 text-center">
+                  <p className="rounded-lg bg-[#ECFDF5] p-2 text-xs font-bold text-[#065F46] text-center">
                     {successMessage}
                   </p>
                 )}
@@ -209,13 +305,13 @@ export default function AdminDispatchPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedBooking(null)}
-                    className="rounded-xl border border-gray-300 px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50"
+                    className="rounded-xl border border-[#E2EBE7] px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-[#F2F8F5] transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="rounded-xl bg-[#116b70] px-5 py-2 text-xs font-bold text-white hover:bg-[#0d5559] shadow-sm"
+                    className="rounded-xl bg-[#064E3B] px-5 py-2 text-xs font-semibold text-white hover:bg-[#065F46] shadow-xs transition-colors"
                   >
                     Dispatch Now
                   </button>
