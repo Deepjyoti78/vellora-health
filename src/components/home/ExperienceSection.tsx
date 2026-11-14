@@ -6,7 +6,7 @@ export const ExperienceSection: React.FC = () => {
   return (
     <section className="section section-experience" aria-labelledby="experienceTitle">
       <div className="container">
-        <div className="section-heading-row experience-header">
+        <div className="section-heading-row experience-header scroll-reveal">
           <div>
             <p className="eyebrow">WHY CHOOSE VELLORA HEALTH</p>
             <h2 id="experienceTitle">
@@ -18,9 +18,9 @@ export const ExperienceSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="experience-grid">
+        <div className="experience-grid stagger-container">
           {EXPERIENCE_ITEMS.map((item, idx) => (
-            <div key={idx} className="experience-pill">
+            <div key={idx} className="experience-pill scroll-reveal-card">
               <Icon name={item.icon as IconName} /> {item.label}
             </div>
           ))}

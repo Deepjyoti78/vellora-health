@@ -12,7 +12,7 @@ export const CareOptionsSection: React.FC = () => {
   return (
     <section id="care-options" className="section bg-[#ffffff] py-20 border-b border-[#e5e9e9]" aria-labelledby="careOptionsTitle">
       <div className="container">
-        <div className="text-center max-w-2xl mx-auto mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-14 scroll-reveal">
           <p className="eyebrow text-[#116b70]">FLEXIBLE CLINICAL SCHEDULES</p>
           <h2 id="careOptionsTitle" className="font-heading text-3xl font-extrabold text-[#11191b] md:text-4xl">
             Home Care Options &amp; Shift Packages
@@ -22,11 +22,11 @@ export const CareOptionsSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-container">
           {CARE_OPTIONS_DATA.map((opt) => (
             <div
               key={opt.id}
-              className="flex flex-col justify-between rounded-2xl border border-[#e5e9e9] bg-[#fbfcfc] p-6 transition hover:border-[#116b70] hover:shadow-lg"
+              className="flex flex-col justify-between rounded-2xl border border-[#e5e9e9] bg-[#fbfcfc] p-6 transition hover:border-[#116b70] hover:shadow-lg scroll-reveal-card"
             >
               <div>
                 <span className="inline-block rounded-full bg-[#eaf4f3] px-3 py-1 text-[11px] font-bold text-[#116b70] uppercase tracking-wide">

@@ -15,7 +15,7 @@ export const HeroSection: React.FC = () => {
 
       <div className="hero-main container">
         <div className="hero-copy">
-          <div className="trust-row" aria-label="Patient trust indicator">
+          <div className="trust-row animate-hero-trust" aria-label="Patient trust indicator">
             <div className="trust-avatars" aria-hidden="true">
               {TRUST_DATA.avatars.map((src, idx) => (
                 <img
@@ -32,7 +32,7 @@ export const HeroSection: React.FC = () => {
             </span>
           </div>
 
-          <h1 id="heroTitle" className="hero-title">
+          <h1 id="heroTitle" className="hero-title animate-hero-title">
             EXCEPTIONAL<br />
             <span className="hero-title-row">
               <span className="hero-title-thumb" aria-hidden="true">
@@ -43,7 +43,7 @@ export const HeroSection: React.FC = () => {
             ALWAYS
           </h1>
 
-          <div className="hero-actions">
+          <div className="hero-actions animate-hero-actions">
             <button
               type="button"
               className="button button-white button-sm"
@@ -59,7 +59,7 @@ export const HeroSection: React.FC = () => {
         </div>
 
         {/* Right-side statistics column */}
-        <div className="hero-stats" aria-label="Key healthcare performance metrics">
+        <div className="hero-stats animate-hero-stats" aria-label="Key healthcare performance metrics">
           <div className="hero-stat-item">
             <span className="hero-stat-number">20K+</span>
             <span className="hero-stat-label">Patients Served Successfully</span>
@@ -78,7 +78,7 @@ export const HeroSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="hero-detail">
+        <div className="hero-detail animate-hero-detail">
           <p className="hero-detail-text">
             Accessible Modern Medical Care — where technology meets compassion.<br />
             From routine checkups to specialized treatment, our physicians bring<br />

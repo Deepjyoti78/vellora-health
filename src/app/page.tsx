@@ -9,10 +9,11 @@ import { FacilitiesSection } from '@/components/home/FacilitiesSection';
 import { FaqSection } from '@/components/home/FaqSection';
 import { CtaBanner } from '@/components/home/CtaBanner';
 import { Footer } from '@/components/layout/Footer';
+import { ScrollAnimationProvider } from '@/components/common/ScrollAnimationProvider';
 
 export default function HomePage() {
   return (
-    <>
+    <ScrollAnimationProvider>
       <main id="main">
         {/* 1. Hero with approved dark hospital aesthetic & 3-line heading */}
         <HeroSection />
@@ -45,6 +46,6 @@ export default function HomePage() {
         <CtaBanner />
       </main>
       <Footer />
-    </>
+    </ScrollAnimationProvider>
   );
 }

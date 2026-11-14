@@ -11,7 +11,7 @@ export const HowItWorksSection: React.FC = () => {
   return (
     <section id="how-it-works" className="section bg-[#f5f7f7] py-20 border-b border-[#e5e9e9]" aria-labelledby="howItWorksTitle">
       <div className="container">
-        <div className="text-center max-w-2xl mx-auto mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-14 scroll-reveal">
           <p className="eyebrow text-[#116b70]">STREAMLINED CLINICAL PROCESS</p>
           <h2 id="howItWorksTitle" className="font-heading text-3xl font-extrabold text-[#11191b] md:text-4xl">
             How Home Healthcare Works
@@ -21,11 +21,11 @@ export const HowItWorksSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-container">
           {HOW_IT_WORKS_DATA.map((item) => (
             <div
               key={item.step}
-              className="relative flex flex-col rounded-2xl bg-white p-7 border border-[#e5e9e9] shadow-sm transition hover:shadow-md"
+              className="relative flex flex-col rounded-2xl bg-white p-7 border border-[#e5e9e9] shadow-sm transition hover:shadow-md scroll-reveal-card"
             >
               <div className="flex items-center justify-between mb-5">
                 <span className="font-heading text-2xl font-black text-[#116b70]/30 tracking-tight">

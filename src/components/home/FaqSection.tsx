@@ -14,7 +14,7 @@ export const FaqSection: React.FC = () => {
   return (
     <section className="section section-faq" id="faq" aria-labelledby="faqTitle">
       <div className="container faq-container">
-        <div className="faq-intro">
+        <div className="faq-intro scroll-reveal-left">
           <p className="eyebrow">GOOD TO KNOW</p>
           <h2 id="faqTitle">
             Frequently asked<br />questions.
@@ -25,12 +25,13 @@ export const FaqSection: React.FC = () => {
           </a>
         </div>
 
-        <div className="faq-list">
+        <div className="faq-list stagger-container">
           {FAQ_DATA.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
               <details
                 key={index}
+                className="scroll-reveal-card"
                 open={isOpen}
                 onClick={(e) => {
                   e.preventDefault();

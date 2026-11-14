@@ -52,7 +52,7 @@ export const Header: React.FC = () => {
   }, [isNavOpen]);
 
   return (
-    <header className="site-header" id="siteHeader">
+    <header className="site-header animate-hero-header" id="siteHeader">
       <Link href="/" className="brand" aria-label="Vellora Health, home">
         <span className="brand-icon" aria-hidden="true">
           <span></span>

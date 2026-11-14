@@ -210,8 +210,8 @@ export const DOCTORS_DATA: DoctorItem[] = [
     specialty: 'INTERNAL MEDICINE & GERIATRICS',
     quote: 'Bringing thorough, unhurried medical examinations to patients at bedside.',
     rating: '4.9',
-    image: '/assets/doctor-2.webp',
-    alt: 'Female physician in white coat with stethoscope',
+    image: '/assets/doctor-maya-patel.jpg',
+    alt: 'Dr. Maya Patel, Female physician in white coat with stethoscope',
   },
   {
     id: 'ethan-park',
@@ -219,8 +219,8 @@ export const DOCTORS_DATA: DoctorItem[] = [
     specialty: 'FAMILY MEDICINE & PEDIATRICS',
     quote: 'Compassionate family care that keeps children and elders safe at home.',
     rating: '4.8',
-    image: '/assets/doctor-1.webp',
-    alt: 'Male physician in clinical coat',
+    image: '/assets/doctor-ethan-park.jpg',
+    alt: 'Dr. Ethan Park, Male physician in clinical coat',
   },
   {
     id: 'daniel-reed',
@@ -228,17 +228,8 @@ export const DOCTORS_DATA: DoctorItem[] = [
     specialty: 'CHRONIC DISEASE MANAGEMENT',
     quote: 'Dedicated to preventing hospital re-admissions through proactive home visits.',
     rating: '4.8',
-    image: '/assets/doctor-3.webp',
-    alt: 'Male physician reviewing medical records',
-  },
-  {
-    id: 'sofia-morgan',
-    name: 'Dr. Sofia Morgan',
-    specialty: 'POST-OPERATIVE REHABILITATION',
-    quote: 'Guiding surgical recovery and mobility milestones in the safety of your home.',
-    rating: '4.9',
-    image: '/assets/doctor-4.webp',
-    alt: 'Female doctor smiling warmly',
+    image: '/assets/doctor-daniel-reed.jpg',
+    alt: 'Dr. Daniel Reed, Male physician reviewing medical records',
   },
 ];
 

@@ -10,7 +10,7 @@ export const ReviewsSection: React.FC = () => {
   return (
     <section className="section section-reviews" aria-labelledby="reviewsTitle">
       <div className="container">
-        <div className="section-heading-row">
+        <div className="section-heading-row scroll-reveal">
           <div>
             <p className="eyebrow">PATIENT &amp; FAMILY EXPERIENCES</p>
             <h2 id="reviewsTitle">
@@ -25,12 +25,12 @@ export const ReviewsSection: React.FC = () => {
         </div>
 
         <div
-          className="review-track scroll-track"
+          className="review-track scroll-track stagger-container"
           id="reviewSlider"
           ref={trackRef}
         >
           {TESTIMONIALS_DATA.map((review) => (
-            <article key={review.id} className="review-card">
+            <article key={review.id} className="review-card scroll-reveal-card">
               <div className="review-upper">
                 <img
                   src={review.avatar}

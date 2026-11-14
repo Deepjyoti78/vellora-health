@@ -606,15 +606,15 @@ h1, h2 {
   flex-direction: column;
   overflow: hidden;
   border-radius: 20px;
-  background: linear-gradient(180deg, #1a2326 0%, #11191b 45%, #0b1012 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 32px rgba(17, 25, 27, 0.08);
+  background: linear-gradient(180deg, #ffffff 0%, #f5f9f9 48%, #eaf3f3 100%);
+  border: 1px solid #d2e4e6;
+  box-shadow: 0 10px 28px rgba(17, 107, 112, 0.07);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 
 .service-photo-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 42px rgba(17, 25, 27, 0.18);
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(17, 107, 112, 0.15);
 }
 
 .service-card-media {
@@ -622,7 +622,7 @@ h1, h2 {
   width: 100%;
   height: 220px;
   overflow: hidden;
-  background: #11191b;
+  background: #edf5f5;
 }
 
 .service-card-media > img {
@@ -640,7 +640,7 @@ h1, h2 {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, #11191b 0%, rgba(17, 25, 27, 0.65) 25%, transparent 60%);
+  background: linear-gradient(0deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 20%, transparent 48%);
   pointer-events: none;
 }
 
@@ -828,14 +828,21 @@ h1, h2 {
 }
 
 .doctor-card {
-  height: 475px;
+  height: 450px;
   position: relative;
-  flex: 0 0 calc((100% - 54px)/4);
-  border-radius: 17px;
+  flex: 0 0 calc((100% - 36px)/3);
+  border-radius: 20px;
   overflow: hidden;
-  background: #d3e2ef;
+  background: #11191b;
   isolation: isolate;
-  box-shadow: 0 12px 32px rgba(17, 25, 27, 0.06);
+  box-shadow: 0 12px 32px rgba(17, 25, 27, 0.08);
+  border: 1px solid #e1e9ec;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 42px rgba(17, 25, 27, 0.14);
 }
 
 .doctor-card img {
@@ -844,8 +851,8 @@ h1, h2 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
-  transition: transform 0.4s ease;
+  object-position: center 15%;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .doctor-card:hover img {
@@ -856,8 +863,9 @@ h1, h2 {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(16, 42, 57, 0.96) 0%, rgba(18, 50, 68, 0.65) 27%, transparent 58%);
+  background: linear-gradient(0deg, rgba(14, 27, 31, 0.94) 0%, rgba(14, 27, 31, 0.6) 30%, transparent 62%);
   z-index: 1;
+  pointer-events: none;
 }
 
 .doctor-rating {
@@ -2025,6 +2033,151 @@ h1, h2 {
     gap: 13px;
   }
 }
+
+/* ==========================================================================
+   Page Load & Scroll-Triggered Reveal Animations
+   ========================================================================== */
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes heroSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(45px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Page load hero elements */
+.animate-hero-header {
+  animation: heroFadeDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-hero-trust {
+  opacity: 0;
+  animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+.animate-hero-title {
+  opacity: 0;
+  animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+}
+
+.animate-hero-actions {
+  opacity: 0;
+  animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+}
+
+.animate-hero-stats {
+  opacity: 0;
+  animation: heroSlideLeft 1s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+}
+
+.animate-hero-detail {
+  opacity: 0;
+  animation: heroFadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+
+/* Scroll reveal classes */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-36px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-left.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(36px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-right.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-scale {
+  opacity: 0;
+  transform: scale(0.95) translateY(24px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-scale.is-revealed {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.scroll-reveal-card {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-card.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger cascade for child cards */
+.stagger-container > *:nth-child(1) { transition-delay: 0ms; }
+.stagger-container > *:nth-child(2) { transition-delay: 110ms; }
+.stagger-container > *:nth-child(3) { transition-delay: 220ms; }
+.stagger-container > *:nth-child(4) { transition-delay: 330ms; }
+.stagger-container > *:nth-child(5) { transition-delay: 440ms; }
+.stagger-container > *:nth-child(6) { transition-delay: 550ms; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

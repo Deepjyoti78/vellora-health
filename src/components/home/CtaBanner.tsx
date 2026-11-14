@@ -10,7 +10,7 @@ export const CtaBanner: React.FC = () => {
   return (
     <section className="section bg-[#11191b] py-20 text-white relative overflow-hidden" aria-labelledby="ctaTitle">
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#116b70_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-      <div className="container relative z-10 text-center max-w-3xl mx-auto">
+      <div className="container relative z-10 text-center max-w-3xl mx-auto scroll-reveal-scale">
         <span className="inline-block rounded-full bg-[#116b70]/40 px-3.5 py-1 text-xs font-semibold text-teal-300 mb-4 border border-[#116b70]/50">
           HEALTHCARE AT YOUR DOORSTEP
         </span>

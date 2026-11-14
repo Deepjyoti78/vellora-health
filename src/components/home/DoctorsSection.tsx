@@ -13,7 +13,7 @@ export const DoctorsSection: React.FC = () => {
   return (
     <section id="doctors" className="section section-doctors" aria-labelledby="doctorsTitle">
       <div className="container">
-        <div className="section-heading-row">
+        <div className="section-heading-row scroll-reveal">
           <div>
             <p className="eyebrow">LICENSED HOME CARE CLINICIANS</p>
             <h2 id="doctorsTitle">
@@ -31,13 +31,13 @@ export const DoctorsSection: React.FC = () => {
         </div>
 
         <div
-          className="doctor-track scroll-track"
+          className="doctor-track scroll-track stagger-container"
           id="doctorSlider"
           ref={trackRef}
           aria-label="Doctor profiles"
         >
           {DOCTORS_DATA.map((doctor) => (
-            <article key={doctor.id} className="doctor-card">
+            <article key={doctor.id} className="doctor-card scroll-reveal-card">
               <img
                 src={doctor.image}
                 alt={doctor.alt}

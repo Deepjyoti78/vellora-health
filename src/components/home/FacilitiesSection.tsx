@@ -11,7 +11,7 @@ export const FacilitiesSection: React.FC = () => {
   return (
     <section id="facilities" className="section section-facilities" aria-labelledby="facilitiesTitle">
       <div className="container">
-        <div className="section-heading-row">
+        <div className="section-heading-row scroll-reveal">
           <div>
             <p className="eyebrow">A BETTER CARE EXPERIENCE</p>
             <h2 id="facilitiesTitle">
@@ -28,13 +28,13 @@ export const FacilitiesSection: React.FC = () => {
 
         <div
           id="facilitySlider"
-          className="facility-track scroll-track"
+          className="facility-track scroll-track stagger-container"
           ref={trackRef}
         >
           {FACILITIES_DATA.map((facility) => {
             if (facility.isSolid) {
               return (
-                <article key={facility.id} className="facility-card facility-solid">
+                <article key={facility.id} className="facility-card facility-solid scroll-reveal-card">
                   <div className="facility-solid-text">
                     <Icon name="stethoscope" />
                     <h3>
@@ -46,7 +46,7 @@ export const FacilitiesSection: React.FC = () => {
             }
 
             return (
-              <article key={facility.id} className="facility-card">
+              <article key={facility.id} className="facility-card scroll-reveal-card">
                 <img
                   src={facility.image}
                   alt={facility.alt || facility.title}
