@@ -293,11 +293,12 @@ h1, h2 {
   min-height: 750px;
   background-color: #0c1517;
   background-image: 
-    linear-gradient(90deg, rgba(8, 17, 19, 0.95) 0%, rgba(8, 17, 19, 0.86) 32%, rgba(9, 18, 20, 0.45) 52%, rgba(9, 18, 20, 0.08) 66%, transparent 75%),
+    linear-gradient(90deg, rgba(8, 17, 19, 0.95) 0%, rgba(8, 17, 19, 0.86) 30%, rgba(9, 18, 20, 0.45) 50%, rgba(9, 18, 20, 0.08) 65%, transparent 75%),
+    linear-gradient(270deg, rgba(8, 17, 19, 0.9) 0%, rgba(8, 17, 19, 0.45) 15%, transparent 32%),
     linear-gradient(180deg, rgba(8, 17, 19, 0.5) 0%, transparent 16%),
     url("/assets/compassionate-hospital-care.png");
   background-size: cover;
-  background-position: calc(50% + 140px) center;
+  background-position: calc(50% - 95px) center;
   background-repeat: no-repeat;
   overflow: hidden;
   color: white;
@@ -397,8 +398,11 @@ h1, h2 {
 .header-book {
   justify-self: end;
   min-height: 42px;
-  gap: 12px;
-  font-size: 12px;
+  height: 42px;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 20px;
 }
 
 .mobile-menu-button {
@@ -539,6 +543,11 @@ h1, h2 {
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.hero-actions .button {
+  font-size: 14px;
+  font-weight: 700;
 }
 
 /* Bottom left text: Comprehensive Care headline + 3 lines readable copy */

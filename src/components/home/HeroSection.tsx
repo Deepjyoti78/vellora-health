@@ -15,7 +15,7 @@ export const HeroSection: React.FC = () => {
 
       <div className="hero-main container">
         <div className="hero-copy">
-          <div className="trust-row" aria-label="Demonstration trust indicator">
+          <div className="trust-row" aria-label="Patient trust indicator">
             <div className="trust-avatars" aria-hidden="true">
               {TRUST_DATA.avatars.map((src, idx) => (
                 <img
@@ -28,13 +28,18 @@ export const HeroSection: React.FC = () => {
               ))}
             </div>
             <span>
-              Trusted Home Healthcare · <strong>Certified Clinicians</strong>
+              Trusted by <strong>135k+ people</strong>
             </span>
           </div>
 
           <h1 id="heroTitle" className="hero-title">
             EXCEPTIONAL<br />
-            HEALTHCARE<br />
+            <span className="hero-title-row">
+              <span className="hero-title-thumb" aria-hidden="true">
+                <img src="/assets/avatar-3.webp" alt="Patient" />
+              </span>
+              HEALTHCARE
+            </span><br />
             ALWAYS
           </h1>
 
@@ -53,12 +58,31 @@ export const HeroSection: React.FC = () => {
           </div>
         </div>
 
+        {/* Right-side statistics column */}
+        <div className="hero-stats" aria-label="Key healthcare performance metrics">
+          <div className="hero-stat-item">
+            <span className="hero-stat-number">20K+</span>
+            <span className="hero-stat-label">Patients Served Successfully</span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="hero-stat-number">30+</span>
+            <span className="hero-stat-label">Board-Certified Specialists</span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="hero-stat-number">18</span>
+            <span className="hero-stat-label">Medical Departments</span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="hero-stat-number">4.9/5</span>
+            <span className="hero-stat-label">Average Patient Satisfaction</span>
+          </div>
+        </div>
+
         <div className="hero-detail">
-          <h3 className="hero-detail-heading">Comprehensive Care</h3>
           <p className="hero-detail-text">
-            Accessible, modern healthcare designed around you. From routine
-            consultations to nursing and diagnostic services, experience
-            compassionate care delivered to your doorstep.
+            Accessible Modern Medical Care — where technology meets compassion.<br />
+            From routine checkups to specialized treatment, our physicians bring<br />
+            expertise and human kindness together under one roof.
           </p>
         </div>
       </div>
