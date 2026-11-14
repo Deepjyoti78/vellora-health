@@ -1,0 +1,254 @@
+﻿[
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/",
+        "file":  "src/app/page.tsx",
+        "title":  "Homepage (Approved Hero \u0026 Clean Grid)",
+        "role":  "Public"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/services",
+        "file":  "src/app/services/page.tsx",
+        "title":  "Services Overview Catalog",
+        "role":  "Public"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/services/home-doctor-visit",
+        "file":  "src/app/services/[slug]/page.tsx",
+        "title":  "Service Detail Page",
+        "role":  "Public"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/doctors",
+        "file":  "src/app/doctors/page.tsx",
+        "title":  "Medical Specialists Directory",
+        "role":  "Public"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/facilities",
+        "file":  "src/app/facilities/page.tsx",
+        "title":  "Facilities \u0026 Clinical Tech",
+        "role":  "Public"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/about",
+        "file":  "src/app/about/page.tsx",
+        "title":  "About Vellora Health",
+        "role":  "Public"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/contact",
+        "file":  "src/app/contact/page.tsx",
+        "title":  "Contact \u0026 Emergency Helpdesk",
+        "role":  "Public"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/login",
+        "file":  "src/app/patient/login/page.tsx",
+        "title":  "Patient Phone OTP Login",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/register",
+        "file":  "src/app/patient/register/page.tsx",
+        "title":  "Patient Registration \u0026 Onboarding",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/dashboard",
+        "file":  "src/app/patient/dashboard/page.tsx",
+        "title":  "Patient Command Dashboard",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/book",
+        "file":  "src/app/patient/book/page.tsx",
+        "title":  "Multi-step 4-Service Booking Engine",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/bookings",
+        "file":  "src/app/patient/bookings/page.tsx",
+        "title":  "My Care Requests \u0026 History",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/bookings/bkg-1",
+        "file":  "src/app/patient/bookings/[id]/page.tsx",
+        "title":  "Live Care Tracking \u0026 PIN Security",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/records",
+        "file":  "src/app/patient/records/page.tsx",
+        "title":  "Electronic Health Records \u0026 Vitals",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/records/lab-1",
+        "file":  "src/app/patient/records/[id]/page.tsx",
+        "title":  "Detailed Lab Report \u0026 Printable View",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/family",
+        "file":  "src/app/patient/family/page.tsx",
+        "title":  "Family Dependents Directory",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/account",
+        "file":  "src/app/patient/account/page.tsx",
+        "title":  "Patient Profile \u0026 Emergency Contacts",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/patient/support",
+        "file":  "src/app/patient/support/page.tsx",
+        "title":  "Patient Help \u0026 Incident Tickets",
+        "role":  "Patient"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/provider/login",
+        "file":  "src/app/provider/login/page.tsx",
+        "title":  "Provider 1-Click Role Login",
+        "role":  "Provider"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/provider/onboarding",
+        "file":  "src/app/provider/onboarding/page.tsx",
+        "title":  "Healthcare Clinician Credentialing",
+        "role":  "Provider"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/provider/dashboard",
+        "file":  "src/app/provider/dashboard/page.tsx",
+        "title":  "Provider Duty Dashboard \u0026 Dispatch Queue",
+        "role":  "Provider"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/provider/appointments",
+        "file":  "src/app/provider/appointments/page.tsx",
+        "title":  "Assigned Shifts \u0026 Consultations",
+        "role":  "Provider"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/provider/appointments/bkg-2",
+        "file":  "src/app/provider/appointments/[id]/page.tsx",
+        "title":  "Clinical Encounter \u0026 Field Execution (e-Rx/Vitals/PIN)",
+        "role":  "Provider"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/provider/availability",
+        "file":  "src/app/provider/availability/page.tsx",
+        "title":  "Weekly Shifts \u0026 Service Radius",
+        "role":  "Provider"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/provider/earnings",
+        "file":  "src/app/provider/earnings/page.tsx",
+        "title":  "Clinician Payouts \u0026 Settlement Log",
+        "role":  "Provider"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/provider/profile",
+        "file":  "src/app/provider/profile/page.tsx",
+        "title":  "Provider Credentials \u0026 Licenses",
+        "role":  "Provider"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/dashboard",
+        "file":  "src/app/admin/dashboard/page.tsx",
+        "title":  "Command Desk KPI Overview",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/dispatch",
+        "file":  "src/app/admin/dispatch/page.tsx",
+        "title":  "Live 5-Stage Dispatch Kanban Board",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/bookings",
+        "file":  "src/app/admin/bookings/page.tsx",
+        "title":  "Master Appointments \u0026 Booking Audit",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/providers",
+        "file":  "src/app/admin/providers/page.tsx",
+        "title":  "Provider Workforce Roster",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/verifications",
+        "file":  "src/app/admin/verifications/page.tsx",
+        "title":  "CMO Credentialing Review Queue",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/patients",
+        "file":  "src/app/admin/patients/page.tsx",
+        "title":  "Master Patient Index (MPI)",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/services",
+        "file":  "src/app/admin/services/page.tsx",
+        "title":  "Clinical Services \u0026 Pricing Editor",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/finance",
+        "file":  "src/app/admin/finance/page.tsx",
+        "title":  "Revenue, Split Margins \u0026 Settlements",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/feedback",
+        "file":  "src/app/admin/feedback/page.tsx",
+        "title":  "CSAT, Incident Tickets \u0026 Escalations",
+        "role":  "Admin"
+    },
+    {
+        "status":  "Implemented / Verified",
+        "path":  "/admin/settings",
+        "file":  "src/app/admin/settings/page.tsx",
+        "title":  "Platform Governance, SLAs \u0026 Geo-zones",
+        "role":  "Admin"
+    }
+]
