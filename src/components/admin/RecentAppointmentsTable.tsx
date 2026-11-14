@@ -2,8 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { MoreHorizontal, ArrowRight, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { MoreHorizontal, ArrowRight, Clock, Calendar } from 'lucide-react';
 
 interface AppointmentRow {
   id: string;
@@ -21,7 +20,7 @@ const mockAppointments: AppointmentRow[] = [
   {
     id: 'VEL-8941',
     patientName: 'Eleanor Vance',
-    patientAvatar: '/assets/ChatGPT Image Nov 14, 2026, 07_31_41 PM-3.png',
+    patientAvatar: '/assets/avatar-indian-9.jpg',
     patientAge: '68 yrs • Female',
     doctorName: 'Dr. Maya Patel',
     doctorSpecialty: 'Cardiologist',
@@ -32,7 +31,7 @@ const mockAppointments: AppointmentRow[] = [
   {
     id: 'VEL-8942',
     patientName: 'Harold Vance',
-    patientAvatar: '/assets/ChatGPT Image Nov 14, 2026, 07_31_42 PM-4.png',
+    patientAvatar: '/assets/avatar-indian-2.jpg',
     patientAge: '74 yrs • Male',
     doctorName: 'Nurse Sarah Jenkins',
     doctorSpecialty: 'Critical Care RN',
@@ -43,7 +42,7 @@ const mockAppointments: AppointmentRow[] = [
   {
     id: 'VEL-8943',
     patientName: 'Ananya Sharma',
-    patientAvatar: '/assets/ChatGPT Image Nov 14, 2026, 07_31_43 PM-5.png',
+    patientAvatar: '/assets/avatar-indian-4.jpg',
     patientAge: '34 yrs • Female',
     doctorName: 'Alex Rivera',
     doctorSpecialty: 'Phlebotomist',
@@ -54,7 +53,7 @@ const mockAppointments: AppointmentRow[] = [
   {
     id: 'VEL-8944',
     patientName: 'Arthur Pendelton',
-    patientAvatar: '/assets/ChatGPT Image Nov 14, 2026, 07_31_44 PM-6.png',
+    patientAvatar: '/assets/doorstep-1.webp',
     patientAge: '82 yrs • Male',
     doctorName: 'James Thornton',
     doctorSpecialty: 'Elderly Mobility Aide',
@@ -65,7 +64,7 @@ const mockAppointments: AppointmentRow[] = [
   {
     id: 'VEL-8945',
     patientName: 'Vikram Malhotra',
-    patientAvatar: '/assets/ChatGPT Image Nov 14, 2026, 07_31_46 PM-8.png',
+    patientAvatar: '/assets/avatar-indian-9.jpg',
     patientAge: '52 yrs • Male',
     doctorName: 'Dr. Ethan Park',
     doctorSpecialty: 'Internal Medicine',
@@ -80,14 +79,14 @@ export const RecentAppointmentsTable: React.FC = () => {
     switch (status) {
       case 'IN_PROGRESS':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] px-2.5 py-1 text-[11px] font-bold text-[#065F46]">
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] px-2.5 py-1 text-[11px] font-bold text-[#07583F]">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             In Progress
           </span>
         );
       case 'CONFIRMED':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#EFF6FF] px-2.5 py-1 text-[11px] font-bold text-[#1D4ED8]">
             <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
             Confirmed
           </span>
@@ -110,20 +109,25 @@ export const RecentAppointmentsTable: React.FC = () => {
   };
 
   return (
-    <div className="rounded-2xl border border-[#E2EBE7] bg-white p-6 shadow-xs">
-      {/* Table Header */}
+    <div className="rounded-[18px] border border-[#E2EBE7] bg-white p-6 shadow-xs transition-all hover:border-[#CBDCD5]">
+      {/* Table Header with Mint Icon */}
       <div className="flex items-center justify-between">
-        <div>
-          <h3 className="font-heading text-base font-bold text-[#102820]">
-            Recent Appointments
-          </h3>
-          <p className="mt-0.5 text-xs text-slate-400">
-            Real-time live medical booking stream and clinician arrival status.
-          </p>
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ECFDF5] text-[#07583F]">
+            <Calendar className="h-4 w-4 stroke-[2.2]" />
+          </div>
+          <div>
+            <h3 className="font-heading text-base font-bold text-[#102820]">
+              Recent Appointments
+            </h3>
+            <p className="text-[11px] text-slate-400">
+              Live medical booking stream and clinician arrival status
+            </p>
+          </div>
         </div>
         <Link
           href="/admin/bookings"
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#065F46] hover:text-[#064E3B] transition-colors"
+          className="inline-flex items-center gap-1 text-xs font-bold text-[#07583F] hover:text-[#064E3B] transition-colors"
         >
           <span>View All (186)</span>
           <ArrowRight className="h-3.5 w-3.5" />
@@ -150,11 +154,10 @@ export const RecentAppointmentsTable: React.FC = () => {
                 <td className="py-3.5 pl-1">
                   <div className="flex items-center gap-3">
                     <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-[#E2EBE7] bg-slate-100">
-                      <Image
+                      <img
                         src={apt.patientAvatar}
                         alt={apt.patientName}
-                        fill
-                        className="object-cover"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     <div>

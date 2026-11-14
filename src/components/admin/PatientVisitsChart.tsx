@@ -3,63 +3,73 @@
 import React, { useState } from 'react';
 import {
   ResponsiveContainer,
-  AreaChart,
+  ComposedChart,
   Area,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
 } from 'recharts';
-import { Calendar, ChevronDown, Download } from 'lucide-react';
+import { Calendar, ChevronDown } from 'lucide-react';
+import { ChartSelectionHighlight } from './ChartSelectionHighlight';
 
-const weeklyData = [
-  { day: 'Mon', visits: 120, prevVisits: 95 },
-  { day: 'Tue', visits: 145, prevVisits: 110 },
-  { day: 'Wed', visits: 190, prevVisits: 140 },
-  { day: 'Thu', visits: 175, prevVisits: 160 },
-  { day: 'Fri', visits: 248, prevVisits: 185 }, // Peak day
-  { day: 'Sat', visits: 180, prevVisits: 155 },
-  { day: 'Sun', visits: 135, prevVisits: 110 },
+interface VisitDataPoint {
+  day: string;
+  fullDate: string;
+  visits: number;
+  highlight?: boolean;
+  change?: string;
+}
+
+const WEEKLY_VISITS: VisitDataPoint[] = [
+  { day: 'Mon', fullDate: 'Mon, Nov 10', visits: 110, change: '+5.2%' },
+  { day: 'Tue', fullDate: 'Tue, Nov 11', visits: 135, change: '+12.4%' },
+  { day: 'Wed', fullDate: 'Wed, Nov 12', visits: 180, change: '+14.1%' },
+  { day: 'Thu', fullDate: 'Thu, Nov 13', visits: 165, change: '+8.3%' },
+  { day: 'Fri', fullDate: 'Fri, Nov 14', visits: 248, highlight: true, change: '+18.4%' }, // Active peak
+  { day: 'Sat', fullDate: 'Sat, Nov 15', visits: 175, change: '+6.5%' },
+  { day: 'Sun', fullDate: 'Sun, Nov 16', visits: 130, change: '+3.8%' },
 ];
 
-const monthlyData = [
-  { day: 'Week 1', visits: 890, prevVisits: 720 },
-  { day: 'Week 2', visits: 1040, prevVisits: 880 },
-  { day: 'Week 3', visits: 1250, prevVisits: 990 },
-  { day: 'Week 4', visits: 1380, prevVisits: 1150 },
+const MONTHLY_VISITS: VisitDataPoint[] = [
+  { day: 'Week 1', fullDate: 'Oct 20 - Oct 26', visits: 890, change: '+9.4%' },
+  { day: 'Week 2', fullDate: 'Oct 27 - Nov 02', visits: 1040, change: '+11.8%' },
+  { day: 'Week 3', fullDate: 'Nov 03 - Nov 09', visits: 1250, change: '+15.2%' },
+  { day: 'Week 4', fullDate: 'Nov 10 - Nov 16', visits: 1420, highlight: true, change: '+18.4%' },
 ];
 
 export const PatientVisitsChart: React.FC = () => {
   const [period, setPeriod] = useState<'Weekly' | 'Monthly'>('Weekly');
-  const data = period === 'Weekly' ? weeklyData : monthlyData;
+  const data = period === 'Weekly' ? WEEKLY_VISITS : MONTHLY_VISITS;
 
   return (
-    <div className="rounded-2xl border border-[#E2EBE7] bg-white p-6 shadow-xs">
+    <div className="rounded-[18px] border border-[#E2EBE7] bg-white p-6 shadow-xs transition-all hover:border-[#CBDCD5]">
       {/* Chart Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h3 className="font-heading text-base font-bold text-[#102820]">
+          <div className="flex items-center gap-2.5">
+            <h3 className="font-heading text-lg font-bold tracking-tight text-[#102820]">
               Patient Visits Overview
             </h3>
-            <span className="rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-[11px] font-bold text-[#065F46]">
+            <span className="rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-[11px] font-bold text-[#07583F]">
               +18.4% WoW
             </span>
           </div>
-          <p className="mt-0.5 text-xs text-slate-400">
+          <p className="mt-0.5 text-xs text-slate-500">
             Real-time telemetry of completed doorstep doctor consultations and nursing shifts.
           </p>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2">
+        {/* Filter Controls */}
+        <div className="flex items-center gap-2 self-start sm:self-auto">
           <div className="inline-flex rounded-xl bg-[#F2F8F5] p-1 border border-[#E2EBE7]">
             <button
               type="button"
               onClick={() => setPeriod('Weekly')}
-              className={`rounded-lg px-3 py-1 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                 period === 'Weekly'
-                  ? 'bg-white text-[#064E3B] shadow-2xs'
+                  ? 'bg-white text-[#07583F] shadow-2xs'
                   : 'text-slate-500 hover:text-[#102820]'
               }`}
             >
@@ -68,9 +78,9 @@ export const PatientVisitsChart: React.FC = () => {
             <button
               type="button"
               onClick={() => setPeriod('Monthly')}
-              className={`rounded-lg px-3 py-1 text-xs font-semibold transition-all ${
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                 period === 'Monthly'
-                  ? 'bg-white text-[#064E3B] shadow-2xs'
+                  ? 'bg-white text-[#07583F] shadow-2xs'
                   : 'text-slate-500 hover:text-[#102820]'
               }`}
             >
@@ -89,28 +99,57 @@ export const PatientVisitsChart: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Chart Graphic */}
-      <div className="mt-6 h-72 w-full">
+      {/* Main Chart Canvas */}
+      <div className="mt-6 h-72 sm:h-80 w-full relative">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <ComposedChart
+            data={data}
+            margin={{ top: 20, right: 15, left: -15, bottom: 0 }}
+          >
             <defs>
-              <linearGradient id="patientVisitsGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#065F46" stopOpacity={0.25} />
-                <stop offset="95%" stopColor="#065F46" stopOpacity={0.0} />
+              {/* Mint gradient under line */}
+              <linearGradient id="visitsAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#07583F" stopOpacity={0.25} />
+                <stop offset="65%" stopColor="#7DC6A2" stopOpacity={0.08} />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.0} />
               </linearGradient>
-              <linearGradient id="prevVisitsGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#94A3B8" stopOpacity={0.15} />
-                <stop offset="95%" stopColor="#94A3B8" stopOpacity={0.0} />
-              </linearGradient>
+
+              {/* Diagonal hatch pattern */}
+              <pattern
+                id="diagonalHatch"
+                width="8"
+                height="8"
+                patternTransform="rotate(45 0 0)"
+                patternUnits="userSpaceOnUse"
+              >
+                <line
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="8"
+                  stroke="#07583F"
+                  strokeWidth="1"
+                  strokeOpacity="0.08"
+                />
+              </pattern>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#E2EBE7"
+              opacity={0.7}
+            />
+
             <XAxis
               dataKey="day"
               stroke="#94A3B8"
               fontSize={12}
               tickLine={false}
               axisLine={{ stroke: '#E2EBE7' }}
+              dy={6}
             />
+
             <YAxis
               stroke="#94A3B8"
               fontSize={12}
@@ -118,71 +157,116 @@ export const PatientVisitsChart: React.FC = () => {
               axisLine={false}
               tickFormatter={(val) => `${val}`}
             />
+
+            {/* Custom Tooltip */}
             <Tooltip
-              content={({ active, payload, label }) => {
+              cursor={{
+                stroke: '#07583F',
+                strokeWidth: 1.5,
+                strokeDasharray: '4 4',
+              }}
+              content={({ active, payload }) => {
                 if (active && payload && payload.length) {
+                  const pt = payload[0].payload as VisitDataPoint;
                   return (
-                    <div className="rounded-xl border border-[#E2EBE7] bg-white p-3 shadow-lg">
-                      <p className="text-xs font-bold text-[#102820]">{label}</p>
-                      <div className="mt-1 flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full bg-[#065F46]" />
-                        <span className="text-xs text-slate-500">Current:</span>
-                        <span className="text-xs font-bold text-[#065F46]">
-                          {payload[0].value} visits
+                    <div className="rounded-2xl border border-[#E2EBE7] bg-white p-3.5 shadow-xl min-w-[140px] animate-in fade-in zoom-in-95">
+                      <p className="text-[11px] font-semibold text-slate-400">
+                        {pt.fullDate}
+                      </p>
+                      <div className="mt-1 flex items-baseline justify-between gap-3">
+                        <span className="font-heading text-lg font-black text-[#102820]">
+                          {pt.visits}
+                        </span>
+                        <span className="rounded-full bg-[#ECFDF5] px-2 py-0.5 text-[10px] font-bold text-[#07583F]">
+                          {pt.change}
                         </span>
                       </div>
-                      {payload[1] && (
-                        <div className="flex items-center gap-2">
-                          <span className="h-2 w-2 rounded-full bg-slate-400" />
-                          <span className="text-xs text-slate-500">Previous:</span>
-                          <span className="text-xs font-bold text-slate-600">
-                            {payload[1].value} visits
-                          </span>
-                        </div>
-                      )}
+                      <p className="text-[10px] text-slate-400 mt-0.5">
+                        Completed visits
+                      </p>
                     </div>
                   );
                 }
                 return null;
               }}
             />
-            <Area
-              type="monotone"
-              dataKey="prevVisits"
-              stroke="#94A3B8"
-              strokeWidth={1.5}
-              strokeDasharray="4 4"
-              fillOpacity={1}
-              fill="url(#prevVisitsGrad)"
-            />
+
+            {/* Gradient Area Fill */}
             <Area
               type="monotone"
               dataKey="visits"
-              stroke="#065F46"
-              strokeWidth={3}
-              fillOpacity={1}
-              fill="url(#patientVisitsGrad)"
-              activeDot={{ r: 6, fill: '#064E3B', stroke: '#FFFFFF', strokeWidth: 2 }}
+              stroke="none"
+              fill="url(#visitsAreaGrad)"
             />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
 
-      {/* Footer Legend */}
-      <div className="mt-4 flex items-center justify-between border-t border-[#F2F8F5] pt-3 text-xs text-slate-500">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#065F46]" />
-            <span className="font-medium text-slate-700">Current Period</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />
-            <span className="font-medium text-slate-500">Prior Week Benchmark</span>
-          </div>
-        </div>
-        <span className="text-[11px] text-slate-400">
-          Peak dispatch: <strong className="text-[#102820]">Friday (248 visits)</strong>
-        </span>
+            {/* Diagonal Hatch Overlay Fill */}
+            <Area
+              type="monotone"
+              dataKey="visits"
+              stroke="none"
+              fill="url(#diagonalHatch)"
+            />
+
+            {/* Prominent Smooth Dark-Green Line */}
+            <Line
+              type="monotone"
+              dataKey="visits"
+              stroke="#07583F"
+              strokeWidth={2.8}
+              dot={(props: any) => {
+                const { cx, cy, payload } = props;
+                const isHighlight = payload?.highlight;
+
+                if (isHighlight) {
+                  return (
+                    <g key={`highlight-${cx}-${cy}`}>
+                      {/* Vertical highlight bar under the active point */}
+                      <rect
+                        x={cx - 18}
+                        y={cy + 6}
+                        width={36}
+                        height={260 - cy}
+                        rx={16}
+                        ry={16}
+                        fill="url(#selectionHighlightGrad)"
+                        opacity={0.12}
+                        className="pointer-events-none"
+                      />
+                      {/* Circular active dot */}
+                      <circle cx={cx} cy={cy} r={8} fill="#D1FAE5" />
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={4.5}
+                        fill="#07583F"
+                        stroke="#FFFFFF"
+                        strokeWidth={2}
+                      />
+                    </g>
+                  );
+                }
+
+                return (
+                  <circle
+                    key={`dot-${cx}-${cy}`}
+                    cx={cx}
+                    cy={cy}
+                    r={3.5}
+                    fill="#FFFFFF"
+                    stroke="#07583F"
+                    strokeWidth={1.8}
+                  />
+                );
+              }}
+              activeDot={{
+                r: 6,
+                fill: '#07583F',
+                stroke: '#FFFFFF',
+                strokeWidth: 2,
+              }}
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
