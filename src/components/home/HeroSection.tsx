@@ -58,6 +58,26 @@ export const HeroSection: React.FC = () => {
           </div>
         </div>
 
+        {/* Right side stats column matching reference design */}
+        <div className="hero-stats" aria-label="Key Medical Statistics">
+          <div className="hero-stat-item">
+            <span className="hero-stat-number">20K+</span>
+            <span className="hero-stat-label">Patients Served Successfully</span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="hero-stat-number">30+</span>
+            <span className="hero-stat-label">Board-Certified Specialists</span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="hero-stat-number">18</span>
+            <span className="hero-stat-label">Medical Departments</span>
+          </div>
+          <div className="hero-stat-item">
+            <span className="hero-stat-number">4.9/5</span>
+            <span className="hero-stat-label">Average Patient Satisfaction</span>
+          </div>
+        </div>
+
         <div className="hero-detail">
           <p className="hero-detail-text">
             Accessible Modern Medical Care — where technology meets compassion.
