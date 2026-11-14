@@ -415,6 +415,59 @@ h1, h2 {
   justify-content: center;
 }
 
+/* Light Header Theme for Internal Pages */
+.site-header.site-header-light {
+  border-bottom: 1px solid #e5ecec;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: max(24px, calc((100% - 1440px) / 2));
+}
+
+.site-header.site-header-light .brand {
+  color: #11191b;
+}
+
+.site-header.site-header-light .brand-icon span {
+  background: #116b70;
+}
+
+.site-header.site-header-light .site-nav a {
+  color: #3b4e52;
+  opacity: 1;
+}
+
+.site-header.site-header-light .site-nav a:hover {
+  color: #116b70;
+  opacity: 1;
+}
+
+.site-header.site-header-light .site-nav a.nav-active {
+  background: #e8f4f5;
+  color: #116b70;
+  font-weight: 700;
+}
+
+.site-header.site-header-light .header-book {
+  background: #11191b;
+  color: #ffffff;
+  border: 1px solid #11191b;
+  box-shadow: 0 4px 12px rgba(17, 25, 27, 0.12);
+}
+
+.site-header.site-header-light .header-book:hover {
+  background: #116b70;
+  border-color: #116b70;
+  transform: translateY(-1px);
+}
+
+.site-header.site-header-light .mobile-menu-button {
+  border: 1px solid #d4dede;
+  color: #11191b;
+  background: #f2f6f6;
+}
+
 .hero-main {
   height: calc(100% - 94px);
   position: relative;
@@ -1647,6 +1700,18 @@ h1, h2 {
   }
   .site-nav.nav-open {
     display: flex;
+  }
+  .site-header.site-header-light .site-nav {
+    background: #ffffff;
+    border: 1px solid #dbe5e5;
+    box-shadow: 0 16px 36px rgba(17, 25, 27, 0.12);
+  }
+  .site-header.site-header-light .site-nav a {
+    color: #11191b;
+  }
+  .site-header.site-header-light .site-nav a.nav-active {
+    background: #e8f4f5;
+    color: #116b70;
   }
   .site-nav a {
     font-size: 14px;

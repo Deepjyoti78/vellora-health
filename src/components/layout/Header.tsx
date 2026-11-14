@@ -7,7 +7,7 @@ import { NAV_LINKS } from '@/data/site-content';
 import { useBooking } from '@/context/BookingContext';
 import { Icon } from '@/components/common/Icon';
 
-export const Header: React.FC = () => {
+export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light' }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
@@ -51,8 +51,12 @@ export const Header: React.FC = () => {
     };
   }, [isNavOpen]);
 
+  const headerClass = `site-header animate-hero-header ${
+    theme === 'light' ? 'site-header-light' : 'site-header-dark'
+  }`;
+
   return (
-    <header className="site-header animate-hero-header" id="siteHeader">
+    <header className={headerClass} id="siteHeader">
       <Link href="/" className="brand" aria-label="Vellora Health, home">
         <span className="brand-icon" aria-hidden="true">
           <span></span>

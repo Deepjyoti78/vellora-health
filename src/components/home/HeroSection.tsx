@@ -12,7 +12,7 @@ export const HeroSection: React.FC = () => {
 
   return (
     <section id="home" className="hero" aria-labelledby="heroTitle">
-      <Header />
+      <Header theme="dark" />
 
       <div className="hero-main container">
         <div className="hero-copy">

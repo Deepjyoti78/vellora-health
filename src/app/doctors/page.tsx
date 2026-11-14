@@ -36,26 +36,26 @@ export default function DoctorsDirectoryPage() {
   return (
     <ScrollAnimationProvider>
       <div className="min-h-screen bg-[#fcfdfd]">
-        {/* Dark Hero Section matching Vellora aesthetics */}
-        <div className="bg-[#11191b] text-white relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#116b70_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
-          <Header />
-          <div className="container py-16 text-center relative z-10">
-            <div className="inline-flex items-center gap-2 rounded-full bg-teal-500/20 px-3.5 py-1 text-xs font-semibold text-teal-300 border border-teal-500/30 mb-4 animate-hero-trust">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        {/* Light, Clean Header */}
+        <Header theme="light" />
+
+        {/* Premium Light Hero Section */}
+        <div className="border-b border-[#e5ecec] bg-gradient-to-b from-[#f2f8f8] via-[#f7fafb] to-[#fcfdfd] py-12 md:py-16 text-center">
+          <div className="container max-w-4xl">
+            <p className="text-[11px] font-bold tracking-widest text-[#116b70] uppercase mb-2 animate-hero-trust">
               COUNCIL-REGISTERED MEDICAL PRACTITIONERS
-            </div>
-            <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl text-white max-w-4xl mx-auto leading-tight animate-hero-title">
+            </p>
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#11191b] tracking-tight leading-tight animate-hero-title">
               Meet Our Visiting Medical Specialists &amp; Physicians
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base text-gray-300 leading-relaxed animate-hero-detail">
-              Every Vellora physician is board-certified, hospital-affiliated, and dedicated to compassionate, unhurried examinations right at your bedside. No rushed 5-minute clinic slots.
+            <p className="mx-auto mt-3.5 max-w-2xl text-sm md:text-base text-[#4d5f63] leading-relaxed animate-hero-detail">
+              Every Vellora physician is board-certified, hospital-affiliated, and dedicated to compassionate, unhurried examinations right at your bedside. No rushed clinic waiting rooms.
             </p>
           </div>
         </div>
 
         {/* Directory Content */}
-        <div className="container py-14">
+        <div className="container py-10 md:py-12">
           {/* Search & Filter Bar */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-gray-200 pb-6 scroll-reveal">
             <div className="flex flex-wrap gap-2">

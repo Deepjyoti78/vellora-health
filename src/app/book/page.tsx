@@ -137,25 +137,25 @@ function BookAppointmentContent() {
 
   return (
     <div className="min-h-screen bg-[#fcfdfd]">
-      {/* Header Banner */}
-      <div className="bg-[#11191b] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#116b70_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
-        <Header />
-        <div className="container py-12 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full bg-teal-500/20 px-3.5 py-1 text-xs font-semibold text-teal-300 border border-teal-500/30 mb-3 animate-hero-trust">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            INSTANT DOORSTEP CLINICAL RESERVATION
-          </div>
-          <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl text-white max-w-3xl mx-auto animate-hero-title">
+      {/* Light, Clean Header */}
+      <Header theme="light" />
+
+      {/* Premium Light Hero Section */}
+      <div className="border-b border-[#e5ecec] bg-gradient-to-b from-[#f2f8f8] via-[#f7fafb] to-[#fcfdfd] py-10 md:py-12 text-center">
+        <div className="container max-w-4xl">
+          <p className="text-[11px] font-bold tracking-widest text-[#116b70] uppercase mb-2 animate-hero-trust">
+            DOORSTEP CLINICAL RESERVATION
+          </p>
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#11191b] tracking-tight leading-tight animate-hero-title">
             Book an Appointment
           </h1>
-          <p className="mx-auto mt-2 max-w-xl text-xs md:text-sm text-gray-300 animate-hero-detail">
+          <p className="mx-auto mt-2 max-w-xl text-xs sm:text-sm text-[#4d5f63] animate-hero-detail">
             Schedule a council-registered doctor, licensed nurse, bedside caretaker, or home blood test in under 2 minutes.
           </p>
 
           {/* Step Progress Indicator (Hidden on Success) */}
           {!bookingConfirmed && (
-            <div className="mt-8 flex items-center justify-center gap-2 sm:gap-4 max-w-2xl mx-auto">
+            <div className="mt-7 flex items-center justify-center gap-2 sm:gap-4 max-w-2xl mx-auto">
               {[
                 { num: 1, label: 'Service' },
                 { num: 2, label: 'Patient' },
@@ -169,22 +169,22 @@ function BookAppointmentContent() {
                     onClick={() => s.num < currentStep && setCurrentStep(s.num)}
                     className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all ${
                       currentStep === s.num
-                        ? 'bg-teal-400 text-[#11191b] ring-4 ring-teal-400/30'
+                        ? 'bg-[#11191b] text-white ring-4 ring-[#11191b]/15 shadow-sm'
                         : currentStep > s.num
-                        ? 'bg-teal-800 text-teal-200 cursor-pointer'
-                        : 'bg-white/10 text-gray-400'
+                        ? 'bg-teal-700 text-white cursor-pointer'
+                        : 'bg-white border border-gray-300 text-gray-500'
                     }`}
                   >
                     {currentStep > s.num ? '✓' : s.num}
                   </button>
                   <span
                     className={`hidden sm:inline text-xs font-medium ${
-                      currentStep === s.num ? 'text-white font-bold' : 'text-gray-400'
+                      currentStep === s.num ? 'text-gray-900 font-bold' : 'text-gray-500'
                     }`}
                   >
                     {s.label}
                   </span>
-                  {s.num < 5 && <div className="h-0.5 w-4 sm:w-8 bg-white/20" />}
+                  {s.num < 5 && <div className="h-0.5 w-4 sm:w-8 bg-gray-200" />}
                 </div>
               ))}
             </div>

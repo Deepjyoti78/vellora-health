@@ -27,46 +27,46 @@ export default function FacilitiesPage() {
   return (
     <ScrollAnimationProvider>
       <div className="min-h-screen bg-[#fcfdfd]">
-        {/* Dark Hero Section matching Vellora aesthetics */}
-        <div className="bg-[#11191b] text-white relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#116b70_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
-          <Header />
-          <div className="container py-16 text-center relative z-10">
-            <div className="inline-flex items-center gap-2 rounded-full bg-teal-500/20 px-3.5 py-1 text-xs font-semibold text-teal-300 border border-teal-500/30 mb-4 animate-hero-trust">
-              <span className="h-2 w-2 rounded-full bg-teal-400 animate-pulse"></span>
-              CLINICAL EXCELLENCE &amp; HOSPITAL STANDARDS
-            </div>
-            <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl text-white max-w-4xl mx-auto leading-tight animate-hero-title">
+        {/* Light, Clean Header */}
+        <Header theme="light" />
+
+        {/* Premium Light Hero Section */}
+        <div className="border-b border-[#e5ecec] bg-gradient-to-b from-[#f2f8f8] via-[#f7fafb] to-[#fcfdfd] py-12 md:py-16 text-center">
+          <div className="container max-w-4xl">
+            <p className="text-[11px] font-bold tracking-widest text-[#116b70] uppercase mb-2 animate-hero-trust">
+              HOSPITAL STANDARDS &amp; INFRASTRUCTURE
+            </p>
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#11191b] tracking-tight leading-tight animate-hero-title">
               State-of-the-Art Facilities &amp; Clinical Infrastructure
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-sm md:text-base text-gray-300 leading-relaxed animate-hero-detail">
+            <p className="mx-auto mt-3.5 max-w-2xl text-sm md:text-base text-[#4d5f63] leading-relaxed animate-hero-detail">
               From our accredited partner reference laboratories to portable ICU equipment suites and active cold-chain phlebotomy fleets, we deliver hospital-grade patient safety right to your doorstep.
             </p>
 
-            {/* Quick Metrics Bar */}
-            <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-3xl mx-auto animate-hero-actions">
-              <div className="rounded-2xl bg-white/5 p-4 border border-white/10 backdrop-blur-sm">
-                <p className="text-2xl font-extrabold text-teal-300">100%</p>
-                <p className="text-xs text-gray-300 mt-0.5">NABL &amp; CAP Accredited</p>
+            {/* Quick Metrics Bar (Clean Light Clinical Style) */}
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 max-w-3xl mx-auto animate-hero-actions">
+              <div className="rounded-2xl bg-white p-3.5 border border-[#e1e9e9] shadow-sm">
+                <p className="text-xl sm:text-2xl font-extrabold text-[#116b70]">100%</p>
+                <p className="text-[11px] text-[#55696d] mt-0.5 font-medium">NABL &amp; CAP Accredited</p>
               </div>
-              <div className="rounded-2xl bg-white/5 p-4 border border-white/10 backdrop-blur-sm">
-                <p className="text-2xl font-extrabold text-teal-300">2°C – 8°C</p>
-                <p className="text-xs text-gray-300 mt-0.5">Cold-Chain Calibrated</p>
+              <div className="rounded-2xl bg-white p-3.5 border border-[#e1e9e9] shadow-sm">
+                <p className="text-xl sm:text-2xl font-extrabold text-[#116b70]">2°C – 8°C</p>
+                <p className="text-[11px] text-[#55696d] mt-0.5 font-medium">Cold-Chain Calibrated</p>
               </div>
-              <div className="rounded-2xl bg-white/5 p-4 border border-white/10 backdrop-blur-sm">
-                <p className="text-2xl font-extrabold text-teal-300">&lt; 15 min</p>
-                <p className="text-xs text-gray-300 mt-0.5">ER Escalation Window</p>
+              <div className="rounded-2xl bg-white p-3.5 border border-[#e1e9e9] shadow-sm">
+                <p className="text-xl sm:text-2xl font-extrabold text-[#116b70]">&lt; 15 min</p>
+                <p className="text-[11px] text-[#55696d] mt-0.5 font-medium">ER Escalation Window</p>
               </div>
-              <div className="rounded-2xl bg-white/5 p-4 border border-white/10 backdrop-blur-sm">
-                <p className="text-2xl font-extrabold text-teal-300">24 / 7</p>
-                <p className="text-xs text-gray-300 mt-0.5">Physician Command Desk</p>
+              <div className="rounded-2xl bg-white p-3.5 border border-[#e1e9e9] shadow-sm">
+                <p className="text-xl sm:text-2xl font-extrabold text-[#116b70]">24 / 7</p>
+                <p className="text-[11px] text-[#55696d] mt-0.5 font-medium">Physician Command Desk</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="container py-14">
+        <div className="container py-10 md:py-12">
           {/* Category Filter Pills */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-6 scroll-reveal">
             <div className="flex flex-wrap gap-2">
