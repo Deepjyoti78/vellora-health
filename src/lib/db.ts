@@ -358,164 +358,1023 @@ const initialUsers: UserRecord[] = [
 
 const initialServices: ServiceRecord[] = [
   {
-    id: 'srv-1',
-    slug: 'home-doctor-visit',
-    name: 'Home Visit Doctor Consultations',
-    category: 'DOCTOR_VISIT',
-    categoryLabel: 'Doctor Consultations',
-    shortDesc: 'Comprehensive medical assessment in the comfort and privacy of your home.',
-    description:
-      'Avoid clinic queues and travel stress. Our board-certified physicians provide unhurried physical examinations, acute illness diagnosis, chronic condition reviews, digital prescriptions, and direct specialist coordination.',
-    image: '/assets/doorstep-1.png',
-    basePrice: 95,
-    duration: '45 - 60 mins',
-    features: [
-      'In-person head-to-toe physical examination',
-      'Instant digital prescriptions sent to your phone',
-      'Follow-up teleconsultation included within 7 days',
-      'Vital signs, blood pressure & ECG rhythm check',
-      'Referral coordination with top regional hospitals',
+    "id": "srv-1",
+    "slug": "home-doctor-visit",
+    "name": "Home Visit Doctor Consultations",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Comprehensive medical assessment in the comfort and privacy of your home.",
+    "description": "Avoid clinic queues and travel stress. Board-certified physicians provide unhurried physical examinations, acute illness diagnosis, chronic condition reviews, digital prescriptions, and direct specialist coordination.",
+    "image": "/assets/doorstep-1.png",
+    "basePrice": 95,
+    "duration": "45 - 60 mins",
+    "features": [
+      "In-person head-to-toe physical examination",
+      "Instant digital prescriptions sent to your phone",
+      "Follow-up teleconsultation included within 7 days",
+      "Vital signs, blood pressure & ECG rhythm check",
+      "Referral coordination with top regional hospitals"
     ],
-    supportedOptions: [
-      'General Physician Consultation',
-      'Geriatric & Elderly Care Review',
-      'Pediatric Home Visit',
-      'Post-Discharge Physician Follow-up',
-    ],
+    "supportedOptions": [
+      "General Physician Consultation",
+      "Geriatric & Elderly Care Review",
+      "Pediatric Home Visit",
+      "Post-Discharge Physician Follow-up"
+    ]
   },
   {
-    id: 'srv-2',
-    slug: 'home-nursing-care',
-    name: 'Home Nursing Care',
-    category: 'NURSING_CARE',
-    categoryLabel: 'Professional Nursing',
-    shortDesc: 'Certified nursing support for wound care, IV therapy, injections, and vitals.',
-    description:
-      'Hospital-grade clinical nursing at home. From surgical wound dressing and suture removal to IV catheter administration, catheterization, and post-operative vitals monitoring by licensed nurses.',
-    image: '/assets/doorstep-3.png',
-    basePrice: 55,
-    duration: 'Per procedure or 2-4 hours',
-    features: [
-      'Sterile wound dressing and diabetic ulcer management',
-      'IV fluid administration and IV antibiotic therapy',
-      'Catheter insertion, care, and bladder wash',
-      'Tracheostomy care and nebulization therapy',
-      'Hourly vitals charting and physician notification',
+    "id": "srv-7",
+    "slug": "geriatric-comprehensive-evaluation",
+    "name": "Geriatric Comprehensive Senior Medical Exam",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Specialized medical assessment for seniors, polypharmacy review, and cognitive screening.",
+    "description": "Elderly care evaluation conducted by experienced geriatric physicians. Includes medication reconciliation, fall risk assessment, cognitive health checks, and chronic disease optimization.",
+    "image": "/assets/doctor-daniel-reed.jpg",
+    "basePrice": 120,
+    "duration": "60 mins",
+    "features": [
+      "Comprehensive polypharmacy and drug interaction audit",
+      "Cognitive assessment & memory screening (MMSE)",
+      "Mobility, balance, and fall prevention guidance",
+      "Chronic hypertension & diabetes clinical evaluation",
+      "Personalized preventative senior care plan"
     ],
-    supportedOptions: [
-      'Single Procedure / Dressing Visit',
-      'Short Nursing Visit (2 Hours)',
-      '12-Hour Day Nursing Shift',
-      '12-Hour Night Nursing Shift',
-      '24-Hour Continuous Nursing Care',
-    ],
+    "supportedOptions": [
+      "Comprehensive Senior Checkup",
+      "Cognitive & Memory Review",
+      "Polypharmacy Optimization"
+    ]
   },
   {
-    id: 'srv-3',
-    slug: 'patient-caretakers-medical-maids',
-    name: 'Patient Caretakers & Medical Maids',
-    category: 'CARETAKER',
-    categoryLabel: 'Caretakers & Assistants',
-    shortDesc: 'Trained attendants for daily living assistance, hygiene, mobility, and feeding.',
-    description:
-      'Dedicated bedside caretakers who ensure your loved ones are safe, clean, nourished, and supported around the clock. Ideal for bedridden patients, stroke recovery, and seniors needing mobility support.',
-    image: '/assets/doorstep-4.png',
-    basePrice: 40,
-    duration: '12-Hour or 24-Hour Shifts',
-    features: [
-      'Assistance with bathing, sponge baths, and oral hygiene',
-      'Diaper change, bedpan assistance, and skin care',
-      'Mobility transfer, wheelchair assistance, and light walking',
-      'Timely oral medication reminder and feeding support',
-      'Companionship, repositioning to prevent bedsores',
+    "id": "srv-8",
+    "slug": "pediatric-home-consultation",
+    "name": "Pediatric In-Home Child Care Consultation",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Gentle, compassionate pediatrician house calls for infants, toddlers, and young children.",
+    "description": "Keep sick children comfortable at home. Our pediatricians evaluate fevers, respiratory issues, rashes, ear infections, and milestones in your childs familiar surroundings.",
+    "image": "/assets/doctor-2.webp",
+    "basePrice": 110,
+    "duration": "45 mins",
+    "features": [
+      "Gentle pediatric ear, nose, throat, and chest exam",
+      "Fever, cough, asthma, and allergy bedside diagnosis",
+      "Growth and developmental milestone tracking",
+      "Child-safe e-prescriptions with weight-based dosing",
+      "Direct parent WhatsApp follow-up for 48 hours"
     ],
-    supportedOptions: [
-      '12-Hour Day Attendant Shift',
-      '12-Hour Night Attendant Shift',
-      '24-Hour Live-in Caretaker',
-      'Weekly Bedridden Patient Care Package',
-    ],
+    "supportedOptions": [
+      "Acute Illness Home Visit",
+      "Newborn Wellness Check",
+      "Pediatric Allergy & Asthma Review"
+    ]
   },
   {
-    id: 'srv-4',
-    slug: 'home-lab-investigations',
-    name: 'Home Lab Investigations',
-    category: 'LAB_TESTS',
-    categoryLabel: 'Diagnostic Tests',
-    shortDesc: 'Painless sample collection at home with digital reports within 12 to 24 hours.',
-    description:
-      'NABL-accredited laboratory diagnostics delivered to your doorstep. Certified phlebotomists collect blood, urine, or swab samples using vacuum sterile barcoded vials with cold-chain transport.',
-    image: '/assets/doorstep-2.png',
-    basePrice: 35,
-    duration: '15 mins sample collection',
-    features: [
-      'Certified phlebotomist home visit',
-      'Painless vacutainer blood collection',
-      'Cold-chain transport directly to accredited labs',
-      'Digital PDF report delivered via app and email within 12 hours',
-      'Free doctor tele-review on abnormal test results',
+    "id": "srv-9",
+    "slug": "cardiology-bedside-evaluation",
+    "name": "In-Home Cardiology & Heart Health Assessment",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Bedside cardiac consultation, digital rhythm analysis, and hypertension management.",
+    "description": "Consult a cardiologist without visiting the hospital. Includes stethoscope heart sound analysis, blood pressure mapping, digital ECG telemetry, and medication optimization.",
+    "image": "/assets/doctor-maya-patel.jpg",
+    "basePrice": 145,
+    "duration": "50 - 60 mins",
+    "features": [
+      "Cardiologist physical examination & murmur auscultation",
+      "Digital 12-lead ECG rhythm recording & immediate report",
+      "Congestive heart failure (CHF) fluid retention check",
+      "Post-stent and bypass surgery follow-up care",
+      "Dietary sodium and cardiovascular lifestyle counseling"
     ],
-    supportedOptions: [
-      'Comprehensive Full Body Health Checkup',
-      'Complete Blood Count (CBC) & ESR',
-      'Diabetic Profile (HbA1c & Fasting Glucose)',
-      'Lipid & Cardiac Risk Profile',
-      'Liver & Kidney Function Panel',
-      'Thyroid Hormone Panel (T3, T4, TSH)',
-    ],
+    "supportedOptions": [
+      "Cardiology Consultation",
+      "Hypertension & Arrhythmia Clinic",
+      "Post-Op Cardiac Review"
+    ]
   },
   {
-    id: 'srv-5',
-    slug: 'home-physiotherapy',
-    name: 'Home Physiotherapy & Rehabilitation',
-    category: 'REHAB_THERAPY',
-    categoryLabel: 'Physical Therapy & Rehab',
-    shortDesc: 'Expert physical therapy for stroke recovery, joint replacement, and mobility restoration.',
-    description:
-      'Certified physical therapists bring customized orthopedic, neurological, and geriatric rehabilitation directly to your living room. Accelerate recovery with guided neuromuscular stimulation and gait training.',
-    image: '/assets/wellness.webp',
-    basePrice: 60,
-    duration: '50 - 60 mins',
-    features: [
-      'Personalized mobility assessment and joint range of motion',
-      'Post-total-knee/hip-replacement protocol exercises',
-      'Stroke paralysis rehabilitation & balance retraining',
-      'Pain management with portable TENS & ultrasound units',
-      'Digital exercise compliance chart for treating surgeon',
+    "id": "srv-10",
+    "slug": "diabetic-metabolic-care-visit",
+    "name": "Diabetic & Metabolic Chronic Care House Call",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Focused medical checkup for diabetes, insulin titration, and diabetic neuropathy screening.",
+    "description": "Comprehensive chronic disease doctor visits designed to stabilize blood sugars, prevent diabetic foot complications, and review kidney health.",
+    "image": "/assets/doctor-ethan-park.jpg",
+    "basePrice": 100,
+    "duration": "45 mins",
+    "features": [
+      "Blood glucose & HbA1c review with insulin dose titration",
+      "Diabetic monofilament foot sensory & vascular examination",
+      "Kidney function & microalbuminuria risk audit",
+      "Dietary carbohydrate management plan",
+      "Continuous Glucose Monitor (CGM) sensor calibration"
     ],
-    supportedOptions: [
-      'Single Targeted Physiotherapy Session',
-      '5-Session Mobility Rehabilitation Pack',
-      '10-Session Comprehensive Post-Op Package',
-      'Elderly Fall-Prevention Conditioning',
-    ],
+    "supportedOptions": [
+      "Type 2 Diabetes Review",
+      "Insulin Initiation Consultation",
+      "Diabetic Neuropathy & Foot Check"
+    ]
   },
   {
-    id: 'srv-6',
-    slug: 'critical-care-icu-setup',
-    name: 'Critical Care & ICU Step-Down Setup',
-    category: 'CRITICAL_CARE',
-    categoryLabel: 'Critical Care & Monitoring',
-    shortDesc: 'Advanced home ICU installation with multipara monitors, oxygen, and continuous critical care nursing.',
-    description:
-      'Transition hospitalized patients safely home. Complete ICU infrastructure including hospital-grade electric beds, continuous vitals monitoring, oxygen concentrators, and 24/7 dedicated critical care nurses supervised by intensivists.',
-    image: '/assets/compassionate-hospital-care.png',
-    basePrice: 180,
-    duration: '12-Hour or 24-Hour Continuous Care',
-    features: [
-      'Certified ICU trained registered nurse stationed at bedside',
-      'Multipara monitor (SpO2, continuous ECG, NIBP, respiration)',
-      'Medical oxygen concentrator & suction machine setup',
-      'BiPAP / CPAP / tracheostomy tube management protocols',
-      '24/7 tele-intensivist emergency video consultation backup',
+    "id": "srv-11",
+    "slug": "orthopedic-joint-pain-assessment",
+    "name": "Orthopedic & Joint Pain House Call",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Expert musculoskeletal evaluation for arthritis, back pain, and joint stiffness.",
+    "description": "Orthopedic doctor visits for patients with restricted mobility due to osteoarthritis, spinal pain, or recent bone fractures.",
+    "image": "/assets/doctor-3.webp",
+    "basePrice": 125,
+    "duration": "45 - 60 mins",
+    "features": [
+      "Joint range of motion, spine & gait biomechanical exam",
+      "Arthritis pain management & non-opioid prescribing",
+      "Post-fracture healing audit & brace fitting review",
+      "Targeted physiotherapy recommendations",
+      "Mobility aid prescription (walker, cane, wheelchair)"
     ],
-    supportedOptions: [
-      '12-Hour ICU Step-Down Nursing Shift',
-      '24-Hour Intensive Care Continuous Package',
-      'Complete Home ICU Equipment Suite Rental',
-      'Palliative & Comfort Care ICU Protocol',
-    ],
+    "supportedOptions": [
+      "Knee & Hip Osteoarthritis Exam",
+      "Spine & Sciatica Review",
+      "Post-Fracture Home Assessment"
+    ]
   },
+  {
+    "id": "srv-12",
+    "slug": "pulmonology-respiratory-house-call",
+    "name": "Pulmonology & Respiratory Health Home Visit",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Doctor consultation for COPD, asthma, bronchitis, and post-viral recovery.",
+    "description": "Specialized respiratory examinations at home. Auscultation of lung fields, pulse oximetry mapping, peak flow measurement, and inhaler technique optimization.",
+    "image": "/assets/specialists.webp",
+    "basePrice": 130,
+    "duration": "45 mins",
+    "features": [
+      "Detailed lung auscultation & breath sound evaluation",
+      "Oxygen saturation mapping and home oxygen prescription",
+      "Nebulization and inhaler dosage optimization",
+      "COPD action plan for seasonal flare-ups",
+      "Chest X-ray referral and home collection lab orders"
+    ],
+    "supportedOptions": [
+      "COPD & Emphysema Management",
+      "Asthma Control Review",
+      "Post-Pneumonia Lung Checkup"
+    ]
+  },
+  {
+    "id": "srv-13",
+    "slug": "neurology-stroke-followup-visit",
+    "name": "Neurology & Post-Stroke Recovery Consultation",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Neurological assessment for stroke survivors, Parkinsons, and tremors at home.",
+    "description": "Dedicated doctor evaluation for neurological conditions. Motor tone testing, cranial nerve checks, swallowing evaluation, and medication coordination.",
+    "image": "/assets/doctor-4.webp",
+    "basePrice": 155,
+    "duration": "60 mins",
+    "features": [
+      "Comprehensive bedside neurological examination",
+      "Post-stroke motor power & speech clarity tracking",
+      "Parkinsons tremor, rigidity, and gait evaluation",
+      "Swallowing safety & aspiration pneumonia prevention",
+      "Coordination with home speech & physical therapists"
+    ],
+    "supportedOptions": [
+      "Post-Stroke Assessment",
+      "Parkinsons Disease Management",
+      "Neuropathy & Tremor Evaluation"
+    ]
+  },
+  {
+    "id": "srv-14",
+    "slug": "post-discharge-hospital-review",
+    "name": "Post-Hospital Discharge Transitional Review",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Crucial 48-hour post-discharge medical checkup to prevent hospital readmissions.",
+    "description": "A critical bedside checkup within 48 to 72 hours of coming home from the hospital. The physician reviews discharge summaries, adjusts medications, and checks surgical wounds.",
+    "image": "/assets/care-alt.webp",
+    "basePrice": 115,
+    "duration": "60 mins",
+    "features": [
+      "Full review of hospital discharge summary and lab reports",
+      "Reconciliation of pre-admission vs post-discharge meds",
+      "Surgical incision inspection & infection surveillance",
+      "Direct coordination with treating hospital surgeon",
+      "Emergency escalation protocol establishing"
+    ],
+    "supportedOptions": [
+      "General Post-Discharge Review",
+      "Post-Surgical Review",
+      "Cardiac Post-Discharge Check"
+    ]
+  },
+  {
+    "id": "srv-15",
+    "slug": "urgent-care-acute-illness-visit",
+    "name": "Same-Day Urgent Care Acute Illness Home Exam",
+    "category": "DOCTOR_VISIT",
+    "categoryLabel": "Doctor Consultations",
+    "shortDesc": "Rapid doorstep doctor visit for sudden illness, high fevers, and acute infections.",
+    "description": "Rapid dispatch physician visits for urgent medical issues that do not require an emergency room visit. Prompt diagnosis, bedside treatment, and symptom relief.",
+    "image": "/assets/Warm Home Visit Healthcare Scene.png",
+    "basePrice": 135,
+    "duration": "45 mins",
+    "features": [
+      "Rapid doctor dispatch within 60 to 90 minutes",
+      "Diagnosis of flu, strep throat, UTI, gastroenteritis",
+      "Bedside point-of-care rapid testing and vitals",
+      "Emergency anti-emetic or antibiotic prescription",
+      "Direct clinical triage for hospital escalation if needed"
+    ],
+    "supportedOptions": [
+      "Acute Fever & Infection Exam",
+      "Gastroenteritis & Dehydration Check",
+      "Urgent Elderly Checkup"
+    ]
+  },
+  {
+    "id": "srv-2",
+    "slug": "home-nursing-care",
+    "name": "Home Nursing Care",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Certified nursing support for wound care, IV therapy, injections, and vitals.",
+    "description": "Hospital-grade clinical nursing at home. From surgical wound dressing and suture removal to IV catheter administration, catheterization, and post-operative vitals monitoring by licensed nurses.",
+    "image": "/assets/doorstep-3.png",
+    "basePrice": 55,
+    "duration": "Per procedure or 2-4 hours",
+    "features": [
+      "Sterile wound dressing and diabetic ulcer management",
+      "IV fluid administration and IV antibiotic therapy",
+      "Catheter insertion, care, and bladder wash",
+      "Tracheostomy care and nebulization therapy",
+      "Hourly vitals charting and physician notification"
+    ],
+    "supportedOptions": [
+      "Single Procedure / Dressing Visit",
+      "Short Nursing Visit (2 Hours)",
+      "12-Hour Day Nursing Shift",
+      "12-Hour Night Nursing Shift",
+      "24-Hour Continuous Nursing Care"
+    ]
+  },
+  {
+    "id": "srv-16",
+    "slug": "post-surgical-wound-dressing",
+    "name": "Sterile Post-Op Wound Dressing & Suture Removal",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Aseptic dressing changes, surgical staples removal, and wound healing monitoring.",
+    "description": "Keep surgical incisions clean and infection-free. Certified registered nurses change surgical dressings using hospital-grade sterile techniques, remove sutures, and manage wound vacs.",
+    "image": "/assets/care.webp",
+    "basePrice": 65,
+    "duration": "45 mins",
+    "features": [
+      "Aseptic no-touch technique dressing changes",
+      "Diabetic foot ulcer and pressure sore debridement care",
+      "Suture and surgical staple removal with sterile kit",
+      "Infection monitoring (erythema, exudate, temperature)",
+      "Digital wound progression photos sent to your surgeon"
+    ],
+    "supportedOptions": [
+      "Single Sterile Dressing",
+      "3-Visit Wound Care Pack",
+      "Suture / Staple Removal Visit"
+    ]
+  },
+  {
+    "id": "srv-17",
+    "slug": "12h-day-nursing-shift",
+    "name": "12-Hour Day Shift Registered Nursing",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Dedicated daytime bedside clinical nursing for high-dependency recovery.",
+    "description": "A licensed registered nurse (RN/BSN) stationed at your home for 12 continuous daytime hours (8 AM to 8 PM) managing medications, infusions, catheterization, and hygiene.",
+    "image": "/assets/doorstep-3.png",
+    "basePrice": 220,
+    "duration": "12 Hours (8 AM - 8 PM)",
+    "features": [
+      "Continuous hourly vitals monitoring and charting",
+      "Medication administration (oral, subcutaneous, IV)",
+      "Position changing and bed sore prevention protocols",
+      "Enteral nutrition via feeding tube (NG / PEG)",
+      "Immediate emergency liaison with treating doctors"
+    ],
+    "supportedOptions": [
+      "Single 12H Day Shift",
+      "5-Day Post-Op Nursing Package",
+      "Weekly Nursing Care Package"
+    ]
+  },
+  {
+    "id": "srv-18",
+    "slug": "12h-night-nursing-shift",
+    "name": "12-Hour Night Shift Registered Nursing",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Peace of mind overnight nursing care with active vitals monitoring and oxygen care.",
+    "description": "Overnight nursing support from 8 PM to 8 AM. Ensures uninterrupted sleep for family members while a licensed nurse supervises oxygen, monitors IV infusions, and assists with nocturnal mobility.",
+    "image": "/assets/doorstep-1.png",
+    "basePrice": 240,
+    "duration": "12 Hours (8 PM - 8 AM)",
+    "features": [
+      "Overnight continuous oxygenation & SpO2 monitoring",
+      "Nocturnal medication administration and pain management",
+      "Scheduled turning every 2 hours for bedridden patients",
+      "Assistance with nocturnal bathroom needs or bedpan",
+      "Morning vitals and clinical handoff report"
+    ],
+    "supportedOptions": [
+      "Single Night Shift",
+      "7-Night Post-Hospital Package",
+      "Monthly Night Care Retainer"
+    ]
+  },
+  {
+    "id": "srv-19",
+    "slug": "24h-continuous-residential-nursing",
+    "name": "24-Hour Continuous Residential Nursing Care",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "24/7 dedicated round-the-clock hospital-grade nursing care in your home.",
+    "description": "Round-the-clock clinical care provided by paired registered nurses on rotational 12-hour shifts. Ideal for intensive recovery, complex wounds, or advanced palliative care.",
+    "image": "/assets/compassionate-hospital-care.png",
+    "basePrice": 420,
+    "duration": "24 Hours (Rotational)",
+    "features": [
+      "Two paired licensed nurses covering 24 continuous hours",
+      "Comprehensive medication, IV line, and infusion management",
+      "BiPAP, CPAP, oxygen concentrator, and suction maintenance",
+      "Full personal hygiene, skin care, and enteral tube feeding",
+      "Daily electronic medical summary to your primary doctor"
+    ],
+    "supportedOptions": [
+      "24H Daily Nursing",
+      "Weekly 24/7 Intensive Care",
+      "Monthly Full-Time Nursing Package"
+    ]
+  },
+  {
+    "id": "srv-20",
+    "slug": "iv-cannulation-infusion-therapy",
+    "name": "IV Cannulation, Saline & Antibiotic Infusions",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Safe in-home intravenous catheter placement, saline hydration, and antibiotic drips.",
+    "description": "Avoid emergency department visits just for IV lines. A certified infusion nurse visits your home with sterile catheterization kits to start and monitor intravenous therapy.",
+    "image": "/assets/doorstep-2.png",
+    "basePrice": 75,
+    "duration": "60 mins",
+    "features": [
+      "Ultrasonography-guided or sterile peripheral vein cannulation",
+      "Doctor-prescribed IV antibiotic and saline infusion",
+      "Phlebitis and infiltration safety surveillance",
+      "Heparin/saline flush maintenance for existing lines",
+      "Safe catheter removal and puncture dressing"
+    ],
+    "supportedOptions": [
+      "Single IV Cannulation Visit",
+      "Daily IV Antibiotic Course",
+      "Hydration Therapy Session"
+    ]
+  },
+  {
+    "id": "srv-21",
+    "slug": "urinary-catheter-care-foley",
+    "name": "Urinary Catheter Care & Foley Replacement",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Gentle, sterile Foley catheter insertion, bladder wash, and bag replacement.",
+    "description": "Painless and sterile urinary catheter care at home. Licensed nurses handle Foley catheter insertion, continuous drainage bag emptying, irrigation, and hygiene.",
+    "image": "/assets/care-alt.webp",
+    "basePrice": 70,
+    "duration": "45 mins",
+    "features": [
+      "Sterile Foley catheter placement and balloon inflation",
+      "Bladder wash and irrigation to clear sediment or clots",
+      "Night and leg drainage bag exchange and disinfection",
+      "Perineal hygiene and UTI prevention protocols",
+      "Catheter removal and trial of voiding supervision"
+    ],
+    "supportedOptions": [
+      "Catheter Change & Replacement",
+      "Bladder Wash & Flush",
+      "Emergency Catheter Clearance"
+    ]
+  },
+  {
+    "id": "srv-22",
+    "slug": "tracheostomy-care-suctioning",
+    "name": "Tracheostomy Tube Care & Airway Suctioning",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Specialized airway suctioning, tracheostomy tie change, and stoma skin dressing.",
+    "description": "Clinical nursing care for patients with tracheostomy tubes. Ensures open airway clearance, mucus suctioning, inner cannula cleaning, and stoma infection prevention.",
+    "image": "/assets/specialists.webp",
+    "basePrice": 85,
+    "duration": "60 mins",
+    "features": [
+      "Aseptic bronchial suctioning with sterile suction catheters",
+      "Tracheostomy tube tie replacement and flange stabilization",
+      "Stoma site cleansing, antiseptic application, and split-gauze dressing",
+      "Nebulization and humidified oxygen therapy setup",
+      "Emergency tube decannulation escalation training"
+    ],
+    "supportedOptions": [
+      "Single Tracheostomy Care Visit",
+      "Twice-Daily Suctioning Service",
+      "Tracheostomy Inner Cannula Change"
+    ]
+  },
+  {
+    "id": "srv-23",
+    "slug": "ryles-tube-ng-feeding-care",
+    "name": "Nasogastric (Ryles Tube) Feeding & Insertion",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Sterile NG tube placement, position verification, and enteral feeding administration.",
+    "description": "Safe enteral nutrition management. Registered nurses insert or replace nasogastric (NG/Ryles) tubes, verify gastric placement with pH testing, and guide family members.",
+    "image": "/assets/Warm Home Visit Healthcare Scene.png",
+    "basePrice": 80,
+    "duration": "45 mins",
+    "features": [
+      "Sterile nasogastric tube insertion with topical anesthesia",
+      "Gastric aspirate pH testing to confirm stomach placement",
+      "Administration of liquid diets, pureed nutrition, and medications",
+      "Flushing protocol to prevent tube clogging",
+      "Tape change and nasal skin breakdown prevention"
+    ],
+    "supportedOptions": [
+      "NG Tube Insertion Visit",
+      "NG Tube Replacement & Check",
+      "Enteral Feeding Protocol Guidance"
+    ]
+  },
+  {
+    "id": "srv-24",
+    "slug": "central-line-picc-dressing",
+    "name": "PICC Line & Central Venous Line Sterile Dressing",
+    "category": "NURSING_CARE",
+    "categoryLabel": "Professional Nursing",
+    "shortDesc": "Hospital-standard sterile biopatch dressing changes and heparin line flushes.",
+    "description": "Specialized central line maintenance. Certified nurses perform chlorhexidine skin prep, statlock replacement, biopatch application, and heparin locks to prevent bloodstream infections.",
+    "image": "/assets/doctor-1.webp",
+    "basePrice": 90,
+    "duration": "45 mins",
+    "features": [
+      "Maximal sterile barrier technique with mask and sterile gloves",
+      "Chlorhexidine skin antisepsis with 2-minute dry time",
+      "Biopatch and transparent occlusive dressing replacement",
+      "Pulsatile saline flush and heparin cap locking",
+      "Inspection for catheter migration or erythema"
+    ],
+    "supportedOptions": [
+      "Weekly PICC Line Dressing",
+      "Central Line Flush & Cap Change",
+      "Port-a-Cath Needle Access & Flush"
+    ]
+  },
+  {
+    "id": "srv-3",
+    "slug": "patient-caretakers-medical-maids",
+    "name": "Patient Caretakers & Medical Maids",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Trained attendants for daily living assistance, hygiene, mobility, and feeding.",
+    "description": "Dedicated bedside caretakers who ensure your loved ones are safe, clean, nourished, and supported around the clock. Ideal for bedridden patients, stroke recovery, and seniors needing mobility support.",
+    "image": "/assets/doorstep-4.png",
+    "basePrice": 40,
+    "duration": "12-Hour or 24-Hour Shifts",
+    "features": [
+      "Assistance with bathing, sponge baths, and oral hygiene",
+      "Diaper change, bedpan assistance, and skin care",
+      "Mobility transfer, wheelchair assistance, and light walking",
+      "Timely oral medication reminder and feeding support",
+      "Companionship, repositioning to prevent bedsores"
+    ],
+    "supportedOptions": [
+      "12-Hour Day Attendant Shift",
+      "12-Hour Night Attendant Shift",
+      "24-Hour Live-in Caretaker",
+      "Weekly Bedridden Patient Care Package"
+    ]
+  },
+  {
+    "id": "srv-25",
+    "slug": "elderly-mobility-attendant-12h",
+    "name": "12-Hour Day Elderly Mobility & Assistance Attendant",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Compassionate daytime support for walking, bathing, dressing, and companionship.",
+    "description": "A trained personal care attendant helps your elderly parent with balance, walking, bathing, meal assistance, and medication reminders from morning to evening.",
+    "image": "/assets/doorstep-4.png",
+    "basePrice": 110,
+    "duration": "12 Hours (8 AM - 8 PM)",
+    "features": [
+      "Safe transfer assistance from bed to chair to walker",
+      "Full assistance with morning hygiene, bathing, and grooming",
+      "Nutritious meal preparation and feeding support",
+      "Timely oral medication reminders based on prescription",
+      "Engaging companionship, puzzle solving, and light strolls"
+    ],
+    "supportedOptions": [
+      "Single 12H Day Attendant",
+      "5-Day Workweek Care Package",
+      "Monthly Ongoing Attendant Plan"
+    ]
+  },
+  {
+    "id": "srv-26",
+    "slug": "24h-resident-patient-caretaker",
+    "name": "24-Hour Live-In Patient Caretaker & Attendant",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Full-time continuous 24/7 bedside attendant for non-clinical elder assistance.",
+    "description": "Full-time live-in caregiver providing constant reassurance, mobility transfers, hygiene maintenance, and emergency alerting throughout both day and night.",
+    "image": "/assets/care-alt.webp",
+    "basePrice": 195,
+    "duration": "24 Hours (Continuous)",
+    "features": [
+      "24-hour round-the-clock physical presence and assistance",
+      "Nighttime bathroom escort and fall prevention vigilance",
+      "Assistance with meals, hydration, and light housekeeping",
+      "Bed turning every 2 hours to safeguard fragile skin",
+      "Real-time WhatsApp updates to family members"
+    ],
+    "supportedOptions": [
+      "Daily 24H Attendant",
+      "Weekly 7-Day Live-In Package",
+      "Monthly Full-Time Resident Aide"
+    ]
+  },
+  {
+    "id": "srv-27",
+    "slug": "bedridden-hygiene-sponge-bath",
+    "name": "Bedridden Patient Sponge Bath & Hygiene Session",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Dignified, gentle sponge baths, hair washing, skin moisturizing, and linen change.",
+    "description": "A focused 1-hour session by trained attendants to provide a refreshing sponge bath, shampoo, nail clipping, skin barrier cream application, and complete bed linen change.",
+    "image": "/assets/wellness.webp",
+    "basePrice": 50,
+    "duration": "60 mins",
+    "features": [
+      "Warm water bed bath with gentle medical cleansing solution",
+      "No-rinse hair shampoo and scalp massage",
+      "Pressure point massage and zinc barrier cream application",
+      "Clean adult diaper and sanitary pad change",
+      "Fresh hospital-corner bed linen and sheet change"
+    ],
+    "supportedOptions": [
+      "Single Hygiene Visit",
+      "3-Visit Weekly Bathing Plan",
+      "Daily Bedside Hygiene Retainer"
+    ]
+  },
+  {
+    "id": "srv-28",
+    "slug": "dementia-alzheimers-companion",
+    "name": "Dementia & Alzheimers Specialized Care Attendant",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Patient, trained attendants skilled in wandering prevention and memory reassurance.",
+    "description": "Caregivers certified in memory care. They employ gentle redirection techniques, maintain structured routines, and safeguard seniors prone to wandering or sundowning.",
+    "image": "/assets/doctor-daniel-reed.jpg",
+    "basePrice": 130,
+    "duration": "12 Hours (Day or Night)",
+    "features": [
+      "Specialized behavioral redirection and de-escalation skills",
+      "Strict adherence to daily memory-friendly routines",
+      "Wandering prevention and doorway monitoring vigilance",
+      "Assistance with forgotten meals, hydration, and hygiene",
+      "Cognitive engagement through music, photos, and sensory games"
+    ],
+    "supportedOptions": [
+      "12-Hour Day Memory Support",
+      "12-Hour Night Sundowning Shift",
+      "Comprehensive Weekly Dementia Plan"
+    ]
+  },
+  {
+    "id": "srv-29",
+    "slug": "post-stroke-mobility-aide",
+    "name": "Post-Stroke Bedside Mobility & Feeding Aide",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Assistance for hemiplegic stroke survivors: transfers, feeding, and limb support.",
+    "description": "Dedicated support for stroke recovery. Attendants assist with one-sided weakness, safe transfers using gait belts, aspiration-safe upright feeding, and range of motion.",
+    "image": "/assets/doorstep-1.png",
+    "basePrice": 120,
+    "duration": "12 Hours",
+    "features": [
+      "Gait belt transfers protecting weak paretic limbs",
+      "Upright 90-degree feeding support with swallowing vigilance",
+      "Assistance with doctor-prescribed passive limb exercises",
+      "Bed positioning with pillows to prevent shoulder subluxation",
+      "Speech practice encouragement and communication board use"
+    ],
+    "supportedOptions": [
+      "12-Hour Stroke Support Shift",
+      "14-Day Post-Stroke Intensive Pack",
+      "Monthly Stroke Aide Retainer"
+    ]
+  },
+  {
+    "id": "srv-30",
+    "slug": "parkinsons-support-attendant",
+    "name": "Parkinsons Movement & Fall Prevention Attendant",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Assisting with freezing episodes, steady walking, tremors, and timed meds.",
+    "description": "Caregivers trained in Parkinsons disease characteristics. They help patients overcome gait freezing, steady hand tremors during dining, and ensure precise medication timing.",
+    "image": "/assets/doctor-3.webp",
+    "basePrice": 125,
+    "duration": "12 Hours",
+    "features": [
+      "Assistance with gait freezing cues and auditory metronome pacing",
+      "Precise on-time reminder for carbidopa-levodopa dosing",
+      "Tremor-adaptive eating and drinking utensil assistance",
+      "Fall prevention during bathroom and threshold navigation",
+      "Gentle muscle massage for rigidity and stiffness relief"
+    ],
+    "supportedOptions": [
+      "12-Hour Daytime Support",
+      "Weekly Parkinsons Routine Plan",
+      "Full-Month Dedicated Attendant"
+    ]
+  },
+  {
+    "id": "srv-31",
+    "slug": "post-hospital-transition-attendant",
+    "name": "Post-Surgical Discharge Transitional Attendant",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Extra help for the first critical 7 to 14 days after surgery or hospital stay.",
+    "description": "Provides physical assistance during the vulnerable weeks following knee replacements, abdominal surgery, or cardiac recovery. Helps prevent accidental falls and wound strain.",
+    "image": "/assets/care.webp",
+    "basePrice": 115,
+    "duration": "12 Hours",
+    "features": [
+      "Assistance with getting in and out of bed without wound strain",
+      "Ice pack application and surgical limb elevation support",
+      "Transportation escort to follow-up clinic appointments",
+      "Preparation of light recuperative meals and herbal broths",
+      "Immediate alert to family if swelling or fever develops"
+    ],
+    "supportedOptions": [
+      "7-Day Post-Op Recovery Pack",
+      "14-Day Joint Replacement Pack",
+      "Individual 12-Hour Shift"
+    ]
+  },
+  {
+    "id": "srv-32",
+    "slug": "palliative-comfort-care-attendant",
+    "name": "Palliative & Comfort Care Bedside Attendant",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Gentle, respectful bedside presence focusing on dignity, pain relief, and comfort.",
+    "description": "Compassionate attendants trained in end-of-life and palliative comfort. They provide quiet reassurance, gentle mouth care, skin relief, and support to grieving families.",
+    "image": "/assets/Warm Home Visit Healthcare Scene.png",
+    "basePrice": 140,
+    "duration": "12 Hours (Day or Night)",
+    "features": [
+      "Frequent gentle repositioning with soft bolster pillows",
+      "Mouth moistening with oral swabs and lip balm care",
+      "Quiet, respectful companionship and family respite",
+      "Coordination with hospice and palliative nursing teams",
+      "Comfort-first personal hygiene and soothing hand massages"
+    ],
+    "supportedOptions": [
+      "12H Day Comfort Care",
+      "12H Night Comfort Vigil",
+      "24H Continuous Palliative Support"
+    ]
+  },
+  {
+    "id": "srv-33",
+    "slug": "respite-care-family-relief",
+    "name": "Weekend Respite Care Family Relief Attendant",
+    "category": "CARETAKER",
+    "categoryLabel": "Caretakers & Assistants",
+    "shortDesc": "Temporary weekend or evening coverage giving family caregivers a well-deserved break.",
+    "description": "Give primary family caregivers time to recharge, travel, or attend events. Our vetted attendants take over full patient care responsibilities seamlessly.",
+    "image": "/assets/doctor-2.webp",
+    "basePrice": 135,
+    "duration": "12 Hours or Weekend Block",
+    "features": [
+      "Full handoff briefing from family before coverage starts",
+      "Complete handling of meals, hygiene, walking, and medications",
+      "Hourly updates and photos sent to family via messaging",
+      "Emergency contacts verified with local dispatch desk",
+      "Available for weekends, holidays, and evening events"
+    ],
+    "supportedOptions": [
+      "Single Day Respite Shift",
+      "48-Hour Weekend Relief Block",
+      "Holiday Coverage Plan"
+    ]
+  },
+  {
+    "id": "srv-4",
+    "slug": "home-lab-investigations",
+    "name": "Home Lab Investigations",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "Painless sample collection at home with digital reports within 12 to 24 hours.",
+    "description": "NABL-accredited laboratory diagnostics delivered to your doorstep. Certified phlebotomists collect blood, urine, or swab samples using vacuum sterile barcoded vials with cold-chain transport.",
+    "image": "/assets/doorstep-2.png",
+    "basePrice": 35,
+    "duration": "15 mins sample collection",
+    "features": [
+      "Certified phlebotomist home visit",
+      "Painless vacutainer blood collection",
+      "Cold-chain transport directly to accredited labs",
+      "Digital PDF report delivered via app and email within 12 hours",
+      "Free doctor tele-review on abnormal test results"
+    ],
+    "supportedOptions": [
+      "Comprehensive Full Body Health Checkup",
+      "Complete Blood Count (CBC) & ESR",
+      "Diabetic Profile (HbA1c & Fasting Glucose)",
+      "Lipid & Cardiac Risk Profile",
+      "Liver & Kidney Function Panel",
+      "Thyroid Hormone Panel (T3, T4, TSH)"
+    ]
+  },
+  {
+    "id": "srv-34",
+    "slug": "full-body-health-checkup-panel",
+    "name": "Comprehensive Full Body Platinum Health Checkup",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "78 key parameters: CBC, Liver, Kidney, Lipid, Sugar, Thyroid, and Vitamins.",
+    "description": "Complete diagnostic screening at home. Tests liver enzymes, renal function, heart lipids, fasting blood sugar, thyroid hormones, vitamin D, and B12 with a single morning blood draw.",
+    "image": "/assets/diagnostics.webp",
+    "basePrice": 85,
+    "duration": "20 mins sample collection",
+    "features": [
+      "Complete Hemogram (24 blood parameters)",
+      "Liver Function Panel (LFT - 11 markers)",
+      "Kidney Function Panel (KFT - Creatinine, Urea, Uric Acid)",
+      "Lipid Profile (Cholesterol, HDL, LDL, Triglycerides)",
+      "Vitamin D3 & Vitamin B12 levels + Doctor Report Review"
+    ],
+    "supportedOptions": [
+      "Platinum Full Body (78 Tests)",
+      "Gold Wellness (60 Tests)",
+      "Senior Health Panel (85 Tests)"
+    ]
+  },
+  {
+    "id": "srv-35",
+    "slug": "diabetic-monitoring-hba1c-panel",
+    "name": "Diabetic Health & HbA1c Quarterly Monitoring Panel",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "HbA1c 3-month sugar average, fasting glucose, urine microalbumin & kidney check.",
+    "description": "Essential quarterly blood tests for diabetic patients. Measures average blood sugar over 90 days (HbA1c), fasting insulin, and checks for early kidney protein leakage.",
+    "image": "/assets/doorstep-2.png",
+    "basePrice": 45,
+    "duration": "15 mins",
+    "features": [
+      "HbA1c Glycated Hemoglobin (NGSP certified)",
+      "Fasting Blood Glucose & Post-Prandial Glucose",
+      "Urine Microalbumin / Creatinine Ratio (UACR)",
+      "Serum Creatinine & Estimated GFR calculation",
+      "Comparative historical trend report on patient portal"
+    ],
+    "supportedOptions": [
+      "Standard HbA1c Panel",
+      "Comprehensive Diabetic Health Panel",
+      "Diabetic Annual Kidney Audit"
+    ]
+  },
+  {
+    "id": "srv-36",
+    "slug": "lipid-profile-cardiac-panel",
+    "name": "Cardiac Risk Profile & Advanced Lipid Blood Panel",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "Cholesterol, Triglycerides, HDL, LDL, VLDL, and High-Sensitivity CRP.",
+    "description": "Evaluate cardiovascular risk from home. Measures good vs bad cholesterol, total lipid ratios, and systemic inflammatory markers (hs-CRP) that predict arterial plaque.",
+    "image": "/assets/doctor-4.webp",
+    "basePrice": 55,
+    "duration": "15 mins",
+    "features": [
+      "Total Cholesterol, Triglycerides & HDL Good Cholesterol",
+      "Direct LDL Bad Cholesterol & Non-HDL calculations",
+      "High-Sensitivity C-Reactive Protein (hs-CRP) inflammation test",
+      "Cardiac risk ratio computation",
+      "Cold-chain transport with same-day digital result"
+    ],
+    "supportedOptions": [
+      "Standard Lipid Profile",
+      "Advanced Cardiac Risk Panel (hs-CRP + Lipids)",
+      "Post-Heart Attack Follow-up Panel"
+    ]
+  },
+  {
+    "id": "srv-37",
+    "slug": "kidney-function-test-kft",
+    "name": "Kidney Function Test (KFT / RFT) Home Collection",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "Serum Creatinine, Blood Urea Nitrogen, Uric Acid, and Electrolytes.",
+    "description": "Monitors renal clearance and electrolyte balance. Essential for patients taking blood pressure medications, diuretics, or managing chronic kidney disease.",
+    "image": "/assets/facility-3.webp",
+    "basePrice": 48,
+    "duration": "15 mins",
+    "features": [
+      "Serum Creatinine & Estimated Glomerular Filtration Rate (eGFR)",
+      "Blood Urea Nitrogen (BUN) & BUN/Creatinine ratio",
+      "Serum Electrolytes (Sodium, Potassium, Chloride)",
+      "Serum Uric Acid level (gout screening)",
+      "Automated email notification when report is validated"
+    ],
+    "supportedOptions": [
+      "Complete KFT with Electrolytes",
+      "Basic Renal Panel",
+      "Dialysis Pre/Post Chemistry Panel"
+    ]
+  },
+  {
+    "id": "srv-38",
+    "slug": "liver-function-test-lft",
+    "name": "Liver Function Panel (LFT) & Bilirubin Blood Test",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "SGOT, SGPT, Bilirubin (Total & Direct), Alkaline Phosphatase, and Proteins.",
+    "description": "Evaluates liver cellular health, bile duct patency, and synthetic protein production. Ideal for medication toxicity monitoring or gastrointestinal evaluations.",
+    "image": "/assets/facility-2.webp",
+    "basePrice": 48,
+    "duration": "15 mins",
+    "features": [
+      "SGPT (ALT) & SGOT (AST) liver enzyme assays",
+      "Total, Direct, and Indirect Serum Bilirubin",
+      "Alkaline Phosphatase (ALP) & Gamma-GT",
+      "Total Serum Protein, Albumin, and Globulin ratio",
+      "Digital report with color-coded high/low reference ranges"
+    ],
+    "supportedOptions": [
+      "Complete LFT Panel",
+      "Liver Enzymes Express Panel",
+      "Viral Hepatitis + LFT Screening"
+    ]
+  },
+  {
+    "id": "srv-39",
+    "slug": "thyroid-profile-tsh-panel",
+    "name": "Thyroid Hormone Profile (Total T3, Total T4, TSH)",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "High-sensitivity TSH, Total T3, and Total T4 for metabolism and thyroid disorders.",
+    "description": "Check for hypothyroidism or hyperthyroidism from home. Measures pituitary stimulating hormone and active circulating thyroid hormones with high precision chemiluminescence.",
+    "image": "/assets/diagnostics.webp",
+    "basePrice": 42,
+    "duration": "15 mins",
+    "features": [
+      "Ultrasensitive Thyroid Stimulating Hormone (TSH 3rd Gen)",
+      "Total Triiodothyronine (T3) & Total Thyroxine (T4)",
+      "Levothyroxine dosage monitoring guidance",
+      "Sample collected in clot-activator sterile gold-top vial",
+      "Results delivered within 12 hours of collection"
+    ],
+    "supportedOptions": [
+      "Complete Thyroid Profile (T3, T4, TSH)",
+      "TSH Monitoring Test Only",
+      "Free T3 & Free T4 Advanced Panel"
+    ]
+  },
+  {
+    "id": "srv-40",
+    "slug": "senior-vitamin-d-b12-panel",
+    "name": "Vitamin D3 & Vitamin B12 Deficiency Home Panel",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "25-Hydroxy Vitamin D and Active B12 for fatigue, bone health, and neuropathy.",
+    "description": "Address chronic tiredness, body aches, and numbness. Evaluates vitamin D for bone calcium absorption and B12 for nerve myelination and red blood cell production.",
+    "image": "/assets/doctor-3.webp",
+    "basePrice": 65,
+    "duration": "15 mins",
+    "features": [
+      "25-Hydroxy Vitamin D total assay (D2 + D3)",
+      "Serum Vitamin B12 Cyanocobalamin level",
+      "Bone density risk assessment correlation",
+      "Oral vs injectable supplement recommendations in report",
+      "Free telephone review with medical team"
+    ],
+    "supportedOptions": [
+      "Vitamin D + B12 Combo",
+      "Vitamin D Test Only",
+      "Vitamin B12 Test Only"
+    ]
+  },
+  {
+    "id": "srv-41",
+    "slug": "doorstep-vaccination-service",
+    "name": "Doorstep Adult & Pediatric Vaccination Service",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "In-home administration of Flu, Pneumococcal, Shingles, and Hepatitis vaccines.",
+    "description": "Stay immunized without clinic exposure. Certified nurses bring cold-chain stored vaccines to your home, administer the shot safely, and observe for 15 minutes post-vaccination.",
+    "image": "/assets/doorstep-4.png",
+    "basePrice": 60,
+    "duration": "30 mins",
+    "features": [
+      "Certified nurse home visit with portable vaccine cold-box (2-8°C)",
+      "Pre-vaccine vitals, allergy screening, and consent verification",
+      "Painless intramuscular or subcutaneous injection technique",
+      "15-minute post-vaccination adverse reaction observation",
+      "Digital vaccination card and state registry documentation"
+    ],
+    "supportedOptions": [
+      "Influenza (Flu Quadrivalent) Vaccine",
+      "Pneumococcal (Pneumonia) Vaccine",
+      "Shingles (Herpes Zoster) Vaccine",
+      "Hepatitis B Booster"
+    ]
+  },
+  {
+    "id": "srv-42",
+    "slug": "home-12-lead-digital-ecg",
+    "name": "12-Lead Digital ECG at Home with Cardiologist Report",
+    "category": "LAB_TESTS",
+    "categoryLabel": "Diagnostic Tests",
+    "shortDesc": "Hospital-grade bedside resting electrocardiogram with tele-cardiologist review.",
+    "description": "A trained technician brings a portable digital 12-lead electrocardiograph machine directly to your living room. The tracing is interpreted by a senior board cardiologist within 60 minutes.",
+    "image": "/assets/specialists.webp",
+    "basePrice": 70,
+    "duration": "30 mins",
+    "features": [
+      "Full 12-lead standard resting electrocardiogram",
+      "Painless limb clamp and chest bulb electrode placement",
+      "Immediate digital waveform transmission to cardiology review desk",
+      "Cardiologist signed formal interpretation report within 1 hour",
+      "Urgent alert if signs of acute ischemia or arrhythmia are detected"
+    ],
+    "supportedOptions": [
+      "Standard 12-Lead ECG Visit",
+      "Pre-Operative Clearance ECG",
+      "Serial ECG 3-Pack (for Arrhythmias)"
+    ]
+  },
+  {
+    "id": "srv-5",
+    "slug": "home-physiotherapy",
+    "name": "Home Physiotherapy & Rehabilitation",
+    "category": "REHAB_THERAPY",
+    "categoryLabel": "Physical Therapy & Rehab",
+    "shortDesc": "Expert physical therapy for stroke recovery, joint replacement, and mobility restoration.",
+    "description": "Certified physical therapists bring customized orthopedic, neurological, and geriatric rehabilitation directly to your living room. Accelerate recovery with guided neuromuscular stimulation and gait training.",
+    "image": "/assets/wellness.webp",
+    "basePrice": 60,
+    "duration": "50 - 60 mins",
+    "features": [
+      "Personalized mobility assessment and joint range of motion",
+      "Post-total-knee/hip-replacement protocol exercises",
+      "Stroke paralysis rehabilitation & balance retraining",
+      "Pain management with portable TENS & ultrasound units",
+      "Digital exercise compliance chart for treating surgeon"
+    ],
+    "supportedOptions": [
+      "Single Targeted Physiotherapy Session",
+      "5-Session Mobility Rehabilitation Pack",
+      "10-Session Comprehensive Post-Op Package",
+      "Elderly Fall-Prevention Conditioning"
+    ]
+  },
+  {
+    "id": "srv-6",
+    "slug": "critical-care-icu-setup",
+    "name": "Critical Care & ICU Step-Down Setup",
+    "category": "CRITICAL_CARE",
+    "categoryLabel": "Critical Care & Monitoring",
+    "shortDesc": "Advanced home ICU installation with multipara monitors, oxygen, and continuous critical care nursing.",
+    "description": "Transition hospitalized patients safely home. Complete ICU infrastructure including hospital-grade electric beds, continuous vitals monitoring, oxygen concentrators, and 24/7 dedicated critical care nurses supervised by intensivists.",
+    "image": "/assets/compassionate-hospital-care.png",
+    "basePrice": 180,
+    "duration": "12-Hour or 24-Hour Continuous Care",
+    "features": [
+      "Certified ICU trained registered nurse stationed at bedside",
+      "Multipara monitor (SpO2, continuous ECG, NIBP, respiration)",
+      "Medical oxygen concentrator & suction machine setup",
+      "BiPAP / CPAP / tracheostomy tube management protocols",
+      "24/7 tele-intensivist emergency video consultation backup"
+    ],
+    "supportedOptions": [
+      "12-Hour ICU Step-Down Nursing Shift",
+      "24-Hour Intensive Care Continuous Package",
+      "Complete Home ICU Equipment Suite Rental",
+      "Palliative & Comfort Care ICU Protocol"
+    ]
+  }
 ];
 
 const initialBookings: BookingRecord[] = [

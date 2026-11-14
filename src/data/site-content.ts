@@ -40,7 +40,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     description: 'Expert care at the comfort of your home.',
     image: '/assets/doorstep-1.png',
     alt: 'Doctor providing compassionate home medical visit',
-    href: '/services/home-doctor-visit',
+    href: '/services?category=DOCTOR_VISIT',
     icon: 'stethoscope',
   },
   {
@@ -51,7 +51,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     description: 'Skilled nursing care at your doorstep.',
     image: '/assets/doorstep-2.png',
     alt: 'Registered clinician administering specialized home care',
-    href: '/services/home-nursing-care',
+    href: '/services?category=NURSING_CARE',
     icon: 'heartbeat',
   },
   {
@@ -62,7 +62,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     description: 'Compassionate support for your loved ones.',
     image: '/assets/doorstep-3.png',
     alt: 'Caregiver supporting patient with personalized bedside care',
-    href: '/services/patient-caretakers-medical-maids',
+    href: '/services?category=CARETAKER',
     icon: 'users',
   },
   {
@@ -73,7 +73,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     description: 'Tests and vaccinations at your convenience.',
     image: '/assets/doorstep-4.png',
     alt: 'Healthcare provider supporting elder mobility at home',
-    href: '/services/home-lab-investigations',
+    href: '/services?category=LAB_TESTS',
     icon: 'syringe',
   },
 ];
