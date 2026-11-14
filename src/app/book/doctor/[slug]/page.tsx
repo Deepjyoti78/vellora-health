@@ -4,7 +4,6 @@ import React, { useState, use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { db, UserRecord } from '@/lib/db';
-import { BookingProgress } from '@/components/booking/BookingProgress';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
 import {
   Stethoscope,
@@ -210,27 +209,10 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
     }
   };
 
-  const stepsList = [
-    { number: 1, label: 'Doctor & Visit' },
-    { number: 2, label: 'Patient Details' },
-    { number: 3, label: 'Review & Request' },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#F5F9F7] flex flex-col justify-between">
-      {/* Integrated Booking Header */}
-      <BookingProgress
-        currentStep={submittedBooking ? 3 : step}
-        totalSteps={3}
-        steps={stepsList}
-        backHref="/doctors"
-        backLabel="Back to Specialists"
-        title="Doctor Consultation Request"
-        subtitle={`Schedule an in-home or virtual consultation with ${doctor.name}`}
-      />
-
+    <div className="min-h-screen bg-[#F5F9F7] py-8 sm:py-12">
       {/* Main Body */}
-      <div className="container max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <main className="container max-w-5xl mx-auto px-4 sm:px-6">
         {submittedBooking ? (
           <RequestSuccessState
             type="DOCTOR_CONSULTATION"
@@ -258,7 +240,15 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
             ]}
           />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div>
+            {/* Main Heading - Clean and Minimal */}
+            <div className="mb-6 sm:mb-8">
+              <h1 className="font-heading text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#102820] tracking-tight">
+                Booking Home Visit Doctor
+              </h1>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Form Column (8 cols) */}
             <div className="lg:col-span-8">
               <div className="overflow-hidden rounded-[24px] border border-[#E2EBE7] bg-white p-6 sm:p-8 shadow-xs">
@@ -1061,13 +1051,9 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
               </div>
             </div>
           </div>
-        )}
-      </div>
-
-      {/* Minimal Privacy & Compliance Note */}
-      <footer className="py-6 text-center text-[11px] text-slate-400 border-t border-[#E2EBE7] bg-white">
-        Vellora Health Care Platform • HIPAA Compliant &amp; 256-Bit Encrypted Clinical Dispatch
-      </footer>
-    </div>
-  );
+        </div>
+      )}
+    </main>
+  </div>
+);
 }
