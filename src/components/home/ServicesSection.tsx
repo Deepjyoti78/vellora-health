@@ -42,18 +42,43 @@ export const ServicesSection: React.FC = () => {
               className="service-photo-card group"
               aria-label={service.title}
             >
-              <img
-                src={service.image}
-                alt={service.alt}
-                loading="eager"
-              />
-              {service.id === 'doctor-visit' && (
-                <div className="absolute bottom-6 left-6 z-10">
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-white drop-shadow-md">
-                    01 / DOCTOR VISIT
-                  </span>
+              {/* Top Media Area with earlier black pill element */}
+              <div className="service-card-media">
+                <img
+                  src={service.image}
+                  alt={service.alt}
+                  loading="eager"
+                />
+                {/* Earlier black element at top left */}
+                <div className="absolute left-3.5 top-3.5 z-20 rounded-full bg-black/80 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md border border-white/10 shadow-sm">
+                  {service.number} / {service.category}
                 </div>
-              )}
+              </div>
+
+              {/* Lower Body with Image 3 text effect and blackish background */}
+              <div className="p-5 pt-3 flex flex-col justify-between flex-1 relative z-10 min-h-[195px]">
+                {/* Icon & Title Row */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-[#116b70] shadow-sm">
+                    <Icon name={(service.icon as IconName) || 'stethoscope'} className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-heading text-[15px] font-bold leading-snug text-white transition group-hover:text-teal-200">
+                    {service.title}
+                  </h3>
+                </div>
+
+                {/* Description Text */}
+                <p className="mt-3 text-xs leading-relaxed text-gray-300 flex-1">
+                  {service.description}
+                </p>
+
+                {/* Bottom Right Arrow Button */}
+                <div className="mt-3 flex justify-end">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#116b70] text-white shadow-xs transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#0e5c60]">
+                    <Icon name="arrow-right" className="h-4 w-4" />
+                  </div>
+                </div>
+              </div>
             </Link>
           ))}
         </div>

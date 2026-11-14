@@ -7,6 +7,7 @@ export interface ServiceItem {
   image: string;
   alt: string;
   href: string;
+  icon?: string;
   isBookingLink?: boolean;
 }
 
