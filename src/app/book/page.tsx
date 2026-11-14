@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/lib/db';
@@ -28,7 +28,7 @@ const CARE_TYPES = [
   { id: 'NOT_SURE', label: 'Not Sure / General Enquiry', icon: HelpCircle },
 ];
 
-export default function QuickEnquiryPage() {
+function QuickEnquiryContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -321,5 +321,19 @@ export default function QuickEnquiryPage() {
         Vellora Health Care Platform • HIPAA Compliant &amp; 256-Bit Encrypted Dispatch
       </footer>
     </div>
+  );
+}
+
+export default function QuickEnquiryPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F8FAF9] flex items-center justify-center p-4">
+          <div className="w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <QuickEnquiryContent />
+    </Suspense>
   );
 }
