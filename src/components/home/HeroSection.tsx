@@ -37,7 +37,7 @@ export const HeroSection: React.FC = () => {
             EXCEPTIONAL<br />
             <span className="hero-title-row">
               <span className="hero-title-thumb" aria-hidden="true">
-                <img src="/assets/avatar-3.webp" alt="Patient" />
+                <img src="/assets/hero-heading-smile.jpg" alt="Smiling Doctor" />
               </span>
               HEALTHCARE
             </span><br />

@@ -25,10 +25,10 @@ export const TRUST_DATA = {
   count: '135k+',
   label: 'people',
   avatars: [
-    '/assets/avatar-1.webp',
-    '/assets/avatar-2.webp',
-    '/assets/avatar-3.webp',
-    '/assets/doctor-2.webp',
+    '/assets/avatar-1.jpg',
+    '/assets/avatar-2.jpg',
+    '/assets/avatar-3.jpg',
+    '/assets/avatar-4.jpg',
   ],
 };
 
