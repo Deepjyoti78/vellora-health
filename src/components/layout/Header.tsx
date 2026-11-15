@@ -259,39 +259,39 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
             {/* Profile Dropdown Menu */}
             {isProfileOpen && (
               <div
-                className="absolute right-0 mt-2 w-72 origin-top-right rounded-2xl border border-[#E2EBE7] bg-white p-2 shadow-2xl z-50 animate-scale-in text-left"
+                className="absolute right-0 mt-2 w-56 origin-top-right rounded-2xl border border-[#E2EBE7] bg-white p-1.5 shadow-xl z-50 animate-scale-in text-left"
                 role="menu"
                 aria-orientation="vertical"
               >
                 {/* Account Summary Banner */}
-                <div className="p-3 border-b border-slate-100 bg-[#F8FAF9] rounded-xl mb-1.5">
-                  <div className="flex items-center gap-3">
+                <div className="p-2.5 border-b border-slate-100 bg-[#F8FAF9] rounded-xl mb-1">
+                  <div className="flex items-center gap-2.5">
                     {currentUser.avatar ? (
                       <img
                         src={currentUser.avatar}
                         alt={currentUser.name}
-                        className="h-10 w-10 rounded-full object-cover border border-[#CBDCD5]"
+                        className="h-9 w-9 rounded-full object-cover border border-[#CBDCD5] shrink-0"
                       />
                     ) : (
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#064E3B] text-white text-sm font-black">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#064E3B] text-white text-xs font-black">
                         {getInitials(currentUser.name)}
                       </span>
                     )}
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1">
                         <p className="truncate text-xs font-extrabold text-[#102820]">
                           {currentUser.name}
                         </p>
                         {currentUser.verificationStatus === 'APPROVED' && (
                           <span title="Verified Account" className="inline-flex items-center">
-                            <ShieldCheck className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
+                            <ShieldCheck className="h-3 w-3 text-[#065F46] shrink-0" />
                           </span>
                         )}
                       </div>
-                      <p className="truncate text-[11px] text-slate-500">
+                      <p className="truncate text-[10.5px] text-slate-500">
                         {currentUser.email || currentUser.phone}
                       </p>
-                      <span className="mt-1 inline-block text-[10px] font-bold text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] px-1.5 py-0.2 rounded-md">
+                      <span className="mt-0.5 inline-block text-[9.5px] font-bold text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] px-1.5 py-0.5 rounded-md">
                         {currentUser.role === 'PATIENT' ? 'Patient Account' : currentUser.role}
                       </span>
                     </div>
@@ -303,105 +303,105 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
                   <Link
                     href="/patient/dashboard"
                     onClick={() => setIsProfileOpen(false)}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     role="menuitem"
                   >
-                    <LayoutDashboard className="h-4 w-4 text-[#065F46]" />
+                    <LayoutDashboard className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
                     <span>My Dashboard</span>
                   </Link>
 
                   <Link
                     href="/patient/bookings"
                     onClick={() => setIsProfileOpen(false)}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     role="menuitem"
                   >
-                    <Calendar className="h-4 w-4 text-[#065F46]" />
+                    <Calendar className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
                     <span>My Appointments</span>
                   </Link>
 
                   <Link
                     href="/patient/account"
                     onClick={() => setIsProfileOpen(false)}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     role="menuitem"
                   >
-                    <User className="h-4 w-4 text-[#065F46]" />
+                    <User className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
                     <span>My Profile &amp; Vitals</span>
                   </Link>
 
                   <Link
                     href="/patient/family"
                     onClick={() => setIsProfileOpen(false)}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     role="menuitem"
                   >
-                    <Users className="h-4 w-4 text-[#065F46]" />
+                    <Users className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
                     <span>Family Members</span>
                   </Link>
 
                   <Link
                     href="/patient/records"
                     onClick={() => setIsProfileOpen(false)}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     role="menuitem"
                   >
-                    <FileText className="h-4 w-4 text-[#065F46]" />
+                    <FileText className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
                     <span>Medical Records</span>
                   </Link>
 
                   <Link
                     href="/patient/support"
                     onClick={() => setIsProfileOpen(false)}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     role="menuitem"
                   >
-                    <LifeBuoy className="h-4 w-4 text-[#065F46]" />
+                    <LifeBuoy className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
                     <span>Support &amp; Help</span>
                   </Link>
                 </div>
 
                 {/* Role-Specific Portal Links for Doctor / Nurse / Admin */}
                 {(currentUser.role === 'DOCTOR' || currentUser.role === 'NURSE') && (
-                  <div className="pt-1.5 mt-1.5 border-t border-slate-100">
+                  <div className="pt-1 mt-1 border-t border-slate-100">
                     <Link
                       href="/provider/dashboard"
                       onClick={() => setIsProfileOpen(false)}
-                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-emerald-800 bg-emerald-50/70 hover:bg-emerald-100/70 transition-colors"
+                      className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50/70 hover:bg-emerald-100/70 transition-colors"
                       role="menuitem"
                     >
-                      <Stethoscope className="h-4 w-4 text-emerald-700" />
+                      <Stethoscope className="h-3.5 w-3.5 text-emerald-700 shrink-0" />
                       <span>Visiting Clinician Portal</span>
                     </Link>
                   </div>
                 )}
 
                 {currentUser.role === 'ADMIN' && (
-                  <div className="pt-1.5 mt-1.5 border-t border-slate-100">
+                  <div className="pt-1 mt-1 border-t border-slate-100">
                     <Link
                       href="/admin/dashboard"
                       onClick={() => setIsProfileOpen(false)}
-                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-slate-800 bg-slate-100/80 hover:bg-slate-200/80 transition-colors"
+                      className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-800 bg-slate-100/80 hover:bg-slate-200/80 transition-colors"
                       role="menuitem"
                     >
-                      <ShieldCheck className="h-4 w-4 text-slate-700" />
+                      <ShieldCheck className="h-3.5 w-3.5 text-slate-700 shrink-0" />
                       <span>Admin Console</span>
                     </Link>
                   </div>
                 )}
 
                 {/* Divider & Log Out */}
-                <div className="pt-1.5 mt-1.5 border-t border-slate-100">
+                <div className="pt-1 mt-1 border-t border-slate-100">
                   <button
                     type="button"
                     onClick={() => {
                       setIsProfileOpen(false);
                       logout();
                     }}
-                    className="w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors"
+                    className="w-full flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors text-left"
                     role="menuitem"
                   >
-                    <LogOut className="h-4 w-4" />
+                    <LogOut className="h-3.5 w-3.5 shrink-0" />
                     <span>Log Out</span>
                   </button>
                 </div>
