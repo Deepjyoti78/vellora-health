@@ -82,11 +82,10 @@ export const PatientLayout: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const navLinks = [
     { label: 'Dashboard', href: '/patient/dashboard', icon: 'building' as const },
-    { label: 'Book Care', href: '/patient/book', icon: 'calendar' as const },
     { label: 'My Bookings', href: '/patient/bookings', icon: 'clock' as const },
     { label: 'Medical Records', href: '/patient/records', icon: 'file' as const },
-    { label: 'Family Profiles', href: '/patient/family', icon: 'users' as const },
-    { label: 'Account', href: '/patient/account', icon: 'shield' as const },
+    { label: 'Family Members', href: '/patient/family', icon: 'users' as const },
+    { label: 'My Profile', href: '/patient/account', icon: 'shield' as const },
     { label: 'Support & Help', href: '/patient/support', icon: 'message' as const },
   ];
 
@@ -132,10 +131,10 @@ export const PatientLayout: React.FC<{ children: React.ReactNode }> = ({ childre
             </Link>
 
             <Link
-              href="tel:911"
-              className="hidden sm:inline-flex rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-bold text-red-700"
+              href="/patient/support"
+              className="hidden sm:inline-flex rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-bold text-red-700 hover:bg-red-100 transition-colors"
             >
-              Emergency 911
+              Emergency 112 / 108
             </Link>
 
             <Link
