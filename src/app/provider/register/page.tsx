@@ -120,13 +120,12 @@ function RegisterForm() {
   return (
     <div className="min-h-screen bg-[#F7FBF9] text-[#102723] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-xl text-center">
-        <Link href="/" className="inline-flex items-center gap-2 mb-4">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#065F46] text-white font-black text-xl shadow-sm">
-            +
-          </span>
-          <span className="text-2xl font-black tracking-tight text-[#102723]">
-            VELLORA HEALTH
-          </span>
+        <Link href="/" className="inline-block mb-4 group" aria-label="Velora Healthcare Home">
+          <img
+            src="/assets/logo-dark.png"
+            alt="Velora Healthcare"
+            className="h-10 w-auto mx-auto object-contain group-hover:opacity-90 transition-opacity"
+          />
         </Link>
         <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-0.5 text-xs font-bold text-[#065F46] mb-2">
           <Sparkles className="h-3.5 w-3.5 text-[#10B981]" />

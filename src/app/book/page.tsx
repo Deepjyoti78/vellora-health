@@ -129,15 +129,14 @@ function QuickEnquiryContent() {
             <BackButton href="/services" label="Back" />
             <Link
               href="/"
-              className="inline-flex items-center gap-2 group"
-              aria-label="Vellora Health Home"
+              className="inline-flex items-center group"
+              aria-label="Velora Healthcare Home"
             >
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-white font-black text-sm shadow-2xs group-hover:bg-[#065F46] transition-colors">
-                +
-              </div>
-              <span className="font-heading text-lg font-black tracking-tight text-[#102820]">
-                Vellora Health
-              </span>
+              <img
+                src="/assets/logo-dark.png"
+                alt="Velora Healthcare"
+                className="h-7 sm:h-8 w-auto object-contain group-hover:opacity-90 transition-opacity"
+              />
             </Link>
           </div>
 

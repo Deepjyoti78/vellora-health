@@ -93,12 +93,12 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
 
   return (
     <header className={headerClass} id="siteHeader">
-      <Link href="/" className="brand" aria-label="Vellora Health, home">
-        <span className="brand-icon" aria-hidden="true">
-          <span></span>
-          <span></span>
-        </span>
-        <span>Vellora Health</span>
+      <Link href="/" className="brand" aria-label="Velora Healthcare, home">
+        <img
+          src={theme === 'dark' ? '/assets/logo-white.png' : '/assets/logo-dark.png'}
+          alt="Velora Healthcare"
+          className="h-7 sm:h-8 md:h-9 w-auto object-contain select-none"
+        />
       </Link>
 
       <nav

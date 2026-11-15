@@ -50,13 +50,12 @@ export default function ProviderApplicationStatusPage() {
       <div className="mx-auto max-w-2xl">
         {/* Top Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#065F46] text-white font-black text-lg shadow-sm">
-              +
-            </span>
-            <span className="text-xl font-black tracking-tight text-[#102723]">
-              VELLORA HEALTH
-            </span>
+          <Link href="/" className="inline-block mb-3 group" aria-label="Velora Healthcare Home">
+            <img
+              src="/assets/logo-dark.png"
+              alt="Velora Healthcare"
+              className="h-9 w-auto mx-auto object-contain group-hover:opacity-90 transition-opacity"
+            />
           </Link>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-0.5 text-xs font-bold text-[#065F46]">
             <ShieldCheck className="h-3.5 w-3.5 text-[#10B981]" />

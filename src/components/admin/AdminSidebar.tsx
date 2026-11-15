@@ -72,19 +72,22 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <Link
             href="/admin/dashboard"
             onClick={onCloseMobile}
-            className="flex items-center gap-3 overflow-hidden"
+            className="flex items-center gap-3 overflow-hidden group"
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#064E3B] text-white shadow-sm">
-              <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
-                <path d="M12 2L15 8L21 9L17 14L18 20L12 17L6 20L7 14L3 9L9 8L12 2Z" />
-              </svg>
-            </div>
-            {!collapsed && (
-              <div className="leading-tight">
-                <span className="block font-heading text-[15px] font-black tracking-tight text-[#102820]">
-                  Vellora Health
-                </span>
-                <span className="block text-[10px] font-extrabold tracking-widest text-[#065F46] uppercase">
+            {collapsed ? (
+              <img
+                src="/assets/logo-icon.png"
+                alt="Velora Healthcare"
+                className="h-9 w-9 object-contain shrink-0"
+              />
+            ) : (
+              <div className="flex flex-col items-start overflow-hidden">
+                <img
+                  src="/assets/logo-dark.png"
+                  alt="Velora Healthcare"
+                  className="h-7 w-auto object-contain group-hover:opacity-90 transition-opacity"
+                />
+                <span className="block text-[10px] font-extrabold tracking-widest text-[#065F46] uppercase pl-1 mt-0.5">
                   Command Center
                 </span>
               </div>

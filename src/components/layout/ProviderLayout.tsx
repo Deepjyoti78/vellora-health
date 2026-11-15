@@ -113,18 +113,15 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
 
-            <Link href="/provider/dashboard" className="flex items-center gap-3 shrink-0 group">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#064E3B] text-white shadow-xs group-hover:bg-[#065F46] transition-colors">
-                <span className="text-xl font-bold leading-none select-none">+</span>
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="font-heading text-lg sm:text-xl font-black tracking-tight text-[#15212B] leading-none">
-                  Vellora <span className="font-medium text-slate-500 text-sm">Health</span>
-                </span>
-                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#059669] leading-none mt-1">
-                  Clinician Portal
-                </span>
-              </div>
+            <Link href="/provider/dashboard" className="flex flex-col items-start gap-1 shrink-0 group">
+              <img
+                src="/assets/logo-dark.png"
+                alt="Velora Healthcare"
+                className="h-7 sm:h-8 w-auto object-contain group-hover:opacity-90 transition-opacity"
+              />
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#059669] leading-none pl-1">
+                Clinician Portal
+              </span>
             </Link>
           </div>
 

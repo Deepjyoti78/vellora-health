@@ -174,13 +174,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="relative my-auto w-full max-w-md transform rounded-[24px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-2xl transition-all z-10 animate-scale-in text-left">
           {/* Header Row: Brand badge & Close button */}
           <div className="flex items-center justify-between pb-3 border-b border-[#F0F5F2]">
-            <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-sm font-black text-white shadow-xs">
-                +
-              </span>
-              <span className="text-sm font-extrabold text-[#102820] tracking-tight">
-                Vellora Health
-              </span>
+            <div className="flex items-center gap-2.5">
+              <img
+                src="/assets/logo-dark.png"
+                alt="Velora Healthcare"
+                className="h-6 w-auto object-contain"
+              />
               <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2 py-0.5 text-[10px] font-bold text-[#065F46]">
                 <ShieldCheck className="h-3 w-3" />
                 Secure Portal

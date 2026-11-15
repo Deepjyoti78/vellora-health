@@ -11,11 +11,15 @@ export const Footer: React.FC = () => {
   return (
     <footer className="site-footer">
       <div className="container">
-        <div className="footer-top">
-          <Link className="footer-brand" href="/">
-            VELLORA<span className="footer-cross">+</span>
+        <div className="footer-top flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6">
+          <Link className="inline-block group" href="/" aria-label="Velora Healthcare, home">
+            <img
+              src="/assets/logo-white.png"
+              alt="Velora Healthcare"
+              className="h-10 sm:h-12 md:h-14 w-auto object-contain group-hover:opacity-90 transition-opacity"
+            />
           </Link>
-          <p>Exceptional healthcare, always.</p>
+          <p className="text-slate-400 text-sm">Exceptional healthcare, always.</p>
         </div>
 
         <div className="footer-divider"></div>

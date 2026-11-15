@@ -86,11 +86,12 @@ function PatientRegisterContent() {
       <div className="w-full max-w-lg rounded-[24px] border border-[#E2EBE7] bg-white p-7 sm:p-9 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         {/* Brand Header */}
         <div className="text-center">
-          <Link href="/" className="inline-flex items-center gap-2 text-lg font-extrabold text-[#102820]">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#064E3B] text-white font-black text-sm">
-              +
-            </span>
-            <span>Vellora Health</span>
+          <Link href="/" className="inline-block group mb-2" aria-label="Velora Healthcare Home">
+            <img
+              src="/assets/logo-dark.png"
+              alt="Velora Healthcare"
+              className="h-9 w-auto mx-auto object-contain group-hover:opacity-90 transition-opacity"
+            />
           </Link>
           <h1 className="mt-5 font-heading text-2xl font-bold text-[#102820]">
             Create Patient Account
