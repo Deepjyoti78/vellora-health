@@ -21,7 +21,6 @@ import {
   Sparkles,
   Layers,
   Heart,
-  ChevronRight,
 } from 'lucide-react';
 
 interface CategoryCardItem {
@@ -147,116 +146,111 @@ export default function ServicesPage() {
   const isSearching = searchQuery.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-[#F8FAF9] text-[#11191B] font-sans antialiased">
+    <div className="min-h-screen bg-[#FAFCFB] text-[#11191B] font-sans antialiased">
       {/* Top Header with active Services pill */}
       <Header theme="light" />
 
-      {/* Main Container */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 pb-20">
-        {/* HERO SECTION MATCHING REFERENCE IMAGE */}
-        <section className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-r from-[#F0F8F5] via-[#E8F5F0] to-[#E3F2EB] border border-[#D5E8DF] p-6 sm:p-10 lg:p-12 mb-12 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
-          {/* Subtle curved background wave for the right image */}
-          <div className="absolute right-0 top-0 bottom-0 w-full sm:w-[50%] lg:w-[46%] pointer-events-none overflow-hidden hidden md:block">
-            <div className="absolute -right-12 -top-12 -bottom-12 w-[120%] bg-gradient-to-l from-white/35 via-white/20 to-transparent rounded-l-[120px]" />
-          </div>
+      {/* FULL-WIDTH SEAMLESS HERO SECTION MATCHING TARGET REFERENCE */}
+      <section className="relative w-full bg-gradient-to-r from-[#F6FBFA] via-[#F3F9F7] to-[#EDF6F3] overflow-hidden border-b border-[#E8F0EC]">
+        {/* Subtle mint organic glow on left */}
+        <div className="absolute top-0 left-0 w-[420px] h-[420px] bg-[#E2F4EC]/50 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2" />
 
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
-            {/* Left Column: Heading, Search & Popular Tags */}
-            <div className="w-full lg:max-w-xl xl:max-w-2xl flex flex-col justify-center">
-              {/* Eyebrow Pill */}
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E6F4EE] border border-[#C6E6D8] px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#065F46] w-fit mb-4 shadow-2xs">
-                <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
-                <span>OUR SERVICES</span>
-              </div>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 flex flex-col lg:flex-row lg:items-center justify-between min-h-[400px] lg:min-h-[440px]">
+          {/* Left Column: Heading, Search & Popular Tags */}
+          <div className="w-full lg:w-[52%] xl:w-[50%] z-10 flex flex-col justify-center">
+            {/* Eyebrow Pill */}
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-3.5 shadow-2xs">
+              <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
+              <span>OUR SERVICES</span>
+            </div>
 
-              {/* Main Heading */}
-              <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#102820] tracking-tight leading-[1.15] mb-3.5">
-                Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
-              </h1>
+            {/* Main Heading */}
+            <h1 className="text-3xl sm:text-4xl lg:text-[46px] xl:text-[50px] font-extrabold text-[#102820] tracking-tight leading-[1.12] mb-3.5">
+              Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
+            </h1>
 
-              {/* Subtitle */}
-              <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-xl mb-6 font-normal">
-                Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
-              </p>
+            {/* Subtitle */}
+            <p className="text-[#5A6E69] text-sm sm:text-[15.5px] leading-relaxed max-w-[580px] mb-6 font-normal">
+              Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
+            </p>
 
-              {/* Search Bar Container */}
-              <div className="relative flex items-center w-full max-w-lg rounded-full border border-[#D1DCD6] bg-white p-1.5 pl-5 pr-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.04)] focus-within:border-[#065F46] focus-within:ring-4 focus-within:ring-[#065F46]/10 transition-all">
-                <Search className="h-5 w-5 text-slate-400 mr-3 shrink-0 stroke-[2]" />
-                <input
-                  type="text"
-                  role="searchbox"
-                  aria-label="Search services, treatments, or care types"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Escape') setSearchQuery('');
-                  }}
-                  placeholder="Search services, treatments, or care types..."
-                  className="w-full bg-transparent text-xs sm:text-sm text-[#102820] placeholder-slate-400 focus:outline-none font-medium"
-                />
+            {/* Search Bar Container */}
+            <div className="relative flex items-center w-full max-w-[590px] h-[54px] sm:h-[58px] rounded-full border border-[#DCE6E1] bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.04)] focus-within:border-[#065F46] focus-within:ring-4 focus-within:ring-[#065F46]/10 transition-all">
+              <Search className="h-5 w-5 text-slate-400 mr-3 shrink-0 stroke-[2]" />
+              <input
+                type="text"
+                role="searchbox"
+                aria-label="Search services, treatments, or care types"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') setSearchQuery('');
+                }}
+                placeholder="Search services, treatments, or care types..."
+                className="w-full bg-transparent text-xs sm:text-sm text-[#102820] placeholder-slate-400 focus:outline-none font-medium"
+              />
 
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="mr-2 p-1 text-slate-400 hover:text-slate-600 rounded-full transition-colors"
-                    title="Clear search"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-
+              {searchQuery && (
                 <button
                   type="button"
-                  onClick={() => {}}
-                  aria-label="Submit search"
-                  className="h-10 w-10 rounded-full bg-[#065F46] hover:bg-[#043328] text-white flex items-center justify-center shrink-0 shadow-xs transition-colors cursor-pointer group"
+                  onClick={() => setSearchQuery('')}
+                  className="mr-2 p-1 text-slate-400 hover:text-slate-600 rounded-full transition-colors"
+                  title="Clear search"
                 >
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  <X className="h-4 w-4" />
                 </button>
-              </div>
+              )}
 
-              {/* Popular Search Chips */}
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-                <span className="text-slate-500 font-semibold text-xs mr-0.5">Popular:</span>
-                {POPULAR_CHIPS.map((chip) => {
-                  const ChipIcon = chip.icon;
-                  const isSelected = searchQuery === chip.query;
-                  return (
-                    <button
-                      key={chip.label}
-                      type="button"
-                      onClick={() => setSearchQuery(isSelected ? '' : chip.query)}
-                      className={`rounded-full border px-3 py-1 flex items-center gap-1.5 text-xs font-medium shadow-2xs transition-all cursor-pointer ${
-                        isSelected
-                          ? 'border-[#065F46] bg-[#065F46] text-white'
-                          : 'border-slate-200/90 bg-white/90 hover:bg-white text-slate-700 hover:border-[#065F46] hover:text-[#065F46]'
-                      }`}
-                    >
-                      <ChipIcon className={`h-3.5 w-3.5 ${isSelected ? 'text-white' : 'text-slate-500'}`} />
-                      <span>{chip.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
+              <button
+                type="button"
+                aria-label="Submit search"
+                className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-[#065F46] hover:bg-[#043328] text-white flex items-center justify-center shrink-0 shadow-xs transition-colors cursor-pointer group"
+              >
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </button>
             </div>
 
-            {/* Right Column: Doctor & Patient Scene Photo matching reference */}
-            <div className="w-full lg:w-[44%] relative flex items-center justify-center lg:justify-end">
-              <div className="relative overflow-hidden rounded-[24px] sm:rounded-[30px] shadow-sm max-h-[300px] sm:max-h-[340px] w-full">
-                <img
-                  src="/assets/services-hero-doctor.webp"
-                  alt="Doctor and patient consultation at home"
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
+            {/* Popular Search Chips */}
+            <div className="mt-3.5 flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11.5px]">
+              <span className="text-slate-500 font-semibold mr-1">Popular:</span>
+              {POPULAR_CHIPS.map((chip) => {
+                const ChipIcon = chip.icon;
+                const isSelected = searchQuery === chip.query;
+                return (
+                  <button
+                    key={chip.label}
+                    type="button"
+                    onClick={() => setSearchQuery(isSelected ? '' : chip.query)}
+                    className={`rounded-full border px-2.5 sm:px-3 py-1 flex items-center gap-1.5 font-medium shadow-2xs transition-all cursor-pointer ${
+                      isSelected
+                        ? 'border-[#065F46] bg-[#065F46] text-white'
+                        : 'border-[#DCE6E1] bg-white hover:bg-slate-50 text-slate-700 hover:border-[#065F46] hover:text-[#065F46]'
+                    }`}
+                  >
+                    <ChipIcon className={`h-3.5 w-3.5 ${isSelected ? 'text-white' : 'text-[#065F46]'}`} />
+                    <span>{chip.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
-        </section>
 
-        {/* Dynamic Section: Search Results vs. Care Categories Grid */}
+          {/* Right Column: Large Seamlessly Integrated Healthcare Photograph */}
+          <div className="w-full lg:w-[48%] xl:w-[50%] lg:absolute lg:right-0 lg:top-0 lg:bottom-0 flex items-center justify-end overflow-hidden pointer-events-none mt-6 lg:mt-0">
+            <img
+              src="/assets/services-hero-integrated.webp"
+              alt="Doctor and patient consultation in a warm home setting"
+              className="h-full w-auto max-h-[360px] sm:max-h-[400px] lg:max-h-full object-cover object-right"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* MAIN CONTENT AREA */}
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-20">
+        {/* Dynamic Content: Search Results vs. Care Categories Grid */}
         {isSearching ? (
-          <section className="mt-8 animate-in fade-in duration-200">
+          <section className="animate-in fade-in duration-200">
             {/* Search Header Bar */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2EBE7] pb-3.5 mb-6">
               <div className="flex items-center gap-2">
@@ -356,13 +350,13 @@ export default function ServicesPage() {
                 <h2 className="text-2xl sm:text-[30px] font-extrabold text-[#102820] tracking-tight">
                   Explore Care Categories
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-500 mt-1 font-normal">
+                <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-normal">
                   Find the right healthcare services for you and your family.
                 </p>
               </div>
 
               {/* Total Services Count Badge */}
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E6F4EE] border border-[#C6E6D8] px-3.5 py-1.5 text-xs font-bold text-[#065F46] shadow-2xs w-fit">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1.5 text-xs font-bold text-[#065F46] shadow-2xs w-fit">
                 <Layers className="h-3.5 w-3.5 text-[#065F46]" />
                 <span>{allServices.length} Total Services Available</span>
               </div>
@@ -375,24 +369,24 @@ export default function ServicesPage() {
                 return (
                   <div
                     key={cat.id}
-                    className="group flex flex-col justify-between overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300"
+                    className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E2EBE7] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)] transition-all duration-300"
                   >
-                    {/* Top Image with Badge */}
-                    <Link href={cat.href} className="relative h-[165px] sm:h-[180px] w-full overflow-hidden bg-slate-100 block">
+                    {/* Top Image with Badge (185-200px height) */}
+                    <Link href={cat.href} className="relative h-[185px] sm:h-[195px] lg:h-[200px] w-full overflow-hidden bg-slate-100 block">
                       <img
                         src={cat.image}
                         alt={cat.title}
                         loading="eager"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-103"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
                       />
                       {/* Floating Service Count Badge */}
-                      <div className="absolute top-3 right-3 rounded-full bg-white/95 backdrop-blur-xs px-3 py-1 text-[11px] font-bold text-slate-800 shadow-2xs border border-slate-100">
+                      <div className="absolute top-3.5 right-3.5 rounded-full bg-white/95 backdrop-blur-xs px-3 py-1 text-[11.5px] font-bold text-slate-800 shadow-2xs border border-slate-100">
                         {cat.servicesCount}
                       </div>
                     </Link>
 
                     {/* Lower Bar with Mint Icon Square, Title/Description & Emerald Pill Button */}
-                    <div className="p-4 sm:p-4.5 flex items-center justify-between gap-3 bg-white">
+                    <div className="p-4 sm:p-4.5 flex items-center justify-between gap-3 bg-white min-h-[96px]">
                       <div className="flex items-center gap-3 min-w-0">
                         {/* Mint Icon Box */}
                         <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-[#E6F4EE] flex items-center justify-center text-[#065F46] shrink-0 border border-[#D1EADC]">
@@ -401,11 +395,11 @@ export default function ServicesPage() {
                         {/* Text Content */}
                         <div className="min-w-0">
                           <Link href={cat.href}>
-                            <h3 className="font-bold text-[15px] sm:text-[16px] text-[#102820] leading-snug group-hover:text-[#065F46] transition-colors truncate">
+                            <h3 className="font-bold text-[16px] sm:text-[17px] text-[#102820] leading-snug group-hover:text-[#065F46] transition-colors truncate">
                               {cat.title}
                             </h3>
                           </Link>
-                          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
+                          <p className="text-[11.5px] sm:text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
                             {cat.description}
                           </p>
                         </div>
