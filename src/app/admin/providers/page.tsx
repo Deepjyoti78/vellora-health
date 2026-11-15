@@ -69,10 +69,10 @@ export default function AdminProvidersPage() {
           </div>
 
           <Link
-            href="/admin/verifications"
+            href="/admin/providers/applications"
             className="inline-flex items-center gap-1.5 rounded-xl bg-[#064E3B] px-4 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-[#065F46] transition-colors self-start sm:self-center"
           >
-            <span>Credential Verification Queue</span>
+            <span>Credential Verification Queue ({db.getProviderApplications().filter(a => a.status === 'UNDER_REVIEW' || a.status === 'SUBMITTED').length} Pending)</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -80,7 +80,7 @@ export default function AdminProvidersPage() {
         {/* Toolbar: Role Filter Pills & Search */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2EBE7] pb-4">
           <div className="flex flex-wrap items-center gap-1.5">
-            {['ALL', 'DOCTOR', 'NURSE', 'CARETAKER', 'PHLEBOTOMIST'].map((role) => (
+            {['ALL', 'DOCTOR', 'NURSE', 'CARETAKER', 'PHYSIOTHERAPIST', 'PHLEBOTOMIST'].map((role) => (
               <button
                 key={role}
                 type="button"

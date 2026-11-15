@@ -352,6 +352,33 @@ export default function AboutPage() {
             </div>
           </section>
 
+          {/* Provider Recruitment Callout Banner */}
+          <section className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 sm:p-8 shadow-[0_4px_20px_rgba(6,95,70,0.04)] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                <ShieldCheck className="h-6 w-6" />
+              </div>
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#065F46]">
+                  Clinician Careers
+                </span>
+                <h3 className="mt-1 font-heading text-lg sm:text-xl font-bold text-[#102723]">
+                  Join Vellora&apos;s Healthcare Provider Fleet
+                </h3>
+                <p className="mt-1 text-xs sm:text-sm text-slate-500 max-w-xl">
+                  Are you a licensed physician, registered nurse, physiotherapist, caretaker, or phlebotomist? Deliver flexible, unhurried bedside care with transparent weekly compensation and dedicated dispatcher support.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/join-as-provider"
+              className="shrink-0 inline-flex items-center gap-2 rounded-full bg-[#065F46] hover:bg-[#054d39] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-sm transition-all hover:gap-3"
+            >
+              <span>Apply as a Provider</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </section>
+
           {/* CTA Banner */}
           <section className="rounded-[26px] bg-[#064E3B] p-8 sm:p-12 text-white relative overflow-hidden shadow-xl">
             {/* Soft decorative cross & background pattern */}

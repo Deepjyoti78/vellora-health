@@ -51,6 +51,9 @@ export const Footer: React.FC = () => {
             <Link href="/patient/login">Patient Portal</Link>
             <Link href="/provider/login">Clinician Workstation</Link>
             <Link href="/admin/dashboard">Admin Command Desk</Link>
+            <Link href="/join-as-provider" className="text-emerald-400 font-semibold hover:underline">
+              Join Our Care Team &rarr;
+            </Link>
             <Link href="/contact">24/7 Care Helpline</Link>
             <Link href="/book" prefetch={true} className="text-left font-semibold text-teal-400 hover:text-teal-300 hover:underline">
               Book Home Appointment &rarr;

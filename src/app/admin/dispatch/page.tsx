@@ -77,8 +77,18 @@ export default function AdminDispatchPage() {
     if (!selectedBooking || !selectedProviderId) return;
 
     db.assignProvider(selectedBooking.id, selectedProviderId);
+    db.createJobOffer({
+      bookingId: selectedBooking.id,
+      providerId: selectedProviderId,
+      serviceName: selectedBooking.serviceName,
+      scheduledDate: selectedBooking.scheduledDate || 'Nov 15, 2026',
+      scheduledTimeSlot: selectedBooking.scheduledTimeSlot || '10:00 AM',
+      addressArea: selectedBooking.addressText || 'Springfield Care Corridor',
+      estimatedFee: selectedBooking.totalAmount || 120,
+      status: 'OFFERED',
+    });
     setBookings([...db.getBookings()]);
-    setSuccessMessage(`Assigned clinician to ${selectedBooking.bookingNumber}!`);
+    setSuccessMessage(`Assigned clinician to ${selectedBooking.bookingNumber}! Dispatch offer dispatched.`);
     setTimeout(() => {
       setSuccessMessage('');
       setSelectedBooking(null);

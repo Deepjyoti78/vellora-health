@@ -4,11 +4,21 @@ import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/db';
 import { ProviderLayout } from '@/components/layout/ProviderLayout';
-import { Icon } from '@/components/common/Icon';
+import {
+  DollarSign,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  ArrowRight,
+  Download,
+  Building,
+  ShieldCheck,
+  TrendingUp,
+} from 'lucide-react';
 
 export default function ProviderEarningsPage() {
   const { currentUser } = useAuth();
-  const [payouts, setPayouts] = useState(() => (currentUser ? db.getPayouts(currentUser.id) : []));
+  const [payouts] = useState(() => (currentUser ? db.getPayouts(currentUser.id) : []));
   const [instantPayoutDone, setInstantPayoutDone] = useState(false);
 
   const totalEarned = payouts.reduce((sum, p) => sum + p.netPayout, 0) + 1485;
@@ -20,29 +30,29 @@ export default function ProviderEarningsPage() {
 
   return (
     <ProviderLayout>
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 space-y-6">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#116b70]">
-            Financial Ledger
+          <span className="text-xs font-bold uppercase tracking-wider text-[#065F46]">
+            Practitioner Financial Ledger
           </span>
-          <h1 className="text-2xl font-black text-gray-900 sm:text-3xl">
-            Earnings & Direct Deposits
+          <h1 className="text-2xl font-black text-[#102723] sm:text-3xl mt-0.5">
+            Earnings &amp; Direct Deposits
           </h1>
-          <p className="mt-1 text-xs text-gray-500">
-            Track your completed clinical shifts, net remuneration, and automated Friday ACH transfers.
+          <p className="mt-1 text-xs text-slate-500">
+            Track completed clinical visits, net remuneration, deductions, and automated weekly electronic remittances.
           </p>
         </div>
 
         {/* Financial KPI Cards */}
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-            <span className="text-xs font-bold uppercase text-gray-400">Available For Cashout</span>
-            <div className="mt-2 text-3xl font-black text-[#116b70]">$1,485.00</div>
-            <p className="mt-1 text-xs text-gray-500">Accrued from 9 completed shifts this week</p>
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
+            <span className="text-[11px] font-bold uppercase text-slate-400">Available For Cashout</span>
+            <div className="mt-2 text-3xl font-black text-[#065F46]">$1,485.00</div>
+            <p className="mt-1 text-xs text-slate-500">Accrued from 9 completed home shifts this week</p>
             <button
               type="button"
               onClick={handleInstantPayout}
-              className="mt-4 w-full rounded-xl bg-[#116b70] py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#0d5559] transition-colors"
+              className="mt-4 w-full rounded-xl bg-[#065F46] hover:bg-[#054d39] py-2.5 text-xs font-bold text-white shadow-2xs transition-colors"
             >
               Instant Transfer to Chase Bank (•••• 4921)
             </button>
@@ -53,37 +63,41 @@ export default function ProviderEarningsPage() {
             )}
           </div>
 
-          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-            <span className="text-xs font-bold uppercase text-gray-400">Next Scheduled Payout</span>
-            <div className="mt-2 text-3xl font-black text-gray-900">Friday, Nov 20</div>
-            <p className="mt-1 text-xs text-gray-500">Automatic free ACH direct deposit to primary bank</p>
-            <div className="mt-4 rounded-xl bg-gray-50 p-3 text-xs text-gray-600">
-              <span className="font-bold text-gray-800">Primary Account:</span>
+          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
+            <span className="text-[11px] font-bold uppercase text-slate-400">Next Scheduled Payout</span>
+            <div className="mt-2 text-3xl font-black text-[#102723]">Friday, Nov 20</div>
+            <p className="mt-1 text-xs text-slate-500">Automatic free ACH direct deposit to primary bank</p>
+            <div className="mt-4 rounded-xl bg-[#F7FBF9] border border-[#D9ECE7] p-3 text-xs text-slate-600">
+              <span className="font-bold text-[#102723]">Primary Account:</span>
               <p>JPMorgan Chase Bank • Checking • Routing 121000358</p>
             </div>
           </div>
 
-          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-            <span className="text-xs font-bold uppercase text-gray-400">Total YTD Earnings</span>
-            <div className="mt-2 text-3xl font-black text-gray-900">${totalEarned.toLocaleString()}</div>
+          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
+            <span className="text-[11px] font-bold uppercase text-slate-400">Total YTD Earnings</span>
+            <div className="mt-2 text-3xl font-black text-[#102723]">${totalEarned.toLocaleString()}</div>
             <p className="mt-1 text-xs text-emerald-700 font-semibold">+22% compared to last quarter</p>
-            <div className="mt-4 rounded-xl bg-gray-50 p-3 text-xs text-gray-600">
-              <span className="font-bold text-gray-800">Platform Split:</span>
-              <p>75% Clinician Remuneration • 25% Operations & Malpractice Umbrella</p>
+            <div className="mt-4 rounded-xl bg-[#F7FBF9] border border-[#D9ECE7] p-3 text-xs text-slate-600">
+              <span className="font-bold text-[#102723]">Remuneration Split:</span>
+              <p>75% Clinician Net • 25% Dispatch &amp; Malpractice Umbrella</p>
             </div>
           </div>
         </div>
 
         {/* Payout History Ledger */}
-        <div className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-          <h3 className="text-base font-bold text-gray-900">Historical Settlement Statements</h3>
-          <p className="mt-0.5 text-xs text-gray-500">
-            Bi-weekly itemized payment vouchers with IRS 1099 accounting codes.
-          </p>
+        <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#F2F8F5]">
+            <div>
+              <h3 className="font-heading text-base font-bold text-[#102723]">Historical Settlement Statements</h3>
+              <p className="text-xs text-slate-500">
+                Itemized payment vouchers with IRS 1099 accounting codes.
+              </p>
+            </div>
+          </div>
 
-          <div className="mt-6 overflow-hidden rounded-xl border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200 text-left text-xs">
-              <thead className="bg-gray-100 font-bold text-gray-700">
+          <div className="mt-4 overflow-x-auto rounded-xl border border-[#D9ECE7]">
+            <table className="min-w-full divide-y divide-[#D9ECE7] text-left text-xs">
+              <thead className="bg-[#F7FBF9] font-bold text-slate-700">
                 <tr>
                   <th className="px-4 py-3">Pay Period</th>
                   <th className="px-4 py-3">Visits / Shifts</th>
@@ -94,22 +108,22 @@ export default function ProviderEarningsPage() {
                   <th className="px-4 py-3 text-right">Reference ID</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
+              <tbody className="divide-y divide-[#F2F8F5] bg-white">
                 {payouts.map((pay) => (
-                  <tr key={pay.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-semibold text-gray-900">{pay.period}</td>
-                    <td className="px-4 py-3 text-gray-600">{pay.visitsCount} visits</td>
-                    <td className="px-4 py-3 font-mono text-gray-900">${pay.totalEarnings}</td>
-                    <td className="px-4 py-3 font-mono text-gray-500">-${pay.commission}</td>
-                    <td className="px-4 py-3 font-mono font-black text-emerald-700">
+                  <tr key={pay.id} className="hover:bg-[#F7FBF9]">
+                    <td className="px-4 py-3 font-semibold text-[#102723]">{pay.period}</td>
+                    <td className="px-4 py-3 text-slate-600">{pay.visitsCount} visits</td>
+                    <td className="px-4 py-3 font-mono text-slate-900">${pay.totalEarnings}</td>
+                    <td className="px-4 py-3 font-mono text-slate-500">-${pay.commission}</td>
+                    <td className="px-4 py-3 font-mono font-bold text-[#065F46]">
                       ${pay.netPayout}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
+                      <span className="inline-flex rounded-full bg-emerald-100 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
                         {pay.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-mono text-gray-400 text-right">
+                    <td className="px-4 py-3 font-mono text-slate-400 text-right">
                       {pay.transactionRef}
                     </td>
                   </tr>

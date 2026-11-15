@@ -11,6 +11,14 @@ interface AuthContextType {
   isAuthLoading: boolean;
   login: (emailOrPhone: string, preferredRole?: UserRole) => boolean;
   registerPatient: (data: { name: string; email: string; phone: string }) => UserRecord;
+  registerProvider: (data: {
+    name: string;
+    email: string;
+    phone: string;
+    role: 'DOCTOR' | 'NURSE' | 'CARETAKER' | 'PHYSIOTHERAPIST' | 'PHLEBOTOMIST';
+    specialty?: string;
+    qualification?: string;
+  }) => UserRecord;
   logout: () => void;
   switchRole: (role: UserRole) => void;
   validateInternalRedirect: (target?: string | null, fallback?: string) => string;
@@ -150,6 +158,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return newUser;
   }, []);
 
+  const registerProvider = useCallback((data: {
+    name: string;
+    email: string;
+    phone: string;
+    role: 'DOCTOR' | 'NURSE' | 'CARETAKER' | 'PHYSIOTHERAPIST' | 'PHLEBOTOMIST';
+    specialty?: string;
+    qualification?: string;
+  }): UserRecord => {
+    const newUser = db.createUser({
+      name: data.name.trim(),
+      email: data.email.trim(),
+      phone: data.phone.trim(),
+      role: data.role,
+      specialty: data.specialty,
+      qualification: data.qualification,
+      verificationStatus: 'PENDING',
+      isOnline: false,
+    });
+    setCurrentUser(newUser);
+    setIsAuthenticated(true);
+    try {
+      sessionStorage.setItem(CLIENT_SESSION_STORAGE_KEY, newUser.id);
+    } catch {}
+    return newUser;
+  }, []);
+
   const validateInternalRedirect = useCallback(
     (target?: string | null, fallback: string = '/') => validateInternalPath(target, fallback),
     []
@@ -163,6 +197,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthLoading,
         login,
         registerPatient,
+        registerProvider,
         logout,
         switchRole,
         validateInternalRedirect,

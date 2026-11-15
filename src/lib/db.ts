@@ -6,7 +6,7 @@ export interface UserRecord {
   name: string;
   email: string;
   phone: string;
-  role: 'PATIENT' | 'DOCTOR' | 'NURSE' | 'CARETAKER' | 'PHLEBOTOMIST' | 'ADMIN';
+  role: 'PATIENT' | 'DOCTOR' | 'NURSE' | 'CARETAKER' | 'PHYSIOTHERAPIST' | 'PHLEBOTOMIST' | 'ADMIN';
   avatar: string;
   specialty?: string;
   verificationStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED';
@@ -17,6 +17,96 @@ export interface UserRecord {
   hourlyRate?: number;
   bio?: string;
   qualification?: string;
+  licenseNumber?: string;
+  registrationCouncil?: string;
+  serviceLocations?: string[];
+}
+
+export interface ProviderApplicationRecord {
+  id: string;
+  userId?: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  role: 'DOCTOR' | 'NURSE' | 'CARETAKER' | 'PHYSIOTHERAPIST' | 'PHLEBOTOMIST';
+  state: string;
+  city: string;
+  serviceLocations: string[];
+  qualification: string;
+  experienceYears: number;
+  licenseNumber?: string;
+  registrationCouncil?: string;
+  specialty?: string;
+  documents: {
+    id: string;
+    title: string;
+    type: string;
+    size: string;
+    status: 'VALID' | 'PENDING' | 'REJECTED';
+    uploadedAt: string;
+  }[];
+  status:
+    | 'DRAFT'
+    | 'SUBMITTED'
+    | 'UNDER_REVIEW'
+    | 'ADDITIONAL_INFO_REQUIRED'
+    | 'APPROVED'
+    | 'REJECTED'
+    | 'SUSPENDED';
+  adminNotes?: string;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  rejectionReason?: string;
+  appliedAt: string;
+}
+
+export interface ProviderShiftRecord {
+  id: string;
+  providerId: string;
+  dayOfWeek: number; // 0: Sun, 1: Mon, ... 6: Sat
+  dayName: string;
+  startTime: string; // "08:00"
+  endTime: string;   // "17:00"
+  isActive: boolean;
+  maxVisitsPerDay: number;
+  serviceZones: string[];
+}
+
+export interface JobOfferRecord {
+  id: string;
+  bookingId: string;
+  providerId: string;
+  serviceName: string;
+  scheduledDate: string;
+  scheduledTimeSlot: string;
+  addressArea: string;
+  estimatedFee: number;
+  status: 'OFFERED' | 'ACCEPTED' | 'DECLINED' | 'EXPIRED';
+  offeredAt: string;
+}
+
+export interface ClinicalNoteRecord {
+  id: string;
+  bookingId: string;
+  patientId: string;
+  patientName: string;
+  providerId: string;
+  providerName: string;
+  providerRole: 'DOCTOR' | 'NURSE' | 'CARETAKER' | 'PHYSIOTHERAPIST' | 'PHLEBOTOMIST';
+  title: string;
+  summary: string;
+  observations?: string;
+  tasksCompleted?: string[];
+  vitalsRecorded?: {
+    bp?: string;
+    pulse?: number;
+    spo2?: number;
+    temp?: number;
+    glucose?: number;
+  };
+  specimenBarcode?: string;
+  rehabExercises?: string[];
+  createdAt: string;
 }
 
 export interface FamilyMemberRecord {
@@ -1722,6 +1812,253 @@ const initialNotifications: NotificationRecord[] = [
   },
 ];
 
+const initialProviderApplications: ProviderApplicationRecord[] = [
+  {
+    id: 'app-1',
+    userId: 'doc-michael-chen',
+    fullName: 'Dr. Michael Chen',
+    email: 'm.chen@example.com',
+    phone: '+1 (555) 789-0123',
+    role: 'DOCTOR',
+    state: 'California',
+    city: 'San Francisco',
+    serviceLocations: ['San Francisco', 'Oakland', 'Berkeley'],
+    qualification: 'MD (Internal Medicine & Preventive Care)',
+    experienceYears: 15,
+    licenseNumber: 'MD-CA-981240',
+    registrationCouncil: 'Medical Board of California',
+    specialty: 'Family Medicine & Geriatrics',
+    documents: [
+      {
+        id: 'doc-mc-1',
+        title: 'California_State_Medical_Board_License.pdf',
+        type: 'Medical Council License',
+        size: '2.4 MB',
+        status: 'VALID',
+        uploadedAt: '2026-11-13T10:15:00Z',
+      },
+      {
+        id: 'doc-mc-2',
+        title: 'Medical_Malpractice_Insurance_COI.pdf',
+        type: 'Malpractice Insurance',
+        size: '1.8 MB',
+        status: 'VALID',
+        uploadedAt: '2026-11-13T10:18:00Z',
+      },
+      {
+        id: 'doc-mc-3',
+        title: 'DEA_Controlled_Substance_Reg.pdf',
+        type: 'DEA Registration',
+        size: '1.1 MB',
+        status: 'VALID',
+        uploadedAt: '2026-11-13T10:20:00Z',
+      },
+    ],
+    status: 'UNDER_REVIEW',
+    adminNotes: 'Primary source verification submitted to Medical Board of California portal. All 3 certificates valid.',
+    appliedAt: '2026-11-13T10:25:00Z',
+  },
+  {
+    id: 'app-2',
+    userId: 'nurse-jessica-vance',
+    fullName: 'Jessica Vance, RN',
+    email: 'jessica.rn@example.com',
+    phone: '+1 (555) 890-1234',
+    role: 'NURSE',
+    state: 'California',
+    city: 'San Jose',
+    serviceLocations: ['San Jose', 'Sunnyvale', 'Santa Clara'],
+    qualification: 'BSN, RN (Pediatric & Infusion Therapy)',
+    experienceYears: 7,
+    licenseNumber: 'RN-CA-442190',
+    registrationCouncil: 'California Board of Registered Nursing',
+    specialty: 'Pediatric & Home Infusion Care',
+    documents: [
+      {
+        id: 'doc-jv-1',
+        title: 'RN_Board_of_Registered_Nursing_Cert.pdf',
+        type: 'Nursing Council License',
+        size: '1.9 MB',
+        status: 'VALID',
+        uploadedAt: '2026-11-12T14:00:00Z',
+      },
+      {
+        id: 'doc-jv-2',
+        title: 'AHA_BLS_ACLS_Certification.pdf',
+        type: 'CPR / BLS / ACLS Certification',
+        size: '940 KB',
+        status: 'VALID',
+        uploadedAt: '2026-11-12T14:05:00Z',
+      },
+    ],
+    status: 'SUBMITTED',
+    adminNotes: 'Awaiting secondary supervisor reference check verification.',
+    appliedAt: '2026-11-12T14:10:00Z',
+  },
+  {
+    id: 'app-3',
+    userId: 'pt-rajesh',
+    fullName: 'Rajesh Sharma, PT',
+    email: 'rajesh.pt@example.com',
+    phone: '+1 (555) 901-2345',
+    role: 'PHYSIOTHERAPIST',
+    state: 'California',
+    city: 'San Francisco',
+    serviceLocations: ['San Francisco', 'Daly City'],
+    qualification: 'MPT (Neuro-Physiotherapy & Musculoskeletal)',
+    experienceYears: 10,
+    licenseNumber: 'PT-CA-771234',
+    registrationCouncil: 'Physical Therapy Board of California',
+    specialty: 'Stroke & Post-Op Joint Mobility',
+    documents: [
+      {
+        id: 'doc-rs-1',
+        title: 'PTBC_State_Physical_Therapy_License.pdf',
+        type: 'PT License',
+        size: '2.1 MB',
+        status: 'VALID',
+        uploadedAt: '2026-11-10T09:00:00Z',
+      },
+    ],
+    status: 'APPROVED',
+    adminNotes: 'License verified via DCA BreEZe portal. Full clearance granted.',
+    reviewedBy: 'Dr. Sarah Lin (Chief Medical Officer)',
+    reviewedAt: '2026-11-11T11:00:00Z',
+    appliedAt: '2026-11-10T09:15:00Z',
+  },
+  {
+    id: 'app-4',
+    userId: 'phleb-priya',
+    fullName: 'Priya Nair, CPT',
+    email: 'priya.cpt@example.com',
+    phone: '+1 (555) 012-3456',
+    role: 'PHLEBOTOMIST',
+    state: 'California',
+    city: 'Oakland',
+    serviceLocations: ['Oakland', 'Alameda', 'San Leandro'],
+    qualification: 'Certified Phlebotomy Technician I (CPT-1)',
+    experienceYears: 6,
+    licenseNumber: 'CPT-CA-338901',
+    registrationCouncil: 'California Department of Public Health (LFS)',
+    specialty: 'Sterile Pediatric & Geriatric Venipuncture',
+    documents: [
+      {
+        id: 'doc-pn-1',
+        title: 'CDPH_LFS_Phlebotomy_Certificate.pdf',
+        type: 'State Phlebotomy Certification',
+        size: '1.4 MB',
+        status: 'VALID',
+        uploadedAt: '2026-11-14T11:30:00Z',
+      },
+    ],
+    status: 'SUBMITTED',
+    appliedAt: '2026-11-14T11:45:00Z',
+  },
+  {
+    id: 'app-5',
+    userId: 'care-ramesh',
+    fullName: 'Ramesh Patel',
+    email: 'ramesh.care@example.com',
+    phone: '+1 (555) 123-4567',
+    role: 'CARETAKER',
+    state: 'California',
+    city: 'San Francisco',
+    serviceLocations: ['San Francisco', 'South San Francisco'],
+    qualification: 'Certified Home Health Aide (CHHA) & Geriatric Care',
+    experienceYears: 8,
+    specialty: 'Bedside Dementia Care & Mobility Support',
+    documents: [
+      {
+        id: 'doc-rp-1',
+        title: 'CHHA_State_Certification.pdf',
+        type: 'Caregiver Certification',
+        size: '1.2 MB',
+        status: 'VALID',
+        uploadedAt: '2026-11-09T08:00:00Z',
+      },
+      {
+        id: 'doc-rp-2',
+        title: 'LiveScan_DOJ_FBI_Background_Clearance.pdf',
+        type: 'Background Clearance',
+        size: '980 KB',
+        status: 'VALID',
+        uploadedAt: '2026-11-09T08:05:00Z',
+      },
+    ],
+    status: 'APPROVED',
+    reviewedBy: 'Admin Team',
+    reviewedAt: '2026-11-10T10:00:00Z',
+    appliedAt: '2026-11-09T08:15:00Z',
+  },
+];
+
+const initialProviderShifts: ProviderShiftRecord[] = [
+  { id: 'sh-1', providerId: 'doc-1', dayOfWeek: 1, dayName: 'Monday', startTime: '08:00', endTime: '18:00', isActive: true, maxVisitsPerDay: 6, serviceZones: ['San Francisco', 'South San Francisco'] },
+  { id: 'sh-2', providerId: 'doc-1', dayOfWeek: 2, dayName: 'Tuesday', startTime: '08:00', endTime: '18:00', isActive: true, maxVisitsPerDay: 6, serviceZones: ['San Francisco', 'Daly City'] },
+  { id: 'sh-3', providerId: 'doc-1', dayOfWeek: 3, dayName: 'Wednesday', startTime: '08:00', endTime: '18:00', isActive: true, maxVisitsPerDay: 6, serviceZones: ['San Francisco'] },
+  { id: 'sh-4', providerId: 'doc-1', dayOfWeek: 4, dayName: 'Thursday', startTime: '08:00', endTime: '18:00', isActive: true, maxVisitsPerDay: 6, serviceZones: ['San Francisco', 'Oakland'] },
+  { id: 'sh-5', providerId: 'doc-1', dayOfWeek: 5, dayName: 'Friday', startTime: '08:00', endTime: '16:00', isActive: true, maxVisitsPerDay: 5, serviceZones: ['San Francisco'] },
+  { id: 'sh-6', providerId: 'doc-1', dayOfWeek: 6, dayName: 'Saturday', startTime: '09:00', endTime: '14:00', isActive: false, maxVisitsPerDay: 3, serviceZones: ['San Francisco'] },
+  { id: 'sh-7', providerId: 'doc-1', dayOfWeek: 0, dayName: 'Sunday', startTime: '09:00', endTime: '14:00', isActive: false, maxVisitsPerDay: 3, serviceZones: ['San Francisco'] },
+];
+
+const initialJobOffers: JobOfferRecord[] = [
+  {
+    id: 'off-1',
+    bookingId: 'bkg-101',
+    providerId: 'doc-1',
+    serviceName: 'Home Visit Doctor Consultations',
+    scheduledDate: '2026-11-15',
+    scheduledTimeSlot: '10:00 AM – 11:00 AM',
+    addressArea: '742 Evergreen Terrace, Springfield, OR',
+    estimatedFee: 85,
+    status: 'ACCEPTED',
+    offeredAt: '2026-11-14T09:00:00Z',
+  },
+  {
+    id: 'off-2',
+    bookingId: 'bkg-102',
+    providerId: 'doc-1',
+    serviceName: 'Acute Illness Bedside Evaluation',
+    scheduledDate: '2026-11-16',
+    scheduledTimeSlot: '02:00 PM – 03:00 PM',
+    addressArea: 'Mission District, San Francisco, CA',
+    estimatedFee: 95,
+    status: 'OFFERED',
+    offeredAt: '2026-11-15T08:30:00Z',
+  },
+  {
+    id: 'off-3',
+    bookingId: 'bkg-103',
+    providerId: 'doc-1',
+    serviceName: 'Geriatric Comprehensive Routine Follow-up',
+    scheduledDate: '2026-11-17',
+    scheduledTimeSlot: '11:00 AM – 12:00 PM',
+    addressArea: 'Pacific Heights, San Francisco, CA',
+    estimatedFee: 110,
+    status: 'OFFERED',
+    offeredAt: '2026-11-15T09:00:00Z',
+  },
+];
+
+const initialClinicalNotes: ClinicalNoteRecord[] = [
+  {
+    id: 'cn-1',
+    bookingId: 'bkg-101',
+    patientId: 'pat-1',
+    patientName: 'Eleanor Vance',
+    providerId: 'doc-1',
+    providerName: 'Dr. Maya Patel',
+    providerRole: 'DOCTOR',
+    title: 'Comprehensive Bedside Clinical Assessment',
+    summary: 'Patient evaluated bedside for routine geriatric health optimization. Blood pressure well managed on current regimen.',
+    observations: 'Patient alert and oriented x4. Chest clear to auscultation bilaterally. No pedal edema noted.',
+    tasksCompleted: ['Full vitals triage', 'Physical examination', 'Polypharmacy review', 'Digital prescription issued'],
+    vitalsRecorded: { bp: '120/78 mmHg', pulse: 72, spo2: 98, temp: 98.4 },
+    createdAt: '2026-11-15T11:15:00Z',
+  },
+];
+
 // In-Memory Data Store with LocalStorage synchronization
 class DataStore {
   private users: UserRecord[] = initialUsers;
@@ -1734,6 +2071,10 @@ class DataStore {
   private addresses: AddressRecord[] = initialAddresses;
   private payouts: PayoutRecord[] = initialPayouts;
   private notifications: NotificationRecord[] = initialNotifications;
+  private providerApplications: ProviderApplicationRecord[] = initialProviderApplications;
+  private providerShifts: ProviderShiftRecord[] = initialProviderShifts;
+  private jobOffers: JobOfferRecord[] = initialJobOffers;
+  private clinicalNotes: ClinicalNoteRecord[] = initialClinicalNotes;
 
   // Users
   getUsers() { return this.users; }
@@ -1959,6 +2300,149 @@ class DataStore {
   markNotificationRead(id: string) {
     const notif = this.notifications.find(n => n.id === id);
     if (notif) notif.isRead = true;
+  }
+
+  // Provider Applications & Onboarding
+  getProviderApplications() {
+    return this.providerApplications;
+  }
+  getProviderApplicationById(id: string) {
+    return this.providerApplications.find(a => a.id === id);
+  }
+  getProviderApplicationByEmail(email: string) {
+    const clean = email.trim().toLowerCase();
+    return this.providerApplications.find(a => a.email.toLowerCase() === clean);
+  }
+  createProviderApplication(data: Omit<ProviderApplicationRecord, 'id' | 'appliedAt' | 'status'> & { status?: ProviderApplicationRecord['status'] }) {
+    const newApp: ProviderApplicationRecord = {
+      ...data,
+      id: `app-${Date.now().toString().slice(-6)}`,
+      status: data.status || 'SUBMITTED',
+      appliedAt: new Date().toISOString(),
+    };
+    this.providerApplications.unshift(newApp);
+
+    // Also register or sync UserRecord in PENDING verification status
+    let user = this.users.find(u => u.email.toLowerCase() === newApp.email.toLowerCase());
+    if (!user) {
+      this.createUser({
+        name: newApp.fullName,
+        email: newApp.email,
+        phone: newApp.phone,
+        role: newApp.role,
+        verificationStatus: 'PENDING',
+        specialty: newApp.specialty,
+        qualification: newApp.qualification,
+        experienceYears: newApp.experienceYears,
+        licenseNumber: newApp.licenseNumber,
+        registrationCouncil: newApp.registrationCouncil,
+        serviceLocations: newApp.serviceLocations,
+        isOnline: false,
+      });
+    }
+
+    return newApp;
+  }
+  updateProviderApplication(id: string, updates: Partial<ProviderApplicationRecord>) {
+    const idx = this.providerApplications.findIndex(a => a.id === id);
+    if (idx !== -1) {
+      this.providerApplications[idx] = { ...this.providerApplications[idx], ...updates };
+
+      // If approved, update associated user to APPROVED status
+      if (updates.status === 'APPROVED') {
+        const app = this.providerApplications[idx];
+        const user = this.users.find(u => u.email.toLowerCase() === app.email.toLowerCase());
+        if (user) {
+          user.verificationStatus = 'APPROVED';
+          user.role = app.role;
+          if (app.specialty) user.specialty = app.specialty;
+          if (app.qualification) user.qualification = app.qualification;
+        }
+      }
+
+      return this.providerApplications[idx];
+    }
+    return null;
+  }
+
+  // Provider Availability & Shifts
+  getProviderShifts(providerId: string): ProviderShiftRecord[] {
+    const existing = this.providerShifts.filter(s => s.providerId === providerId);
+    if (existing.length > 0) return existing;
+
+    // Default template for new provider (Mon-Fri 08:00 - 18:00)
+    const days = [
+      { dayOfWeek: 1, dayName: 'Monday', active: true },
+      { dayOfWeek: 2, dayName: 'Tuesday', active: true },
+      { dayOfWeek: 3, dayName: 'Wednesday', active: true },
+      { dayOfWeek: 4, dayName: 'Thursday', active: true },
+      { dayOfWeek: 5, dayName: 'Friday', active: true },
+      { dayOfWeek: 6, dayName: 'Saturday', active: false },
+      { dayOfWeek: 0, dayName: 'Sunday', active: false },
+    ];
+    const generated: ProviderShiftRecord[] = days.map((d, i) => ({
+      id: `sh-${providerId}-${i}`,
+      providerId,
+      dayOfWeek: d.dayOfWeek,
+      dayName: d.dayName,
+      startTime: '08:00',
+      endTime: '18:00',
+      isActive: d.active,
+      maxVisitsPerDay: 5,
+      serviceZones: ['Metro Central', 'South Area'],
+    }));
+    this.providerShifts.push(...generated);
+    return generated;
+  }
+  setProviderShifts(providerId: string, shifts: ProviderShiftRecord[]) {
+    this.providerShifts = this.providerShifts.filter(s => s.providerId !== providerId);
+    this.providerShifts.push(...shifts);
+    return shifts;
+  }
+
+  // Job Offers / Dispatch Matching
+  getJobOffers(providerId: string) {
+    return this.jobOffers.filter(o => o.providerId === providerId);
+  }
+  createJobOffer(offer: Omit<JobOfferRecord, 'id' | 'offeredAt'>) {
+    const newOffer: JobOfferRecord = {
+      ...offer,
+      id: `off-${Date.now().toString().slice(-6)}`,
+      offeredAt: new Date().toISOString(),
+    };
+    this.jobOffers.unshift(newOffer);
+    return newOffer;
+  }
+  respondToJobOffer(offerId: string, accept: boolean) {
+    const offer = this.jobOffers.find(o => o.id === offerId);
+    if (offer) {
+      offer.status = accept ? 'ACCEPTED' : 'DECLINED';
+      if (accept) {
+        // Assign booking to this provider
+        this.assignProvider(offer.bookingId, offer.providerId);
+      }
+      return offer;
+    }
+    return null;
+  }
+
+  // Clinical Records / Documentation
+  getClinicalNotes(filter?: { bookingId?: string; patientId?: string; providerId?: string }) {
+    return this.clinicalNotes.filter(cn => {
+      if (filter?.bookingId && cn.bookingId !== filter.bookingId) return false;
+      if (filter?.patientId && cn.patientId !== filter.patientId) return false;
+      if (filter?.providerId && cn.providerId !== filter.providerId) return false;
+      return true;
+    });
+  }
+  createClinicalNote(data: Omit<ClinicalNoteRecord, 'id' | 'createdAt'>) {
+    const newNote: ClinicalNoteRecord = {
+      ...data,
+      id: `cn-${Date.now().toString().slice(-6)}`,
+      createdAt: new Date().toISOString(),
+    };
+    this.clinicalNotes.unshift(newNote);
+    return newNote;
   }
 }
 

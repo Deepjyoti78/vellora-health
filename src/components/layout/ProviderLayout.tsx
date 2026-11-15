@@ -23,9 +23,11 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
   const navLinks = [
     { href: '/provider/dashboard', label: 'Dashboard', icon: 'layers' as const },
     { href: '/provider/appointments', label: 'Visits & Schedule', icon: 'calendar' as const },
+    { href: '/provider/requests', label: 'Job Offers', icon: 'clock' as const },
+    { href: '/provider/clinical-records', label: 'Clinical Charting', icon: 'file-text' as const },
     { href: '/provider/availability', label: 'Duty Shifts', icon: 'clock' as const },
     { href: '/provider/earnings', label: 'Earnings & Payouts', icon: 'shield' as const },
-    { href: '/provider/profile', label: 'Credentials & Profile', icon: 'user' as const },
+    { href: '/provider/profile', label: 'Profile & Zones', icon: 'user' as const },
   ];
 
   return (

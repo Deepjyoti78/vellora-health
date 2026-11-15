@@ -4,20 +4,75 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth, UserRole } from '@/context/AuthContext';
-import { Icon } from '@/components/common/Icon';
+import {
+  Stethoscope,
+  Activity,
+  HeartHandshake,
+  UserCheck,
+  Syringe,
+  ArrowRight,
+  ShieldCheck,
+  Sparkles,
+  CheckCircle2,
+  ChevronRight,
+} from 'lucide-react';
 
 export default function ProviderLoginPage() {
   const router = useRouter();
   const { switchRole } = useAuth();
   const [phone, setPhone] = useState('+1 (555) 345-6789');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('DOCTOR');
   const [step, setStep] = useState<'PHONE' | 'OTP'>('PHONE');
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
 
+  const demoAccounts = [
+    {
+      role: 'DOCTOR' as UserRole,
+      name: 'Dr. Maya Patel',
+      title: 'Visiting Physician (Internal Med)',
+      phone: '+1 (555) 234-5678',
+      icon: Stethoscope,
+      status: 'APPROVED',
+    },
+    {
+      role: 'NURSE' as UserRole,
+      name: 'Nurse Sarah Jenkins',
+      title: 'Registered Nurse (BSN)',
+      phone: '+1 (555) 345-6789',
+      icon: Activity,
+      status: 'APPROVED',
+    },
+    {
+      role: 'CARETAKER' as UserRole,
+      name: 'Priya Sharma',
+      title: 'Senior Care Attendant',
+      phone: '+1 (555) 456-7890',
+      icon: HeartHandshake,
+      status: 'APPROVED',
+    },
+    {
+      role: 'PHYSIOTHERAPIST' as UserRole,
+      name: 'David Kim',
+      title: 'Licensed Physical Therapist (BPT)',
+      phone: '+1 (555) 567-8901',
+      icon: UserCheck,
+      status: 'APPROVED',
+    },
+    {
+      role: 'PHLEBOTOMIST' as UserRole,
+      name: 'Alex Rivera',
+      title: 'Mobile Phlebotomy Specialist',
+      phone: '+1 (555) 678-9012',
+      icon: Syringe,
+      status: 'APPROVED',
+    },
+  ];
+
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!phone) {
-      setError('Please enter a valid phone number');
+      setError('Please enter a valid practitioner phone number');
       return;
     }
     setError('');
@@ -27,155 +82,179 @@ export default function ProviderLoginPage() {
   const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
     if (otp === '4829' || otp === '1234' || otp.length === 4) {
-      switchRole('DOCTOR');
+      switchRole(selectedRole);
       router.push('/provider/dashboard');
     } else {
-      setError('Invalid code. Use test OTP: 4829');
+      setError('Invalid verification code. Please enter demo code: 4829');
     }
   };
 
-  const handleQuickSwitch = (role: UserRole) => {
+  const handleQuickLogin = (role: UserRole) => {
     switchRole(role);
     router.push('/provider/dashboard');
   };
 
   return (
-    <div className="flex min-h-screen flex-col justify-center bg-[#11191B] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F7FBF9] text-[#102723] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="inline-flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#116b70] text-white font-black text-lg">
+        <Link href="/" className="inline-flex items-center gap-2 mb-4">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#065F46] text-white font-black text-xl shadow-sm">
             +
           </span>
-          <span className="text-xl font-black tracking-tight text-white">
+          <span className="text-2xl font-black tracking-tight text-[#102723]">
             VELLORA HEALTH
           </span>
         </Link>
-        <span className="mt-2 block text-xs font-bold uppercase tracking-widest text-[#116b70]">
-          Healthcare Provider Network
-        </span>
-        <h2 className="mt-4 text-2xl font-black tracking-tight text-white">
-          Practitioner Sign In
-        </h2>
-        <p className="mt-1 text-xs text-gray-400">
-          Access your daily home clinical itinerary, shift dispatch, and clinical documentation.
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-0.5 text-xs font-bold text-[#065F46] mb-2">
+          <ShieldCheck className="h-3.5 w-3.5 text-[#10B981]" />
+          <span>CLINICAL WORKSTATION SIGN IN</span>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-heading font-bold text-[#102723]">
+          Provider Portal Access
+        </h1>
+        <p className="mt-1.5 text-xs sm:text-sm text-slate-500">
+          Access your daily home visit itinerary, patient vitals telemetry, and weekly settlements.
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-2xl">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md space-y-6">
+        {/* OTP Sign-In Card */}
+        <div className="rounded-[26px] border border-[#D9ECE7] bg-white p-6 sm:p-8 shadow-[0_4px_24px_rgba(6,95,70,0.06)]">
+          {error && (
+            <div className="mb-4 rounded-xl bg-red-50 border border-red-200 p-3 text-xs text-red-600 font-medium">
+              {error}
+            </div>
+          )}
+
           {step === 'PHONE' ? (
             <form onSubmit={handleSendOtp} className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-gray-300">
-                  Registered Practitioner Phone
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                  Select Provider Specialty
                 </label>
-                <div className="mt-1 relative">
+                <select
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value as UserRole)}
+                  className="w-full rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] px-3.5 py-2.5 text-xs sm:text-sm text-[#102723] focus:border-[#065F46] focus:bg-white focus:outline-hidden"
+                >
+                  <option value="DOCTOR">Doctor / Visiting Physician</option>
+                  <option value="NURSE">Registered Nurse (RN)</option>
+                  <option value="CARETAKER">Patient Caretaker / Attendant</option>
+                  <option value="PHYSIOTHERAPIST">Licensed Physiotherapist</option>
+                  <option value="PHLEBOTOMIST">Mobile Phlebotomist</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                  Registered Mobile Number
+                </label>
+                <div className="relative">
                   <input
                     type="tel"
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+1 (555) 000-0000"
-                    className="block w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-[#116b70] focus:ring-1 focus:ring-[#116b70]"
+                    className="w-full rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] px-3.5 py-2.5 text-xs sm:text-sm text-[#102723] focus:border-[#065F46] focus:bg-white focus:outline-hidden"
                   />
                 </div>
               </div>
 
-              {error && <p className="text-xs text-red-400 font-medium">{error}</p>}
-
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#116b70] py-3 text-xs font-bold text-white shadow-lg hover:bg-[#0d5559] transition-colors"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#065F46] hover:bg-[#054d39] py-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-emerald-900/10 transition-colors"
               >
-                Send Secure Login Code
-                <Icon name="arrow-right" className="h-4 w-4" />
+                <span>Send Secure Access Code</span>
+                <ArrowRight className="h-4 w-4" />
               </button>
             </form>
           ) : (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               <div>
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-gray-300">Enter SMS Code</label>
-                  <span className="text-[11px] font-mono text-[#116b70] bg-[#116b70]/20 px-2 py-0.5 rounded">
-                    Test OTP: 4829
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Enter Verification Code
+                  </label>
+                  <span className="text-[11px] font-mono text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] px-2 py-0.5 rounded-md font-bold">
+                    Demo PIN: 4829
                   </span>
                 </div>
                 <input
                   type="text"
-                  maxLength={4}
+                  maxLength={6}
                   required
+                  placeholder="4829"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  placeholder="4829"
-                  className="mt-1 block w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-center text-xl font-mono tracking-widest text-white focus:border-[#116b70] focus:ring-1 focus:ring-[#116b70]"
+                  className="w-full text-center tracking-widest text-lg font-mono rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] px-4 py-2.5 text-[#102723] focus:border-[#065F46] focus:bg-white focus:outline-hidden"
                 />
               </div>
 
-              {error && <p className="text-xs text-red-400 font-medium">{error}</p>}
-
               <button
                 type="submit"
-                className="w-full rounded-xl bg-[#116b70] py-3 text-xs font-bold text-white shadow-lg hover:bg-[#0d5559] transition-colors"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#065F46] hover:bg-[#054d39] py-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-emerald-900/10 transition-colors"
               >
-                Verify & Enter Provider Dashboard
+                <span>Verify &amp; Enter Workstation</span>
+                <CheckCircle2 className="h-4 w-4" />
               </button>
 
               <button
                 type="button"
                 onClick={() => setStep('PHONE')}
-                className="w-full text-center text-xs text-gray-400 hover:text-white"
+                className="w-full text-center text-xs text-slate-500 hover:text-slate-800 transition-colors mt-2"
               >
-                Change Phone Number
+                ← Change Phone Number
               </button>
             </form>
           )}
 
-          {/* Quick Switch Persona Buttons */}
-          <div className="mt-8 border-t border-white/10 pt-6">
-            <span className="block text-[11px] font-bold uppercase tracking-wider text-gray-400 text-center">
-              1-Click Instant Persona Sign-In:
-            </span>
-            <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-              <button
-                type="button"
-                onClick={() => handleQuickSwitch('DOCTOR')}
-                className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-left text-white hover:bg-white/10 transition-colors"
-              >
-                <div className="font-bold text-emerald-400">Dr. Maya Patel</div>
-                <div className="text-[10px] text-gray-400">Doctor (MD)</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickSwitch('NURSE')}
-                className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-left text-white hover:bg-white/10 transition-colors"
-              >
-                <div className="font-bold text-blue-400">Sarah Jenkins</div>
-                <div className="text-[10px] text-gray-400">Registered Nurse (RN)</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickSwitch('CARETAKER')}
-                className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-left text-white hover:bg-white/10 transition-colors"
-              >
-                <div className="font-bold text-amber-400">James Thornton</div>
-                <div className="text-[10px] text-gray-400">Senior Caretaker</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickSwitch('PHLEBOTOMIST')}
-                className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-left text-white hover:bg-white/10 transition-colors"
-              >
-                <div className="font-bold text-purple-400">Alex Rivera</div>
-                <div className="text-[10px] text-gray-400">Phlebotomist (CPT)</div>
-              </button>
-            </div>
+          <div className="mt-6 pt-5 border-t border-[#D9ECE7] text-center">
+            <p className="text-xs text-slate-500">
+              Not yet registered with Vellora?{' '}
+              <Link href="/provider/register" className="font-bold text-[#065F46] hover:underline">
+                Apply as a Healthcare Provider
+              </Link>
+            </p>
           </div>
+        </div>
 
-          <div className="mt-6 text-center text-xs text-gray-400">
-            Interested in joining our medical network?{' '}
-            <Link href="/provider/onboarding" className="font-bold text-[#116b70] hover:underline">
-              Apply for Credentialing
-            </Link>
+        {/* 1-Click Fast Clinician Demo Switcher */}
+        <div className="rounded-[22px] border border-[#D9ECE7] bg-white p-5 shadow-2xs">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="h-4 w-4 text-[#065F46]" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#102723]">
+              Instant Demo Workstation Login
+            </h3>
+          </div>
+          <p className="text-[11px] text-slate-500 mb-3">
+            Click any active practitioner below to immediately enter their dedicated workstation dashboard:
+          </p>
+          <div className="space-y-2">
+            {demoAccounts.map((acc) => {
+              const AccIcon = acc.icon;
+              return (
+                <button
+                  key={acc.role}
+                  type="button"
+                  onClick={() => handleQuickLogin(acc.role)}
+                  className="w-full flex items-center justify-between p-2.5 rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] hover:bg-[#ECFDF5] hover:border-[#A7F3D0] transition-all text-left group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-[#D9ECE7] text-[#065F46] group-hover:scale-105 transition-transform">
+                      <AccIcon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[#102723] leading-tight">{acc.name}</p>
+                      <p className="text-[10px] text-slate-500">{acc.title}</p>
+                    </div>
+                  </div>
+                  <span className="text-[11px] font-bold text-[#065F46] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                    Enter <ChevronRight className="h-3 w-3" />
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
