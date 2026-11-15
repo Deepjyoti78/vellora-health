@@ -74,60 +74,12 @@ export const PatientLayout: React.FC<{ children: React.ReactNode }> = ({ childre
     );
   }
 
-  // Helper to format page title for breadcrumb
-  const formatPageTitle = (path: string) => {
-    const segment = path.split('/').filter(Boolean).pop() || '';
-    switch (segment) {
-      case 'bookings':
-        return 'My Care Bookings';
-      case 'records':
-        return 'Medical Records';
-      case 'family':
-        return 'Family Members';
-      case 'account':
-        return 'Profile & Account Settings';
-      case 'support':
-        return 'Support & Help';
-      case 'book':
-        return 'Book a Visit';
-      default:
-        return segment.replace(/-/g, ' ');
-    }
-  };
-
-  const isSubPage = pathname !== '/patient/dashboard';
-
   return (
     <div className="flex min-h-screen flex-col bg-[#f8faf9]">
-      {/* 1. Main Website Navbar (Brought back to patient dashboard & portal) */}
+      {/* 1. Main Website Navbar */}
       <Header theme="light" />
 
-      {/* 2. Secondary Navigation Sub-bar for sub-pages: provides back button & breadcrumbs */}
-      {isSubPage && (
-        <div className="sticky top-[73px] z-30 border-b border-[#E2EBE7] bg-white/95 backdrop-blur-md py-2.5 px-4 sm:px-6 shadow-2xs transition-all animate-fade-in-down">
-          <div className="mx-auto max-w-7xl flex items-center justify-between">
-            <Link
-              href="/patient/dashboard"
-              className="group inline-flex items-center gap-1.5 rounded-full border border-[#CBDCD5] bg-[#F8FAF9] px-3.5 py-1 text-xs font-bold text-[#102820] hover:border-[#064E3B] hover:bg-[#ECFDF5] hover:text-[#064E3B] transition-all shadow-2xs"
-            >
-              <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-              <span>Back to Dashboard</span>
-            </Link>
-
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-              <Link href="/patient/dashboard" className="hover:text-[#064E3B] transition-colors">
-                Dashboard
-              </Link>
-              <span className="text-slate-300">/</span>
-              <span className="text-[#064E3B] font-bold capitalize">
-                {formatPageTitle(pathname)}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 3. Main Page Area */}
+      {/* 2. Main Page Area */}
       <main className="flex-1 pb-16">{children}</main>
     </div>
   );

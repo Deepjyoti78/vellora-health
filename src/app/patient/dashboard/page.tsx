@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { db } from '@/lib/db';
+import { db, BookingRecord } from '@/lib/db';
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import {
   Calendar,
@@ -22,11 +22,24 @@ import {
   Activity,
   MapPin,
   Sparkles,
+  X,
 } from 'lucide-react';
 
 export default function PatientDashboardPage() {
   const { currentUser } = useAuth();
   const userId = currentUser?.id || '';
+  const [selectedBooking, setSelectedBooking] = useState<BookingRecord | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedBooking(null);
+    };
+    if (selectedBooking) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedBooking]);
+
   const bookings = db.getBookingsByPatient(userId);
   const activeBookings = bookings.filter((b) =>
     ['REQUESTED', 'CONFIRMED', 'ASSIGNED', 'ON_THE_WAY', 'ARRIVED', 'IN_PROGRESS'].includes(b.status)
@@ -188,12 +201,13 @@ export default function PatientDashboardPage() {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2 sm:self-center">
-                        <Link
-                          href={`/patient/bookings/${booking.id}`}
-                          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
+                        <button
+                          type="button"
+                          onClick={() => setSelectedBooking(booking)}
+                          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-2xs cursor-pointer"
                         >
                           View Details
-                        </Link>
+                        </button>
                         {['ON_THE_WAY', 'ARRIVED', 'IN_PROGRESS'].includes(booking.status) ? (
                           <Link
                             href={`/patient/bookings/${booking.id}`}
@@ -472,6 +486,136 @@ export default function PatientDashboardPage() {
           </div>
         </section>
       </div>
+
+      {/* APPOINTMENT DETAILS MINIMAL POPUP MODAL */}
+      {selectedBooking && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-200"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="bookingModalTitle"
+          onClick={() => setSelectedBooking(null)}
+        >
+          <div
+            className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-[#E2EBE7] bg-white p-6 sm:p-7 shadow-2xl animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Header: Title, Reference & Close */}
+            <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200 shadow-2xs">
+                    {selectedBooking.bookingNumber}
+                  </span>
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
+                      selectedBooking.status === 'CONFIRMED'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : ['IN_PROGRESS', 'ON_THE_WAY', 'ARRIVED'].includes(selectedBooking.status)
+                        ? 'bg-amber-50 text-amber-800 border border-amber-200 animate-pulse'
+                        : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                    }`}
+                  >
+                    ● {selectedBooking.status.replace(/_/g, ' ')}
+                  </span>
+                </div>
+                <h3 id="bookingModalTitle" className="text-lg font-bold text-[#102820] leading-snug">
+                  {selectedBooking.serviceName}
+                </h3>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedBooking(null)}
+                className="rounded-full p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                aria-label="Close dialog"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Clean Details Grid */}
+            <div className="mt-4 space-y-3 text-xs text-slate-600">
+              {/* Schedule & Time */}
+              <div className="flex items-center gap-3 rounded-2xl bg-[#F8FAF9] p-3.5 border border-slate-100">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100/70 text-[#065F46] shrink-0">
+                  <Calendar className="h-4.5 w-4.5" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">
+                    {selectedBooking.scheduledDate} • {selectedBooking.scheduledTimeSlot}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Doorstep Bedside Visit</p>
+                </div>
+              </div>
+
+              {/* Patient / Beneficiary & Location */}
+              <div className="flex items-start gap-3 rounded-2xl bg-[#F8FAF9] p-3.5 border border-slate-100">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100/70 text-blue-700 shrink-0">
+                  <User className="h-4.5 w-4.5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-slate-900">
+                    {selectedBooking.beneficiaryName}{' '}
+                    <span className="font-normal text-slate-500">({selectedBooking.beneficiaryRelation})</span>
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                    <span className="truncate">{selectedBooking.addressText}</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Assigned Clinician & Bedside Safety PIN */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="rounded-2xl bg-[#F8FAF9] p-3 border border-slate-100">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Assigned Clinician</p>
+                  <p className="font-bold text-slate-900 mt-1 flex items-center gap-1.5 text-xs truncate">
+                    <Stethoscope className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
+                    <span className="truncate">{selectedBooking.providerName || 'Pending Clinician Dispatch'}</span>
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-[#F8FAF9] p-3 border border-slate-100">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Bedside Safety PIN</p>
+                  <p className="font-mono font-black text-emerald-800 text-sm mt-1 flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>{selectedBooking.verificationPin || '4829'}</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Payment & Rate Status */}
+              <div className="flex items-center justify-between rounded-2xl bg-[#F8FAF9] px-4 py-2.5 border border-slate-100">
+                <span className="text-slate-500">Service Fee:</span>
+                <span className="font-bold text-slate-900">
+                  ${selectedBooking.totalAmount || 95}.00 •{' '}
+                  <span className="text-emerald-700 font-semibold">{selectedBooking.paymentStatus || 'Paid'}</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-end gap-2.5">
+              <button
+                type="button"
+                onClick={() => setSelectedBooking(null)}
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+              >
+                Close
+              </button>
+
+              <Link
+                href={`/patient/bookings/${selectedBooking.id}`}
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4.5 py-2 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-xs"
+              >
+                <span>Full Tracking Page</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </PatientLayout>
   );
 }
