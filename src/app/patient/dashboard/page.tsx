@@ -30,7 +30,7 @@ import {
   Phone,
   Home,
   CheckCircle2,
-  Bell,
+  ChevronRight,
 } from 'lucide-react';
 
 // Format YYYY-MM-DD into "Nov 15, 2026"
@@ -54,11 +54,11 @@ function formatDisplayDate(dateStr: string) {
 
 // 24/7 Care Coordination Headset Illustration
 const CareCoordinationIllustration = () => (
-  <div className="relative w-32 h-24 sm:w-40 sm:h-28 shrink-0 flex items-center justify-center select-none pointer-events-none">
-    <div className="absolute inset-0 bg-[#E6F7F0] rounded-full blur-xl opacity-80" />
-    <svg viewBox="0 0 160 130" className="w-full h-full relative z-10 drop-shadow-sm" fill="none">
+  <div className="relative w-28 h-24 sm:w-36 sm:h-28 shrink-0 flex items-center justify-center select-none pointer-events-none">
+    <div className="absolute inset-0 bg-[#E6F7F0] rounded-full blur-xl opacity-75" />
+    <svg viewBox="0 0 160 130" className="w-full h-full relative z-10 drop-shadow-xs" fill="none">
       {/* Background Soft Bubble */}
-      <circle cx="80" cy="65" r="45" fill="#EAF8F2" />
+      <circle cx="80" cy="65" r="44" fill="#EAF8F2" />
       {/* Plant Leaves */}
       <path d="M40 95 C 30 85, 32 70, 48 78 C 45 90, 42 93, 40 95 Z" fill="#A7F3D0" />
       <path d="M50 102 C 38 98, 42 85, 56 90 C 54 99, 52 101, 50 102 Z" fill="#6EE7B7" />
@@ -83,9 +83,9 @@ const CareCoordinationIllustration = () => (
 
 // Emergency Medical Ambulance Illustration
 const EmergencyAmbulanceIllustration = () => (
-  <div className="relative w-32 h-20 sm:w-40 sm:h-24 shrink-0 flex items-center justify-center select-none pointer-events-none">
-    <div className="absolute inset-0 bg-[#FEE2E2] rounded-full blur-xl opacity-70" />
-    <svg viewBox="0 0 160 110" className="w-full h-full relative z-10 drop-shadow-sm" fill="none">
+  <div className="relative w-28 h-20 sm:w-36 sm:h-24 shrink-0 flex items-center justify-center select-none pointer-events-none">
+    <div className="absolute inset-0 bg-[#FEE2E2] rounded-full blur-xl opacity-60" />
+    <svg viewBox="0 0 160 110" className="w-full h-full relative z-10 drop-shadow-xs" fill="none">
       {/* Road Shadow */}
       <ellipse cx="80" cy="94" rx="55" ry="5" fill="#E2E8F0" />
       {/* Siren Light Glow & Bulb */}
@@ -174,29 +174,27 @@ export default function PatientDashboardPage() {
     <PatientLayout>
       <div className="min-h-screen bg-[#F7FAF9] text-[#15212B] font-sans antialiased py-6 sm:py-8 lg:py-10">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
-          {/* ================= 2. HERO / WELCOME SECTION ================= */}
-          <section className="relative overflow-hidden rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
-            {/* Ambient Background Mint Curves */}
-            <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-[#EAF8F2]/70 blur-3xl pointer-events-none" />
-
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* ================= 1. SEAMLESS WELCOME HERO SECTION ================= */}
+          {/* Open, unboxed layout directly on the mint-tinted page background */}
+          <section className="relative pt-2 pb-2 sm:pt-4 sm:pb-4 lg:pt-6 lg:pb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               {/* Left Column: Heading, Subtitle, CTA */}
-              <div className="lg:col-span-7">
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-[11px] font-bold text-[#065F46] uppercase tracking-wider mb-3.5 shadow-2xs">
+              <div className="lg:col-span-7 space-y-4">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-[11px] font-bold text-[#065F46] uppercase tracking-wider shadow-2xs">
                   <ShieldCheck className="h-3.5 w-3.5" />
                   <span>PERSONAL HEALTHCARE PORTAL</span>
                 </div>
 
-                <h1 className="font-heading text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#15212B] tracking-tight leading-[1.12] flex items-center gap-2.5">
+                <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#15212B] tracking-tight leading-[1.15] flex items-center gap-2.5">
                   <span>Welcome back, {firstName}</span>
                   <span className="text-[#059669] text-2xl sm:text-3xl font-light select-none">✦</span>
                 </h1>
 
-                <p className="mt-3 text-sm sm:text-base text-[#64748B] font-normal max-w-xl leading-relaxed">
+                <p className="text-sm sm:text-base text-[#64748B] font-normal max-w-xl leading-relaxed">
                   Manage your appointments, medical records, and family healthcare in one place.
                 </p>
 
-                <div className="mt-6 flex items-center gap-3">
+                <div className="pt-2 flex items-center gap-3">
                   <Link
                     href="/patient/book"
                     className="inline-flex items-center gap-2 rounded-full bg-[#064E3B] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#065F46] transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -207,20 +205,22 @@ export default function PatientDashboardPage() {
                 </div>
               </div>
 
-              {/* Right Column: Serene Tea & Houseplant Illustration */}
-              <div className="hidden lg:flex lg:col-span-5 items-center justify-end">
-                <div className="relative w-full max-w-[420px] overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-[#F4FAF7] shadow-[0_4px_24px_rgba(6,95,70,0.06)]">
+              {/* Right Column: Seamless Lifestyle Illustration without any rectangular box */}
+              <div className="lg:col-span-5 flex items-center justify-center lg:justify-end relative">
+                {/* Soft ambient mint glow */}
+                <div className="absolute right-6 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#EAF8F2]/75 blur-2xl pointer-events-none" />
+                <div className="relative z-10 w-full max-w-[430px]">
                   <img
-                    src="/assets/dashboard-welcome-illustration.jpg"
-                    alt="Serene home wellness illustration"
-                    className="w-full h-auto max-h-[260px] object-contain mx-auto"
+                    src="/assets/patient-hero-seamless@2x.png"
+                    alt="Eleanor enjoying calm home healthcare wellness"
+                    className="w-full h-auto object-contain select-none pointer-events-none drop-shadow-xs"
                   />
                 </div>
               </div>
             </div>
           </section>
 
-          {/* ================= 3. STATS SUMMARY ROW ================= */}
+          {/* ================= 2. UNIFIED STATISTICS SUMMARY STRIP ================= */}
           <section className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 sm:p-6 shadow-[0_2px_14px_rgba(0,0,0,0.02)]">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 divide-y sm:divide-y-0 lg:divide-x divide-[#E5ECE9]">
               {/* Stat 1: Total Bookings */}
@@ -232,7 +232,7 @@ export default function PatientDashboardPage() {
                   <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
                     {bookings.length}
                   </span>
-                  <span className="text-xs text-[#64748B] font-medium block">Total Bookings</span>
+                  <span className="text-xs sm:text-sm text-[#64748B] font-medium block">Total Bookings</span>
                 </div>
               </div>
 
@@ -245,7 +245,7 @@ export default function PatientDashboardPage() {
                   <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
                     {activeBookings.length}
                   </span>
-                  <span className="text-xs text-[#64748B] font-medium block">Active Visits</span>
+                  <span className="text-xs sm:text-sm text-[#64748B] font-medium block">Active Visits</span>
                 </div>
               </div>
 
@@ -258,7 +258,7 @@ export default function PatientDashboardPage() {
                   <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
                     {familyMembers.length}
                   </span>
-                  <span className="text-xs text-[#64748B] font-medium block">Family Members</span>
+                  <span className="text-xs sm:text-sm text-[#64748B] font-medium block">Family Members</span>
                 </div>
               </div>
 
@@ -271,31 +271,31 @@ export default function PatientDashboardPage() {
                   <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
                     {prescriptions.length + labReports.length}
                   </span>
-                  <span className="text-xs text-[#64748B] font-medium block">Medical Records</span>
+                  <span className="text-xs sm:text-sm text-[#64748B] font-medium block">Medical Records</span>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* ================= 4. UPCOMING & ACTIVE APPOINTMENTS SECTION ================= */}
-          <section className="rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+          {/* ================= 3. UPCOMING & ACTIVE APPOINTMENTS SECTION ================= */}
+          <section className="rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-8 shadow-[0_2px_16px_rgba(0,0,0,0.02)]">
             {/* Section Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#F2F8F5]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#F2F8F5]">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
                   <Calendar className="h-5 w-5 stroke-[2]" />
                 </div>
                 <div>
                   <h2 className="font-heading text-lg sm:text-xl font-bold text-[#15212B]">
                     Upcoming &amp; Active Appointments
                   </h2>
-                  <p className="text-xs sm:text-sm text-[#64748B] font-normal">
+                  <p className="text-xs text-[#64748B] font-normal">
                     Your scheduled doorstep clinician visits and clinical procedures.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 self-start sm:self-center">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-xs font-bold text-[#065F46]">
                   <span className="h-2 w-2 rounded-full bg-[#059669] animate-pulse" />
                   <span>{activeBookings.length} Active Visit{activeBookings.length === 1 ? '' : 's'}</span>
@@ -311,9 +311,9 @@ export default function PatientDashboardPage() {
               </div>
             </div>
 
-            {/* Appointment Cards List */}
+            {/* Structured Appointment Cards */}
             {activeBookings.length > 0 ? (
-              <div className="mt-6 space-y-4">
+              <div className="mt-5 space-y-3.5">
                 {activeBookings.map((booking) => {
                   const isConfirmed = booking.status === 'CONFIRMED';
                   const isInProgress = ['IN_PROGRESS', 'ON_THE_WAY', 'ARRIVED'].includes(booking.status);
@@ -321,91 +321,113 @@ export default function PatientDashboardPage() {
                   return (
                     <div
                       key={booking.id}
-                      className="group flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-[20px] border border-[#E5EAE9] bg-[#FAFCFB] p-5 sm:p-6 transition-all duration-300 hover:border-[#B8DCDE] hover:bg-white hover:shadow-md"
+                      className="group rounded-[20px] border border-[#E5EAE9] bg-[#FAFCFB] p-5 transition-all duration-200 hover:border-[#A7F3D0] hover:bg-white hover:shadow-xs"
                     >
-                      {/* Left: Service Icon & Title */}
-                      <div className="flex items-center gap-3.5 min-w-[280px]">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                          {booking.category === 'DOCTOR_VISIT' ? (
-                            <Home className="h-5 w-5 stroke-[2]" />
-                          ) : (
-                            <Stethoscope className="h-5 w-5 stroke-[2]" />
-                          )}
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                        {/* Column 1: Service Icon, Title & Reference */}
+                        <div className="lg:col-span-4 flex items-center gap-3.5">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                            {booking.category === 'DOCTOR_VISIT' ? (
+                              <Home className="h-5 w-5 stroke-[2]" />
+                            ) : (
+                              <Stethoscope className="h-5 w-5 stroke-[2]" />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="font-heading text-sm sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors truncate">
+                              {booking.serviceName}
+                            </h3>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="font-mono text-[11px] font-bold text-[#065F46] bg-white border border-[#D9ECE7] px-2 py-0.5 rounded-md">
+                                {booking.bookingNumber}
+                              </span>
+                              {booking.category && (
+                                <span className="text-[11px] text-slate-400 capitalize hidden sm:inline">
+                                  {booking.category.toLowerCase().replace(/_/g, ' ')}
+                                </span>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-heading text-sm sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
-                            {booking.serviceName}
-                          </h3>
-                          <span className="text-xs text-[#64748B] font-mono mt-0.5 block">
-                            {booking.bookingNumber}
-                          </span>
-                        </div>
-                      </div>
 
-                      {/* Middle-Left: Date & Time */}
-                      <div className="flex items-center gap-3 min-w-[200px]">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
-                          <Calendar className="h-4 w-4 stroke-[2]" />
-                        </div>
-                        <div className="text-xs">
-                          <span className="font-bold text-[#15212B] block">
-                            {formatDisplayDate(booking.scheduledDate)}
-                          </span>
-                          <span className="text-[#64748B] block mt-0.5">{booking.scheduledTimeSlot}</span>
-                        </div>
-                      </div>
+                        {/* Column 2: Date, Time, Patient & Address */}
+                        <div className="lg:col-span-5 space-y-1.5 text-xs text-[#64748B]">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="inline-flex items-center gap-1 text-[#15212B] font-semibold">
+                              <Calendar className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
+                              <span>{formatDisplayDate(booking.scheduledDate)}</span>
+                            </span>
+                            <span className="text-slate-300">•</span>
+                            <span className="inline-flex items-center gap-1 text-slate-600">
+                              <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                              <span>{booking.scheduledTimeSlot}</span>
+                            </span>
+                            {booking.providerName && (
+                              <>
+                                <span className="text-slate-300">•</span>
+                                <span className="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[11px] font-bold">
+                                  <Stethoscope className="h-3 w-3" />
+                                  <span>{booking.providerName}</span>
+                                </span>
+                              </>
+                            )}
+                          </div>
 
-                      {/* Middle-Right: Location */}
-                      <div className="flex items-center gap-3 min-w-[240px] max-w-sm">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
-                          <MapPin className="h-4 w-4 stroke-[2]" />
+                          <div className="flex items-center gap-3 text-[11px] text-slate-500">
+                            <span className="inline-flex items-center gap-1 shrink-0">
+                              <User className="h-3 w-3 text-slate-400" />
+                              <strong className="text-slate-700">{booking.beneficiaryName || booking.patientName}</strong> ({booking.beneficiaryRelation || 'Self'})
+                            </span>
+                            <span className="text-slate-300">•</span>
+                            <span className="inline-flex items-center gap-1 truncate max-w-xs">
+                              <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
+                              <span className="truncate">{booking.addressText}</span>
+                            </span>
+                          </div>
                         </div>
-                        <div className="text-xs text-[#64748B] leading-tight">
-                          <span className="line-clamp-2">{booking.addressText}</span>
-                        </div>
-                      </div>
 
-                      {/* Right: Status Pill & Arrow Link */}
-                      <div className="flex items-center justify-between lg:justify-end gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-[#F2F8F5]">
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold ${
-                            isConfirmed
-                              ? 'bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]'
-                              : isInProgress
-                              ? 'bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309]'
-                              : 'bg-slate-100 text-slate-700'
-                          }`}
-                        >
-                          {isConfirmed ? (
-                            <Check className="h-3 w-3 stroke-[3]" />
-                          ) : (
-                            <Clock className="h-3 w-3 stroke-[2.5]" />
-                          )}
-                          <span>
-                            {isConfirmed
-                              ? 'Confirmed'
-                              : isInProgress
-                              ? 'In Progress'
-                              : booking.status.replace(/_/g, ' ')}
-                          </span>
-                        </span>
-
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setSelectedBooking(booking)}
-                            className="rounded-full border border-[#DCE6E1] bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+                        {/* Column 3: Status Badge & Actions */}
+                        <div className="lg:col-span-3 flex items-center justify-between lg:justify-end gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-[#F2F8F5]">
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
+                              isConfirmed
+                                ? 'bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]'
+                                : isInProgress
+                                ? 'bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309]'
+                                : 'bg-slate-100 text-slate-700'
+                            }`}
                           >
-                            View Details
-                          </button>
+                            {isConfirmed ? (
+                              <Check className="h-3 w-3 stroke-[3]" />
+                            ) : (
+                              <Clock className="h-3 w-3 stroke-[2.5]" />
+                            )}
+                            <span>
+                              {isConfirmed
+                                ? 'Confirmed'
+                                : isInProgress
+                                ? 'In Progress'
+                                : booking.status.replace(/_/g, ' ')}
+                            </span>
+                          </span>
 
-                          <Link
-                            href={`/patient/bookings/${booking.id}`}
-                            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] hover:bg-[#D1FAE5] transition-colors shadow-2xs"
-                            title="Open Booking Overview"
-                          >
-                            <ArrowRight className="h-4 w-4 stroke-[2.5]" />
-                          </Link>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedBooking(booking)}
+                              className="rounded-full border border-[#DCE6E1] bg-white px-3 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+                            >
+                              Details
+                            </button>
+
+                            <Link
+                              href={`/patient/bookings/${booking.id}`}
+                              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] hover:bg-[#D1FAE5] transition-colors shadow-2xs"
+                              title="Open Booking Tracker"
+                            >
+                              <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -413,8 +435,8 @@ export default function PatientDashboardPage() {
                 })}
               </div>
             ) : (
-              <div className="py-12 text-center bg-[#FAFCFB] rounded-2xl border border-dashed border-[#E2EBE7] mt-6">
-                <Calendar className="h-10 w-10 text-slate-300 mx-auto mb-2" />
+              <div className="py-10 text-center bg-[#FAFCFB] rounded-2xl border border-dashed border-[#E2EBE7] mt-5">
+                <Calendar className="h-9 w-9 text-slate-300 mx-auto mb-2" />
                 <p className="text-sm font-bold text-[#15212B]">No active appointments scheduled</p>
                 <p className="text-xs text-[#64748B] mt-1 max-w-sm mx-auto">
                   Book a verified home doctor consultation, nursing procedure, or doorstep blood test whenever needed.
@@ -430,7 +452,8 @@ export default function PatientDashboardPage() {
             )}
           </section>
 
-          {/* ================= 5. HEALTHCARE MANAGEMENT HUB ================= */}
+          {/* ================= 4. HEALTHCARE MANAGEMENT HUB ================= */}
+          {/* Compact, balanced 4-column cards with content-driven height and consistent arrow alignment */}
           <section className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
@@ -446,25 +469,25 @@ export default function PatientDashboardPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Card 1: My Bookings */}
               <Link
                 href="/patient/bookings"
-                className="group flex flex-col justify-between rounded-[22px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:border-[#B8DCDE] hover:shadow-md transition-all duration-300"
+                className="group flex flex-col justify-between rounded-[20px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
               >
                 <div>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-4 shadow-2xs group-hover:scale-105 transition-transform">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 shadow-2xs group-hover:scale-105 transition-transform">
                     <Calendar className="h-5 w-5 stroke-[2]" />
                   </div>
                   <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
                     My Bookings
                   </h3>
-                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed line-clamp-2">
                     View and manage all your appointments.
                   </p>
                 </div>
-                <div className="mt-6 flex justify-end">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                <div className="mt-4 pt-3 border-t border-[#F4FAF7] flex justify-end">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
@@ -473,21 +496,21 @@ export default function PatientDashboardPage() {
               {/* Card 2: Medical Records */}
               <Link
                 href="/patient/records"
-                className="group flex flex-col justify-between rounded-[22px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:border-[#B8DCDE] hover:shadow-md transition-all duration-300"
+                className="group flex flex-col justify-between rounded-[20px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
               >
                 <div>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-4 shadow-2xs group-hover:scale-105 transition-transform">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 shadow-2xs group-hover:scale-105 transition-transform">
                     <FileText className="h-5 w-5 stroke-[2]" />
                   </div>
                   <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
                     Medical Records
                   </h3>
-                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed line-clamp-2">
                     Access prescriptions, lab results, and health reports.
                   </p>
                 </div>
-                <div className="mt-6 flex justify-end">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                <div className="mt-4 pt-3 border-t border-[#F4FAF7] flex justify-end">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
@@ -496,21 +519,21 @@ export default function PatientDashboardPage() {
               {/* Card 3: Family Members */}
               <Link
                 href="/patient/family"
-                className="group flex flex-col justify-between rounded-[22px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:border-[#B8DCDE] hover:shadow-md transition-all duration-300"
+                className="group flex flex-col justify-between rounded-[20px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
               >
                 <div>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-4 shadow-2xs group-hover:scale-105 transition-transform">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 shadow-2xs group-hover:scale-105 transition-transform">
                     <Users className="h-5 w-5 stroke-[2]" />
                   </div>
                   <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
                     Family Members
                   </h3>
-                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed line-clamp-2">
                     Manage family profiles and their healthcare.
                   </p>
                 </div>
-                <div className="mt-6 flex justify-end">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                <div className="mt-4 pt-3 border-t border-[#F4FAF7] flex justify-end">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
@@ -519,21 +542,21 @@ export default function PatientDashboardPage() {
               {/* Card 4: My Profile & Vitals */}
               <Link
                 href="/patient/account"
-                className="group flex flex-col justify-between rounded-[22px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:border-[#B8DCDE] hover:shadow-md transition-all duration-300"
+                className="group flex flex-col justify-between rounded-[20px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
               >
                 <div>
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-4 shadow-2xs group-hover:scale-105 transition-transform">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 shadow-2xs group-hover:scale-105 transition-transform">
                     <User className="h-5 w-5 stroke-[2]" />
                   </div>
                   <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
                     My Profile &amp; Vitals
                   </h3>
-                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed line-clamp-2">
                     Update personal details and track your vital stats.
                   </p>
                 </div>
-                <div className="mt-6 flex justify-end">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                <div className="mt-4 pt-3 border-t border-[#F4FAF7] flex justify-end">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
                     <ArrowRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
@@ -541,7 +564,7 @@ export default function PatientDashboardPage() {
             </div>
           </section>
 
-          {/* ================= 6. QUICK HEALTHCARE SERVICES ================= */}
+          {/* ================= 5. QUICK HEALTHCARE SERVICES ================= */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -574,7 +597,7 @@ export default function PatientDashboardPage() {
                   <Link
                     key={qs.name}
                     href={qs.href}
-                    className="group flex items-center justify-between rounded-[20px] border border-[#E5EAE9] bg-white px-5 py-4 shadow-2xs hover:border-[#064E3B] hover:shadow-xs transition-all"
+                    className="group flex items-center justify-between rounded-[20px] border border-[#E5EAE9] bg-white px-4 py-3.5 sm:px-5 sm:py-4 shadow-2xs hover:border-[#064E3B] hover:shadow-xs transition-all"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-colors">
@@ -592,10 +615,10 @@ export default function PatientDashboardPage() {
             </div>
           </section>
 
-          {/* ================= 7. BOTTOM SUPPORT / ASSISTANCE AREA ================= */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* ================= 6. CARE COORDINATION & EMERGENCY SUPPORT ================= */}
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Left Card: 24/7 Care Coordination */}
-            <div className="relative overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-[#F4FAF7] p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="relative overflow-hidden rounded-[24px] border border-[#D9ECE7] bg-[#F4FAF7] p-6 sm:p-7 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-5">
               <div>
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]">
@@ -611,7 +634,7 @@ export default function PatientDashboardPage() {
                 <div className="mt-4">
                   <Link
                     href="/patient/support"
-                    className="inline-flex items-center gap-2 rounded-full border border-[#DCE6E1] bg-white px-5 py-2 text-xs font-bold text-[#15212B] hover:bg-white/80 transition-colors shadow-2xs cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#DCE6E1] bg-white px-5 py-2 text-xs font-bold text-[#15212B] hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
                   >
                     <span>Open Assistance Hub</span>
                     <ArrowRight className="h-3.5 w-3.5 text-[#065F46]" />
@@ -624,7 +647,7 @@ export default function PatientDashboardPage() {
             </div>
 
             {/* Right Card: Emergency Medical Guidance */}
-            <div className="relative overflow-hidden rounded-[26px] border border-[#FECACA] bg-[#FEF2F2] p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="relative overflow-hidden rounded-[24px] border border-[#FEE2E2] bg-[#FFF8F8] p-6 sm:p-7 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-5">
               <div>
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-100 text-red-700">
