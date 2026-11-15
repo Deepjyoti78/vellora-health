@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, use } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { db, ServiceRecord } from '@/lib/db';
+import { useAuth } from '@/context/AuthContext';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
 import {
   MapPin,
@@ -19,6 +20,7 @@ import {
   FileText,
   AlertCircle,
   Home,
+  Sparkles,
 } from 'lucide-react';
 
 interface ServiceBookingPageProps {
@@ -28,6 +30,7 @@ interface ServiceBookingPageProps {
 export default function ServiceBookingPage({ params }: ServiceBookingPageProps) {
   const resolvedParams = use(params);
   const slug = resolvedParams.slug;
+  const { currentUser } = useAuth();
 
   const service = db.getServiceBySlug(slug) || db.getServiceById(slug);
 
@@ -47,9 +50,9 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
 
   // STEP 2 State: Patient & Schedule
   const [recipient, setRecipient] = useState<'SELF' | 'OTHER'>('SELF');
-  const [patientName, setPatientName] = useState('');
+  const [patientName, setPatientName] = useState(currentUser?.name || '');
   const [relationship, setRelationship] = useState('Parent');
-  const [contactPhone, setContactPhone] = useState('');
+  const [contactPhone, setContactPhone] = useState(currentUser?.phone || '');
   const [preferredDate, setPreferredDate] = useState(
     new Date(Date.now() + 86400000).toISOString().split('T')[0]
   );
@@ -59,6 +62,18 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
   const [streetAddress, setStreetAddress] = useState('');
   const [apartment, setApartment] = useState('');
   const [careNotes, setCareNotes] = useState('');
+
+  // Pre-load saved addresses & family members for authenticated patient
+  const savedAddresses = currentUser ? db.getAddresses(currentUser.id) : [];
+  const savedFamily = currentUser ? db.getFamilyMembers(currentUser.id) : [];
+
+  // Auto-fill from currentUser when available
+  useEffect(() => {
+    if (currentUser && recipient === 'SELF') {
+      if (!patientName) setPatientName(currentUser.name);
+      if (!contactPhone) setContactPhone(currentUser.phone);
+    }
+  }, [currentUser, recipient]);
 
   // STEP 3 State: Review & Submit
   const [consent, setConsent] = useState(false);
@@ -113,9 +128,10 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
 
       const newBooking = db.createBooking({
         bookingType: 'SERVICE_REQUEST',
-        patientId: 'pat-guest',
-        patientName: patientName.trim(),
+        patientId: currentUser ? currentUser.id : 'pat-guest',
+        patientName: recipient === 'SELF' && currentUser ? currentUser.name : patientName.trim(),
         patientPhone: contactPhone.trim(),
+        patientEmail: currentUser?.email,
         beneficiaryName: patientName.trim(),
         beneficiaryRelation: recipient === 'SELF' ? 'Self' : relationship,
         serviceId: service.id,
@@ -319,6 +335,51 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
                     </p>
                   </div>
 
+                  {/* Authentication Intent Banner */}
+                  {currentUser ? (
+                    <div className="flex items-center gap-2 rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] p-3 text-xs text-[#065F46]">
+                      <ShieldCheck className="h-4 w-4 shrink-0 text-[#065F46]" />
+                      <span>
+                        Logged in as <strong>{currentUser.name}</strong>. Your profile details and verified contacts have been pre-filled.
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl bg-slate-50 border border-slate-200 p-3 text-xs text-slate-600">
+                      <span>Booking as Guest Visitor. Have a Vellora patient account?</span>
+                      <Link
+                        href={`/patient/login?redirect=/book/service/${slug}`}
+                        className="inline-flex items-center gap-1 font-bold text-[#064E3B] hover:underline"
+                      >
+                        <span>Sign In to auto-fill</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                  )}
+
+                  {/* Family member quick-selector if authenticated and OTHER */}
+                  {currentUser && recipient === 'OTHER' && savedFamily.length > 0 && (
+                    <div className="rounded-xl border border-[#E2EBE7] bg-[#F5F9F7] p-3 text-xs space-y-2">
+                      <span className="font-bold text-[#102820] text-[11px] uppercase tracking-wider block">
+                        Select from your registered family profiles:
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {savedFamily.map((fam) => (
+                          <button
+                            key={fam.id}
+                            type="button"
+                            onClick={() => {
+                              setPatientName(fam.fullName);
+                              setRelationship(fam.relationship);
+                            }}
+                            className="rounded-lg bg-white border border-[#D1DCD6] px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#064E3B] hover:text-[#064E3B] transition-colors shadow-2xs"
+                          >
+                            {fam.fullName} ({fam.relationship})
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Self vs Dependent Toggle */}
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-2">
@@ -439,9 +500,35 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
 
                   {/* Visit Address Fields */}
                   <div className="space-y-3">
-                    <label className="block text-xs font-bold text-slate-700">
-                      Doorstep Visit Address <span className="text-rose-500">*</span>
-                    </label>
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-slate-700">
+                        Doorstep Visit Address <span className="text-rose-500">*</span>
+                      </label>
+                      {currentUser && savedAddresses.length > 0 && (
+                        <span className="text-[11px] text-slate-500">Pick saved address:</span>
+                      )}
+                    </div>
+
+                    {currentUser && savedAddresses.length > 0 && (
+                      <div className="flex flex-wrap gap-2 pb-1">
+                        {savedAddresses.map((addr) => (
+                          <button
+                            key={addr.id}
+                            type="button"
+                            onClick={() => {
+                              setStreetAddress(addr.streetAddress);
+                              setApartment(addr.apartment || '');
+                              if (addr.postalCode) setPinCode(addr.postalCode);
+                            }}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-[#D1DCD6] px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:border-[#064E3B] hover:text-[#064E3B] transition-colors shadow-2xs"
+                          >
+                            <Home className="h-3 w-3 text-[#065F46]" />
+                            <span>{addr.tag}: {addr.streetAddress}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
                     <input
                       type="text"
                       required

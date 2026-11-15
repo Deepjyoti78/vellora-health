@@ -28,10 +28,10 @@ import {
 export default function PatientAccountPage() {
   const { currentUser } = useAuth();
   const user = currentUser || {
-    id: 'pat-1',
-    name: 'Eleanor Vance',
-    email: 'eleanor.vance@example.com',
-    phone: '+1 (555) 234-5678',
+    id: '',
+    name: 'Patient User',
+    email: '',
+    phone: '',
     role: 'PATIENT' as const,
     avatar: '/assets/avatar-1.webp',
   };

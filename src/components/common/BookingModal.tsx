@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useBooking } from '@/context/BookingContext';
+import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/db';
 import {
   X,
@@ -18,6 +19,7 @@ import {
   ShieldCheck,
   ArrowRight,
   Clock,
+  Sparkles,
 } from 'lucide-react';
 
 const CARE_TYPES = [
@@ -30,6 +32,7 @@ const CARE_TYPES = [
 
 export const BookingModal: React.FC = () => {
   const { isOpen, closeBooking, specialty, doctor } = useBooking();
+  const { currentUser, isAuthenticated } = useAuth();
 
   const [fullName, setFullName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -53,9 +56,9 @@ export const BookingModal: React.FC = () => {
     if (isOpen) {
       setSubmittedRecord(null);
       setErrorMsg('');
-      setFullName('');
-      setMobileNumber('');
-      setEmail('');
+      setFullName(currentUser?.name || '');
+      setMobileNumber(currentUser?.phone || '');
+      setEmail(currentUser?.email || '');
       setConsent(false);
       setSelectedCareType(
         specialty ? 'DOCTOR_VISIT' : 'DOCTOR_VISIT'
@@ -68,7 +71,7 @@ export const BookingModal: React.FC = () => {
     } else {
       document.body.style.overflow = '';
     }
-  }, [isOpen, specialty]);
+  }, [isOpen, specialty, currentUser]);
 
   // Escape key & focus management
   useEffect(() => {
@@ -111,7 +114,7 @@ export const BookingModal: React.FC = () => {
 
       const newBooking = db.createBooking({
         bookingType: 'QUICK_ENQUIRY',
-        patientId: 'pat-guest',
+        patientId: currentUser ? currentUser.id : 'pat-guest',
         patientName: fullName.trim(),
         patientPhone: mobileNumber.trim(),
         patientEmail: email.trim() || undefined,
@@ -237,6 +240,18 @@ export const BookingModal: React.FC = () => {
               <p className="mt-1 text-xs text-slate-500">
                 Tell us what care you need. Our team will get in touch.
               </p>
+
+              {currentUser ? (
+                <div className="mt-3 flex items-center gap-1.5 rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1.5 text-xs text-[#065F46] font-medium">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#065F46]" />
+                  <span>Authenticated as <strong>{currentUser.name}</strong> (Details auto-filled)</span>
+                </div>
+              ) : (
+                <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 px-3 py-1.5 text-[11px] text-slate-600">
+                  <span>Booking as Guest Visitor</span>
+                  <span className="text-[#065F46] font-semibold">No account required</span>
+                </div>
+              )}
             </div>
 
             {errorMsg && (
