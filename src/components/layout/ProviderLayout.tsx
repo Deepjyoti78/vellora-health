@@ -76,7 +76,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
     },
     {
       href: '/provider/earnings',
-      label: 'Earnings & Payouts',
+      label: 'Earnings',
       icon: DollarSign,
     },
   ];
@@ -99,11 +99,11 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FBF9] text-[#102723] font-sans antialiased">
-      {/* Top Navbar with spacious padding and clean vertical breathing room */}
-      <header className="sticky top-0 z-40 border-b border-[#D9ECE7] bg-white/95 backdrop-blur-md shadow-[0_2px_16px_rgba(6,95,70,0.03)]">
-        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
-          {/* Left: Vellora Brand with Clinician Portal STACKED BELOW */}
+    <div className="min-h-screen bg-[#F7FAF9] text-[#15212B] font-sans antialiased">
+      {/* Top Navbar: Spacious, Clean & Breathable */}
+      <header className="sticky top-0 z-40 border-b border-[#E5ECE9] bg-white/95 backdrop-blur-md shadow-[0_2px_14px_rgba(0,0,0,0.02)]">
+        <div className="mx-auto flex max-w-[1360px] items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
+          {/* Left: Vellora Brand with Clinician Portal STACKED DIRECTLY BELOW */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -114,22 +114,22 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
             </button>
 
             <Link href="/provider/dashboard" className="flex items-center gap-3 shrink-0 group">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#065F46] text-white font-black text-xl shadow-xs group-hover:bg-[#054d39] transition-colors">
-                +
-              </span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#064E3B] text-white shadow-xs group-hover:bg-[#065F46] transition-colors">
+                <span className="text-xl font-bold leading-none select-none">+</span>
+              </div>
               <div className="flex flex-col text-left">
-                <span className="font-heading text-lg sm:text-xl font-bold tracking-tight text-[#102723] leading-tight">
+                <span className="font-heading text-lg sm:text-xl font-black tracking-tight text-[#15212B] leading-none">
                   Vellora <span className="font-medium text-slate-500 text-sm">Health</span>
                 </span>
-                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#065F46] leading-none mt-0.5">
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#059669] leading-none mt-1">
                   Clinician Portal
                 </span>
               </div>
             </Link>
           </div>
 
-          {/* Center: Spacious, Uncrowded Desktop Navigation Tabs */}
-          <nav className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-full bg-[#F2F8F5] border border-[#D9ECE7] shadow-2xs">
+          {/* Center: Spacious, Elegant Floating Pill Navigation Tabs */}
+          <nav className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-full bg-[#F4FAF7] border border-[#E2EBE7] shadow-2xs">
             {navLinks.map((item) => {
               const isActive =
                 pathname === item.href ||
@@ -142,16 +142,16 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                   href={item.href}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all whitespace-nowrap ${
                     isActive
-                      ? 'bg-[#065F46] text-white shadow-xs'
-                      : 'text-slate-600 hover:text-[#102723] hover:bg-white'
+                      ? 'bg-[#064E3B] text-white shadow-xs'
+                      : 'text-[#64748B] hover:text-[#15212B] hover:bg-white'
                   }`}
                 >
-                  <ItemIcon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
+                  <ItemIcon className={`h-3.5 w-3.5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                   <span>{item.label}</span>
                   {item.badge !== undefined && item.badge > 0 && (
                     <span
                       className={`ml-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1.5 text-[10px] font-black ${
-                        isActive ? 'bg-white text-[#065F46]' : 'bg-[#065F46] text-white'
+                        isActive ? 'bg-white text-[#064E3B]' : 'bg-[#064E3B] text-white'
                       }`}
                     >
                       {item.badge}
@@ -162,43 +162,43 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
             })}
           </nav>
 
-          {/* Right: Clinician Profile Dropdown (On Duty switch removed per request for clean spaciousness) */}
+          {/* Right: Clinician Profile Dropdown */}
           <div className="flex items-center gap-3">
             <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center gap-3 rounded-full border border-[#D9ECE7] bg-white hover:bg-[#F2F8F5] p-1.5 pr-4 transition-all shadow-2xs group"
+                className="flex items-center gap-3 rounded-full border border-[#E5ECE9] bg-white hover:bg-[#F4FAF7] p-1.5 pr-4 transition-all shadow-2xs group"
               >
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46] font-black text-xs shadow-2xs">
                   {initials}
                 </div>
                 <div className="hidden sm:block text-left leading-tight">
-                  <span className="block font-bold text-xs text-[#102723] truncate max-w-[130px]">
+                  <span className="block font-bold text-xs text-[#15212B] truncate max-w-[130px]">
                     {currentUser?.name || 'Practitioner'}
                   </span>
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[#065F46]">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-[#059669]">
                     {roleLabel}
                   </span>
                 </div>
                 <ChevronDown
                   className={`h-4 w-4 text-slate-400 transition-transform ${
-                    profileDropdownOpen ? 'rotate-180 text-[#065F46]' : ''
+                    profileDropdownOpen ? 'rotate-180 text-[#064E3B]' : ''
                   }`}
                 />
               </button>
 
               {/* Profile Dropdown Popover */}
               {profileDropdownOpen && (
-                <div className="absolute right-0 mt-2.5 w-76 rounded-[24px] border border-[#D9ECE7] bg-white p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="absolute right-0 mt-2.5 w-76 rounded-[24px] border border-[#E5ECE9] bg-white p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                   {/* Practitioner Header */}
-                  <div className="p-3.5 rounded-2xl bg-[#F7FBF9] border border-[#D9ECE7] mb-2.5">
+                  <div className="p-3.5 rounded-2xl bg-[#F7FAF9] border border-[#E5ECE9] mb-2.5">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#065F46] text-white font-black text-sm shadow-xs">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#064E3B] text-white font-black text-sm shadow-xs">
                         {initials}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="font-heading text-xs font-bold text-[#102723] truncate">
+                        <p className="font-heading text-xs font-bold text-[#15212B] truncate">
                           {currentUser?.name || 'Practitioner'}
                         </p>
                         <p className="text-[11px] text-slate-500 truncate">{currentUser?.email || 'clinician@vellora.com'}</p>
@@ -214,7 +214,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                     <Link
                       href="/provider/profile"
                       onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#065F46] transition-colors"
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     >
                       <User className="h-4 w-4 text-slate-500" />
                       <span>My Profile &amp; Credentials</span>
@@ -223,7 +223,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                     <Link
                       href="/provider/availability"
                       onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#065F46] transition-colors"
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     >
                       <MapPin className="h-4 w-4 text-slate-500" />
                       <span>Service Zones &amp; Shifts</span>
@@ -232,7 +232,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                     <Link
                       href="/provider/earnings"
                       onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#065F46] transition-colors"
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     >
                       <DollarSign className="h-4 w-4 text-slate-500" />
                       <span>Payouts &amp; Bank Settings</span>
@@ -258,8 +258,8 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                           onClick={() => handleRoleSwitch(item.r)}
                           className={`text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-colors ${
                             currentUser?.role === item.r
-                              ? 'bg-[#065F46] text-white font-bold'
-                              : 'text-slate-600 hover:bg-[#F2F8F5] hover:text-[#102723]'
+                              ? 'bg-[#064E3B] text-white font-bold'
+                              : 'text-slate-600 hover:bg-[#F2F8F5] hover:text-[#15212B]'
                           }`}
                         >
                           {item.label}
@@ -273,7 +273,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                     <Link
                       href="/patient/dashboard"
                       onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-3 py-2 text-slate-600 hover:bg-[#F2F8F5] hover:text-[#065F46] transition-colors"
+                      className="flex items-center justify-between rounded-xl px-3 py-2 text-slate-600 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     >
                       <span>Switch to Patient Portal</span>
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -282,7 +282,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                     <Link
                       href="/admin/providers"
                       onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-3 py-2 text-slate-600 hover:bg-[#F2F8F5] hover:text-[#065F46] transition-colors"
+                      className="flex items-center justify-between rounded-xl px-3 py-2 text-slate-600 hover:bg-[#F2F8F5] hover:text-[#064E3B] transition-colors"
                     >
                       <span>Admin Management</span>
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -309,7 +309,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
 
         {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (
-          <div className="border-t border-[#D9ECE7] bg-white px-4 py-4 lg:hidden shadow-lg animate-in slide-in-from-top-2 duration-150">
+          <div className="border-t border-[#E5ECE9] bg-white px-4 py-4 lg:hidden shadow-lg animate-in slide-in-from-top-2 duration-150">
             <div className="space-y-1 mb-4">
               {navLinks.map((item) => {
                 const isActive =
@@ -324,7 +324,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-bold transition-colors ${
                       isActive
-                        ? 'bg-[#065F46] text-white shadow-2xs'
+                        ? 'bg-[#064E3B] text-white shadow-2xs'
                         : 'text-slate-700 hover:bg-[#F2F8F5]'
                     }`}
                   >
@@ -335,7 +335,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                     {item.badge !== undefined && item.badge > 0 && (
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-black ${
-                          isActive ? 'bg-white text-[#065F46]' : 'bg-[#065F46] text-white'
+                          isActive ? 'bg-white text-[#064E3B]' : 'bg-[#064E3B] text-white'
                         }`}
                       >
                         {item.badge}
