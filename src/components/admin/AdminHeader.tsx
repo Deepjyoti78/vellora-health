@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Search,
   Bell,
@@ -22,15 +23,18 @@ interface AdminHeaderProps {
 }
 
 export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileMenu }) => {
+  const pathname = usePathname();
+  const isDashboard = pathname === '/admin/dashboard' || pathname === '/admin';
+
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <header className="sticky top-0 z-30 flex h-[76px] shrink-0 items-center justify-between border-b border-[#E2EBE7] bg-white px-4 sm:px-8 transition-colors">
-      {/* Left: Mobile hamburger & Global Search matching Reference Image 2 */}
-      <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-2xl">
+    <header className="sticky top-0 z-30 flex h-[76px] shrink-0 items-center justify-between border-b border-[#E2EBE7]/60 bg-[#F5F9F7] px-4 sm:px-8 transition-colors">
+      {/* Left: Mobile hamburger & Global Search (Dashboard Only) */}
+      <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-3xl lg:max-w-4xl">
         <button
           type="button"
           onClick={onOpenMobileMenu}
@@ -40,17 +44,19 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileMenu }) =>
           <Menu className="h-5 w-5" />
         </button>
 
-        {/* Spacious Rounded Search Bar */}
-        <div className="relative w-full max-w-xl">
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 pointer-events-none" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search patients, doctors, appointments..."
-            className="w-full rounded-2xl border border-[#E2EBE7] bg-white py-2.5 pl-11 pr-4 text-xs sm:text-[13px] text-[#102820] placeholder:text-slate-400 focus:border-[#065F46] focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-[#065F46] transition-all shadow-2xs"
-          />
-        </div>
+        {/* Spacious Rounded Search Bar with Transparent BG & Increased Width - Dashboard Only */}
+        {isDashboard && (
+          <div className="relative w-full max-w-2xl lg:max-w-3xl xl:max-w-4xl">
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search patients, doctors, appointments..."
+              className="w-full rounded-2xl border border-[#D9E3DE] bg-transparent py-2.5 pl-11 pr-4 text-xs sm:text-[13px] text-[#102820] placeholder:text-slate-400 hover:border-[#CBDCD5] focus:border-[#065F46] focus:bg-transparent focus:outline-hidden focus:ring-1 focus:ring-[#065F46] transition-all"
+            />
+          </div>
+        )}
       </div>
 
       {/* Right: AI Sparkle, Notification Bell & User Profile */}
