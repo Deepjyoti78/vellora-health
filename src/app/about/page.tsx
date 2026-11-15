@@ -91,44 +91,24 @@ export default function AboutPage() {
 
           <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Background Illustration: In-Home Bedside Doctor Visit (No Box, No Card) */}
+              {/* Left Background Illustration: In-Home Bedside Doctor Visit (No Box, No Card, Static) */}
               <div className="hidden lg:flex lg:col-span-3 xl:col-span-3.5 justify-start">
                 <div className="relative w-full max-w-[340px] flex items-center justify-center">
                   {/* Soft Background Mint Aura */}
                   <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-[#ECFDF5] via-[#D1FAE5]/50 to-transparent blur-2xl opacity-80 pointer-events-none" />
 
-                  {/* Decorative Floating Accents */}
-                  <div className="absolute -top-3 left-4 text-emerald-300/60 font-black text-xl select-none pointer-events-none animate-subtle-float">
-                    ✦
-                  </div>
-                  <div className="absolute bottom-6 -left-2 text-teal-400/50 font-black text-lg select-none pointer-events-none animate-subtle-float-reverse">
-                    +
-                  </div>
-
-                  {/* Floating Badge (Top Left) */}
-                  <div className="absolute -top-2 left-1 z-20 flex items-center gap-1.5 rounded-full border border-[#D1FAE5] bg-white/95 px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-[0_4px_16px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                    <span>Compassionate Care</span>
-                  </div>
-
-                  {/* Pure Background Illustration (Unboxed) */}
+                  {/* Pure Background Illustration (Unboxed, Static) */}
                   <div className="relative z-10 w-full flex items-center justify-center">
                     <img
                       src="/assets/services-hero-illustration-transparent.png"
                       alt="In-Home Doctor Consultation Illustration"
-                      className="w-full h-auto max-h-[220px] object-contain drop-shadow-[0_10px_24px_rgba(6,95,70,0.08)] transition-transform duration-500 hover:scale-105"
+                      className="w-full h-auto max-h-[220px] object-contain drop-shadow-[0_10px_24px_rgba(6,95,70,0.08)]"
                     />
-                  </div>
-
-                  {/* Floating Badge (Bottom Right) */}
-                  <div className="absolute -bottom-3 right-0 z-20 flex items-center gap-1.5 rounded-2xl border border-[#D1FAE5] bg-white/95 px-3 py-1.5 text-[11px] font-bold text-[#15212B] shadow-[0_4px_16px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float-reverse">
-                    <span className="text-[#065F46]">45–60 Min</span>
-                    <span className="text-slate-500 font-medium">Bedside Visits</span>
                   </div>
                 </div>
               </div>
 
-              {/* Center Column: Eyebrow, Mission Headline & Trust Badges */}
+              {/* Center Column: Eyebrow & Mission Headline */}
               <div className="lg:col-span-6 xl:col-span-5 text-center flex flex-col items-center justify-center">
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] text-[#065F46] uppercase mb-3.5 shadow-2xs">
                   <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
@@ -138,57 +118,21 @@ export default function AboutPage() {
                 <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#15212B] tracking-tight leading-[1.14]">
                   Where Modern Medical Science Meets Compassion
                 </h1>
-
-                {/* Micro Trust Indicators framing the title in place of bulky text */}
-                <div className="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#E2EBE7] px-3 py-1 text-xs font-semibold text-[#15212B] shadow-2xs">
-                    <span className="h-2 w-2 rounded-full bg-[#059669]" />
-                    100% Board-Certified Doctors
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#E2EBE7] px-3 py-1 text-xs font-semibold text-[#15212B] shadow-2xs">
-                    <span className="h-2 w-2 rounded-full bg-[#059669]" />
-                    Hospital Standards at Home
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#E2EBE7] px-3 py-1 text-xs font-semibold text-[#15212B] shadow-2xs">
-                    <span className="h-2 w-2 rounded-full bg-[#059669]" />
-                    4-Digit Bedside PIN Verified
-                  </span>
-                </div>
               </div>
 
-              {/* Right Background Illustration: Modern Hospital Standards & Clinical Network (No Box, No Card) */}
+              {/* Right Background Illustration: Modern Hospital Standards & Clinical Network (No Box, No Card, Static) */}
               <div className="hidden lg:flex lg:col-span-3 xl:col-span-3.5 justify-end">
                 <div className="relative w-full max-w-[340px] flex items-center justify-center">
                   {/* Soft Background Mint Aura */}
                   <div className="absolute -inset-2 rounded-full bg-gradient-to-tl from-[#ECFDF5] via-[#D1FAE5]/50 to-transparent blur-2xl opacity-80 pointer-events-none" />
 
-                  {/* Decorative Floating Accents */}
-                  <div className="absolute -top-3 right-4 text-emerald-300/60 font-black text-xl select-none pointer-events-none animate-subtle-float">
-                    ✦
-                  </div>
-                  <div className="absolute bottom-6 -right-2 text-teal-400/50 font-black text-lg select-none pointer-events-none animate-subtle-float-reverse">
-                    +
-                  </div>
-
-                  {/* Floating Badge (Top Right) */}
-                  <div className="absolute -top-2 right-1 z-20 flex items-center gap-1.5 rounded-full border border-[#D1FAE5] bg-white/95 px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-[0_4px_16px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float">
-                    <ShieldCheck className="h-3.5 w-3.5 text-[#065F46]" />
-                    <span>Hospital Grade</span>
-                  </div>
-
-                  {/* Pure Background Illustration (Unboxed) */}
+                  {/* Pure Background Illustration (Unboxed, Static) */}
                   <div className="relative z-10 w-full flex items-center justify-center">
                     <img
                       src="/assets/about-hero-hospital-illustration-transparent.png"
                       alt="Modern Clinical Infrastructure & Hospital Standards Illustration"
-                      className="w-full h-auto max-h-[220px] object-contain drop-shadow-[0_10px_24px_rgba(6,95,70,0.08)] transition-transform duration-500 hover:scale-105"
+                      className="w-full h-auto max-h-[220px] object-contain drop-shadow-[0_10px_24px_rgba(6,95,70,0.08)]"
                     />
-                  </div>
-
-                  {/* Floating Badge (Bottom Left) */}
-                  <div className="absolute -bottom-3 left-0 z-20 flex items-center gap-1.5 rounded-2xl border border-[#D1FAE5] bg-white/95 px-3 py-1.5 text-[11px] font-bold text-[#15212B] shadow-[0_4px_16px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float-reverse">
-                    <span className="text-[#065F46]">NABL / ISO</span>
-                    <span className="text-slate-500 font-medium">Certified Standards</span>
                   </div>
                 </div>
               </div>

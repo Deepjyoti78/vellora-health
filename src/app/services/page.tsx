@@ -259,62 +259,20 @@ export default function ServicesPage() {
               </div>
             </div>
 
-            {/* Right Column (col-span-5): Unboxed Healthcare Illustration & Surrounding Badges */}
-            <div className="lg:col-span-5 flex items-center justify-center lg:justify-end animate-card-slide-right animate-delay-2">
+            {/* Right Column (col-span-5): Unboxed Healthcare Illustration */}
+            <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
               <div className="relative w-full max-w-[500px] flex items-center justify-center">
                 {/* Multi-layered ambient mint glow in background */}
                 <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-[#ECFDF5] via-[#D1FAE5]/50 to-transparent blur-3xl opacity-80 pointer-events-none" />
                 <div className="absolute -top-10 -right-8 h-48 w-48 rounded-full bg-emerald-100/40 blur-2xl pointer-events-none" />
 
-                {/* Subtle Decorative Floating Medical Crosses */}
-                <div className="absolute -top-4 left-10 text-emerald-300/60 font-black text-2xl select-none pointer-events-none animate-subtle-float">
-                  ✦
-                </div>
-                <div className="absolute bottom-12 -left-2 text-teal-400/50 font-black text-xl select-none pointer-events-none animate-subtle-float-reverse">
-                  +
-                </div>
-                <div className="absolute top-1/3 -right-3 text-emerald-400/40 font-black text-2xl select-none pointer-events-none animate-subtle-float">
-                  +
-                </div>
-
-                {/* Floating Badge 1 (Top-Left): Board-Certified MDs */}
-                <div className="absolute -top-3 -left-3 sm:-left-6 z-20 flex items-center gap-2.5 rounded-2xl border border-[#D1FAE5] bg-white/95 px-3.5 py-2 shadow-[0_8px_24px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#ECFDF5] text-[#065F46]">
-                    <ShieldCheck className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <span className="block text-xs font-bold text-[#15212B]">Board-Certified MDs</span>
-                    <span className="block text-[10px] text-slate-500 font-medium">100% Verified Clinicians</span>
-                  </div>
-                </div>
-
-                {/* Floating Badge 2 (Top-Right): 24/7 Clinical Care */}
-                <div className="absolute top-2 right-1 sm:-right-2 z-20 hidden sm:inline-flex items-center gap-1.5 rounded-full border border-[#D1FAE5] bg-white/95 px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-[0_4px_16px_rgba(6,95,70,0.06)] backdrop-blur-xs animate-subtle-float-reverse">
-                  <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
-                  <span>24/7 Home Care</span>
-                </div>
-
-                {/* Main Illustration Floating Seamlessly in the Background (No Box, No Card) */}
+                {/* Main Illustration Seamlessly in the Background (No Box, No Card, Static) */}
                 <div className="relative z-10 w-full flex items-center justify-center">
                   <img
                     src="/assets/services-hero-illustration-transparent.png"
                     alt="In-Home Doctor Consultation and Healthcare Illustration"
-                    className="w-full h-auto max-h-[320px] sm:max-h-[350px] object-contain drop-shadow-[0_12px_28px_rgba(6,95,70,0.08)] transition-transform duration-500 hover:scale-[1.02]"
+                    className="w-full h-auto max-h-[320px] sm:max-h-[350px] object-contain drop-shadow-[0_12px_28px_rgba(6,95,70,0.08)]"
                   />
-                </div>
-
-                {/* Floating Badge 3 (Bottom-Left): Doorstep Arrival & Rating */}
-                <div className="absolute -bottom-4 left-4 sm:left-2 z-20 flex items-center gap-2.5 rounded-2xl border border-[#D1FAE5] bg-white/95 px-3.5 py-2 shadow-[0_8px_24px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float-reverse">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#ECFDF5] text-[#065F46]">
-                    <Clock className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <span className="block text-xs font-bold text-[#15212B]">Doorstep Visit in 45 Min</span>
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-amber-500">
-                      <span>★ 4.9 Rating</span>
-                      <span className="text-slate-400 font-normal">• 12k+ Visits</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
