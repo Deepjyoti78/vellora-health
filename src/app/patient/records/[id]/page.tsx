@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Icon } from '@/components/common/Icon';
+import { BackButton } from '@/components/common/BackButton';
 
 export default function LabReportDetailPage({
   params,
@@ -36,16 +37,13 @@ export default function LabReportDetailPage({
 
   return (
     <PatientLayout>
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 animate-fade-in-up">
         {/* Navigation & Action Bar */}
         <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <Link
-            href="/patient/records"
-            className="flex items-center gap-1.5 text-xs font-bold text-[#116b70] hover:underline"
-          >
-            <Icon name="arrow-left" className="h-3.5 w-3.5" />
-            Back to Medical Records
-          </Link>
+          <div className="flex items-center gap-2">
+            <BackButton href="/patient/records" label="Back to Records" />
+            <BackButton href="/patient/dashboard" label="Dashboard" />
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => window.print()}

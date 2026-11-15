@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { db, BookingRecord } from '@/lib/db';
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Icon } from '@/components/common/Icon';
+import { BackButton } from '@/components/common/BackButton';
 
 export default function BookingDetailPage({
   params,
@@ -64,7 +65,13 @@ export default function BookingDetailPage({
 
   return (
     <PatientLayout>
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 animate-fade-in-up">
+        {/* Navigation Bar */}
+        <div className="mb-4 flex items-center gap-2">
+          <BackButton href="/patient/bookings" label="Back to Bookings" />
+          <BackButton href="/patient/dashboard" label="Dashboard" />
+        </div>
+
         {/* Top bar */}
         <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>

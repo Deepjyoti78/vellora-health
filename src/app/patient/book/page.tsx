@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { db, ServiceRecord } from '@/lib/db';
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Icon } from '@/components/common/Icon';
+import { BackButton } from '@/components/common/BackButton';
 
 export default function PatientBookPage() {
   const router = useRouter();
@@ -121,7 +122,12 @@ export default function PatientBookPage() {
 
   return (
     <PatientLayout>
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 animate-fade-in-up">
+        {/* Back to Dashboard Navigation Button */}
+        <div className="mb-4">
+          <BackButton href="/patient/dashboard" label="Back to Dashboard" />
+        </div>
+
         {/* Navigation Breadcrumb / Stepper */}
         <div className="mb-8">
           <div className="flex items-center justify-between">

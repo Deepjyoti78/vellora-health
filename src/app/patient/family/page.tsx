@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/db';
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Icon } from '@/components/common/Icon';
+import { BackButton } from '@/components/common/BackButton';
 
 export default function PatientFamilyPage() {
   const { currentUser } = useAuth();
@@ -51,7 +52,12 @@ export default function PatientFamilyPage() {
 
   return (
     <PatientLayout>
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 animate-fade-in-up">
+        {/* Back to Dashboard Navigation Button */}
+        <div className="mb-4">
+          <BackButton href="/patient/dashboard" label="Back to Dashboard" />
+        </div>
+
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>

@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/db';
 import { PatientLayout } from '@/components/layout/PatientLayout';
+import { BackButton } from '@/components/common/BackButton';
 import {
   User,
   ShieldCheck,
@@ -148,6 +149,11 @@ function PatientAccountContent() {
   return (
     <PatientLayout>
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 animate-fade-in-up">
+        {/* Back to Dashboard Navigation Button */}
+        <div className="mb-4">
+          <BackButton href="/patient/dashboard" label="Back to Dashboard" />
+        </div>
+
         {/* Customer Profile Header Banner */}
         <div className="overflow-hidden rounded-3xl border border-[#E2EBE7] bg-white p-6 sm:p-8 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">

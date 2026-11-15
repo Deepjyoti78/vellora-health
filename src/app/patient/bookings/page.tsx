@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { db, BookingRecord } from '@/lib/db';
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Icon } from '@/components/common/Icon';
+import { BackButton } from '@/components/common/BackButton';
 
 export default function PatientBookingsPage() {
   const { currentUser } = useAuth();
@@ -70,7 +71,12 @@ export default function PatientBookingsPage() {
 
   return (
     <PatientLayout>
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 animate-fade-in-up">
+        {/* Back to Dashboard Navigation Button */}
+        <div className="mb-4">
+          <BackButton href="/patient/dashboard" label="Back to Dashboard" />
+        </div>
+
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
@@ -162,7 +168,7 @@ export default function PatientBookingsPage() {
             filteredBookings.map((b) => (
               <div
                 key={b.id}
-                className="flex flex-col justify-between gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs transition-shadow hover:shadow-md sm:flex-row sm:items-center"
+                className="card-hover-lift flex flex-col justify-between gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-xs hover:border-[#065F46]/40 transition-all sm:flex-row sm:items-center"
               >
                 <div className="space-y-1.5">
                   <div className="flex flex-wrap items-center gap-2">

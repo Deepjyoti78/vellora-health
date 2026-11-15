@@ -17,12 +17,11 @@ import {
   ArrowRight,
   Clock,
   ShieldCheck,
-  AlertCircle,
   Plus,
   PhoneCall,
   Activity,
-  ChevronRight,
   MapPin,
+  Sparkles,
 } from 'lucide-react';
 
 export default function PatientDashboardPage() {
@@ -44,43 +43,44 @@ export default function PatientDashboardPage() {
       desc: 'Physician consultation at home',
       href: '/services/doctor-consultations',
       icon: Stethoscope,
-      bg: 'bg-emerald-50 text-emerald-800 border-emerald-100',
+      bg: 'bg-emerald-50 text-emerald-800 border-emerald-100 group-hover:bg-[#064E3B] group-hover:text-white',
     },
     {
       name: 'Home Nursing',
       desc: 'Dressing, injections & IV care',
       href: '/services/nursing-care',
       icon: HeartPulse,
-      bg: 'bg-blue-50 text-blue-800 border-blue-100',
+      bg: 'bg-teal-50 text-teal-800 border-teal-100 group-hover:bg-[#064E3B] group-hover:text-white',
     },
     {
       name: 'Caretaker Shift',
       desc: '12h / 24h bedside support',
       href: '/services/rehab-critical-care',
       icon: Bed,
-      bg: 'bg-amber-50 text-amber-800 border-amber-100',
+      bg: 'bg-amber-50 text-amber-800 border-amber-100 group-hover:bg-[#064E3B] group-hover:text-white',
     },
     {
       name: 'Lab Blood Draw',
       desc: 'Diagnostic panels at doorstep',
       href: '/services/diagnostics-labs',
       icon: FlaskConical,
-      bg: 'bg-purple-50 text-purple-800 border-purple-100',
+      bg: 'bg-purple-50 text-purple-800 border-purple-100 group-hover:bg-[#064E3B] group-hover:text-white',
     },
   ];
 
   return (
     <PatientLayout>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
-        {/* SECTION A — PERSONALIZED WELCOME */}
-        <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center border-b border-slate-200/80 pb-6">
+        {/* SECTION A — PERSONALIZED WELCOME BANNER (Animated Fade Down) */}
+        <section className="animate-fade-in-down flex flex-col justify-between gap-4 sm:flex-row sm:items-center border-b border-slate-200/80 pb-6">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-0.5 text-[11px] font-bold text-[#065F46] uppercase tracking-wider mb-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-0.5 text-[11px] font-bold text-[#065F46] uppercase tracking-wider mb-2 shadow-2xs">
               <ShieldCheck className="h-3.5 w-3.5" />
               <span>Personal Healthcare Portal</span>
             </div>
-            <h1 className="text-2xl font-black text-[#102820] sm:text-3xl tracking-tight">
-              Welcome back, {firstName}
+            <h1 className="text-2xl font-black text-[#102820] sm:text-3xl tracking-tight flex items-center gap-2">
+              <span>Welcome back, {firstName}</span>
+              <span className="inline-block animate-pulse text-emerald-600 text-xl">✦</span>
             </h1>
             <p className="mt-1 text-xs sm:text-sm text-slate-600 font-normal">
               Manage your appointments, medical records, and family healthcare in one place.
@@ -90,20 +90,20 @@ export default function PatientDashboardPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/patient/book"
-              className="inline-flex items-center gap-2 rounded-full bg-[#064E3B] px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors"
+              className="group inline-flex items-center gap-2 rounded-full bg-[#064E3B] px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
               <span>Book Appointment</span>
             </Link>
           </div>
         </section>
 
-        {/* SECTION B — UPCOMING APPOINTMENTS (MOST PROMINENT SECTION) */}
-        <section aria-labelledby="upcomingVisitsHeading">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+        {/* SECTION B — UPCOMING APPOINTMENTS (Animated Fade Up Delay 1) */}
+        <section aria-labelledby="upcomingVisitsHeading" className="animate-fade-in-up animate-delay-1">
+          <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-xs hover:shadow-md transition-shadow duration-300">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-5">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center">
+                <div className="h-10 w-10 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] shadow-2xs">
                   <Calendar className="h-5 w-5" />
                 </div>
                 <div>
@@ -117,15 +117,16 @@ export default function PatientDashboardPage() {
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-800">
-                  {activeBookings.length} Active Visit{activeBookings.length === 1 ? '' : 's'}
+                <span className="rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span>{activeBookings.length} Active Visit{activeBookings.length === 1 ? '' : 's'}</span>
                 </span>
                 <Link
                   href="/patient/bookings"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#065F46] hover:underline"
+                  className="group inline-flex items-center gap-1 text-xs font-bold text-[#065F46] hover:underline"
                 >
                   <span>View All Bookings ({bookings.length})</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </div>
             </div>
@@ -135,11 +136,11 @@ export default function PatientDashboardPage() {
                 {activeBookings.map((booking) => (
                   <div
                     key={booking.id}
-                    className="rounded-2xl border border-slate-200/80 bg-[#FAFCFB] p-5 transition hover:shadow-xs hover:border-[#065F46]/30"
+                    className="card-hover-lift rounded-2xl border border-slate-200/80 bg-[#FAFCFB] p-5 transition-all duration-300 hover:border-[#065F46]/40 hover:bg-white"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono font-bold text-slate-700 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-xs font-mono font-bold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-slate-200 shadow-2xs">
                           {booking.bookingNumber}
                         </span>
                         <span className="text-xs text-slate-500">• Doorstep Service</span>
@@ -147,10 +148,10 @@ export default function PatientDashboardPage() {
                       <span
                         className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
                           booking.status === 'CONFIRMED'
-                            ? 'bg-blue-100 text-blue-800'
+                            ? 'bg-blue-100 text-blue-800 border border-blue-200'
                             : booking.status === 'IN_PROGRESS' || booking.status === 'ON_THE_WAY'
-                            ? 'bg-amber-100 text-amber-800 animate-pulse'
-                            : 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-amber-100 text-amber-800 border border-amber-200 animate-pulse'
+                            : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                         }`}
                       >
                         ● {booking.status.replace(/_/g, ' ')}
@@ -188,14 +189,14 @@ export default function PatientDashboardPage() {
 
                       <div className="flex flex-wrap items-center gap-2 sm:self-center">
                         <Link
-                          href="/patient/bookings"
-                          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                          href={`/patient/bookings/${booking.id}`}
+                          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
                         >
                           View Details
                         </Link>
                         {['ON_THE_WAY', 'ARRIVED', 'IN_PROGRESS'].includes(booking.status) ? (
                           <Link
-                            href="/patient/bookings"
+                            href={`/patient/bookings/${booking.id}`}
                             className="rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-2xs"
                           >
                             Track Visit Live
@@ -232,8 +233,8 @@ export default function PatientDashboardPage() {
           </div>
         </section>
 
-        {/* SECTION C — HEALTHCARE MANAGEMENT (GRID OF 4 PRIMARY NAVIGATION CARDS) */}
-        <section aria-labelledby="healthcareManagementHeading">
+        {/* SECTION C — HEALTHCARE MANAGEMENT HUB (Animated Fade Up Delay 2) */}
+        <section aria-labelledby="healthcareManagementHeading" className="animate-fade-in-up animate-delay-2">
           <div className="mb-4">
             <h2 id="healthcareManagementHeading" className="text-lg font-bold text-[#102820]">
               Healthcare Management Hub
@@ -245,10 +246,10 @@ export default function PatientDashboardPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {/* Card 1: My Bookings */}
-            <div className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-md hover:border-[#065F46]/30 transition-all duration-200 group">
+            <div className="card-hover-lift flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs hover:border-[#065F46]/40 hover:shadow-lg transition-all duration-300 group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="h-10 w-10 rounded-xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5]">
+                  <div className="h-11 w-11 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] group-hover:bg-[#064E3B] group-hover:text-white transition-all duration-300 shadow-2xs">
                     <Calendar className="h-5 w-5" />
                   </div>
                   <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
@@ -262,10 +263,10 @@ export default function PatientDashboardPage() {
                   Upcoming and previous doorstep visits, consultation status, and care logs.
                 </p>
               </div>
-              <div className="mt-5 pt-3 border-t border-slate-100">
+              <div className="mt-5 pt-3.5 border-t border-slate-100">
                 <Link
                   href="/patient/bookings"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#065F46] group-hover:translate-x-0.5 transition-transform"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] group-hover:translate-x-1 transition-transform"
                 >
                   <span>View Bookings</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -274,10 +275,10 @@ export default function PatientDashboardPage() {
             </div>
 
             {/* Card 2: Medical Records */}
-            <div className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-md hover:border-[#065F46]/30 transition-all duration-200 group">
+            <div className="card-hover-lift flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs hover:border-[#065F46]/40 hover:shadow-lg transition-all duration-300 group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="h-10 w-10 rounded-xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5]">
+                  <div className="h-11 w-11 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] group-hover:bg-[#064E3B] group-hover:text-white transition-all duration-300 shadow-2xs">
                     <FileText className="h-5 w-5" />
                   </div>
                   <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
@@ -291,10 +292,10 @@ export default function PatientDashboardPage() {
                   Verified clinician prescriptions, NABL lab test panels, and health reports.
                 </p>
               </div>
-              <div className="mt-5 pt-3 border-t border-slate-100">
+              <div className="mt-5 pt-3.5 border-t border-slate-100">
                 <Link
                   href="/patient/records"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#065F46] group-hover:translate-x-0.5 transition-transform"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] group-hover:translate-x-1 transition-transform"
                 >
                   <span>View Records</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -303,10 +304,10 @@ export default function PatientDashboardPage() {
             </div>
 
             {/* Card 3: Family Members */}
-            <div className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-md hover:border-[#065F46]/30 transition-all duration-200 group">
+            <div className="card-hover-lift flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs hover:border-[#065F46]/40 hover:shadow-lg transition-all duration-300 group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="h-10 w-10 rounded-xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5]">
+                  <div className="h-11 w-11 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] group-hover:bg-[#064E3B] group-hover:text-white transition-all duration-300 shadow-2xs">
                     <Users className="h-5 w-5" />
                   </div>
                   <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
@@ -320,10 +321,10 @@ export default function PatientDashboardPage() {
                   Saved family profiles, dependents, and blood groups for one-click care booking.
                 </p>
               </div>
-              <div className="mt-5 pt-3 border-t border-slate-100">
+              <div className="mt-5 pt-3.5 border-t border-slate-100">
                 <Link
                   href="/patient/family"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#065F46] group-hover:translate-x-0.5 transition-transform"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] group-hover:translate-x-1 transition-transform"
                 >
                   <span>Manage Family</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -332,10 +333,10 @@ export default function PatientDashboardPage() {
             </div>
 
             {/* Card 4: My Profile & Vitals */}
-            <div className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-2xs hover:shadow-md hover:border-[#065F46]/30 transition-all duration-200 group">
+            <div className="card-hover-lift flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs hover:border-[#065F46]/40 hover:shadow-lg transition-all duration-300 group">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="h-10 w-10 rounded-xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5]">
+                  <div className="h-11 w-11 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] group-hover:bg-[#064E3B] group-hover:text-white transition-all duration-300 shadow-2xs">
                     <User className="h-5 w-5" />
                   </div>
                   <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
@@ -349,10 +350,10 @@ export default function PatientDashboardPage() {
                   Personal contacts, registered home addresses, safety PIN, and vital statistics.
                 </p>
               </div>
-              <div className="mt-5 pt-3 border-t border-slate-100">
+              <div className="mt-5 pt-3.5 border-t border-slate-100">
                 <Link
                   href="/patient/account"
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#065F46] group-hover:translate-x-0.5 transition-transform"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] group-hover:translate-x-1 transition-transform"
                 >
                   <span>View Profile</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -362,8 +363,8 @@ export default function PatientDashboardPage() {
           </div>
         </section>
 
-        {/* SECTION D — QUICK BOOKING (SECONDARY COMPACT TILES) */}
-        <section aria-labelledby="quickBookingHeading">
+        {/* SECTION D — QUICK BOOKING (Animated Fade Up Delay 3) */}
+        <section aria-labelledby="quickBookingHeading" className="animate-fade-in-up animate-delay-3">
           <div className="flex items-center justify-between mb-3.5">
             <div>
               <h2 id="quickBookingHeading" className="text-sm font-bold uppercase tracking-wider text-slate-500">
@@ -373,8 +374,9 @@ export default function PatientDashboardPage() {
                 Schedule a routine doctor visit, nurse, attendant, or diagnostic panel
               </p>
             </div>
-            <Link href="/services" className="text-xs font-bold text-[#065F46] hover:underline">
-              All 42 Services →
+            <Link href="/services" className="text-xs font-bold text-[#065F46] hover:underline flex items-center gap-1">
+              <span>All 42 Services</span>
+              <span>→</span>
             </Link>
           </div>
 
@@ -385,16 +387,19 @@ export default function PatientDashboardPage() {
                 <Link
                   key={qs.name}
                   href={qs.href}
-                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xs hover:border-[#065F46] hover:shadow-xs transition-all group"
+                  className="card-hover-lift flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xs hover:border-[#064E3B] hover:shadow-md transition-all duration-200 group"
                 >
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${qs.bg}`}>
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors duration-200 ${qs.bg}`}>
                     <ServiceIcon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-[#102820] truncate group-hover:text-[#065F46]">
+                    <p className="text-xs font-bold text-[#102820] truncate group-hover:text-[#064E3B]">
                       {qs.name}
                     </p>
-                    <p className="text-[10.5px] text-slate-500 truncate">Book visit →</p>
+                    <p className="text-[10.5px] text-slate-500 truncate flex items-center gap-0.5">
+                      <span>Book visit</span>
+                      <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                    </p>
                   </div>
                 </Link>
               );
@@ -402,14 +407,14 @@ export default function PatientDashboardPage() {
           </div>
         </section>
 
-        {/* SECTION E — SUPPORT & EMERGENCY GUIDANCE */}
-        <section aria-labelledby="supportGuidanceHeading">
+        {/* SECTION E — SUPPORT & EMERGENCY GUIDANCE (Animated Fade Up Delay 4) */}
+        <section aria-labelledby="supportGuidanceHeading" className="animate-fade-in-up animate-delay-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* 24/7 Clinical Assistance */}
-            <div className="rounded-2xl border border-[#E2EBE7] bg-white p-5 shadow-2xs flex flex-col justify-between">
+            <div className="card-hover-lift rounded-3xl border border-[#E2EBE7] bg-white p-6 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between">
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="h-8 w-8 rounded-lg bg-[#ECFDF5] text-[#065F46] flex items-center justify-center">
+                <div className="flex items-center gap-2.5 mb-2.5">
+                  <div className="h-9 w-9 rounded-xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5]">
                     <PhoneCall className="h-4 w-4" />
                   </div>
                   <h3 id="supportGuidanceHeading" className="text-sm font-bold text-[#102820]">
@@ -419,27 +424,27 @@ export default function PatientDashboardPage() {
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Need assistance with your booking, clinician dispatch updates, or medical prescriptions? Our triage team is available round the clock.
                 </p>
-                <div className="mt-3 text-xs">
+                <div className="mt-3.5 text-xs">
                   <span className="font-semibold text-slate-500">Toll-Free Helpline: </span>
-                  <span className="font-bold text-[#065F46]">1800-123-CARE (2273)</span>
+                  <span className="font-bold text-[#065F46] tracking-wide">1800-123-CARE (2273)</span>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-100">
+              <div className="mt-5 pt-3.5 border-t border-slate-100">
                 <Link
                   href="/patient/support"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] hover:underline"
+                  className="group inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] hover:underline"
                 >
                   <span>Open Assistance Hub</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </div>
             </div>
 
             {/* Regional Emergency Guidance (Accurate: 112 / 108 Ambulance) */}
-            <div className="rounded-2xl border border-red-200 bg-red-50/70 p-5 flex flex-col justify-between">
+            <div className="card-hover-lift rounded-3xl border border-red-200 bg-red-50/70 p-6 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between">
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-600 text-white text-xs font-bold">
+                <div className="flex items-center gap-2.5 mb-2.5">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-600 text-white text-xs font-bold shadow-2xs">
                     !
                   </span>
                   <h3 className="text-sm font-bold text-red-950">
@@ -449,16 +454,16 @@ export default function PatientDashboardPage() {
                 <p className="text-xs text-red-900 leading-relaxed">
                   Vellora Health provides scheduled home healthcare. For acute life-threatening emergencies (severe chest pain, respiratory distress, major trauma), immediately contact public ambulance dispatch.
                 </p>
-                <div className="mt-3 flex items-center gap-4 text-xs font-bold text-red-900">
-                  <span>National Emergency: 112</span>
-                  <span>Ambulance Dispatch: 108</span>
+                <div className="mt-3.5 flex items-center gap-4 text-xs font-bold text-red-900">
+                  <span className="bg-white/80 px-2 py-0.5 rounded-md border border-red-200">National: 112</span>
+                  <span className="bg-white/80 px-2 py-0.5 rounded-md border border-red-200">Ambulance: 108</span>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-red-200/60 flex items-center justify-between">
+              <div className="mt-5 pt-3.5 border-t border-red-200/60 flex items-center justify-between">
                 <span className="text-[11px] text-red-800 font-medium">Public Emergency Services</span>
                 <Link
                   href="/patient/support"
-                  className="rounded-full bg-red-700 px-3 py-1 text-[11px] font-bold text-white hover:bg-red-800 transition-colors"
+                  className="rounded-full bg-red-700 px-3.5 py-1 text-[11px] font-bold text-white hover:bg-red-800 transition-colors shadow-2xs"
                 >
                   Emergency Protocol
                 </Link>
