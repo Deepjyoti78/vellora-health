@@ -176,10 +176,10 @@ export default function PatientDashboardPage() {
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
           {/* ================= 1. SEAMLESS WELCOME HERO SECTION ================= */}
           {/* Open, unboxed layout directly on the mint-tinted page background */}
-          <section className="relative pt-2 pb-2 sm:pt-4 sm:pb-4 lg:pt-6 lg:pb-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Column: Heading, Subtitle, CTA */}
-              <div className="lg:col-span-7 space-y-4">
+          <section className="relative pt-1 pb-2 sm:pt-2 sm:pb-3 lg:pt-3 lg:pb-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+              {/* Left Column: Heading, Subtitle, CTA (col-span-5) */}
+              <div className="lg:col-span-5 xl:col-span-5 space-y-4">
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-[11px] font-bold text-[#065F46] uppercase tracking-wider shadow-2xs">
                   <ShieldCheck className="h-3.5 w-3.5" />
                   <span>PERSONAL HEALTHCARE PORTAL</span>
@@ -190,7 +190,7 @@ export default function PatientDashboardPage() {
                   <span className="text-[#059669] text-2xl sm:text-3xl font-light select-none">✦</span>
                 </h1>
 
-                <p className="text-sm sm:text-base text-[#64748B] font-normal max-w-xl leading-relaxed">
+                <p className="text-sm sm:text-base text-[#64748B] font-normal max-w-lg leading-relaxed">
                   Manage your appointments, medical records, and family healthcare in one place.
                 </p>
 
@@ -205,74 +205,75 @@ export default function PatientDashboardPage() {
                 </div>
               </div>
 
-              {/* Right Column: Seamless Lifestyle Illustration without any rectangular box */}
-              <div className="lg:col-span-5 flex items-center justify-center lg:justify-end relative">
-                {/* Soft ambient mint glow */}
-                <div className="absolute right-6 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#EAF8F2]/75 blur-2xl pointer-events-none" />
-                <div className="relative z-10 w-full max-w-[430px]">
+              {/* Right Column: Wide Seamless Lifestyle Illustration (col-span-7) */}
+              <div className="lg:col-span-7 xl:col-span-7 flex items-center justify-center lg:justify-end relative">
+                {/* Soft ambient mint glow & warm morning sun aura matching Image 2 */}
+                <div className="absolute right-12 top-4 w-32 h-32 rounded-full bg-amber-100/50 blur-2xl pointer-events-none" />
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[480px] h-72 rounded-full bg-gradient-to-l from-[#EAF8F2] via-[#E6F7F0]/60 to-transparent blur-3xl pointer-events-none" />
+
+                {/* Wide panoramic illustration container covering the horizontal empty spaces */}
+                <div className="relative z-10 w-full max-w-[700px] flex items-center justify-center lg:justify-end">
                   <img
                     src="/assets/patient-hero-seamless@2x.png"
                     alt="Eleanor enjoying calm home healthcare wellness"
-                    className="w-full h-auto object-contain select-none pointer-events-none drop-shadow-xs"
+                    className="w-full h-auto max-h-[250px] sm:max-h-[270px] lg:max-h-[285px] object-contain object-right-bottom select-none pointer-events-none drop-shadow-xs transition-transform duration-500 hover:scale-[1.01]"
                   />
                 </div>
               </div>
             </div>
           </section>
 
-          {/* ================= 2. UNIFIED STATISTICS SUMMARY STRIP ================= */}
-          <section className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 sm:p-6 shadow-[0_2px_14px_rgba(0,0,0,0.02)]">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 divide-y sm:divide-y-0 lg:divide-x divide-[#E5ECE9]">
-              {/* Stat 1: Total Bookings */}
-              <div className="flex items-center gap-4 pt-0 sm:pt-0 lg:pl-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                  <Calendar className="h-5 w-5 stroke-[2]" />
-                </div>
-                <div>
-                  <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
-                    {bookings.length}
-                  </span>
-                  <span className="text-xs sm:text-sm text-[#64748B] font-medium block">Total Bookings</span>
-                </div>
+          {/* ================= 2. FOUR UNIFIED STATISTICS SUMMARY CARDS ================= */}
+          <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {/* Stat 1: Total Bookings */}
+            <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-xs transition-all flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                <Calendar className="h-5 w-5 stroke-[2]" />
               </div>
-
-              {/* Stat 2: Active Visits */}
-              <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                  <Check className="h-5 w-5 stroke-[2.5]" />
-                </div>
-                <div>
-                  <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
-                    {activeBookings.length}
-                  </span>
-                  <span className="text-xs sm:text-sm text-[#64748B] font-medium block">Active Visits</span>
-                </div>
+              <div>
+                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#15212B] tracking-tight block">
+                  {bookings.length}
+                </span>
+                <span className="text-xs sm:text-[13px] text-[#64748B] font-medium block">Total Bookings</span>
               </div>
+            </div>
 
-              {/* Stat 3: Family Members */}
-              <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                  <Users className="h-5 w-5 stroke-[2]" />
-                </div>
-                <div>
-                  <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
-                    {familyMembers.length}
-                  </span>
-                  <span className="text-xs sm:text-sm text-[#64748B] font-medium block">Family Members</span>
-                </div>
+            {/* Stat 2: Active Visits */}
+            <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-xs transition-all flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                <Check className="h-5 w-5 stroke-[2.5]" />
               </div>
+              <div>
+                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#15212B] tracking-tight block">
+                  {activeBookings.length}
+                </span>
+                <span className="text-xs sm:text-[13px] text-[#64748B] font-medium block">Active Visits</span>
+              </div>
+            </div>
 
-              {/* Stat 4: Medical Records */}
-              <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                  <FileText className="h-5 w-5 stroke-[2]" />
-                </div>
-                <div>
-                  <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
-                    {prescriptions.length + labReports.length}
-                  </span>
-                  <span className="text-xs sm:text-sm text-[#64748B] font-medium block">Medical Records</span>
-                </div>
+            {/* Stat 3: Family Members */}
+            <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-xs transition-all flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                <Users className="h-5 w-5 stroke-[2]" />
+              </div>
+              <div>
+                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#15212B] tracking-tight block">
+                  {familyMembers.length}
+                </span>
+                <span className="text-xs sm:text-[13px] text-[#64748B] font-medium block">Family Members</span>
+              </div>
+            </div>
+
+            {/* Stat 4: Medical Records */}
+            <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-xs transition-all flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                <FileText className="h-5 w-5 stroke-[2]" />
+              </div>
+              <div>
+                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#15212B] tracking-tight block">
+                  {prescriptions.length + labReports.length}
+                </span>
+                <span className="text-xs sm:text-[13px] text-[#64748B] font-medium block">Medical Records</span>
               </div>
             </div>
           </section>
