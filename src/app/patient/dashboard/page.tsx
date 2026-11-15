@@ -23,7 +23,100 @@ import {
   MapPin,
   Sparkles,
   X,
+  Layers,
+  Zap,
+  Check,
+  AlertTriangle,
+  Phone,
+  Home,
+  CheckCircle2,
+  Bell,
 } from 'lucide-react';
+
+// Format YYYY-MM-DD into "Nov 15, 2026"
+function formatDisplayDate(dateStr: string) {
+  try {
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const year = parts[0];
+      const monthIdx = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      if (months[monthIdx]) {
+        return `${months[monthIdx]} ${day}, ${year}`;
+      }
+    }
+    return dateStr;
+  } catch {
+    return dateStr;
+  }
+}
+
+// 24/7 Care Coordination Headset Illustration
+const CareCoordinationIllustration = () => (
+  <div className="relative w-32 h-24 sm:w-40 sm:h-28 shrink-0 flex items-center justify-center select-none pointer-events-none">
+    <div className="absolute inset-0 bg-[#E6F7F0] rounded-full blur-xl opacity-80" />
+    <svg viewBox="0 0 160 130" className="w-full h-full relative z-10 drop-shadow-sm" fill="none">
+      {/* Background Soft Bubble */}
+      <circle cx="80" cy="65" r="45" fill="#EAF8F2" />
+      {/* Plant Leaves */}
+      <path d="M40 95 C 30 85, 32 70, 48 78 C 45 90, 42 93, 40 95 Z" fill="#A7F3D0" />
+      <path d="M50 102 C 38 98, 42 85, 56 90 C 54 99, 52 101, 50 102 Z" fill="#6EE7B7" />
+      {/* Headset Arc */}
+      <path d="M48 68 C 48 40, 112 40, 112 68" stroke="#10B981" strokeWidth="6" strokeLinecap="round" />
+      {/* Left Ear Cushion */}
+      <rect x="42" y="62" width="12" height="24" rx="6" fill="#065F46" />
+      {/* Right Ear Cushion */}
+      <rect x="106" y="62" width="12" height="24" rx="6" fill="#065F46" />
+      {/* Microphone Arm & Mic */}
+      <path d="M110 78 C 110 96, 92 104, 76 102" stroke="#047857" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="74" cy="102" r="5" fill="#064E3B" />
+      {/* Speech Chat Bubble */}
+      <rect x="68" y="48" width="28" height="20" rx="8" fill="#FFFFFF" />
+      <circle cx="77" cy="58" r="2" fill="#10B981" />
+      <circle cx="82" cy="58" r="2" fill="#10B981" />
+      <circle cx="87" cy="58" r="2" fill="#10B981" />
+      <path d="M74 68 L 71 74 L 79 68 Z" fill="#FFFFFF" />
+    </svg>
+  </div>
+);
+
+// Emergency Medical Ambulance Illustration
+const EmergencyAmbulanceIllustration = () => (
+  <div className="relative w-32 h-20 sm:w-40 sm:h-24 shrink-0 flex items-center justify-center select-none pointer-events-none">
+    <div className="absolute inset-0 bg-[#FEE2E2] rounded-full blur-xl opacity-70" />
+    <svg viewBox="0 0 160 110" className="w-full h-full relative z-10 drop-shadow-sm" fill="none">
+      {/* Road Shadow */}
+      <ellipse cx="80" cy="94" rx="55" ry="5" fill="#E2E8F0" />
+      {/* Siren Light Glow & Bulb */}
+      <circle cx="68" cy="22" r="8" fill="#FCA5A5" opacity="0.4" />
+      <circle cx="68" cy="22" r="4.5" fill="#EF4444" />
+      {/* Ambulance Van Body */}
+      <path
+        d="M30 42 C 30 36, 35 32, 42 32 L 88 32 C 94 32, 98 36, 102 42 L 122 55 C 126 58, 128 62, 128 67 L 128 80 C 128 84, 125 86, 120 86 L 36 86 C 32 86, 30 83, 30 78 Z"
+        fill="#FFFFFF"
+        stroke="#E2E8F0"
+        strokeWidth="2"
+      />
+      {/* Windshield */}
+      <path d="M98 42 L 115 54 C 117 56, 117 58, 115 58 L 94 58 C 92 58, 92 56, 92 54 L 92 44 C 92 42, 94 42, 98 42 Z" fill="#E0F2FE" />
+      {/* Side Window */}
+      <rect x="52" y="42" width="28" height="14" rx="3" fill="#E0F2FE" />
+      {/* Red Emergency Cross */}
+      <rect x="62" y="64" width="8" height="8" rx="1.5" fill="#FEE2E2" />
+      <path d="M66 65 v 6 M 63 68 h 6" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+      {/* Red Stripe along van */}
+      <path d="M30 74 L 128 74" stroke="#EF4444" strokeWidth="2.5" />
+      {/* Headlight */}
+      <rect x="124" y="68" width="4" height="6" rx="2" fill="#FBBF24" />
+      {/* Wheels */}
+      <circle cx="50" cy="86" r="10" fill="#334155" />
+      <circle cx="50" cy="86" r="4.5" fill="#E2E8F0" />
+      <circle cx="108" cy="86" r="10" fill="#334155" />
+      <circle cx="108" cy="86" r="4.5" fill="#E2E8F0" />
+    </svg>
+  </div>
+);
 
 export default function PatientDashboardPage() {
   const { currentUser } = useAuth();
@@ -48,7 +141,7 @@ export default function PatientDashboardPage() {
   const labReports = db.getLabReportsByPatient(userId);
   const familyMembers = db.getFamilyMembers(userId);
 
-  const firstName = currentUser?.name?.split(' ')[0] || 'Patient';
+  const firstName = currentUser?.name?.split(' ')[0] || 'Eleanor';
 
   const quickServices = [
     {
@@ -56,566 +149,651 @@ export default function PatientDashboardPage() {
       desc: 'Physician consultation at home',
       href: '/services/doctor-consultations',
       icon: Stethoscope,
-      bg: 'bg-emerald-50 text-emerald-800 border-emerald-100 group-hover:bg-[#064E3B] group-hover:text-white',
     },
     {
       name: 'Home Nursing',
       desc: 'Dressing, injections & IV care',
       href: '/services/nursing-care',
       icon: HeartPulse,
-      bg: 'bg-teal-50 text-teal-800 border-teal-100 group-hover:bg-[#064E3B] group-hover:text-white',
     },
     {
       name: 'Caretaker Shift',
       desc: '12h / 24h bedside support',
       href: '/services/rehab-critical-care',
       icon: Bed,
-      bg: 'bg-amber-50 text-amber-800 border-amber-100 group-hover:bg-[#064E3B] group-hover:text-white',
     },
     {
       name: 'Lab Blood Draw',
       desc: 'Diagnostic panels at doorstep',
       href: '/services/diagnostics-labs',
       icon: FlaskConical,
-      bg: 'bg-purple-50 text-purple-800 border-purple-100 group-hover:bg-[#064E3B] group-hover:text-white',
     },
   ];
 
   return (
     <PatientLayout>
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
-        {/* SECTION A — PERSONALIZED WELCOME BANNER (Animated Fade Down) */}
-        <section className="animate-fade-in-down flex flex-col justify-between gap-4 sm:flex-row sm:items-center border-b border-slate-200/80 pb-6">
-          <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-0.5 text-[11px] font-bold text-[#065F46] uppercase tracking-wider mb-2 shadow-2xs">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              <span>Personal Healthcare Portal</span>
+      <div className="min-h-screen bg-[#F7FAF9] text-[#15212B] font-sans antialiased py-6 sm:py-8 lg:py-10">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
+          {/* ================= 2. HERO / WELCOME SECTION ================= */}
+          <section className="relative overflow-hidden rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
+            {/* Ambient Background Mint Curves */}
+            <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-[#EAF8F2]/70 blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column: Heading, Subtitle, CTA */}
+              <div className="lg:col-span-7">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-[11px] font-bold text-[#065F46] uppercase tracking-wider mb-3.5 shadow-2xs">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  <span>PERSONAL HEALTHCARE PORTAL</span>
+                </div>
+
+                <h1 className="font-heading text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#15212B] tracking-tight leading-[1.12] flex items-center gap-2.5">
+                  <span>Welcome back, {firstName}</span>
+                  <span className="text-[#059669] text-2xl sm:text-3xl font-light select-none">✦</span>
+                </h1>
+
+                <p className="mt-3 text-sm sm:text-base text-[#64748B] font-normal max-w-xl leading-relaxed">
+                  Manage your appointments, medical records, and family healthcare in one place.
+                </p>
+
+                <div className="mt-6 flex items-center gap-3">
+                  <Link
+                    href="/patient/book"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#064E3B] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#065F46] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Book Appointment</span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right Column: Serene Tea & Houseplant Illustration */}
+              <div className="hidden lg:flex lg:col-span-5 items-center justify-end">
+                <div className="relative w-full max-w-[420px] overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-[#F4FAF7] shadow-[0_4px_24px_rgba(6,95,70,0.06)]">
+                  <img
+                    src="/assets/dashboard-welcome-illustration.jpg"
+                    alt="Serene home wellness illustration"
+                    className="w-full h-auto max-h-[260px] object-contain mx-auto"
+                  />
+                </div>
+              </div>
             </div>
-            <h1 className="text-2xl font-black text-[#102820] sm:text-3xl tracking-tight flex items-center gap-2">
-              <span>Welcome back, {firstName}</span>
-              <span className="inline-block animate-pulse text-emerald-600 text-xl">✦</span>
-            </h1>
-            <p className="mt-1 text-xs sm:text-sm text-slate-600 font-normal">
-              Manage your appointments, medical records, and family healthcare in one place.
-            </p>
-          </div>
+          </section>
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/patient/book"
-              className="group inline-flex items-center gap-2 rounded-full bg-[#064E3B] px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
-              <span>Book Appointment</span>
-            </Link>
-          </div>
-        </section>
-
-        {/* SECTION B — UPCOMING APPOINTMENTS (Animated Fade Up Delay 1) */}
-        <section aria-labelledby="upcomingVisitsHeading" className="animate-fade-in-up animate-delay-1">
-          <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-xs hover:shadow-md transition-shadow duration-300">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 mb-5">
-              <div className="flex items-center gap-2.5">
-                <div className="h-10 w-10 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] shadow-2xs">
-                  <Calendar className="h-5 w-5" />
+          {/* ================= 3. STATS SUMMARY ROW ================= */}
+          <section className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 sm:p-6 shadow-[0_2px_14px_rgba(0,0,0,0.02)]">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 divide-y sm:divide-y-0 lg:divide-x divide-[#E5ECE9]">
+              {/* Stat 1: Total Bookings */}
+              <div className="flex items-center gap-4 pt-0 sm:pt-0 lg:pl-3">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                  <Calendar className="h-5 w-5 stroke-[2]" />
                 </div>
                 <div>
-                  <h2 id="upcomingVisitsHeading" className="text-base sm:text-lg font-bold text-[#102820]">
+                  <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
+                    {bookings.length}
+                  </span>
+                  <span className="text-xs text-[#64748B] font-medium block">Total Bookings</span>
+                </div>
+              </div>
+
+              {/* Stat 2: Active Visits */}
+              <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                  <Check className="h-5 w-5 stroke-[2.5]" />
+                </div>
+                <div>
+                  <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
+                    {activeBookings.length}
+                  </span>
+                  <span className="text-xs text-[#64748B] font-medium block">Active Visits</span>
+                </div>
+              </div>
+
+              {/* Stat 3: Family Members */}
+              <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                  <Users className="h-5 w-5 stroke-[2]" />
+                </div>
+                <div>
+                  <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
+                    {familyMembers.length}
+                  </span>
+                  <span className="text-xs text-[#64748B] font-medium block">Family Members</span>
+                </div>
+              </div>
+
+              {/* Stat 4: Medical Records */}
+              <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                  <FileText className="h-5 w-5 stroke-[2]" />
+                </div>
+                <div>
+                  <span className="font-heading text-2xl sm:text-3xl font-bold text-[#15212B] tracking-tight block">
+                    {prescriptions.length + labReports.length}
+                  </span>
+                  <span className="text-xs text-[#64748B] font-medium block">Medical Records</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ================= 4. UPCOMING & ACTIVE APPOINTMENTS SECTION ================= */}
+          <section className="rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+            {/* Section Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#F2F8F5]">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                  <Calendar className="h-5 w-5 stroke-[2]" />
+                </div>
+                <div>
+                  <h2 className="font-heading text-lg sm:text-xl font-bold text-[#15212B]">
                     Upcoming &amp; Active Appointments
                   </h2>
-                  <p className="text-xs text-slate-500 font-normal">
-                    Scheduled doorstep clinician visits and clinical procedures
+                  <p className="text-xs sm:text-sm text-[#64748B] font-normal">
+                    Your scheduled doorstep clinician visits and clinical procedures.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-800 flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-xs font-bold text-[#065F46]">
+                  <span className="h-2 w-2 rounded-full bg-[#059669] animate-pulse" />
                   <span>{activeBookings.length} Active Visit{activeBookings.length === 1 ? '' : 's'}</span>
                 </span>
+
                 <Link
                   href="/patient/bookings"
-                  className="group inline-flex items-center gap-1 text-xs font-bold text-[#065F46] hover:underline"
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#065F46] hover:underline"
                 >
-                  <span>View All Bookings ({bookings.length})</span>
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  <span>View All Bookings</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
             </div>
 
+            {/* Appointment Cards List */}
             {activeBookings.length > 0 ? (
-              <div className="space-y-4">
-                {activeBookings.map((booking) => (
-                  <div
-                    key={booking.id}
-                    className="card-hover-lift rounded-2xl border border-slate-200/80 bg-[#FAFCFB] p-5 transition-all duration-300 hover:border-[#065F46]/40 hover:bg-white"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono font-bold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-slate-200 shadow-2xs">
-                          {booking.bookingNumber}
-                        </span>
-                        <span className="text-xs text-slate-500">• Doorstep Service</span>
-                      </div>
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
-                          booking.status === 'CONFIRMED'
-                            ? 'bg-blue-100 text-blue-800 border border-blue-200'
-                            : booking.status === 'IN_PROGRESS' || booking.status === 'ON_THE_WAY'
-                            ? 'bg-amber-100 text-amber-800 border border-amber-200 animate-pulse'
-                            : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                        }`}
-                      >
-                        ● {booking.status.replace(/_/g, ' ')}
-                      </span>
-                    </div>
+              <div className="mt-6 space-y-4">
+                {activeBookings.map((booking) => {
+                  const isConfirmed = booking.status === 'CONFIRMED';
+                  const isInProgress = ['IN_PROGRESS', 'ON_THE_WAY', 'ARRIVED'].includes(booking.status);
 
-                    <div className="mt-3.5 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                      <div>
-                        <h3 className="text-base font-bold text-[#102820]">{booking.serviceName}</h3>
-                        <p className="text-xs text-slate-600 mt-0.5">
-                          Patient: <strong className="text-slate-900">{booking.beneficiaryName}</strong> ({booking.beneficiaryRelation})
-                        </p>
-                        <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-slate-500">
-                          <span className="inline-flex items-center gap-1.5">
-                            <Calendar className="h-3.5 w-3.5 text-[#065F46]" />
-                            {booking.scheduledDate}
-                          </span>
-                          <span className="inline-flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5 text-[#065F46]" />
-                            {booking.scheduledTimeSlot}
-                          </span>
-                          {booking.addressText && (
-                            <span className="inline-flex items-center gap-1.5 max-w-xs truncate">
-                              <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                              <span className="truncate">{booking.addressText}</span>
-                            </span>
+                  return (
+                    <div
+                      key={booking.id}
+                      className="group flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-[20px] border border-[#E5EAE9] bg-[#FAFCFB] p-5 sm:p-6 transition-all duration-300 hover:border-[#B8DCDE] hover:bg-white hover:shadow-md"
+                    >
+                      {/* Left: Service Icon & Title */}
+                      <div className="flex items-center gap-3.5 min-w-[280px]">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                          {booking.category === 'DOCTOR_VISIT' ? (
+                            <Home className="h-5 w-5 stroke-[2]" />
+                          ) : (
+                            <Stethoscope className="h-5 w-5 stroke-[2]" />
                           )}
                         </div>
-                        {booking.providerName && (
-                          <p className="mt-2 text-xs font-semibold text-emerald-800 bg-emerald-50/70 border border-emerald-100 px-2.5 py-1 rounded-lg w-fit">
-                            Assigned Clinician: {booking.providerName}
-                          </p>
-                        )}
+                        <div>
+                          <h3 className="font-heading text-sm sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                            {booking.serviceName}
+                          </h3>
+                          <span className="text-xs text-[#64748B] font-mono mt-0.5 block">
+                            {booking.bookingNumber}
+                          </span>
+                        </div>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-2 sm:self-center">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedBooking(booking)}
-                          className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-2xs cursor-pointer"
+                      {/* Middle-Left: Date & Time */}
+                      <div className="flex items-center gap-3 min-w-[200px]">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
+                          <Calendar className="h-4 w-4 stroke-[2]" />
+                        </div>
+                        <div className="text-xs">
+                          <span className="font-bold text-[#15212B] block">
+                            {formatDisplayDate(booking.scheduledDate)}
+                          </span>
+                          <span className="text-[#64748B] block mt-0.5">{booking.scheduledTimeSlot}</span>
+                        </div>
+                      </div>
+
+                      {/* Middle-Right: Location */}
+                      <div className="flex items-center gap-3 min-w-[240px] max-w-sm">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
+                          <MapPin className="h-4 w-4 stroke-[2]" />
+                        </div>
+                        <div className="text-xs text-[#64748B] leading-tight">
+                          <span className="line-clamp-2">{booking.addressText}</span>
+                        </div>
+                      </div>
+
+                      {/* Right: Status Pill & Arrow Link */}
+                      <div className="flex items-center justify-between lg:justify-end gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-[#F2F8F5]">
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold ${
+                            isConfirmed
+                              ? 'bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]'
+                              : isInProgress
+                              ? 'bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309]'
+                              : 'bg-slate-100 text-slate-700'
+                          }`}
                         >
-                          View Details
-                        </button>
-                        {['ON_THE_WAY', 'ARRIVED', 'IN_PROGRESS'].includes(booking.status) ? (
+                          {isConfirmed ? (
+                            <Check className="h-3 w-3 stroke-[3]" />
+                          ) : (
+                            <Clock className="h-3 w-3 stroke-[2.5]" />
+                          )}
+                          <span>
+                            {isConfirmed
+                              ? 'Confirmed'
+                              : isInProgress
+                              ? 'In Progress'
+                              : booking.status.replace(/_/g, ' ')}
+                          </span>
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedBooking(booking)}
+                            className="rounded-full border border-[#DCE6E1] bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+                          >
+                            View Details
+                          </button>
+
                           <Link
                             href={`/patient/bookings/${booking.id}`}
-                            className="rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-2xs"
+                            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] hover:bg-[#D1FAE5] transition-colors shadow-2xs"
+                            title="Open Booking Overview"
                           >
-                            Track Visit Live
+                            <ArrowRight className="h-4 w-4 stroke-[2.5]" />
                           </Link>
-                        ) : (
-                          <Link
-                            href="/patient/bookings"
-                            className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                          >
-                            Reschedule / Cancel
-                          </Link>
-                        )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
-              <div className="py-10 px-4 text-center bg-[#FAFCFB] rounded-2xl border border-dashed border-slate-200">
-                <Calendar className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-                <p className="text-sm font-bold text-[#102820]">No active visits scheduled at this moment</p>
-                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              <div className="py-12 text-center bg-[#FAFCFB] rounded-2xl border border-dashed border-[#E2EBE7] mt-6">
+                <Calendar className="h-10 w-10 text-slate-300 mx-auto mb-2" />
+                <p className="text-sm font-bold text-[#15212B]">No active appointments scheduled</p>
+                <p className="text-xs text-[#64748B] mt-1 max-w-sm mx-auto">
                   Book a verified home doctor consultation, nursing procedure, or doorstep blood test whenever needed.
                 </p>
                 <Link
                   href="/patient/book"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-5 py-2 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-xs mt-4"
+                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#064E3B] px-5 py-2 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-xs"
                 >
                   <Plus className="h-3.5 w-3.5" />
-                  <span>Book Your First Visit</span>
+                  <span>Book an Appointment</span>
                 </Link>
               </div>
             )}
-          </div>
-        </section>
+          </section>
 
-        {/* SECTION C — HEALTHCARE MANAGEMENT HUB (Animated Fade Up Delay 2) */}
-        <section aria-labelledby="healthcareManagementHeading" className="animate-fade-in-up animate-delay-2">
-          <div className="mb-4">
-            <h2 id="healthcareManagementHeading" className="text-lg font-bold text-[#102820]">
-              Healthcare Management Hub
-            </h2>
-            <p className="text-xs text-slate-500 font-normal">
-              Direct access to your records, appointments, family circles, and personal health metrics
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {/* Card 1: My Bookings */}
-            <div className="card-hover-lift flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs hover:border-[#065F46]/40 hover:shadow-lg transition-all duration-300 group">
+          {/* ================= 5. HEALTHCARE MANAGEMENT HUB ================= */}
+          <section className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                <Layers className="h-5 w-5 stroke-[2]" />
+              </div>
               <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="h-11 w-11 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] group-hover:bg-[#064E3B] group-hover:text-white transition-all duration-300 shadow-2xs">
-                    <Calendar className="h-5 w-5" />
-                  </div>
-                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
-                    {bookings.length} Total
-                  </span>
-                </div>
-                <h3 className="text-base font-bold text-[#102820] group-hover:text-[#065F46] transition-colors">
-                  My Bookings
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Upcoming and previous doorstep visits, consultation status, and care logs.
+                <h2 className="font-heading text-lg sm:text-xl font-bold text-[#15212B]">
+                  Healthcare Management Hub
+                </h2>
+                <p className="text-xs sm:text-sm text-[#64748B] font-normal">
+                  Direct access to your records, appointments, family care, and personal health metrics.
                 </p>
               </div>
-              <div className="mt-5 pt-3.5 border-t border-slate-100">
-                <Link
-                  href="/patient/bookings"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] group-hover:translate-x-1 transition-transform"
-                >
-                  <span>View Bookings</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
             </div>
 
-            {/* Card 2: Medical Records */}
-            <div className="card-hover-lift flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs hover:border-[#065F46]/40 hover:shadow-lg transition-all duration-300 group">
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="h-11 w-11 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] group-hover:bg-[#064E3B] group-hover:text-white transition-all duration-300 shadow-2xs">
-                    <FileText className="h-5 w-5" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {/* Card 1: My Bookings */}
+              <Link
+                href="/patient/bookings"
+                className="group flex flex-col justify-between rounded-[22px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:border-[#B8DCDE] hover:shadow-md transition-all duration-300"
+              >
+                <div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-4 shadow-2xs group-hover:scale-105 transition-transform">
+                    <Calendar className="h-5 w-5 stroke-[2]" />
                   </div>
-                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
-                    {prescriptions.length + labReports.length} Files
-                  </span>
+                  <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                    My Bookings
+                  </h3>
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+                    View and manage all your appointments.
+                  </p>
                 </div>
-                <h3 className="text-base font-bold text-[#102820] group-hover:text-[#065F46] transition-colors">
-                  Medical Records
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Verified clinician prescriptions, NABL lab test panels, and health reports.
-                </p>
-              </div>
-              <div className="mt-5 pt-3.5 border-t border-slate-100">
-                <Link
-                  href="/patient/records"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] group-hover:translate-x-1 transition-transform"
-                >
-                  <span>View Records</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Card 3: Family Members */}
-            <div className="card-hover-lift flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs hover:border-[#065F46]/40 hover:shadow-lg transition-all duration-300 group">
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="h-11 w-11 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] group-hover:bg-[#064E3B] group-hover:text-white transition-all duration-300 shadow-2xs">
-                    <Users className="h-5 w-5" />
+                <div className="mt-6 flex justify-end">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </div>
-                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
-                    {familyMembers.length} Members
-                  </span>
                 </div>
-                <h3 className="text-base font-bold text-[#102820] group-hover:text-[#065F46] transition-colors">
-                  Family Members
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Saved family profiles, dependents, and blood groups for one-click care booking.
-                </p>
-              </div>
-              <div className="mt-5 pt-3.5 border-t border-slate-100">
-                <Link
-                  href="/patient/family"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] group-hover:translate-x-1 transition-transform"
-                >
-                  <span>Manage Family</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
+              </Link>
 
-            {/* Card 4: My Profile & Vitals */}
-            <div className="card-hover-lift flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xs hover:border-[#065F46]/40 hover:shadow-lg transition-all duration-300 group">
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="h-11 w-11 rounded-2xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5] group-hover:bg-[#064E3B] group-hover:text-white transition-all duration-300 shadow-2xs">
-                    <User className="h-5 w-5" />
+              {/* Card 2: Medical Records */}
+              <Link
+                href="/patient/records"
+                className="group flex flex-col justify-between rounded-[22px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:border-[#B8DCDE] hover:shadow-md transition-all duration-300"
+              >
+                <div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-4 shadow-2xs group-hover:scale-105 transition-transform">
+                    <FileText className="h-5 w-5 stroke-[2]" />
                   </div>
-                  <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
-                    Verified
-                  </span>
+                  <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                    Medical Records
+                  </h3>
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+                    Access prescriptions, lab results, and health reports.
+                  </p>
                 </div>
-                <h3 className="text-base font-bold text-[#102820] group-hover:text-[#065F46] transition-colors">
-                  My Profile &amp; Vitals
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Personal contacts, registered home addresses, safety PIN, and vital statistics.
-                </p>
-              </div>
-              <div className="mt-5 pt-3.5 border-t border-slate-100">
-                <Link
-                  href="/patient/account"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] group-hover:translate-x-1 transition-transform"
-                >
-                  <span>View Profile</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION D — QUICK BOOKING (Animated Fade Up Delay 3) */}
-        <section aria-labelledby="quickBookingHeading" className="animate-fade-in-up animate-delay-3">
-          <div className="flex items-center justify-between mb-3.5">
-            <div>
-              <h2 id="quickBookingHeading" className="text-sm font-bold uppercase tracking-wider text-slate-500">
-                Quick Healthcare Dispatch
-              </h2>
-              <p className="text-xs text-slate-400 font-normal">
-                Schedule a routine doctor visit, nurse, attendant, or diagnostic panel
-              </p>
-            </div>
-            <Link href="/services" className="text-xs font-bold text-[#065F46] hover:underline flex items-center gap-1">
-              <span>All 42 Services</span>
-              <span>→</span>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {quickServices.map((qs) => {
-              const ServiceIcon = qs.icon;
-              return (
-                <Link
-                  key={qs.name}
-                  href={qs.href}
-                  className="card-hover-lift flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xs hover:border-[#064E3B] hover:shadow-md transition-all duration-200 group"
-                >
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors duration-200 ${qs.bg}`}>
-                    <ServiceIcon className="h-5 w-5" />
+                <div className="mt-6 flex justify-end">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold text-[#102820] truncate group-hover:text-[#064E3B]">
-                      {qs.name}
-                    </p>
-                    <p className="text-[10.5px] text-slate-500 truncate flex items-center gap-0.5">
-                      <span>Book visit</span>
-                      <span className="transition-transform group-hover:translate-x-0.5">→</span>
-                    </p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
+                </div>
+              </Link>
 
-        {/* SECTION E — SUPPORT & EMERGENCY GUIDANCE (Animated Fade Up Delay 4) */}
-        <section aria-labelledby="supportGuidanceHeading" className="animate-fade-in-up animate-delay-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* 24/7 Clinical Assistance */}
-            <div className="card-hover-lift rounded-3xl border border-[#E2EBE7] bg-white p-6 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+              {/* Card 3: Family Members */}
+              <Link
+                href="/patient/family"
+                className="group flex flex-col justify-between rounded-[22px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:border-[#B8DCDE] hover:shadow-md transition-all duration-300"
+              >
+                <div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-4 shadow-2xs group-hover:scale-105 transition-transform">
+                    <Users className="h-5 w-5 stroke-[2]" />
+                  </div>
+                  <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                    Family Members
+                  </h3>
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+                    Manage family profiles and their healthcare.
+                  </p>
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </div>
+                </div>
+              </Link>
+
+              {/* Card 4: My Profile & Vitals */}
+              <Link
+                href="/patient/account"
+                className="group flex flex-col justify-between rounded-[22px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:border-[#B8DCDE] hover:shadow-md transition-all duration-300"
+              >
+                <div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-4 shadow-2xs group-hover:scale-105 transition-transform">
+                    <User className="h-5 w-5 stroke-[2]" />
+                  </div>
+                  <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                    My Profile &amp; Vitals
+                  </h3>
+                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed">
+                    Update personal details and track your vital stats.
+                  </p>
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </section>
+
+          {/* ================= 6. QUICK HEALTHCARE SERVICES ================= */}
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                  <Zap className="h-5 w-5 stroke-[2]" />
+                </div>
+                <div>
+                  <h2 className="font-heading text-lg font-bold text-[#15212B]">
+                    Quick Healthcare Services
+                  </h2>
+                  <p className="text-xs text-[#64748B]">
+                    Schedule a routine doctor visit, nurse, attendant, or diagnostic service.
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href="/services"
+                className="text-xs sm:text-sm font-bold text-[#065F46] hover:underline flex items-center gap-1"
+              >
+                <span>All 42 Services</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {quickServices.map((qs) => {
+                const IconComponent = qs.icon;
+                return (
+                  <Link
+                    key={qs.name}
+                    href={qs.href}
+                    className="group flex items-center justify-between rounded-[20px] border border-[#E5EAE9] bg-white px-5 py-4 shadow-2xs hover:border-[#064E3B] hover:shadow-xs transition-all"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-colors">
+                        <IconComponent className="h-5 w-5 stroke-[2]" />
+                      </div>
+                      <span className="font-heading text-xs sm:text-sm font-bold text-[#15212B] truncate group-hover:text-[#064E3B] transition-colors">
+                        {qs.name}
+                      </span>
+                    </div>
+
+                    <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#064E3B] group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* ================= 7. BOTTOM SUPPORT / ASSISTANCE AREA ================= */}
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Card: 24/7 Care Coordination */}
+            <div className="relative overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-[#F4FAF7] p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div>
-                <div className="flex items-center gap-2.5 mb-2.5">
-                  <div className="h-9 w-9 rounded-xl bg-[#ECFDF5] text-[#065F46] flex items-center justify-center border border-[#D1FAE5]">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]">
                     <PhoneCall className="h-4 w-4" />
                   </div>
-                  <h3 id="supportGuidanceHeading" className="text-sm font-bold text-[#102820]">
+                  <h3 className="font-heading text-base font-bold text-[#15212B]">
                     Vellora 24/7 Care Coordination
                   </h3>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Need assistance with your booking, clinician dispatch updates, or medical prescriptions? Our triage team is available round the clock.
+                <p className="text-xs text-[#64748B] leading-relaxed max-w-sm">
+                  Need assistance with your booking, clinician dispatch updates, or medical prescriptions?
                 </p>
-                <div className="mt-3.5 text-xs">
-                  <span className="font-semibold text-slate-500">Toll-Free Helpline: </span>
-                  <span className="font-bold text-[#065F46] tracking-wide">1800-123-CARE (2273)</span>
+                <div className="mt-4">
+                  <Link
+                    href="/patient/support"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#DCE6E1] bg-white px-5 py-2 text-xs font-bold text-[#15212B] hover:bg-white/80 transition-colors shadow-2xs cursor-pointer"
+                  >
+                    <span>Open Assistance Hub</span>
+                    <ArrowRight className="h-3.5 w-3.5 text-[#065F46]" />
+                  </Link>
                 </div>
               </div>
-              <div className="mt-5 pt-3.5 border-t border-slate-100">
-                <Link
-                  href="/patient/support"
-                  className="group inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] hover:underline"
-                >
-                  <span>Open Assistance Hub</span>
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              </div>
+
+              {/* Headset Illustration */}
+              <CareCoordinationIllustration />
             </div>
 
-            {/* Regional Emergency Guidance (Accurate: 112 / 108 Ambulance) */}
-            <div className="card-hover-lift rounded-3xl border border-red-200 bg-red-50/70 p-6 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+            {/* Right Card: Emergency Medical Guidance */}
+            <div className="relative overflow-hidden rounded-[26px] border border-[#FECACA] bg-[#FEF2F2] p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div>
-                <div className="flex items-center gap-2.5 mb-2.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-600 text-white text-xs font-bold shadow-2xs">
-                    !
-                  </span>
-                  <h3 className="text-sm font-bold text-red-950">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-100 text-red-700">
+                    <AlertTriangle className="h-4 w-4" />
+                  </div>
+                  <h3 className="font-heading text-base font-bold text-[#991B1B]">
                     Emergency Medical Guidance
                   </h3>
                 </div>
-                <p className="text-xs text-red-900 leading-relaxed">
-                  Vellora Health provides scheduled home healthcare. For acute life-threatening emergencies (severe chest pain, respiratory distress, major trauma), immediately contact public ambulance dispatch.
+                <p className="text-xs text-[#7F1D1D]/80 leading-relaxed max-w-sm">
+                  For acute life-threatening emergencies, immediately contact public ambulance dispatch.
                 </p>
-                <div className="mt-3.5 flex items-center gap-4 text-xs font-bold text-red-900">
-                  <span className="bg-white/80 px-2 py-0.5 rounded-md border border-red-200">National: 112</span>
-                  <span className="bg-white/80 px-2 py-0.5 rounded-md border border-red-200">Ambulance: 108</span>
+                <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                  <a
+                    href="tel:112"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#FCA5A5] px-3.5 py-1 text-xs font-bold text-[#991B1B] hover:bg-red-50 transition-colors shadow-2xs"
+                  >
+                    <Phone className="h-3 w-3" />
+                    <span>National: 112</span>
+                  </a>
+                  <a
+                    href="tel:108"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#FCA5A5] px-3.5 py-1 text-xs font-bold text-[#991B1B] hover:bg-red-50 transition-colors shadow-2xs"
+                  >
+                    <span>🚑 Ambulance: 108</span>
+                  </a>
                 </div>
               </div>
-              <div className="mt-5 pt-3.5 border-t border-red-200/60 flex items-center justify-between">
-                <span className="text-[11px] text-red-800 font-medium">Public Emergency Services</span>
-                <Link
-                  href="/patient/support"
-                  className="rounded-full bg-red-700 px-3.5 py-1 text-[11px] font-bold text-white hover:bg-red-800 transition-colors shadow-2xs"
-                >
-                  Emergency Protocol
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
 
-      {/* APPOINTMENT DETAILS MINIMAL POPUP MODAL */}
-      {selectedBooking && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-200"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="bookingModalTitle"
-          onClick={() => setSelectedBooking(null)}
-        >
+              {/* Ambulance Illustration */}
+              <EmergencyAmbulanceIllustration />
+            </div>
+          </section>
+        </div>
+
+        {/* ================= MODAL APPOINTMENT POP-UP ================= */}
+        {selectedBooking && (
           <div
-            className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-[#E2EBE7] bg-white p-6 sm:p-7 shadow-2xl animate-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 animate-fade-in"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bookingModalTitle"
+            onClick={() => setSelectedBooking(null)}
           >
-            {/* Top Header: Title, Reference & Close */}
-            <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200 shadow-2xs">
-                    {selectedBooking.bookingNumber}
-                  </span>
+            <div
+              className="relative w-full max-w-lg rounded-[26px] bg-white p-6 sm:p-7 shadow-2xl border border-[#E2EBE7] animate-scale-up"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between border-b border-[#F2F8F5] pb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]">
+                    <Calendar className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 id="bookingModalTitle" className="font-heading text-base font-bold text-[#15212B]">
+                      Appointment Details
+                    </h3>
+                    <p className="text-xs text-[#64748B] font-mono">{selectedBooking.bookingNumber}</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedBooking(null)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer"
+                  aria-label="Close modal"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="mt-4 space-y-4 text-xs">
+                {/* Service & Status */}
+                <div className="flex items-center justify-between rounded-xl bg-[#F7FAF9] p-3 border border-[#E8F0EC]">
+                  <div>
+                    <span className="text-[11px] text-[#64748B] block">Service Type</span>
+                    <strong className="text-sm font-bold text-[#15212B] mt-0.5 block">
+                      {selectedBooking.serviceName}
+                    </strong>
+                  </div>
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${
+                    className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase ${
                       selectedBooking.status === 'CONFIRMED'
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : ['IN_PROGRESS', 'ON_THE_WAY', 'ARRIVED'].includes(selectedBooking.status)
-                        ? 'bg-amber-50 text-amber-800 border border-amber-200 animate-pulse'
-                        : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        ? 'bg-[#ECFDF5] text-[#065F46] border border-[#D1FAE5]'
+                        : 'bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]'
                     }`}
                   >
                     ● {selectedBooking.status.replace(/_/g, ' ')}
                   </span>
                 </div>
-                <h3 id="bookingModalTitle" className="text-lg font-bold text-[#102820] leading-snug">
-                  {selectedBooking.serviceName}
-                </h3>
+
+                {/* Patient & Beneficiary */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-[#E5EAE9] p-3">
+                    <span className="text-slate-400 block text-[11px]">Patient Name</span>
+                    <span className="font-bold text-[#15212B] mt-0.5 block">
+                      {selectedBooking.beneficiaryName}
+                    </span>
+                    <span className="text-slate-500 text-[11px]">({selectedBooking.beneficiaryRelation})</span>
+                  </div>
+                  <div className="rounded-xl border border-[#E5EAE9] p-3">
+                    <span className="text-slate-400 block text-[11px]">Contact Phone</span>
+                    <span className="font-bold text-[#15212B] mt-0.5 block">{selectedBooking.patientPhone}</span>
+                  </div>
+                </div>
+
+                {/* Date, Time & Address */}
+                <div className="rounded-xl border border-[#E5EAE9] p-3 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
+                    <span>
+                      <strong>Date:</strong> {formatDisplayDate(selectedBooking.scheduledDate)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
+                    <span>
+                      <strong>Time Window:</strong> {selectedBooking.scheduledTimeSlot}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-3.5 w-3.5 text-[#065F46] shrink-0 mt-0.5" />
+                    <span>
+                      <strong>Address:</strong> {selectedBooking.addressText}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Assigned Clinician (if any) */}
+                {selectedBooking.providerName && (
+                  <div className="rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] p-3 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#065F46] block">
+                        Assigned Clinician
+                      </span>
+                      <strong className="text-xs text-[#15212B] block mt-0.5">
+                        {selectedBooking.providerName}
+                      </strong>
+                    </div>
+                    <span className="text-[10px] font-bold text-[#065F46] bg-white px-2 py-0.5 rounded-full border border-[#D1FAE5]">
+                      Verified Practitioner
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <button
-                type="button"
-                onClick={() => setSelectedBooking(null)}
-                className="rounded-full p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
-                aria-label="Close dialog"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
+              {/* Modal Footer */}
+              <div className="mt-5 pt-4 border-t border-[#F2F8F5] flex items-center justify-between">
+                <Link
+                  href={`/patient/bookings/${selectedBooking.id}`}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#065F46] hover:underline"
+                >
+                  <span>Open Full Tracker</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
 
-            {/* Clean Details Grid */}
-            <div className="mt-4 space-y-3 text-xs text-slate-600">
-              {/* Schedule & Time */}
-              <div className="flex items-center gap-3 rounded-2xl bg-[#F8FAF9] p-3.5 border border-slate-100">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100/70 text-[#065F46] shrink-0">
-                  <Calendar className="h-4.5 w-4.5" />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">
-                    {selectedBooking.scheduledDate} • {selectedBooking.scheduledTimeSlot}
-                  </p>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Doorstep Bedside Visit</p>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedBooking(null)}
+                  className="rounded-full bg-[#064E3B] px-5 py-2 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-2xs"
+                >
+                  Close
+                </button>
               </div>
-
-              {/* Patient / Beneficiary & Location */}
-              <div className="flex items-start gap-3 rounded-2xl bg-[#F8FAF9] p-3.5 border border-slate-100">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100/70 text-blue-700 shrink-0">
-                  <User className="h-4.5 w-4.5" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-slate-900">
-                    {selectedBooking.beneficiaryName}{' '}
-                    <span className="font-normal text-slate-500">({selectedBooking.beneficiaryRelation})</span>
-                  </p>
-                  <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-                    <span className="truncate">{selectedBooking.addressText}</span>
-                  </p>
-                </div>
-              </div>
-
-              {/* Assigned Clinician & Bedside Safety PIN */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="rounded-2xl bg-[#F8FAF9] p-3 border border-slate-100">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Assigned Clinician</p>
-                  <p className="font-bold text-slate-900 mt-1 flex items-center gap-1.5 text-xs truncate">
-                    <Stethoscope className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
-                    <span className="truncate">{selectedBooking.providerName || 'Pending Clinician Dispatch'}</span>
-                  </p>
-                </div>
-
-                <div className="rounded-2xl bg-[#F8FAF9] p-3 border border-slate-100">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Bedside Safety PIN</p>
-                  <p className="font-mono font-black text-emerald-800 text-sm mt-1 flex items-center gap-1.5">
-                    <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-                    <span>{selectedBooking.verificationPin || '4829'}</span>
-                  </p>
-                </div>
-              </div>
-
-              {/* Payment & Rate Status */}
-              <div className="flex items-center justify-between rounded-2xl bg-[#F8FAF9] px-4 py-2.5 border border-slate-100">
-                <span className="text-slate-500">Service Fee:</span>
-                <span className="font-bold text-slate-900">
-                  ${selectedBooking.totalAmount || 95}.00 •{' '}
-                  <span className="text-emerald-700 font-semibold">{selectedBooking.paymentStatus || 'Paid'}</span>
-                </span>
-              </div>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-end gap-2.5">
-              <button
-                type="button"
-                onClick={() => setSelectedBooking(null)}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
-              >
-                Close
-              </button>
-
-              <Link
-                href={`/patient/bookings/${selectedBooking.id}`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4.5 py-2 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-xs"
-              >
-                <span>Full Tracking Page</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </PatientLayout>
   );
 }
