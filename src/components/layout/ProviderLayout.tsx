@@ -16,24 +16,16 @@ import {
   ChevronDown,
   LogOut,
   MapPin,
-  ShieldCheck,
   Menu,
   X,
-  Stethoscope,
-  Activity,
-  HeartHandshake,
-  UserCheck,
-  Syringe,
   Sparkles,
   ArrowRight,
-  RefreshCw,
 } from 'lucide-react';
 
 export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, switchRole, logout } = useAuth();
-  const [isOnline, setIsOnline] = useState<boolean>(currentUser?.isOnline ?? true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -48,20 +40,6 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  // Sync duty status with currentUser
-  useEffect(() => {
-    if (currentUser?.isOnline !== undefined) {
-      setIsOnline(currentUser.isOnline);
-    }
-  }, [currentUser]);
-
-  const toggleDutyStatus = () => {
-    if (!currentUser) return;
-    const nextStatus = !isOnline;
-    setIsOnline(nextStatus);
-    db.updateUser(currentUser.id, { isOnline: nextStatus });
-  };
 
   // Pending incoming dispatches badge count
   const pendingOffersCount = currentUser
@@ -122,10 +100,10 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
 
   return (
     <div className="min-h-screen bg-[#F7FBF9] text-[#102723] font-sans antialiased">
-      {/* Top Navbar */}
-      <header className="sticky top-0 z-40 border-b border-[#D9ECE7] bg-white/95 backdrop-blur-md shadow-[0_2px_12px_rgba(6,95,70,0.03)]">
-        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
-          {/* Left: Vellora Brand & Workspace Tag */}
+      {/* Top Navbar with spacious padding and clean vertical breathing room */}
+      <header className="sticky top-0 z-40 border-b border-[#D9ECE7] bg-white/95 backdrop-blur-md shadow-[0_2px_16px_rgba(6,95,70,0.03)]">
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
+          {/* Left: Vellora Brand with Clinician Portal STACKED BELOW */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -135,24 +113,23 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
 
-            <Link href="/provider/dashboard" className="flex items-center gap-2.5 shrink-0 group">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#065F46] text-white font-black text-lg shadow-xs group-hover:bg-[#054d39] transition-colors">
+            <Link href="/provider/dashboard" className="flex items-center gap-3 shrink-0 group">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#065F46] text-white font-black text-xl shadow-xs group-hover:bg-[#054d39] transition-colors">
                 +
               </span>
-              <div className="flex items-center gap-2">
-                <span className="font-heading text-lg font-bold tracking-tight text-[#102723]">
+              <div className="flex flex-col text-left">
+                <span className="font-heading text-lg sm:text-xl font-bold tracking-tight text-[#102723] leading-tight">
                   Vellora <span className="font-medium text-slate-500 text-sm">Health</span>
                 </span>
-                <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#065F46]">
-                  <Sparkles className="h-2.5 w-2.5 text-[#10B981]" />
-                  <span>Clinician Portal</span>
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#065F46] leading-none mt-0.5">
+                  Clinician Portal
                 </span>
               </div>
             </Link>
           </div>
 
-          {/* Center: Sleek Desktop Navigation Tabs */}
-          <nav className="hidden lg:flex items-center gap-1 p-1 rounded-full bg-[#F2F8F5] border border-[#D9ECE7]/90 shadow-2xs">
+          {/* Center: Spacious, Uncrowded Desktop Navigation Tabs */}
+          <nav className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-full bg-[#F2F8F5] border border-[#D9ECE7] shadow-2xs">
             {navLinks.map((item) => {
               const isActive =
                 pathname === item.href ||
@@ -163,17 +140,17 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all whitespace-nowrap ${
                     isActive
                       ? 'bg-[#065F46] text-white shadow-xs'
                       : 'text-slate-600 hover:text-[#102723] hover:bg-white'
                   }`}
                 >
-                  <ItemIcon className={`h-3.5 w-3.5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
+                  <ItemIcon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
                   <span>{item.label}</span>
                   {item.badge !== undefined && item.badge > 0 && (
                     <span
-                      className={`ml-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-black ${
+                      className={`ml-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1.5 text-[10px] font-black ${
                         isActive ? 'bg-white text-[#065F46]' : 'bg-[#065F46] text-white'
                       }`}
                     >
@@ -185,61 +162,19 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
             })}
           </nav>
 
-          {/* Right: Duty Toggle & Clinician Profile Menu */}
+          {/* Right: Clinician Profile Dropdown (On Duty switch removed per request for clean spaciousness) */}
           <div className="flex items-center gap-3">
-            {/* On Duty / Off Duty Toggle Pill */}
-            <div
-              className={`flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors shadow-2xs ${
-                isOnline
-                  ? 'border-[#A7F3D0] bg-[#ECFDF5]'
-                  : 'border-slate-200 bg-slate-50'
-              }`}
-            >
-              <span className="relative flex h-2 w-2 items-center justify-center">
-                {isOnline && (
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                )}
-                <span
-                  className={`relative inline-flex rounded-full h-2 w-2 ${
-                    isOnline ? 'bg-emerald-600' : 'bg-slate-400'
-                  }`}
-                />
-              </span>
-              <span
-                className={`text-xs font-bold whitespace-nowrap hidden sm:inline ${
-                  isOnline ? 'text-[#065F46]' : 'text-slate-500'
-                }`}
-              >
-                {isOnline ? 'On Duty (Accepting)' : 'Off Duty'}
-              </span>
-              <button
-                type="button"
-                onClick={toggleDutyStatus}
-                title={isOnline ? 'Click to go Off Duty' : 'Click to go On Duty'}
-                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-                  isOnline ? 'bg-[#065F46]' : 'bg-slate-300'
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
-                    isOnline ? 'translate-x-4' : 'translate-x-0'
-                  }`}
-                />
-              </button>
-            </div>
-
-            {/* Practitioner Dropdown Menu */}
             <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center gap-2.5 rounded-full border border-[#D9ECE7] bg-white hover:bg-[#F2F8F5] p-1 pr-3 transition-colors shadow-2xs group"
+                className="flex items-center gap-3 rounded-full border border-[#D9ECE7] bg-white hover:bg-[#F2F8F5] p-1.5 pr-4 transition-all shadow-2xs group"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] font-black text-xs">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46] font-black text-xs shadow-2xs">
                   {initials}
                 </div>
                 <div className="hidden sm:block text-left leading-tight">
-                  <span className="block font-bold text-xs text-[#102723] truncate max-w-[120px]">
+                  <span className="block font-bold text-xs text-[#102723] truncate max-w-[130px]">
                     {currentUser?.name || 'Practitioner'}
                   </span>
                   <span className="block text-[10px] font-bold uppercase tracking-wider text-[#065F46]">
@@ -247,26 +182,26 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                   </span>
                 </div>
                 <ChevronDown
-                  className={`h-3.5 w-3.5 text-slate-400 transition-transform ${
+                  className={`h-4 w-4 text-slate-400 transition-transform ${
                     profileDropdownOpen ? 'rotate-180 text-[#065F46]' : ''
                   }`}
                 />
               </button>
 
-              {/* Profile Dropdown Card */}
+              {/* Profile Dropdown Popover */}
               {profileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-72 rounded-[22px] border border-[#D9ECE7] bg-white p-2.5 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="absolute right-0 mt-2.5 w-76 rounded-[24px] border border-[#D9ECE7] bg-white p-3 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                   {/* Practitioner Header */}
-                  <div className="p-3 rounded-xl bg-[#F7FBF9] border border-[#D9ECE7] mb-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#065F46] text-white font-black text-sm shadow-xs">
+                  <div className="p-3.5 rounded-2xl bg-[#F7FBF9] border border-[#D9ECE7] mb-2.5">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#065F46] text-white font-black text-sm shadow-xs">
                         {initials}
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="font-heading text-xs font-bold text-[#102723] truncate">
                           {currentUser?.name || 'Practitioner'}
                         </p>
-                        <p className="text-[10px] text-slate-500 truncate">{currentUser?.email || 'clinician@vellora.com'}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{currentUser?.email || 'clinician@vellora.com'}</p>
                         <span className="mt-1 inline-block rounded-md bg-[#ECFDF5] border border-[#D1FAE5] px-2 py-0.5 text-[9px] font-bold text-[#065F46]">
                           {currentUser?.specialty || roleLabel}
                         </span>
@@ -304,8 +239,8 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                     </Link>
                   </div>
 
-                  {/* Fast Clinical Role Switcher for Testing/Demo */}
-                  <div className="mt-2 pt-2 border-t border-[#F2F8F5]">
+                  {/* Fast Clinical Role Switcher */}
+                  <div className="mt-2.5 pt-2.5 border-t border-[#F2F8F5]">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
                       Switch Clinician Role
                     </p>
@@ -334,14 +269,14 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                   </div>
 
                   {/* Portals & Sign out */}
-                  <div className="mt-2 pt-2 border-t border-[#F2F8F5] space-y-0.5 text-xs font-medium">
+                  <div className="mt-2.5 pt-2.5 border-t border-[#F2F8F5] space-y-0.5 text-xs font-medium">
                     <Link
                       href="/patient/dashboard"
                       onClick={() => setProfileDropdownOpen(false)}
                       className="flex items-center justify-between rounded-xl px-3 py-2 text-slate-600 hover:bg-[#F2F8F5] hover:text-[#065F46] transition-colors"
                     >
                       <span>Switch to Patient Portal</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
 
                     <Link
@@ -350,7 +285,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
                       className="flex items-center justify-between rounded-xl px-3 py-2 text-slate-600 hover:bg-[#F2F8F5] hover:text-[#065F46] transition-colors"
                     >
                       <span>Admin Management</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
 
                     <button
@@ -372,7 +307,7 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
           </div>
         </div>
 
-        {/* Mobile Dropdown Nav Menu */}
+        {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (
           <div className="border-t border-[#D9ECE7] bg-white px-4 py-4 lg:hidden shadow-lg animate-in slide-in-from-top-2 duration-150">
             <div className="space-y-1 mb-4">
