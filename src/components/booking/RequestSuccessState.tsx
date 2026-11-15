@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { CheckCircle2, Clock, ArrowRight, Home } from 'lucide-react';
 
@@ -28,6 +28,11 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
   primaryActionHref,
   primaryActionLabel,
 }) => {
+  // Ensure the viewport automatically scrolls smoothly to top when the success card is mounted
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const isEnquiry = type === 'QUICK_ENQUIRY';
   const isDoctor = type === 'DOCTOR_CONSULTATION';
 
@@ -45,8 +50,55 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
 
   return (
     <div className="container max-w-2xl mx-auto px-4 py-8 sm:py-12">
+      {/* Inline styles for guaranteed high-priority smooth animations */}
+      <style>{`
+        @keyframes successCardSpring {
+          0% {
+            opacity: 0;
+            transform: translateY(44px) scale(0.95);
+          }
+          60% {
+            opacity: 1;
+            transform: translateY(-5px) scale(1.008);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        @keyframes successIconSpring {
+          0% {
+            opacity: 0;
+            transform: scale(0.3) rotate(-22deg);
+          }
+          60% {
+            opacity: 1;
+            transform: scale(1.2) rotate(4deg);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+          }
+        }
+        @keyframes successItemSlideUp {
+          0% {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+
       {/* Animated Success Card Container */}
-      <div className="animate-success-card overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white p-6 sm:p-10 shadow-[0_16px_40px_rgba(6,78,59,0.08)] text-center relative">
+      <div
+        className="overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white p-6 sm:p-10 shadow-[0_18px_45px_rgba(6,78,59,0.09)] text-center relative"
+        style={{
+          animation: 'successCardSpring 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        }}
+      >
         {/* Soft background ambient glow */}
         <div
           className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-[#ECFDF5] opacity-60 blur-3xl"
@@ -58,14 +110,21 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
         />
 
         {/* Mint Success Icon with Pop & Bounce Animation */}
-        <div className="relative z-10 mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5] border border-[#A7F3D0] text-[#065F46] shadow-sm mb-5 animate-success-icon">
+        <div
+          className="relative z-10 mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5] border border-[#A7F3D0] text-[#065F46] shadow-sm mb-5"
+          style={{
+            animation: 'successIconSpring 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.15s both',
+          }}
+        >
           <CheckCircle2 className="h-8 w-8 stroke-[2.4]" />
         </div>
 
         {/* Reference Pill with Staggered Fade Up */}
         <div
-          className="relative z-10 inline-flex items-center gap-1.5 rounded-full bg-[#F2F8F5] border border-[#E2EBE7] px-3.5 py-1 text-xs font-bold text-slate-700 mb-3 animate-element-fade-up"
-          style={{ animationDelay: '220ms' }}
+          className="relative z-10 inline-flex items-center gap-1.5 rounded-full bg-[#F2F8F5] border border-[#E2EBE7] px-3.5 py-1 text-xs font-bold text-slate-700 mb-3"
+          style={{
+            animation: 'successItemSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both',
+          }}
         >
           <span className="text-slate-400 font-medium">Reference:</span>
           <span className="text-[#065F46] font-mono">{referenceNumber}</span>
@@ -73,8 +132,10 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
 
         {/* Title & Subtitle with Staggered Entrance */}
         <div
-          className="relative z-10 animate-element-fade-up"
-          style={{ animationDelay: '300ms' }}
+          className="relative z-10"
+          style={{
+            animation: 'successItemSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.33s both',
+          }}
         >
           <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#102820] tracking-tight">
             {title || defaultTitle}
@@ -86,8 +147,10 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
 
         {/* Next Steps Box with Staggered Entrance */}
         <div
-          className="relative z-10 mt-6 rounded-2xl bg-[#F5F9F7] border border-[#E2EBE7] p-4 sm:p-5 text-left text-xs space-y-3 animate-element-fade-up shadow-2xs"
-          style={{ animationDelay: '380ms' }}
+          className="relative z-10 mt-6 rounded-2xl bg-[#F5F9F7] border border-[#E2EBE7] p-4 sm:p-5 text-left text-xs space-y-3 shadow-2xs"
+          style={{
+            animation: 'successItemSlideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both',
+          }}
         >
           <p className="font-extrabold uppercase tracking-wider text-[11px] text-[#065F46] flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5" />
@@ -132,8 +195,10 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
         {/* Summary Details if provided */}
         {details.length > 0 && (
           <div
-            className="relative z-10 mt-5 divide-y divide-[#F2F8F5] rounded-xl border border-[#E2EBE7] bg-white p-3.5 text-xs text-left animate-element-fade-up shadow-2xs"
-            style={{ animationDelay: '460ms' }}
+            className="relative z-10 mt-5 divide-y divide-[#F2F8F5] rounded-xl border border-[#E2EBE7] bg-white p-3.5 text-xs text-left shadow-2xs"
+            style={{
+              animation: 'successItemSlideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.50s both',
+            }}
           >
             {details.map((d, i) => (
               <div key={i} className="flex justify-between py-2 text-slate-600">
@@ -146,8 +211,10 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
 
         {/* Action Buttons with Staggered Entrance */}
         <div
-          className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-3 animate-element-fade-up"
-          style={{ animationDelay: '540ms' }}
+          className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-3"
+          style={{
+            animation: 'successItemSlideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.58s both',
+          }}
         >
           <Link
             href="/"

@@ -233,7 +233,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
             type="DOCTOR_CONSULTATION"
             referenceNumber={submittedBooking.referenceNumber}
             title="Consultation Request Received"
-            subtitle={`Your request for Dr. ${doctor.name} has been placed. Our clinical care desk is verifying doctor availability.`}
+            subtitle={`Your request for ${doctor.name.startsWith('Dr.') ? doctor.name : 'Dr. ' + doctor.name} has been placed. Our clinical care desk is verifying doctor availability.`}
             patientName={submittedBooking.patientName}
             phone={submittedBooking.phone}
             primaryActionHref="/doctors"
