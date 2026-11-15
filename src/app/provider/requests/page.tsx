@@ -77,9 +77,9 @@ export default function ProviderJobRequestsPage() {
 
   return (
     <ProviderLayout>
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 space-y-6">
+      <div className="mx-auto max-w-[1360px] px-4 py-8 sm:px-6 space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in-up">
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#065F46]">
@@ -89,7 +89,7 @@ export default function ProviderJobRequestsPage() {
                 {totalOffersCount} Active Offers
               </span>
             </div>
-            <h1 className="text-2xl font-black text-[#102723] sm:text-3xl mt-0.5">
+            <h1 className="font-heading text-2xl font-black text-[#15212B] sm:text-3xl tracking-tight mt-0.5">
               Incoming Visit Dispatches
             </h1>
             <p className="mt-1 text-xs text-slate-500">
@@ -99,17 +99,17 @@ export default function ProviderJobRequestsPage() {
 
           <Link
             href="/provider/appointments"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-[#D9ECE7] bg-white hover:bg-[#F2F8F5] px-4 py-2 text-xs font-bold text-[#102723] transition-colors self-start sm:self-center"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[#D9ECE7] bg-white hover:bg-[#F2F8F5] px-4 py-2.5 text-xs font-bold text-[#102723] shadow-2xs hover:shadow-xs transition-all self-start sm:self-center"
           >
             <span>My Active Schedule</span>
-            <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
         {/* Accepted notification pill */}
         {acceptedId && (
-          <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-xs font-bold text-emerald-800 flex items-center gap-2 shadow-2xs">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+          <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-xs font-bold text-emerald-800 flex items-center gap-2 shadow-2xs animate-fade-in-up">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 animate-bounce" />
             <span>Visit accepted! Launching clinical appointment cockpit...</span>
           </div>
         )}
@@ -117,9 +117,9 @@ export default function ProviderJobRequestsPage() {
         {/* Job Offers List */}
         <div className="space-y-4">
           {totalOffersCount === 0 ? (
-            <div className="rounded-[24px] border border-dashed border-[#D9ECE7] bg-white p-12 text-center text-slate-500">
+            <div className="rounded-[24px] border border-dashed border-[#D9ECE7] bg-white p-12 text-center text-slate-500 animate-fade-in-up">
               <Bell className="mx-auto h-8 w-8 text-slate-300 mb-2" />
-              <h3 className="font-bold text-sm text-[#102723]">No Active Dispatch Requests Right Now</h3>
+              <h3 className="font-heading font-extrabold text-sm text-[#102723]">No Active Dispatch Requests Right Now</h3>
               <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
                 You are currently on duty and eligible for new patient requests. When patients book in your service zones, new job offers will appear here automatically.
               </p>
@@ -127,10 +127,10 @@ export default function ProviderJobRequestsPage() {
           ) : (
             <>
               {/* Direct Job Offers */}
-              {jobOffers.map((offer) => (
+              {jobOffers.map((offer, oIdx) => (
                 <div
                   key={offer.id}
-                  className="rounded-[22px] border border-[#D1FAE5] bg-gradient-to-r from-white via-white to-[#F2F8F5] p-6 shadow-2xs hover:shadow-xs transition-shadow"
+                  className={`rounded-[22px] border border-[#D1FAE5] bg-gradient-to-r from-white via-white to-[#F2F8F5] p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-${Math.min(oIdx + 1, 4)}`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#F2F8F5]">
                     <div>
@@ -141,12 +141,12 @@ export default function ProviderJobRequestsPage() {
                         </span>
                         <span className="font-mono text-xs text-slate-400">{offer.id}</span>
                       </div>
-                      <h3 className="text-lg font-bold text-[#102723] mt-1">{offer.serviceName}</h3>
+                      <h3 className="font-heading text-lg font-extrabold text-[#15212B] tracking-tight mt-1">{offer.serviceName}</h3>
                     </div>
 
                     <div className="text-left sm:text-right">
-                      <span className="text-xs text-slate-400 font-bold uppercase">Estimated Net Payout</span>
-                      <p className="text-2xl font-black text-[#065F46]">${offer.estimatedFee}</p>
+                      <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Estimated Net Payout</span>
+                      <p className="font-heading text-2xl font-black text-[#065F46] tracking-tight tabular-nums">${offer.estimatedFee}</p>
                     </div>
                   </div>
 
@@ -157,7 +157,7 @@ export default function ProviderJobRequestsPage() {
                     </div>
                     <div className="flex items-center gap-2 text-slate-700">
                       <Clock className="h-4 w-4 text-[#065F46] shrink-0" />
-                      <span>{offer.scheduledTimeSlot}</span>
+                      <span className="font-mono font-medium">{offer.scheduledTimeSlot}</span>
                     </div>
                     <div className="flex items-center gap-2 text-slate-700">
                       <MapPin className="h-4 w-4 text-[#065F46] shrink-0" />
@@ -182,7 +182,7 @@ export default function ProviderJobRequestsPage() {
                       <button
                         type="button"
                         onClick={() => handleAcceptOffer(offer)}
-                        className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#065F46] hover:bg-[#054d39] px-6 py-2 text-xs font-bold text-white shadow-xs transition-colors"
+                        className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#065F46] hover:bg-[#054d39] px-6 py-2 text-xs font-bold text-white shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
                       >
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         <span>Accept Visit (${offer.estimatedFee})</span>
@@ -193,10 +193,10 @@ export default function ProviderJobRequestsPage() {
               ))}
 
               {/* Unassigned Pool Bookings */}
-              {unassignedBookings.map((b) => (
+              {unassignedBookings.map((b, bIdx) => (
                 <div
                   key={b.id}
-                  className="rounded-[22px] border border-[#D9ECE7] bg-white p-6 shadow-2xs hover:shadow-xs transition-shadow"
+                  className={`rounded-[22px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-${Math.min(bIdx + 2, 5)}`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#F2F8F5]">
                     <div>
@@ -206,13 +206,13 @@ export default function ProviderJobRequestsPage() {
                         </span>
                         <span className="font-mono text-xs text-slate-400">{b.bookingNumber}</span>
                       </div>
-                      <h3 className="text-lg font-bold text-[#102723] mt-1">{b.serviceName}</h3>
-                      <p className="text-xs text-slate-500 mt-0.5">Patient: {b.patientName}</p>
+                      <h3 className="font-heading text-lg font-extrabold text-[#15212B] tracking-tight mt-1">{b.serviceName}</h3>
+                      <p className="text-xs text-slate-500 mt-0.5">Patient: <strong className="text-slate-700">{b.patientName}</strong></p>
                     </div>
 
                     <div className="text-left sm:text-right">
-                      <span className="text-xs text-slate-400 font-bold uppercase">Estimated Net Payout</span>
-                      <p className="text-2xl font-black text-[#065F46]">${b.totalAmount}</p>
+                      <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Estimated Net Payout</span>
+                      <p className="font-heading text-2xl font-black text-[#065F46] tracking-tight tabular-nums">${b.totalAmount}</p>
                     </div>
                   </div>
 
@@ -223,7 +223,7 @@ export default function ProviderJobRequestsPage() {
                     </div>
                     <div className="flex items-center gap-2 text-slate-700">
                       <Clock className="h-4 w-4 text-[#065F46] shrink-0" />
-                      <span>{b.scheduledTimeSlot}</span>
+                      <span className="font-mono font-medium">{b.scheduledTimeSlot}</span>
                     </div>
                     <div className="flex items-center gap-2 text-slate-700">
                       <MapPin className="h-4 w-4 text-[#065F46] shrink-0" />
@@ -239,7 +239,7 @@ export default function ProviderJobRequestsPage() {
                     <button
                       type="button"
                       onClick={() => handleClaimBooking(b)}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#065F46] hover:bg-[#054d39] px-6 py-2 text-xs font-bold text-white shadow-xs transition-colors"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#065F46] hover:bg-[#054d39] px-6 py-2 text-xs font-bold text-white shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <CheckCircle2 className="h-3.5 w-3.5" />
                       <span>Claim &amp; Accept Visit</span>

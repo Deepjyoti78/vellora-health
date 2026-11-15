@@ -361,8 +361,10 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
         )}
       </header>
 
-      {/* Main Content Area */}
-      <main className="pb-16">{children}</main>
+      {/* Main Content Area with Smooth Page Transition Animation */}
+      <main key={pathname} className="pb-16 animate-provider-page-enter">
+        {children}
+      </main>
     </div>
   );
 };

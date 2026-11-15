@@ -151,28 +151,28 @@ export default function ProviderAppointmentCockpitPage({
 
   return (
     <ProviderLayout>
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-[1360px] px-4 py-8 sm:px-6 space-y-6">
         {/* Header Bar */}
-        <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center animate-fade-in-up">
           <div>
             <div className="flex items-center gap-2">
               <Link
                 href="/provider/appointments"
-                className="flex items-center gap-1 text-xs font-bold text-[#116b70] hover:underline"
+                className="flex items-center gap-1 text-xs font-bold text-[#065F46] hover:underline"
               >
                 <Icon name="arrow-left" className="h-3 w-3" />
                 Back to Appointments
               </Link>
-              <span className="text-gray-300">•</span>
-              <span className="font-mono text-xs font-bold text-gray-500">
+              <span className="text-slate-300">•</span>
+              <span className="font-mono text-xs font-bold text-slate-500">
                 {booking.bookingNumber}
               </span>
             </div>
-            <h1 className="mt-1 text-2xl font-black text-gray-900 sm:text-3xl">
+            <h1 className="font-heading mt-1 text-2xl font-black text-[#15212B] sm:text-3xl tracking-tight">
               Visit Cockpit: {booking.beneficiaryName}
             </h1>
-            <p className="mt-0.5 text-xs text-gray-500">
-              Service: <strong className="text-gray-900">{booking.serviceName}</strong> • Scheduled: {booking.scheduledTimeSlot}
+            <p className="mt-0.5 text-xs text-slate-500">
+              Service: <strong className="text-[#15212B]">{booking.serviceName}</strong> • Scheduled: {booking.scheduledTimeSlot}
             </p>
           </div>
 
@@ -180,7 +180,7 @@ export default function ProviderAppointmentCockpitPage({
           <span
             className={`rounded-full px-3 py-1 text-xs font-bold self-start sm:self-center ${
               ['ON_THE_WAY', 'ARRIVED', 'IN_PROGRESS'].includes(booking.status)
-                ? 'bg-emerald-100 text-emerald-800 animate-pulse'
+                ? 'bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] animate-pulse'
                 : 'bg-blue-100 text-blue-800'
             }`}
           >
@@ -189,8 +189,8 @@ export default function ProviderAppointmentCockpitPage({
         </div>
 
         {/* Action Bar / Status Transition Buttons */}
-        <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-          <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+        <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-1">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
             Visit Progress Control
           </span>
           <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -198,7 +198,7 @@ export default function ProviderAppointmentCockpitPage({
               <button
                 type="button"
                 onClick={() => handleUpdateStatus('ON_THE_WAY')}
-                className="rounded-xl bg-[#116b70] px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#0d5559] transition-colors"
+                className="rounded-xl bg-[#065F46] px-5 py-2.5 text-xs font-bold text-white shadow-2xs hover:bg-[#054d39] transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 Start Transit (Notify Patient: En Route)
               </button>
@@ -208,7 +208,7 @@ export default function ProviderAppointmentCockpitPage({
               <button
                 type="button"
                 onClick={() => handleUpdateStatus('ARRIVED')}
-                className="rounded-xl bg-amber-600 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-amber-700 transition-colors"
+                className="rounded-xl bg-amber-600 px-5 py-2.5 text-xs font-bold text-white shadow-2xs hover:bg-amber-700 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 Mark Arrived at Doorstep
               </button>
@@ -222,13 +222,13 @@ export default function ProviderAppointmentCockpitPage({
                   placeholder="Doorstep PIN (4829)"
                   value={pinInput}
                   onChange={(e) => setPinInput(e.target.value)}
-                  className="rounded-xl border border-gray-300 px-3 py-2 text-xs font-mono tracking-widest text-center"
+                  className="rounded-xl border border-[#D9ECE7] px-3 py-2 text-xs font-mono tracking-widest text-center"
                 />
                 <button
                   type="submit"
-                  className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700 shadow-sm"
+                  className="rounded-xl bg-[#065F46] px-4 py-2 text-xs font-bold text-white hover:bg-[#054d39] shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  Verify & Start Care
+                  Verify &amp; Start Care
                 </button>
               </form>
             )}
@@ -237,15 +237,15 @@ export default function ProviderAppointmentCockpitPage({
               <button
                 type="button"
                 onClick={() => handleUpdateStatus('COMPLETED')}
-                className="rounded-xl bg-emerald-700 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-emerald-800 transition-colors"
+                className="rounded-xl bg-[#065F46] px-5 py-2.5 text-xs font-bold text-white shadow-2xs hover:bg-[#054d39] transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                Mark Visit Completed & Conclude Shift
+                Mark Visit Completed &amp; Conclude Shift
               </button>
             )}
 
             {booking.status === 'COMPLETED' && (
-              <span className="rounded-xl bg-gray-100 px-4 py-2 text-xs font-bold text-gray-700">
-                ✓ Shift Concluded & Documented
+              <span className="rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] px-4 py-2 text-xs font-bold text-[#065F46]">
+                ✓ Shift Concluded &amp; Documented
               </span>
             )}
           </div>
@@ -255,24 +255,24 @@ export default function ProviderAppointmentCockpitPage({
         {/* Patient Details & Address Grid */}
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Patient Card */}
-          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-gray-900">Patient & Household Details</h3>
+          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-2 space-y-4">
+            <h3 className="font-heading text-sm font-extrabold text-[#15212B] tracking-tight">Patient &amp; Household Details</h3>
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-500">Name:</span>
-                <span className="font-bold text-gray-900">{booking.beneficiaryName}</span>
+              <div className="flex justify-between py-1.5 border-b border-[#F2F8F5]">
+                <span className="text-slate-500">Name:</span>
+                <span className="font-bold text-[#15212B]">{booking.beneficiaryName}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-500">Relation:</span>
-                <span className="font-medium text-gray-800">{booking.beneficiaryRelation}</span>
+              <div className="flex justify-between py-1.5 border-b border-[#F2F8F5]">
+                <span className="text-slate-500">Relation:</span>
+                <span className="font-medium text-slate-800">{booking.beneficiaryRelation}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-500">Phone:</span>
-                <span className="font-mono text-gray-900">{booking.patientPhone}</span>
+              <div className="flex justify-between py-1.5 border-b border-[#F2F8F5]">
+                <span className="text-slate-500">Phone:</span>
+                <span className="font-mono text-[#15212B] font-bold">{booking.patientPhone}</span>
               </div>
               <div className="pt-2">
-                <span className="text-gray-500 block mb-1">Destination Address:</span>
-                <span className="font-bold text-gray-900 block">{booking.addressText}</span>
+                <span className="text-slate-500 block mb-1">Destination Address:</span>
+                <span className="font-bold text-[#15212B] block">{booking.addressText}</span>
               </div>
             </div>
 
@@ -281,13 +281,13 @@ export default function ProviderAppointmentCockpitPage({
                 href={`https://maps.google.com/?q=${encodeURIComponent(booking.addressText)}`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-gray-50 py-2.5 text-xs font-bold text-gray-800 hover:bg-gray-100 shadow-2xs"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] py-2.5 text-xs font-bold text-slate-800 hover:bg-[#F2F8F5] shadow-2xs transition-colors"
               >
                 Open Google Maps Navigation
               </a>
               <a
                 href={`tel:${booking.patientPhone}`}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#116b70] py-2.5 text-xs font-bold text-white hover:bg-[#0d5559] shadow-2xs"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#065F46] py-2.5 text-xs font-bold text-white hover:bg-[#054d39] shadow-2xs transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Icon name="phone" className="h-3.5 w-3.5" />
                 Call Patient
@@ -299,19 +299,19 @@ export default function ProviderAppointmentCockpitPage({
           <div className="lg:col-span-2 space-y-6">
             {/* DOCTOR MODULE */}
             {(currentUser?.role === 'DOCTOR' || booking.category === 'DOCTOR_VISIT') && (
-              <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-3 space-y-4">
+                <div className="flex items-center justify-between border-b border-[#F2F8F5] pb-3">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#116b70]">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#065F46]">
                       Physician Documentation
                     </span>
-                    <h3 className="text-base font-bold text-gray-900">
-                      Diagnosis & Electronic Prescription (e-Rx)
+                    <h3 className="font-heading text-base font-extrabold text-[#15212B] tracking-tight">
+                      Diagnosis &amp; Electronic Prescription (e-Rx)
                     </h3>
                   </div>
                   {rxIssued && (
-                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
-                      Rx Issued & Released
+                    <span className="rounded-full bg-emerald-100 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-800">
+                      Rx Issued &amp; Released
                     </span>
                   )}
                 </div>

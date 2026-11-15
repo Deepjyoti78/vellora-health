@@ -48,107 +48,107 @@ export default function ProviderProfilePage() {
 
   return (
     <ProviderLayout>
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#116b70]">
+      <div className="mx-auto max-w-[1360px] px-4 py-8 sm:px-6 space-y-6">
+        <div className="animate-fade-in-up">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#065F46]">
             Professional Credentialing
           </span>
-          <h1 className="text-2xl font-black text-gray-900 sm:text-3xl">
-            Clinician Profile & Reputation
+          <h1 className="font-heading text-2xl font-black text-[#15212B] sm:text-3xl tracking-tight mt-0.5">
+            Clinician Profile &amp; Reputation
           </h1>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-slate-500">
             Keep your clinical qualifications, bio, and hourly rates current. Patients review these details prior to booking.
           </p>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Left Column: Form */}
           <div className="space-y-6 lg:col-span-2">
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-              <h3 className="text-base font-bold text-gray-900">Clinical Profile Information</h3>
+            <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-1">
+              <h3 className="font-heading text-base font-extrabold text-[#15212B] tracking-tight">Clinical Profile Information</h3>
 
               <form onSubmit={handleSave} className="mt-4 space-y-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">Full Name</label>
+                    <label className="text-xs font-bold text-slate-700">Full Name</label>
                     <input
                       type="text"
                       disabled
                       value={currentUser?.name || ''}
-                      className="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-600 font-bold"
+                      className="mt-1 block w-full rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] p-2.5 text-xs text-slate-700 font-bold"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">Clinical Role</label>
+                    <label className="text-xs font-bold text-slate-700">Clinical Role</label>
                     <input
                       type="text"
                       disabled
                       value={currentUser?.role || ''}
-                      className="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-600 font-bold"
+                      className="mt-1 block w-full rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] p-2.5 text-xs text-slate-700 font-bold"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">Sub-Specialty</label>
+                    <label className="text-xs font-bold text-slate-700">Sub-Specialty</label>
                     <input
                       type="text"
                       value={specialty}
                       onChange={(e) => setSpecialty(e.target.value)}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs font-medium"
+                      className="mt-1 block w-full rounded-xl border border-[#D9ECE7] bg-white p-2.5 text-xs font-medium focus:border-[#065F46] focus:outline-hidden"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">Standard Base Fee ($/hr)</label>
+                    <label className="text-xs font-bold text-slate-700">Standard Base Fee ($/hr)</label>
                     <input
                       type="number"
                       value={hourlyRate}
                       onChange={(e) => setHourlyRate(Number(e.target.value))}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs font-bold"
+                      className="mt-1 block w-full rounded-xl border border-[#D9ECE7] bg-white p-2.5 text-xs font-bold font-mono focus:border-[#065F46] focus:outline-hidden"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Practitioner Bio</label>
+                  <label className="text-xs font-bold text-slate-700">Practitioner Bio</label>
                   <textarea
                     rows={4}
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 text-xs"
+                    className="mt-1 block w-full rounded-xl border border-[#D9ECE7] bg-white p-2.5 text-xs focus:border-[#065F46] focus:outline-hidden"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">Mobile Phone</label>
+                    <label className="text-xs font-bold text-slate-700">Mobile Phone</label>
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-xs"
+                      className="mt-1 block w-full rounded-xl border border-[#D9ECE7] bg-white p-2.5 text-xs focus:border-[#065F46] focus:outline-hidden"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-gray-700">Email Address</label>
+                    <label className="text-xs font-bold text-slate-700">Email Address</label>
                     <input
                       type="email"
                       disabled
                       value={currentUser?.email || ''}
-                      className="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-500"
+                      className="mt-1 block w-full rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] p-2.5 text-xs text-slate-500"
                     />
                   </div>
                 </div>
 
                 {savedSuccess && (
-                  <p className="text-xs font-bold text-emerald-700">Profile saved successfully!</p>
+                  <p className="text-xs font-bold text-emerald-700 animate-fade-in-up">Profile saved successfully!</p>
                 )}
 
-                <div className="flex justify-end pt-2 border-t border-gray-100">
+                <div className="flex justify-end pt-2 border-t border-[#F2F8F5]">
                   <button
                     type="submit"
-                    className="rounded-xl bg-[#116b70] px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#0d5559] transition-colors"
+                    className="rounded-xl bg-[#065F46] hover:bg-[#054d39] px-6 py-2.5 text-xs font-bold text-white shadow-2xs hover:shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     Save Changes
                   </button>
@@ -157,32 +157,32 @@ export default function ProviderProfilePage() {
             </div>
 
             {/* Verified Patient Reviews */}
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
+            <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">Verified Patient Reviews</h3>
-                  <p className="text-xs text-gray-500">Collected post-visit from authenticated consultations.</p>
+                  <h3 className="font-heading text-base font-extrabold text-[#15212B] tracking-tight">Verified Patient Reviews</h3>
+                  <p className="text-xs text-slate-500">Collected post-visit from authenticated consultations.</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-2xl font-black text-amber-500">{currentUser?.rating || 4.9} ★</span>
-                  <span className="block text-[10px] text-gray-400">100% Recommended</span>
+                  <span className="font-heading text-2xl font-black text-amber-500">{currentUser?.rating || 4.9} ★</span>
+                  <span className="block text-[10px] text-slate-400 font-medium">100% Recommended</span>
                 </div>
               </div>
 
-              <div className="mt-6 divide-y divide-gray-100">
+              <div className="mt-6 divide-y divide-[#F2F8F5]">
                 {reviews.map((rev, idx) => (
-                  <div key={idx} className="py-4">
+                  <div key={idx} className="py-4 hover:bg-[#F7FBF9] px-2 rounded-xl transition-colors">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-gray-900">{rev.author}</span>
-                      <span className="text-[11px] text-gray-400">{rev.date}</span>
+                      <span className="text-xs font-bold text-[#15212B]">{rev.author}</span>
+                      <span className="text-[11px] text-slate-400">{rev.date}</span>
                     </div>
                     <div className="mt-0.5 text-amber-400 text-xs">
                       {'★'.repeat(rev.rating)}
-                      <span className="ml-2 text-[11px] font-semibold text-[#116b70]">
+                      <span className="ml-2 text-[11px] font-semibold text-[#065F46]">
                         {rev.service}
                       </span>
                     </div>
-                    <p className="mt-2 text-xs text-gray-600 leading-relaxed">{rev.comment}</p>
+                    <p className="mt-2 text-xs text-slate-600 leading-relaxed">{rev.comment}</p>
                   </div>
                 ))}
               </div>
@@ -191,34 +191,34 @@ export default function ProviderProfilePage() {
 
           {/* Right Column: Credentials & Certifications Card */}
           <div className="space-y-6">
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+            <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#065F46]">
                 Peer Review Accreditation
               </span>
-              <h3 className="mt-1 text-base font-bold text-gray-900">Active Medical Licensure</h3>
+              <h3 className="mt-1 font-heading text-base font-extrabold text-[#15212B] tracking-tight">Active Medical Licensure</h3>
 
-              <div className="mt-4 rounded-2xl bg-emerald-50/60 p-4 border border-emerald-100 space-y-2 text-xs">
+              <div className="mt-4 rounded-2xl bg-emerald-50/70 p-4 border border-emerald-100 space-y-2 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-emerald-900 font-bold">Status:</span>
                   <span className="rounded-full bg-emerald-600 px-2.5 py-0.5 text-[10px] font-black text-white">
-                    VERIFIED & ACTIVE
+                    VERIFIED &amp; ACTIVE
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-emerald-900">State Board:</span>
-                  <span className="font-semibold text-gray-900">Medical Board of California</span>
+                  <span className="font-semibold text-slate-900">Medical Board of California</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-emerald-900">License Number:</span>
-                  <span className="font-mono font-bold text-gray-900">MD-CA-928104</span>
+                  <span className="font-mono font-bold text-slate-900">MD-CA-928104</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-emerald-900">Expiration Date:</span>
-                  <span className="font-semibold text-gray-900">Dec 31, 2027</span>
+                  <span className="font-semibold text-slate-900">Dec 31, 2027</span>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-3 text-xs text-gray-600">
+              <div className="mt-6 space-y-3 text-xs text-slate-600">
                 <div className="flex items-center gap-2">
                   <Icon name="check" className="h-4 w-4 text-emerald-600" />
                   <span>Criminal Background Check (Clear)</span>

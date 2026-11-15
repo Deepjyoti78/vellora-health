@@ -152,9 +152,9 @@ function ClinicalRecordsContent() {
 
   return (
     <ProviderLayout>
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 space-y-6">
+      <div className="mx-auto max-w-[1360px] px-4 py-8 sm:px-6 space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in-up">
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#065F46]">
@@ -164,7 +164,7 @@ function ClinicalRecordsContent() {
                 Digital Medical Record Sync
               </span>
             </div>
-            <h1 className="text-2xl font-black text-[#102723] sm:text-3xl mt-0.5">
+            <h1 className="font-heading text-2xl font-black text-[#15212B] sm:text-3xl tracking-tight mt-0.5">
               Clinical Documentation Workspace
             </h1>
             <p className="mt-1 text-xs text-slate-500">
@@ -175,7 +175,7 @@ function ClinicalRecordsContent() {
           <div className="flex items-center gap-2">
             <Link
               href="/provider/appointments"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#D9ECE7] bg-white hover:bg-[#F2F8F5] px-4 py-2 text-xs font-bold text-[#102723] transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#D9ECE7] bg-white hover:bg-[#F2F8F5] px-4 py-2 text-xs font-bold text-[#102723] shadow-2xs hover:shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>Back to Itinerary</span>
             </Link>
@@ -183,8 +183,8 @@ function ClinicalRecordsContent() {
         </div>
 
         {/* Role Tab Selector (For demonstration across all 5 clinical designations) */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-[#D9ECE7] pb-3">
-          <span className="text-xs font-bold text-slate-400 mr-2">Chart Template:</span>
+        <div className="flex flex-wrap items-center gap-2 border-b border-[#D9ECE7] pb-3 animate-fade-in-up animate-delay-1">
+          <span className="text-xs font-bold text-slate-400 mr-2 uppercase tracking-wider">Chart Template:</span>
           {[
             { id: 'DOCTOR' as const, label: 'Doctor E-Rx & Diagnosis', icon: Stethoscope },
             { id: 'NURSE' as const, label: 'Nurse Bedside Vitals', icon: Activity },
@@ -199,10 +199,10 @@ function ClinicalRecordsContent() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveRoleTab(tab.id)}
-                className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all ${
+                className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all hover:scale-[1.02] active:scale-[0.98] ${
                   isSelected
-                    ? 'bg-[#065F46] text-white shadow-2xs'
-                    : 'bg-white border border-[#D9ECE7] text-slate-600 hover:bg-[#F2F8F5]'
+                    ? 'bg-[#065F46] text-white shadow-xs'
+                    : 'bg-white border border-[#D9ECE7] text-slate-600 hover:bg-[#F2F8F5] hover:text-[#102723]'
                 }`}
               >
                 <TabIcon className="h-3.5 w-3.5" />
@@ -214,9 +214,9 @@ function ClinicalRecordsContent() {
 
         {/* Success Alert */}
         {savedSuccess && (
-          <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-xs font-bold text-emerald-800 flex items-center justify-between shadow-2xs">
+          <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-xs font-bold text-emerald-800 flex items-center justify-between shadow-2xs animate-fade-in-up">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 animate-bounce" />
               <span>Clinical documentation encrypted &amp; synced directly to patient medical records!</span>
             </div>
             <Link href="/patient/records" className="text-emerald-700 underline text-xs">
@@ -228,7 +228,7 @@ function ClinicalRecordsContent() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Charting Form */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 sm:p-8 shadow-2xs">
+            <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 sm:p-8 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-2">
               <form onSubmit={handleSaveRecord} className="space-y-6">
                 {/* Patient & Visit Context */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-4 border-b border-[#F2F8F5]">
@@ -545,8 +545,8 @@ function ClinicalRecordsContent() {
 
           {/* Right Column: Historical Notes Feed */}
           <div className="space-y-4">
-            <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
-              <h3 className="font-heading text-base font-bold text-[#102723]">Recent Clinical Chart History</h3>
+            <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-3">
+              <h3 className="font-heading text-base font-extrabold text-[#15212B] tracking-tight">Recent Clinical Chart History</h3>
               <p className="text-xs text-slate-500 mb-4">Past charts recorded for this patient.</p>
 
               <div className="space-y-3">
@@ -556,7 +556,7 @@ function ClinicalRecordsContent() {
                   pastNotes.map((note) => (
                     <div
                       key={note.id}
-                      className="p-3.5 rounded-2xl border border-[#D9ECE7] bg-[#F7FBF9] space-y-1.5"
+                      className="p-3.5 rounded-2xl border border-[#D9ECE7] bg-[#F7FBF9] hover:bg-white hover:border-[#A7F3D0] shadow-2xs transition-all space-y-1.5"
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded">
@@ -566,7 +566,7 @@ function ClinicalRecordsContent() {
                           {new Date(note.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <h4 className="text-xs font-bold text-[#102723]">{note.title}</h4>
+                      <h4 className="font-heading text-xs font-bold text-[#15212B]">{note.title}</h4>
                       <p className="text-[11px] text-slate-600 line-clamp-2">{note.summary}</p>
                       <p className="text-[10px] text-slate-400">By {note.providerName}</p>
                     </div>

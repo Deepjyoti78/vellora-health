@@ -77,7 +77,7 @@ export default function ProviderDashboardPage() {
     <ProviderLayout>
       <div className="mx-auto max-w-[1360px] px-4 py-6 sm:py-8 lg:py-10 space-y-8 sm:space-y-10">
         {/* ================= 1. HERO / WELCOME SECTION ================= */}
-        <section className="relative overflow-hidden rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
+        <section className="relative overflow-hidden rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-10 lg:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)] animate-fade-in-up transition-all duration-300 hover:shadow-[0_8px_36px_rgba(6,95,70,0.05)]">
           {/* Ambient Background Mint Curves */}
           <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-[#EAF8F2]/70 blur-3xl pointer-events-none" />
 
@@ -89,7 +89,7 @@ export default function ProviderDashboardPage() {
                 <span>{roleTitle} Workstation • Mobile Care Unit</span>
               </div>
 
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#15212B] tracking-tight leading-[1.15] flex items-center gap-2.5">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-black text-[#15212B] tracking-tight leading-[1.15] flex items-center gap-2.5">
                 <span>Good day, {currentUser?.name || 'Alex Rivera'}</span>
                 <span className="text-[#059669] text-2xl sm:text-3xl font-light select-none">✦</span>
               </h1>
@@ -111,7 +111,7 @@ export default function ProviderDashboardPage() {
                 </Link>
                 <Link
                   href="/provider/clinical-records"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#D9ECE7] bg-[#F7FAF9] hover:bg-white px-5 py-3 text-xs sm:text-sm font-bold text-[#15212B] transition-colors shadow-2xs"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#D9ECE7] bg-[#F7FAF9] hover:bg-white px-5 py-3 text-xs sm:text-sm font-bold text-[#15212B] transition-colors shadow-2xs hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <FileText className="h-4 w-4 text-[#065F46]" />
                   <span>Bedside Charting</span>
@@ -121,7 +121,7 @@ export default function ProviderDashboardPage() {
 
             {/* Right Column: Clean Dispatch Readiness Card */}
             <div className="lg:col-span-5">
-              <div className="rounded-[22px] border border-[#E2EBE7] bg-[#F4FAF7] p-5 sm:p-6 shadow-[0_4px_24px_rgba(6,95,70,0.04)]">
+              <div className="rounded-[22px] border border-[#E2EBE7] bg-[#F4FAF7] p-5 sm:p-6 shadow-[0_4px_24px_rgba(6,95,70,0.04)] provider-card-lift">
                 <div className="flex items-center justify-between pb-4 border-b border-[#E2EBE7]">
                   <div className="flex items-center gap-2.5">
                     <span className="relative flex h-3 w-3 items-center justify-center">
@@ -198,15 +198,15 @@ export default function ProviderDashboardPage() {
         )}
 
         {/* ================= 2. UNIFIED STATS SUMMARY ROW ================= */}
-        <section className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 sm:p-6 shadow-[0_2px_14px_rgba(0,0,0,0.02)]">
+        <section className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 sm:p-6 shadow-[0_2px_14px_rgba(0,0,0,0.02)] animate-fade-in-up animate-delay-1 provider-card-lift">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 divide-y sm:divide-y-0 lg:divide-x divide-[#E5ECE9]">
             {/* Stat 1: Active Visits Today */}
-            <div className="flex items-center gap-4 pt-0 sm:pt-0 lg:pl-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+            <div className="flex items-center gap-4 pt-0 sm:pt-0 lg:pl-3 group cursor-default">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs group-hover:scale-110 group-hover:bg-[#D1FAE5] transition-all duration-300">
                 <Activity className="h-5 w-5 stroke-[2]" />
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-bold text-[#15212B] leading-none">
+                <div className="font-heading text-2xl sm:text-3xl font-black text-[#15212B] leading-none tracking-tight">
                   {activeVisits.length}
                 </div>
                 <div className="text-xs text-[#64748B] font-medium mt-1">Active Visits Today</div>
@@ -215,12 +215,12 @@ export default function ProviderDashboardPage() {
             </div>
 
             {/* Stat 2: Completed Shifts */}
-            <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+            <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6 group cursor-default">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs group-hover:scale-110 group-hover:bg-[#D1FAE5] transition-all duration-300">
                 <CalendarCheck className="h-5 w-5 stroke-[2]" />
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-bold text-[#15212B] leading-none">
+                <div className="font-heading text-2xl sm:text-3xl font-black text-[#15212B] leading-none tracking-tight">
                   {completedVisits.length + 19}
                 </div>
                 <div className="text-xs text-[#64748B] font-medium mt-1">Completed Shifts</div>
@@ -229,12 +229,12 @@ export default function ProviderDashboardPage() {
             </div>
 
             {/* Stat 3: Weekly Earnings */}
-            <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+            <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6 group cursor-default">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs group-hover:scale-110 group-hover:bg-[#D1FAE5] transition-all duration-300">
                 <DollarSign className="h-5 w-5 stroke-[2]" />
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-bold text-[#065F46] leading-none">
+                <div className="font-heading text-2xl sm:text-3xl font-black text-[#065F46] leading-none tracking-tight">
                   $1,485.00
                 </div>
                 <div className="text-xs text-[#64748B] font-medium mt-1">Weekly Remuneration</div>
@@ -243,12 +243,12 @@ export default function ProviderDashboardPage() {
             </div>
 
             {/* Stat 4: Patient Rating */}
-            <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 shadow-2xs">
+            <div className="flex items-center gap-4 pt-3 sm:pt-0 lg:pl-6 group cursor-default">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 shadow-2xs group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-300">
                 <Star className="h-5 w-5 stroke-[2] fill-amber-400 text-amber-400" />
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-bold text-amber-500 leading-none">
+                <div className="font-heading text-2xl sm:text-3xl font-black text-amber-500 leading-none tracking-tight">
                   {currentUser?.rating || 4.9} ★
                 </div>
                 <div className="text-xs text-[#64748B] font-medium mt-1">Patient Satisfaction</div>
@@ -260,14 +260,14 @@ export default function ProviderDashboardPage() {
 
         {/* ================= 3. PROXIMITY CARE REQUESTS ================= */}
         {incomingRequests.length > 0 && (
-          <section className="rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-8 shadow-[0_2px_16px_rgba(0,0,0,0.02)]">
+          <section className="rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-8 shadow-[0_2px_16px_rgba(0,0,0,0.02)] animate-fade-in-up animate-delay-2">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-[#F2F8F5]">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ECFDF5] text-[#065F46] border border-[#D1FAE5]">
                   <Bell className="h-4 w-4" />
                 </div>
                 <div>
-                  <h2 className="font-heading text-lg font-bold text-[#15212B]">
+                  <h2 className="font-heading text-lg font-black text-[#15212B] tracking-tight">
                     New Care Requests in Your Proximity
                   </h2>
                   <p className="text-xs text-slate-500">Live bedside visit dispatches awaiting your acceptance</p>
@@ -284,19 +284,19 @@ export default function ProviderDashboardPage() {
               {incomingRequests.map((req) => (
                 <div
                   key={req.id}
-                  className="rounded-[22px] border border-[#E5EAE9] bg-[#F7FAF9] p-5 shadow-2xs hover:shadow-xs hover:border-[#A7F3D0] transition-all flex flex-col justify-between"
+                  className="rounded-[22px] border border-[#E5EAE9] bg-[#F7FAF9] p-5 shadow-2xs provider-card-lift flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-2">
                       <span className="rounded-md bg-white border border-[#D9ECE7] px-2.5 py-0.5 font-mono text-[11px] font-bold text-[#065F46]">
                         {req.bookingNumber}
                       </span>
-                      <span className="text-xs font-black text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 rounded-full">
+                      <span className="text-xs font-black text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 rounded-full font-mono">
                         Payout: ${Math.round(req.totalAmount * 0.75)} Net
                       </span>
                     </div>
 
-                    <h3 className="font-heading text-base font-bold text-[#15212B] mt-1">{req.serviceName}</h3>
+                    <h3 className="font-heading text-base font-extrabold text-[#15212B] mt-1">{req.serviceName}</h3>
 
                     <div className="mt-3 space-y-1.5 text-xs text-slate-600">
                       <div className="flex items-center gap-2">
@@ -338,10 +338,10 @@ export default function ProviderDashboardPage() {
         )}
 
         {/* ================= 4. TODAY'S ACTIVE ITINERARY ================= */}
-        <section className="space-y-4">
+        <section className="space-y-4 animate-fade-in-up animate-delay-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-heading text-lg font-bold text-[#15212B]">
+              <h2 className="font-heading text-lg font-black text-[#15212B] tracking-tight">
                 Today&apos;s Active Clinical Itinerary
               </h2>
               <p className="text-xs text-slate-500">
@@ -350,10 +350,10 @@ export default function ProviderDashboardPage() {
             </div>
             <Link
               href="/provider/appointments"
-              className="text-xs font-bold text-[#065F46] hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-[#065F46] hover:underline flex items-center gap-1 group"
             >
               <span>See all appointments</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
 
@@ -361,20 +361,20 @@ export default function ProviderDashboardPage() {
             {activeVisits.length === 0 ? (
               <div className="rounded-[24px] border border-dashed border-[#E5EAE9] bg-white p-12 text-center text-slate-500">
                 <Calendar className="mx-auto h-9 w-9 text-slate-300 mb-2.5" />
-                <h3 className="font-bold text-sm text-[#15212B]">No Active Visits Currently Underway</h3>
+                <h3 className="font-heading font-bold text-sm text-[#15212B]">No Active Visits Currently Underway</h3>
                 <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
                   You have no pending home visits in transit. Review proximity requests above or check the open dispatch pool.
                 </p>
                 <div className="mt-5 flex justify-center gap-3">
                   <Link
                     href="/provider/requests"
-                    className="rounded-full bg-[#064E3B] hover:bg-[#065F46] px-5 py-2.5 text-xs font-bold text-white shadow-2xs"
+                    className="rounded-full bg-[#064E3B] hover:bg-[#065F46] px-5 py-2.5 text-xs font-bold text-white shadow-2xs hover:scale-105 active:scale-95 transition-all"
                   >
                     Browse Open Job Offers
                   </Link>
                   <Link
                     href="/provider/availability"
-                    className="rounded-full border border-[#E5EAE9] bg-white hover:bg-[#F2F8F5] px-4 py-2.5 text-xs font-bold text-slate-700"
+                    className="rounded-full border border-[#E5EAE9] bg-white hover:bg-[#F2F8F5] px-4 py-2.5 text-xs font-bold text-slate-700 hover:scale-105 active:scale-95 transition-all"
                   >
                     Update Available Shifts
                   </Link>
@@ -384,7 +384,7 @@ export default function ProviderDashboardPage() {
               activeVisits.map((v) => (
                 <div
                   key={v.id}
-                  className="rounded-[24px] border border-[#E5EAE9] bg-white p-6 shadow-2xs hover:shadow-xs transition-shadow flex flex-col lg:flex-row lg:items-center justify-between gap-5"
+                  className="rounded-[24px] border border-[#E5EAE9] bg-white p-6 shadow-2xs provider-card-lift flex flex-col lg:flex-row lg:items-center justify-between gap-5"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
@@ -426,9 +426,9 @@ export default function ProviderDashboardPage() {
         </section>
 
         {/* ================= 5. PRACTITIONER MANAGEMENT HUB ================= */}
-        <section>
-          <div className="mb-4">
-            <h2 className="font-heading text-lg font-bold text-[#15212B]">
+        <section className="space-y-4 animate-fade-in-up animate-delay-4">
+          <div>
+            <h2 className="font-heading text-lg font-black text-[#15212B] tracking-tight">
               Practitioner Management Hub
             </h2>
             <p className="text-xs text-slate-500">Direct access to clinical tools, earnings, shifts, and credentials.</p>
@@ -437,52 +437,72 @@ export default function ProviderDashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link
               href="/provider/clinical-records"
-              className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:shadow-xs hover:border-[#A7F3D0] transition-all group"
+              className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 shadow-2xs provider-card-lift group"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 group-hover:scale-105 transition-transform">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 group-hover:scale-110 transition-transform">
                 <FileText className="h-5 w-5" />
               </div>
-              <h3 className="font-heading text-sm font-bold text-[#15212B]">Clinical Charting</h3>
-              <p className="mt-1 text-xs text-slate-500">Record prescriptions, bedside vitals telemetry, and lab tags.</p>
+              <h3 className="font-heading text-sm font-extrabold text-[#15212B] group-hover:text-[#065F46] transition-colors">Clinical Charting</h3>
+              <p className="mt-1 text-xs text-slate-500 leading-relaxed">Record prescriptions, bedside vitals telemetry, and lab tags.</p>
+              <div className="mt-3 flex justify-end">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all">
+                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </div>
             </Link>
 
             <Link
               href="/provider/availability"
-              className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:shadow-xs hover:border-[#A7F3D0] transition-all group"
+              className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 shadow-2xs provider-card-lift group"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 group-hover:scale-105 transition-transform">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 group-hover:scale-110 transition-transform">
                 <Clock className="h-5 w-5" />
               </div>
-              <h3 className="font-heading text-sm font-bold text-[#15212B]">Duty Shifts &amp; Zones</h3>
-              <p className="mt-1 text-xs text-slate-500">Set weekly operational timetables and travel radius.</p>
+              <h3 className="font-heading text-sm font-extrabold text-[#15212B] group-hover:text-[#065F46] transition-colors">Duty Shifts &amp; Zones</h3>
+              <p className="mt-1 text-xs text-slate-500 leading-relaxed">Set weekly operational timetables and travel radius.</p>
+              <div className="mt-3 flex justify-end">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all">
+                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </div>
             </Link>
 
             <Link
               href="/provider/earnings"
-              className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:shadow-xs hover:border-[#A7F3D0] transition-all group"
+              className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 shadow-2xs provider-card-lift group"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 group-hover:scale-105 transition-transform">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 group-hover:scale-110 transition-transform">
                 <DollarSign className="h-5 w-5" />
               </div>
-              <h3 className="font-heading text-sm font-bold text-[#15212B]">Earnings &amp; Payouts</h3>
-              <p className="mt-1 text-xs text-slate-500">Track net remuneration, bank ACH deposits, and 1099 vouchers.</p>
+              <h3 className="font-heading text-sm font-extrabold text-[#15212B] group-hover:text-[#065F46] transition-colors">Earnings &amp; Payouts</h3>
+              <p className="mt-1 text-xs text-slate-500 leading-relaxed">Track net remuneration, bank ACH deposits, and 1099 vouchers.</p>
+              <div className="mt-3 flex justify-end">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all">
+                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </div>
             </Link>
 
             <Link
               href="/provider/profile"
-              className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:shadow-xs hover:border-[#A7F3D0] transition-all group"
+              className="rounded-[22px] border border-[#E5EAE9] bg-white p-5 shadow-2xs provider-card-lift group"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 group-hover:scale-105 transition-transform">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 group-hover:scale-110 transition-transform">
                 <User className="h-5 w-5" />
               </div>
-              <h3 className="font-heading text-sm font-bold text-[#15212B]">Credentials &amp; Profile</h3>
-              <p className="mt-1 text-xs text-slate-500">Update licensing credentials, specialty bio, and patient ratings.</p>
+              <h3 className="font-heading text-sm font-extrabold text-[#15212B] group-hover:text-[#065F46] transition-colors">Credentials &amp; Profile</h3>
+              <p className="mt-1 text-xs text-slate-500 leading-relaxed">Update licensing credentials, specialty bio, and patient ratings.</p>
+              <div className="mt-3 flex justify-end">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all">
+                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </div>
             </Link>
           </div>
         </section>
 
         {/* ================= 6. CLINICAL DISPATCH & ASSISTANCE ================= */}
-        <section className="rounded-[24px] border border-[#E5EAE9] bg-[#F4FAF7] p-6 text-xs text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <section className="rounded-[24px] border border-[#E5EAE9] bg-[#F4FAF7] p-6 text-xs text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-4 animate-fade-in-up animate-delay-5 provider-card-lift">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#064E3B] shadow-2xs">
               <Phone className="h-5 w-5" />

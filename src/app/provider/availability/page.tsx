@@ -85,12 +85,12 @@ export default function ProviderAvailabilityPage() {
 
   return (
     <ProviderLayout>
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 space-y-6">
-        <div>
+      <div className="mx-auto max-w-[1360px] px-4 py-8 sm:px-6 space-y-6">
+        <div className="animate-fade-in-up">
           <span className="text-xs font-bold uppercase tracking-wider text-[#065F46]">
             Scheduling &amp; Dispatch Routing
           </span>
-          <h1 className="text-2xl font-black text-[#102723] sm:text-3xl">
+          <h1 className="font-heading text-2xl font-black text-[#15212B] sm:text-3xl tracking-tight mt-0.5">
             Duty Availability &amp; Shift Windows
           </h1>
           <p className="mt-1 text-xs text-slate-500">
@@ -99,11 +99,11 @@ export default function ProviderAvailabilityPage() {
         </div>
 
         {/* Priority Emergency Dispatch Banner */}
-        <div className="rounded-[24px] border border-[#D1FAE5] bg-[#ECFDF5] p-5 shadow-2xs flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="rounded-[24px] border border-[#D1FAE5] bg-[#ECFDF5] p-5 shadow-2xs flex flex-col justify-between gap-4 sm:flex-row sm:items-center provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-1">
           <div className="flex items-start gap-3">
             <span className="h-3 w-3 rounded-full bg-[#10B981] animate-pulse shrink-0 mt-1" />
             <div>
-              <h3 className="text-sm font-bold text-[#065F46]">
+              <h3 className="font-heading text-sm font-extrabold text-[#065F46] tracking-tight">
                 Priority Same-Day &amp; Urgent Dispatch (1.5x Premium Rate)
               </h3>
               <p className="mt-0.5 text-xs text-slate-600">
@@ -114,9 +114,9 @@ export default function ProviderAvailabilityPage() {
           <button
             type="button"
             onClick={() => setSurgeEnrolled(!surgeEnrolled)}
-            className={`rounded-xl px-4 py-2 text-xs font-bold transition-all shrink-0 ${
+            className={`rounded-xl px-4 py-2 text-xs font-bold transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] ${
               surgeEnrolled
-                ? 'bg-[#065F46] text-white shadow-2xs'
+                ? 'bg-[#065F46] text-white shadow-2xs hover:bg-[#054d39]'
                 : 'border border-[#D9ECE7] bg-white text-slate-700 hover:bg-[#F2F8F5]'
             }`}
           >
@@ -125,10 +125,10 @@ export default function ProviderAvailabilityPage() {
         </div>
 
         {/* Service Zones Selection */}
-        <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
+        <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-2">
           <div className="flex items-center gap-2 mb-1">
             <MapPin className="h-4 w-4 text-[#065F46]" />
-            <h3 className="text-sm font-bold text-[#102723]">Designated Travel &amp; Service Zones</h3>
+            <h3 className="font-heading text-sm font-extrabold text-[#15212B] tracking-tight">Designated Travel &amp; Service Zones</h3>
           </div>
           <p className="text-xs text-slate-500 mb-4">
             Only accept patient requests originating in these selected communities:
@@ -141,13 +141,13 @@ export default function ProviderAvailabilityPage() {
                   key={zone}
                   type="button"
                   onClick={() => toggleZone(zone)}
-                  className={`flex items-center justify-between p-3 rounded-xl border text-left text-xs transition-all ${
+                  className={`flex items-center justify-between p-3 rounded-xl border text-left text-xs transition-all hover:scale-[1.01] ${
                     isSelected
-                      ? 'border-[#065F46] bg-[#ECFDF5] text-[#065F46] font-bold'
-                      : 'border-[#D9ECE7] bg-[#F7FBF9] text-slate-600 hover:border-[#A7F3D0]'
+                      ? 'border-[#065F46] bg-[#ECFDF5] text-[#065F46] font-bold shadow-2xs'
+                      : 'border-[#D9ECE7] bg-[#F7FBF9] text-slate-600 hover:border-[#A7F3D0] hover:bg-white'
                   }`}
                 >
-                  <span>{zone}</span>
+                  <span className="font-medium">{zone}</span>
                   {isSelected && <CheckCircle2 className="h-4 w-4 text-[#065F46]" />}
                 </button>
               );
@@ -156,10 +156,10 @@ export default function ProviderAvailabilityPage() {
         </div>
 
         {/* Weekly Schedule Form */}
-        <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
+        <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#F2F8F5]">
             <div>
-              <h3 className="text-base font-bold text-[#102723]">Weekly Shift Recurring Timetable</h3>
+              <h3 className="font-heading text-base font-extrabold text-[#15212B] tracking-tight">Weekly Shift Recurring Timetable</h3>
               <p className="text-xs text-slate-500">Toggle active operational days and adjust start/end times.</p>
             </div>
             <div className="flex items-center gap-2 text-xs">
@@ -182,7 +182,7 @@ export default function ProviderAvailabilityPage() {
               {shifts.map((item, idx) => (
                 <div
                   key={item.dayName}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3.5"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3.5 hover:bg-[#F7FBF9] px-2 rounded-xl transition-colors"
                 >
                   <div className="flex items-center gap-3 sm:w-1/4">
                     <button
@@ -241,8 +241,8 @@ export default function ProviderAvailabilityPage() {
             </div>
 
             {savedSuccess && (
-              <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-xs font-bold text-emerald-800 flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-xs font-bold text-emerald-800 flex items-center gap-2 animate-fade-in-up">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 animate-bounce" />
                 <span>Availability timetable and service zones updated! Automated dispatch has synchronized.</span>
               </div>
             )}
@@ -250,7 +250,7 @@ export default function ProviderAvailabilityPage() {
             <div className="pt-4 border-t border-[#F2F8F5] flex justify-end">
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#065F46] hover:bg-[#054d39] px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-2xs transition-colors"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#065F46] hover:bg-[#054d39] px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-2xs hover:shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Save Timetable &amp; Zones</span>

@@ -30,12 +30,12 @@ export default function ProviderEarningsPage() {
 
   return (
     <ProviderLayout>
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 space-y-6">
-        <div>
+      <div className="mx-auto max-w-[1360px] px-4 py-8 sm:px-6 space-y-6">
+        <div className="animate-fade-in-up">
           <span className="text-xs font-bold uppercase tracking-wider text-[#065F46]">
             Practitioner Financial Ledger
           </span>
-          <h1 className="text-2xl font-black text-[#102723] sm:text-3xl mt-0.5">
+          <h1 className="font-heading text-2xl font-black text-[#15212B] sm:text-3xl tracking-tight mt-0.5">
             Earnings &amp; Direct Deposits
           </h1>
           <p className="mt-1 text-xs text-slate-500">
@@ -45,50 +45,50 @@ export default function ProviderEarningsPage() {
 
         {/* Financial KPI Cards */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
-            <span className="text-[11px] font-bold uppercase text-slate-400">Available For Cashout</span>
-            <div className="mt-2 text-3xl font-black text-[#065F46]">$1,485.00</div>
+          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-1">
+            <span className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Available For Cashout</span>
+            <div className="mt-2 font-heading text-3xl font-black text-[#065F46] tracking-tight tabular-nums">$1,485.00</div>
             <p className="mt-1 text-xs text-slate-500">Accrued from 9 completed home shifts this week</p>
             <button
               type="button"
               onClick={handleInstantPayout}
-              className="mt-4 w-full rounded-xl bg-[#065F46] hover:bg-[#054d39] py-2.5 text-xs font-bold text-white shadow-2xs transition-colors"
+              className="mt-4 w-full rounded-xl bg-[#065F46] hover:bg-[#054d39] py-2.5 text-xs font-bold text-white shadow-2xs transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               Instant Transfer to Chase Bank (•••• 4921)
             </button>
             {instantPayoutDone && (
-              <p className="mt-2 text-xs font-bold text-emerald-700 text-center">
+              <p className="mt-2 text-xs font-bold text-emerald-700 text-center animate-fade-in-up">
                 Instant deposit initiated! Funds will arrive in minutes.
               </p>
             )}
           </div>
 
-          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
-            <span className="text-[11px] font-bold uppercase text-slate-400">Next Scheduled Payout</span>
-            <div className="mt-2 text-3xl font-black text-[#102723]">Friday, Nov 20</div>
+          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-2">
+            <span className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Next Scheduled Payout</span>
+            <div className="mt-2 font-heading text-3xl font-black text-[#15212B] tracking-tight">Friday, Nov 20</div>
             <p className="mt-1 text-xs text-slate-500">Automatic free ACH direct deposit to primary bank</p>
             <div className="mt-4 rounded-xl bg-[#F7FBF9] border border-[#D9ECE7] p-3 text-xs text-slate-600">
               <span className="font-bold text-[#102723]">Primary Account:</span>
-              <p>JPMorgan Chase Bank • Checking • Routing 121000358</p>
+              <p className="font-medium text-slate-700">JPMorgan Chase Bank • Checking • Routing 121000358</p>
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
-            <span className="text-[11px] font-bold uppercase text-slate-400">Total YTD Earnings</span>
-            <div className="mt-2 text-3xl font-black text-[#102723]">${totalEarned.toLocaleString()}</div>
+          <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-3">
+            <span className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Total YTD Earnings</span>
+            <div className="mt-2 font-heading text-3xl font-black text-[#15212B] tracking-tight tabular-nums">${totalEarned.toLocaleString()}</div>
             <p className="mt-1 text-xs text-emerald-700 font-semibold">+22% compared to last quarter</p>
             <div className="mt-4 rounded-xl bg-[#F7FBF9] border border-[#D9ECE7] p-3 text-xs text-slate-600">
               <span className="font-bold text-[#102723]">Remuneration Split:</span>
-              <p>75% Clinician Net • 25% Dispatch &amp; Malpractice Umbrella</p>
+              <p className="font-medium text-slate-700">75% Clinician Net • 25% Dispatch &amp; Malpractice Umbrella</p>
             </div>
           </div>
         </div>
 
         {/* Payout History Ledger */}
-        <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs">
+        <div className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 shadow-2xs provider-card-lift transition-all duration-300 animate-fade-in-up animate-delay-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#F2F8F5]">
             <div>
-              <h3 className="font-heading text-base font-bold text-[#102723]">Historical Settlement Statements</h3>
+              <h3 className="font-heading text-base font-extrabold text-[#15212B] tracking-tight">Historical Settlement Statements</h3>
               <p className="text-xs text-slate-500">
                 Itemized payment vouchers with IRS 1099 accounting codes.
               </p>
@@ -110,7 +110,7 @@ export default function ProviderEarningsPage() {
               </thead>
               <tbody className="divide-y divide-[#F2F8F5] bg-white">
                 {payouts.map((pay) => (
-                  <tr key={pay.id} className="hover:bg-[#F7FBF9]">
+                  <tr key={pay.id} className="hover:bg-[#F2F8F5] transition-colors">
                     <td className="px-4 py-3 font-semibold text-[#102723]">{pay.period}</td>
                     <td className="px-4 py-3 text-slate-600">{pay.visitsCount} visits</td>
                     <td className="px-4 py-3 font-mono text-slate-900">${pay.totalEarnings}</td>
