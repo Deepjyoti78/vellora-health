@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { CheckCircle2, ShieldCheck, Clock, ArrowRight, Home, PhoneCall } from 'lucide-react';
+import { CheckCircle2, Clock, ArrowRight, Home } from 'lucide-react';
 
 interface RequestSuccessStateProps {
   type: 'QUICK_ENQUIRY' | 'SERVICE_REQUEST' | 'DOCTOR_CONSULTATION';
@@ -44,28 +44,51 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
     : 'Your care request has been logged in our dispatch stream and is awaiting clinician assignment.';
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 py-12">
-      <div className="overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white p-6 sm:p-10 shadow-xs text-center">
-        {/* Mint Success Icon */}
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs mb-5">
-          <CheckCircle2 className="h-8 w-8 stroke-[2.2]" />
+    <div className="container max-w-2xl mx-auto px-4 py-8 sm:py-12">
+      {/* Animated Success Card Container */}
+      <div className="animate-success-card overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white p-6 sm:p-10 shadow-[0_16px_40px_rgba(6,78,59,0.08)] text-center relative">
+        {/* Soft background ambient glow */}
+        <div
+          className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-[#ECFDF5] opacity-60 blur-3xl"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-[#E8F8F2] opacity-50 blur-3xl"
+          aria-hidden="true"
+        />
+
+        {/* Mint Success Icon with Pop & Bounce Animation */}
+        <div className="relative z-10 mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5] border border-[#A7F3D0] text-[#065F46] shadow-sm mb-5 animate-success-icon">
+          <CheckCircle2 className="h-8 w-8 stroke-[2.4]" />
         </div>
 
-        {/* Reference Pill */}
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-[#F2F8F5] border border-[#E2EBE7] px-3.5 py-1 text-xs font-bold text-slate-700 mb-3">
+        {/* Reference Pill with Staggered Fade Up */}
+        <div
+          className="relative z-10 inline-flex items-center gap-1.5 rounded-full bg-[#F2F8F5] border border-[#E2EBE7] px-3.5 py-1 text-xs font-bold text-slate-700 mb-3 animate-element-fade-up"
+          style={{ animationDelay: '220ms' }}
+        >
           <span className="text-slate-400 font-medium">Reference:</span>
           <span className="text-[#065F46] font-mono">{referenceNumber}</span>
         </div>
 
-        <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#102820]">
-          {title || defaultTitle}
-        </h2>
-        <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
-          {subtitle || defaultSubtitle}
-        </p>
+        {/* Title & Subtitle with Staggered Entrance */}
+        <div
+          className="relative z-10 animate-element-fade-up"
+          style={{ animationDelay: '300ms' }}
+        >
+          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#102820] tracking-tight">
+            {title || defaultTitle}
+          </h2>
+          <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
+            {subtitle || defaultSubtitle}
+          </p>
+        </div>
 
-        {/* Next Steps Box */}
-        <div className="mt-6 rounded-2xl bg-[#F5F9F7] border border-[#E2EBE7] p-4 sm:p-5 text-left text-xs space-y-3">
+        {/* Next Steps Box with Staggered Entrance */}
+        <div
+          className="relative z-10 mt-6 rounded-2xl bg-[#F5F9F7] border border-[#E2EBE7] p-4 sm:p-5 text-left text-xs space-y-3 animate-element-fade-up shadow-2xs"
+          style={{ animationDelay: '380ms' }}
+        >
           <p className="font-extrabold uppercase tracking-wider text-[11px] text-[#065F46] flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5" />
             <span>Next Steps in Your Care Process</span>
@@ -108,7 +131,10 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
 
         {/* Summary Details if provided */}
         {details.length > 0 && (
-          <div className="mt-5 divide-y divide-[#F2F8F5] rounded-xl border border-[#E2EBE7] bg-white p-3.5 text-xs text-left">
+          <div
+            className="relative z-10 mt-5 divide-y divide-[#F2F8F5] rounded-xl border border-[#E2EBE7] bg-white p-3.5 text-xs text-left animate-element-fade-up shadow-2xs"
+            style={{ animationDelay: '460ms' }}
+          >
             {details.map((d, i) => (
               <div key={i} className="flex justify-between py-2 text-slate-600">
                 <span className="font-medium text-slate-400">{d.label}</span>
@@ -118,11 +144,14 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        {/* Action Buttons with Staggered Entrance */}
+        <div
+          className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-3 animate-element-fade-up"
+          style={{ animationDelay: '540ms' }}
+        >
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full border border-[#CBDCD5] bg-white px-5 py-2.5 text-xs font-bold text-[#102820] hover:bg-[#F2F8F5] transition-colors shadow-2xs"
+            className="inline-flex items-center gap-2 rounded-full border border-[#CBDCD5] bg-white px-5 py-2.5 text-xs font-bold text-[#102820] hover:bg-[#F2F8F5] transition-all duration-200 shadow-2xs hover:shadow-xs cursor-pointer"
           >
             <Home className="h-3.5 w-3.5" />
             <span>Return to Home</span>
@@ -130,7 +159,7 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
 
           <Link
             href={primaryActionHref || (isDoctor ? '/doctors' : '/services')}
-            className="inline-flex items-center gap-2 rounded-full bg-[#064E3B] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#064E3B] to-[#065F46] px-5 py-2.5 text-xs font-bold text-white hover:from-[#065F46] hover:to-[#047857] transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer"
           >
             <span>{primaryActionLabel || (isDoctor ? 'View More Specialists' : 'Explore All Services')}</span>
             <ArrowRight className="h-3.5 w-3.5" />
