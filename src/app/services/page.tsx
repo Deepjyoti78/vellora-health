@@ -21,6 +21,8 @@ import {
   Sparkles,
   Layers,
   Heart,
+  User,
+  Pill,
 } from 'lucide-react';
 
 interface CategoryCardItem {
@@ -111,6 +113,14 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
   },
 ];
 
+const POPULAR_SERVICES = [
+  { label: 'Doctor Visit', icon: User, query: 'Doctor Visit' },
+  { label: 'Wound Dressing', icon: Pill, query: 'Wound Dressing' },
+  { label: 'Full Body Checkup', icon: Heart, query: 'Checkup' },
+  { label: '12-Hour Nursing', icon: Clock, query: '12-Hour' },
+  { label: 'Physiotherapy', icon: Activity, query: 'Physiotherapy' },
+];
+
 export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -147,29 +157,46 @@ export default function ServicesPage() {
         {/* Soft background ambient glow */}
         <div className="absolute top-0 right-1/4 h-80 w-80 rounded-full bg-[#ECFDF5] blur-3xl opacity-60 pointer-events-none" />
 
-        <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
+        <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pt-6 sm:pt-7 lg:pt-8 pb-7 sm:pb-8 lg:pb-9">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Column (col-span-7): Eyebrow, Heading, Subtitle & Search */}
             <div className="lg:col-span-7 flex flex-col justify-center">
               {/* Eyebrow Pill */}
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-3 shadow-2xs animate-fade-in-up animate-delay-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-2.5 shadow-2xs animate-fade-in-up animate-delay-1">
                 <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
                 <span>OUR SERVICES</span>
               </div>
 
-              {/* Main Heading */}
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#15212B] tracking-tight leading-[1.15] mb-3 animate-fade-in-up animate-delay-2">
-                Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
+              {/* Main Heading with curved mint accent line under Home */}
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#102820] tracking-tight leading-[1.14] mb-2.5 animate-fade-in-up animate-delay-2">
+                Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your{' '}
+                <span className="relative inline-block">
+                  Home
+                  <svg
+                    className="absolute -bottom-1 left-0 w-full h-2.5 text-[#34D399]/70 pointer-events-none"
+                    viewBox="0 0 100 20"
+                    fill="none"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 14 C 30 18, 70 18, 97 10"
+                      stroke="currentColor"
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>
               </h1>
 
               {/* Subtitle */}
-              <p className="text-[#475569] text-sm sm:text-[15px] leading-relaxed max-w-[540px] mb-5 font-normal animate-fade-in-up animate-delay-3">
+              <p className="text-[#475569] text-sm sm:text-[15px] leading-relaxed max-w-[540px] mb-4.5 font-normal animate-fade-in-up animate-delay-3">
                 Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
               </p>
 
-              {/* Search Bar Container */}
-              <div className="relative flex items-center w-full max-w-[560px] h-[50px] sm:h-[54px] rounded-full border border-[#DCE6E1] bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] focus-within:border-[#065F46] focus-within:ring-3 focus-within:ring-[#065F46]/10 transition-all animate-fade-in-up animate-delay-4">
-                <Search className="h-4.5 w-4.5 text-slate-400 mr-2.5 shrink-0 stroke-[2]" />
+              {/* Search Bar Container with Enhanced Floating Shadow */}
+              <div className="relative flex items-center w-full max-w-[580px] h-[52px] sm:h-[56px] rounded-full border border-slate-200/90 bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_12px_36px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_40px_rgba(6,78,59,0.11)] focus-within:shadow-[0_16px_40px_rgba(6,78,59,0.12)] focus-within:border-[#065F46] focus-within:ring-4 focus-within:ring-[#065F46]/10 transition-all animate-fade-in-up animate-delay-4">
+                <Search className="h-5 w-5 text-slate-400 mr-2.5 shrink-0 stroke-[2]" />
                 <input
                   type="text"
                   role="searchbox"
@@ -187,20 +214,55 @@ export default function ServicesPage() {
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="mr-2 p-1 text-slate-400 hover:text-slate-600 rounded-full transition-colors"
+                    className="mr-2 p-1 text-slate-400 hover:text-slate-600 rounded-full transition-colors cursor-pointer"
                     title="Clear search"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 )}
 
+                {/* Subtle vertical separator before button */}
+                <div className="h-6 w-px bg-slate-200 mx-1.5 shrink-0 hidden sm:block" />
+
                 <button
                   type="button"
                   aria-label="Submit search"
-                  className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#065F46] hover:bg-[#043328] text-white flex items-center justify-center shrink-0 shadow-xs transition-colors cursor-pointer group"
+                  className="h-10 w-11 sm:w-12 rounded-full bg-[#065F46] hover:bg-[#043328] text-white flex items-center justify-center shrink-0 shadow-sm transition-all cursor-pointer group"
                 >
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight className="h-4.5 w-4.5 transition-transform group-hover:translate-x-0.5" />
                 </button>
+              </div>
+
+              {/* Popular Quick-Filter Chips */}
+              <div className="mt-3.5 flex flex-wrap items-center gap-2 sm:gap-2.5 animate-fade-in-up animate-delay-4">
+                <span className="text-xs font-semibold text-slate-500 mr-1 select-none">
+                  Popular:
+                </span>
+                {POPULAR_SERVICES.map((item) => {
+                  const IconComp = item.icon;
+                  const isActive = searchQuery.toLowerCase() === item.query.toLowerCase();
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      onClick={() => {
+                        if (isActive) {
+                          setSearchQuery('');
+                        } else {
+                          setSearchQuery(item.query);
+                        }
+                      }}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 shadow-2xs cursor-pointer ${
+                        isActive
+                          ? 'bg-[#E6F8F0] border-2 border-[#065F46] text-[#065F46] shadow-xs'
+                          : 'bg-white border border-[#E2EBE7] text-slate-700 hover:border-[#065F46]/40 hover:bg-[#F2F8F5] hover:text-[#064E3B]'
+                      }`}
+                    >
+                      <IconComp className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
