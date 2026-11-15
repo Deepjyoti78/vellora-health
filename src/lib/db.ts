@@ -202,7 +202,7 @@ const initialUsers: UserRecord[] = [
     email: 'patient@vellora.com',
     phone: '+1 (555) 234-5678',
     role: 'PATIENT',
-    avatar: '/assets/avatar-1.webp',
+    avatar: '/assets/avatar-indian-1.jpg',
   },
   {
     id: 'pat-2',
@@ -210,7 +210,7 @@ const initialUsers: UserRecord[] = [
     email: 'arthur.p@example.com',
     phone: '+1 (555) 876-5432',
     role: 'PATIENT',
-    avatar: '/assets/avatar-2.webp',
+    avatar: '/assets/avatar-indian-2.jpg',
   },
   {
     id: 'doc-1',
@@ -218,7 +218,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.maya@vellora.com',
     phone: '+1 (555) 345-6789',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-maya-patel.webp',
+    avatar: '/assets/chatgpt-card-3.webp',
     specialty: 'Internal Medicine & Geriatrics',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -235,7 +235,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.ethan@vellora.com',
     phone: '+1 (555) 456-7890',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-ethan-park.webp',
+    avatar: '/assets/chatgpt-card-4.webp',
     specialty: 'Pediatrics & Family Medicine',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -252,7 +252,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.daniel@vellora.com',
     phone: '+1 (555) 567-8912',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-daniel-reed.webp',
+    avatar: '/assets/chatgpt-card-4.webp',
     specialty: 'Cardiology & Chronic Disease Management',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -269,7 +269,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.sofia@vellora.com',
     phone: '+1 (555) 678-9123',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-4.webp',
+    avatar: '/assets/chatgpt-card-3.webp',
     specialty: 'Post-Operative Rehabilitation & Orthopedics',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -286,7 +286,7 @@ const initialUsers: UserRecord[] = [
     email: 'dr.marcus@vellora.com',
     phone: '+1 (555) 789-0134',
     role: 'DOCTOR',
-    avatar: '/assets/doctor-3.webp',
+    avatar: '/assets/chatgpt-card-4.webp',
     specialty: 'General Practice & Acute Illness',
     verificationStatus: 'APPROVED',
     isOnline: false,
@@ -337,7 +337,7 @@ const initialUsers: UserRecord[] = [
     email: 'caretaker.james@vellora.com',
     phone: '+1 (555) 678-9012',
     role: 'CARETAKER',
-    avatar: '/assets/doctor-3.webp',
+    avatar: '/assets/chatgpt-card-4.webp',
     specialty: 'Elderly Assistance & Mobility Support',
     verificationStatus: 'APPROVED',
     isOnline: true,
@@ -371,7 +371,7 @@ const initialUsers: UserRecord[] = [
     email: 'admin@vellora.com',
     phone: '+1 (555) 000-1111',
     role: 'ADMIN',
-    avatar: '/assets/avatar-3.webp',
+    avatar: '/assets/avatar-indian-3.jpg',
   },
 ];
 
@@ -384,7 +384,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Comprehensive medical assessment in the comfort and privacy of your home.",
     "description": "Avoid clinic queues and travel stress. Board-certified physicians provide unhurried physical examinations, acute illness diagnosis, chronic condition reviews, digital prescriptions, and direct specialist coordination.",
-    "image": "/assets/doorstep-1.webp",
+    "image": "/assets/chatgpt-card-1.webp",
     "basePrice": 95,
     "duration": "45 - 60 mins",
     "features": [
@@ -409,7 +409,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Specialized medical assessment for seniors, polypharmacy review, and cognitive screening.",
     "description": "Elderly care evaluation conducted by experienced geriatric physicians. Includes medication reconciliation, fall risk assessment, cognitive health checks, and chronic disease optimization.",
-    "image": "/assets/doctor-daniel-reed.webp",
+    "image": "/assets/chatgpt-card-1.webp",
     "basePrice": 120,
     "duration": "60 mins",
     "features": [
@@ -433,7 +433,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Gentle, compassionate pediatrician house calls for infants, toddlers, and young children.",
     "description": "Keep sick children comfortable at home. Our pediatricians evaluate fevers, respiratory issues, rashes, ear infections, and milestones in your childs familiar surroundings.",
-    "image": "/assets/doctor-2.webp",
+    "image": "/assets/chatgpt-card-9.webp",
     "basePrice": 110,
     "duration": "45 mins",
     "features": [
@@ -457,7 +457,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Bedside cardiac consultation, digital rhythm analysis, and hypertension management.",
     "description": "Consult a cardiologist without visiting the hospital. Includes stethoscope heart sound analysis, blood pressure mapping, digital ECG telemetry, and medication optimization.",
-    "image": "/assets/doctor-maya-patel.webp",
+    "image": "/assets/chatgpt-card-1.webp",
     "basePrice": 145,
     "duration": "50 - 60 mins",
     "features": [
@@ -481,7 +481,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Focused medical checkup for diabetes, insulin titration, and diabetic neuropathy screening.",
     "description": "Comprehensive chronic disease doctor visits designed to stabilize blood sugars, prevent diabetic foot complications, and review kidney health.",
-    "image": "/assets/doctor-ethan-park.webp",
+    "image": "/assets/chatgpt-card-1.webp",
     "basePrice": 100,
     "duration": "45 mins",
     "features": [
@@ -505,7 +505,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Expert musculoskeletal evaluation for arthritis, back pain, and joint stiffness.",
     "description": "Orthopedic doctor visits for patients with restricted mobility due to osteoarthritis, spinal pain, or recent bone fractures.",
-    "image": "/assets/doctor-3.webp",
+    "image": "/assets/chatgpt-card-6.webp",
     "basePrice": 125,
     "duration": "45 - 60 mins",
     "features": [
@@ -529,7 +529,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Doctor consultation for COPD, asthma, bronchitis, and post-viral recovery.",
     "description": "Specialized respiratory examinations at home. Auscultation of lung fields, pulse oximetry mapping, peak flow measurement, and inhaler technique optimization.",
-    "image": "/assets/specialists.webp",
+    "image": "/assets/chatgpt-card-1.webp",
     "basePrice": 130,
     "duration": "45 mins",
     "features": [
@@ -553,7 +553,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Neurological assessment for stroke survivors, Parkinsons, and tremors at home.",
     "description": "Dedicated doctor evaluation for neurological conditions. Motor tone testing, cranial nerve checks, swallowing evaluation, and medication coordination.",
-    "image": "/assets/doctor-4.webp",
+    "image": "/assets/chatgpt-card-6.webp",
     "basePrice": 155,
     "duration": "60 mins",
     "features": [
@@ -577,7 +577,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Crucial 48-hour post-discharge medical checkup to prevent hospital readmissions.",
     "description": "A critical bedside checkup within 48 to 72 hours of coming home from the hospital. The physician reviews discharge summaries, adjusts medications, and checks surgical wounds.",
-    "image": "/assets/care-alt.webp",
+    "image": "/assets/chatgpt-card-1.webp",
     "basePrice": 115,
     "duration": "60 mins",
     "features": [
@@ -601,7 +601,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Doctor Consultations",
     "shortDesc": "Rapid doorstep doctor visit for sudden illness, high fevers, and acute infections.",
     "description": "Rapid dispatch physician visits for urgent medical issues that do not require an emergency room visit. Prompt diagnosis, bedside treatment, and symptom relief.",
-    "image": "/assets/Warm Home Visit Healthcare Scene.webp",
+    "image": "/assets/chatgpt-card-1.webp",
     "basePrice": 135,
     "duration": "45 mins",
     "features": [
@@ -625,7 +625,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Certified nursing support for wound care, IV therapy, injections, and vitals.",
     "description": "Hospital-grade clinical nursing at home. From surgical wound dressing and suture removal to IV catheter administration, catheterization, and post-operative vitals monitoring by licensed nurses.",
-    "image": "/assets/doorstep-3.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 55,
     "duration": "Per procedure or 2-4 hours",
     "features": [
@@ -651,7 +651,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Aseptic dressing changes, surgical staples removal, and wound healing monitoring.",
     "description": "Keep surgical incisions clean and infection-free. Certified registered nurses change surgical dressings using hospital-grade sterile techniques, remove sutures, and manage wound vacs.",
-    "image": "/assets/care.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 65,
     "duration": "45 mins",
     "features": [
@@ -675,7 +675,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Dedicated daytime bedside clinical nursing for high-dependency recovery.",
     "description": "A licensed registered nurse (RN/BSN) stationed at your home for 12 continuous daytime hours (8 AM to 8 PM) managing medications, infusions, catheterization, and hygiene.",
-    "image": "/assets/doorstep-3.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 220,
     "duration": "12 Hours (8 AM - 8 PM)",
     "features": [
@@ -699,7 +699,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Peace of mind overnight nursing care with active vitals monitoring and oxygen care.",
     "description": "Overnight nursing support from 8 PM to 8 AM. Ensures uninterrupted sleep for family members while a licensed nurse supervises oxygen, monitors IV infusions, and assists with nocturnal mobility.",
-    "image": "/assets/doorstep-1.webp",
+    "image": "/assets/chatgpt-card-6.webp",
     "basePrice": 240,
     "duration": "12 Hours (8 PM - 8 AM)",
     "features": [
@@ -723,7 +723,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "24/7 dedicated round-the-clock hospital-grade nursing care in your home.",
     "description": "Round-the-clock clinical care provided by paired registered nurses on rotational 12-hour shifts. Ideal for intensive recovery, complex wounds, or advanced palliative care.",
-    "image": "/assets/compassionate-hospital-care.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 420,
     "duration": "24 Hours (Rotational)",
     "features": [
@@ -747,7 +747,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Safe in-home intravenous catheter placement, saline hydration, and antibiotic drips.",
     "description": "Avoid emergency department visits just for IV lines. A certified infusion nurse visits your home with sterile catheterization kits to start and monitor intravenous therapy.",
-    "image": "/assets/doorstep-2.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 75,
     "duration": "60 mins",
     "features": [
@@ -771,7 +771,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Gentle, sterile Foley catheter insertion, bladder wash, and bag replacement.",
     "description": "Painless and sterile urinary catheter care at home. Licensed nurses handle Foley catheter insertion, continuous drainage bag emptying, irrigation, and hygiene.",
-    "image": "/assets/care-alt.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 70,
     "duration": "45 mins",
     "features": [
@@ -795,7 +795,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Specialized airway suctioning, tracheostomy tie change, and stoma skin dressing.",
     "description": "Clinical nursing care for patients with tracheostomy tubes. Ensures open airway clearance, mucus suctioning, inner cannula cleaning, and stoma infection prevention.",
-    "image": "/assets/specialists.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 85,
     "duration": "60 mins",
     "features": [
@@ -819,7 +819,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Sterile NG tube placement, position verification, and enteral feeding administration.",
     "description": "Safe enteral nutrition management. Registered nurses insert or replace nasogastric (NG/Ryles) tubes, verify gastric placement with pH testing, and guide family members.",
-    "image": "/assets/Warm Home Visit Healthcare Scene.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 80,
     "duration": "45 mins",
     "features": [
@@ -843,7 +843,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Professional Nursing",
     "shortDesc": "Hospital-standard sterile biopatch dressing changes and heparin line flushes.",
     "description": "Specialized central line maintenance. Certified nurses perform chlorhexidine skin prep, statlock replacement, biopatch application, and heparin locks to prevent bloodstream infections.",
-    "image": "/assets/doctor-1.webp",
+    "image": "/assets/chatgpt-card-5.webp",
     "basePrice": 90,
     "duration": "45 mins",
     "features": [
@@ -867,7 +867,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Trained attendants for daily living assistance, hygiene, mobility, and feeding.",
     "description": "Dedicated bedside caretakers who ensure your loved ones are safe, clean, nourished, and supported around the clock. Ideal for bedridden patients, stroke recovery, and seniors needing mobility support.",
-    "image": "/assets/doorstep-4.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 40,
     "duration": "12-Hour or 24-Hour Shifts",
     "features": [
@@ -892,7 +892,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Compassionate daytime support for walking, bathing, dressing, and companionship.",
     "description": "A trained personal care attendant helps your elderly parent with balance, walking, bathing, meal assistance, and medication reminders from morning to evening.",
-    "image": "/assets/doorstep-4.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 110,
     "duration": "12 Hours (8 AM - 8 PM)",
     "features": [
@@ -916,7 +916,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Full-time continuous 24/7 bedside attendant for non-clinical elder assistance.",
     "description": "Full-time live-in caregiver providing constant reassurance, mobility transfers, hygiene maintenance, and emergency alerting throughout both day and night.",
-    "image": "/assets/care-alt.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 195,
     "duration": "24 Hours (Continuous)",
     "features": [
@@ -940,7 +940,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Dignified, gentle sponge baths, hair washing, skin moisturizing, and linen change.",
     "description": "A focused 1-hour session by trained attendants to provide a refreshing sponge bath, shampoo, nail clipping, skin barrier cream application, and complete bed linen change.",
-    "image": "/assets/wellness.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 50,
     "duration": "60 mins",
     "features": [
@@ -964,7 +964,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Patient, trained attendants skilled in wandering prevention and memory reassurance.",
     "description": "Caregivers certified in memory care. They employ gentle redirection techniques, maintain structured routines, and safeguard seniors prone to wandering or sundowning.",
-    "image": "/assets/doctor-daniel-reed.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 130,
     "duration": "12 Hours (Day or Night)",
     "features": [
@@ -988,7 +988,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Assistance for hemiplegic stroke survivors: transfers, feeding, and limb support.",
     "description": "Dedicated support for stroke recovery. Attendants assist with one-sided weakness, safe transfers using gait belts, aspiration-safe upright feeding, and range of motion.",
-    "image": "/assets/doorstep-1.webp",
+    "image": "/assets/chatgpt-card-6.webp",
     "basePrice": 120,
     "duration": "12 Hours",
     "features": [
@@ -1012,7 +1012,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Assisting with freezing episodes, steady walking, tremors, and timed meds.",
     "description": "Caregivers trained in Parkinsons disease characteristics. They help patients overcome gait freezing, steady hand tremors during dining, and ensure precise medication timing.",
-    "image": "/assets/doctor-3.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 125,
     "duration": "12 Hours",
     "features": [
@@ -1036,7 +1036,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Extra help for the first critical 7 to 14 days after surgery or hospital stay.",
     "description": "Provides physical assistance during the vulnerable weeks following knee replacements, abdominal surgery, or cardiac recovery. Helps prevent accidental falls and wound strain.",
-    "image": "/assets/care.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 115,
     "duration": "12 Hours",
     "features": [
@@ -1060,7 +1060,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Gentle, respectful bedside presence focusing on dignity, pain relief, and comfort.",
     "description": "Compassionate attendants trained in end-of-life and palliative comfort. They provide quiet reassurance, gentle mouth care, skin relief, and support to grieving families.",
-    "image": "/assets/Warm Home Visit Healthcare Scene.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 140,
     "duration": "12 Hours (Day or Night)",
     "features": [
@@ -1084,7 +1084,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Caretakers & Assistants",
     "shortDesc": "Temporary weekend or evening coverage giving family caregivers a well-deserved break.",
     "description": "Give primary family caregivers time to recharge, travel, or attend events. Our vetted attendants take over full patient care responsibilities seamlessly.",
-    "image": "/assets/doctor-2.webp",
+    "image": "/assets/chatgpt-card-10.webp",
     "basePrice": 135,
     "duration": "12 Hours or Weekend Block",
     "features": [
@@ -1108,7 +1108,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "Painless sample collection at home with digital reports within 12 to 24 hours.",
     "description": "NABL-accredited laboratory diagnostics delivered to your doorstep. Certified phlebotomists collect blood, urine, or swab samples using vacuum sterile barcoded vials with cold-chain transport.",
-    "image": "/assets/doorstep-2.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 35,
     "duration": "15 mins sample collection",
     "features": [
@@ -1135,7 +1135,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "78 key parameters: CBC, Liver, Kidney, Lipid, Sugar, Thyroid, and Vitamins.",
     "description": "Complete diagnostic screening at home. Tests liver enzymes, renal function, heart lipids, fasting blood sugar, thyroid hormones, vitamin D, and B12 with a single morning blood draw.",
-    "image": "/assets/diagnostics.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 85,
     "duration": "20 mins sample collection",
     "features": [
@@ -1159,7 +1159,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "HbA1c 3-month sugar average, fasting glucose, urine microalbumin & kidney check.",
     "description": "Essential quarterly blood tests for diabetic patients. Measures average blood sugar over 90 days (HbA1c), fasting insulin, and checks for early kidney protein leakage.",
-    "image": "/assets/doorstep-2.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 45,
     "duration": "15 mins",
     "features": [
@@ -1183,7 +1183,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "Cholesterol, Triglycerides, HDL, LDL, VLDL, and High-Sensitivity CRP.",
     "description": "Evaluate cardiovascular risk from home. Measures good vs bad cholesterol, total lipid ratios, and systemic inflammatory markers (hs-CRP) that predict arterial plaque.",
-    "image": "/assets/doctor-4.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 55,
     "duration": "15 mins",
     "features": [
@@ -1207,7 +1207,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "Serum Creatinine, Blood Urea Nitrogen, Uric Acid, and Electrolytes.",
     "description": "Monitors renal clearance and electrolyte balance. Essential for patients taking blood pressure medications, diuretics, or managing chronic kidney disease.",
-    "image": "/assets/facility-3.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 48,
     "duration": "15 mins",
     "features": [
@@ -1231,7 +1231,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "SGOT, SGPT, Bilirubin (Total & Direct), Alkaline Phosphatase, and Proteins.",
     "description": "Evaluates liver cellular health, bile duct patency, and synthetic protein production. Ideal for medication toxicity monitoring or gastrointestinal evaluations.",
-    "image": "/assets/facility-2.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 48,
     "duration": "15 mins",
     "features": [
@@ -1255,7 +1255,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "High-sensitivity TSH, Total T3, and Total T4 for metabolism and thyroid disorders.",
     "description": "Check for hypothyroidism or hyperthyroidism from home. Measures pituitary stimulating hormone and active circulating thyroid hormones with high precision chemiluminescence.",
-    "image": "/assets/diagnostics.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 42,
     "duration": "15 mins",
     "features": [
@@ -1279,7 +1279,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "25-Hydroxy Vitamin D and Active B12 for fatigue, bone health, and neuropathy.",
     "description": "Address chronic tiredness, body aches, and numbness. Evaluates vitamin D for bone calcium absorption and B12 for nerve myelination and red blood cell production.",
-    "image": "/assets/doctor-3.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 65,
     "duration": "15 mins",
     "features": [
@@ -1303,7 +1303,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "In-home administration of Flu, Pneumococcal, Shingles, and Hepatitis vaccines.",
     "description": "Stay immunized without clinic exposure. Certified nurses bring cold-chain stored vaccines to your home, administer the shot safely, and observe for 15 minutes post-vaccination.",
-    "image": "/assets/doorstep-4.webp",
+    "image": "/assets/chatgpt-card-9.webp",
     "basePrice": 60,
     "duration": "30 mins",
     "features": [
@@ -1328,7 +1328,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Diagnostic Tests",
     "shortDesc": "Hospital-grade bedside resting electrocardiogram with tele-cardiologist review.",
     "description": "A trained technician brings a portable digital 12-lead electrocardiograph machine directly to your living room. The tracing is interpreted by a senior board cardiologist within 60 minutes.",
-    "image": "/assets/specialists.webp",
+    "image": "/assets/chatgpt-card-7.webp",
     "basePrice": 70,
     "duration": "30 mins",
     "features": [
@@ -1352,7 +1352,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Physical Therapy & Rehab",
     "shortDesc": "Expert physical therapy for stroke recovery, joint replacement, and mobility restoration.",
     "description": "Certified physical therapists bring customized orthopedic, neurological, and geriatric rehabilitation directly to your living room. Accelerate recovery with guided neuromuscular stimulation and gait training.",
-    "image": "/assets/wellness.webp",
+    "image": "/assets/chatgpt-card-6.webp",
     "basePrice": 60,
     "duration": "50 - 60 mins",
     "features": [
@@ -1377,7 +1377,7 @@ const initialServices: ServiceRecord[] = [
     "categoryLabel": "Critical Care & Monitoring",
     "shortDesc": "Advanced home ICU installation with multipara monitors, oxygen, and continuous critical care nursing.",
     "description": "Transition hospitalized patients safely home. Complete ICU infrastructure including hospital-grade electric beds, continuous vitals monitoring, oxygen concentrators, and 24/7 dedicated critical care nurses supervised by intensivists.",
-    "image": "/assets/compassionate-hospital-care.webp",
+    "image": "/assets/chatgpt-card-2.webp",
     "basePrice": 180,
     "duration": "12-Hour or 24-Hour Continuous Care",
     "features": [
