@@ -142,86 +142,84 @@ export default function ServicesPage() {
       {/* Top Header with active Services pill */}
       <Header theme="light" />
 
-      {/* FULL-WIDTH HERO SECTION WITH COMPASSIONATE CARE BACKGROUND */}
-      <section className="relative w-full overflow-hidden border-b border-[#E8F0EC] bg-[#FAFCFB]">
-        {/* Background Image: Compassionate Care in a Calm Setting */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <img
-            src="/assets/compassionate-care-in-calm-setting.webp"
-            alt="Compassionate Healthcare in a Calm Home Setting"
-            className="h-full w-full object-cover object-right lg:object-[80%_center] opacity-95"
-          />
-          {/* Smooth multi-stage gradient overlay: ensures crisp readability of the heading and search bar on the left */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(250,252,251,0.98) 0%, rgba(250,252,251,0.95) 36%, rgba(250,252,251,0.78) 54%, rgba(250,252,251,0.30) 78%, rgba(250,252,251,0.08) 100%)',
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#FAFCFB]/60 via-transparent to-[#FAFCFB]/30" />
-        </div>
+      {/* 2-COLUMN HERO SECTION WITH REDUCED HEIGHT & HEALTHCARE ILLUSTRATION */}
+      <section className="relative w-full overflow-hidden border-b border-[#E8F0EC] bg-white">
+        {/* Soft background ambient glow */}
+        <div className="absolute top-0 right-1/4 h-80 w-80 rounded-full bg-[#ECFDF5] blur-3xl opacity-60 pointer-events-none" />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-18 flex flex-col justify-center min-h-[380px] lg:min-h-[440px]">
-          {/* Content Column: Eyebrow, Heading, Subtitle & Search */}
-          <div className="w-full lg:w-[58%] xl:w-[54%] z-10 flex flex-col justify-center">
-            {/* Eyebrow Pill */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2]/90 backdrop-blur-xs border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-3.5 shadow-2xs">
-              <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
-              <span>OUR SERVICES</span>
-            </div>
+        <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Column (col-span-7): Eyebrow, Heading, Subtitle & Search */}
+            <div className="lg:col-span-7 flex flex-col justify-center">
+              {/* Eyebrow Pill */}
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-3 shadow-2xs">
+                <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
+                <span>OUR SERVICES</span>
+              </div>
 
-            {/* Main Heading matching the refined font heading of Meet Our Visiting Medical Specialists */}
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#15212B] tracking-tight leading-[1.14] mb-3.5">
-              Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
-            </h1>
+              {/* Main Heading */}
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#15212B] tracking-tight leading-[1.15] mb-3">
+                Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
+              </h1>
 
-            {/* Subtitle */}
-            <p className="text-[#475569] text-sm sm:text-[15.5px] leading-relaxed max-w-[560px] mb-6 font-normal">
-              Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
-            </p>
+              {/* Subtitle */}
+              <p className="text-[#475569] text-sm sm:text-[15px] leading-relaxed max-w-[540px] mb-5 font-normal">
+                Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
+              </p>
 
-            {/* Search Bar Container */}
-            <div className="relative flex items-center w-full max-w-[560px] h-[54px] sm:h-[58px] rounded-full border border-[#DCE6E1] bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_4px_24px_rgba(0,0,0,0.06)] focus-within:border-[#065F46] focus-within:ring-4 focus-within:ring-[#065F46]/10 transition-all">
-              <Search className="h-5 w-5 text-slate-400 mr-3 shrink-0 stroke-[2]" />
-              <input
-                type="text"
-                role="searchbox"
-                aria-label="Search services, treatments, or care types"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Escape') setSearchQuery('');
-                }}
-                placeholder="Search services, treatments, or care types..."
-                className="w-full bg-transparent text-xs sm:text-sm text-[#102820] placeholder-slate-400 focus:outline-none font-medium"
-              />
+              {/* Search Bar Container */}
+              <div className="relative flex items-center w-full max-w-[560px] h-[50px] sm:h-[54px] rounded-full border border-[#DCE6E1] bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] focus-within:border-[#065F46] focus-within:ring-3 focus-within:ring-[#065F46]/10 transition-all">
+                <Search className="h-4.5 w-4.5 text-slate-400 mr-2.5 shrink-0 stroke-[2]" />
+                <input
+                  type="text"
+                  role="searchbox"
+                  aria-label="Search services, treatments, or care types"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') setSearchQuery('');
+                  }}
+                  placeholder="Search services, treatments, or care types..."
+                  className="w-full bg-transparent text-xs sm:text-sm text-[#102820] placeholder-slate-400 focus:outline-none font-medium"
+                />
 
-              {searchQuery && (
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="mr-2 p-1 text-slate-400 hover:text-slate-600 rounded-full transition-colors"
+                    title="Clear search"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="mr-2 p-1 text-slate-400 hover:text-slate-600 rounded-full transition-colors"
-                  title="Clear search"
+                  aria-label="Submit search"
+                  className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#065F46] hover:bg-[#043328] text-white flex items-center justify-center shrink-0 shadow-xs transition-colors cursor-pointer group"
                 >
-                  <X className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
-              )}
+              </div>
+            </div>
 
-              <button
-                type="button"
-                aria-label="Submit search"
-                className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-[#065F46] hover:bg-[#043328] text-white flex items-center justify-center shrink-0 shadow-xs transition-colors cursor-pointer group"
-              >
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </button>
+            {/* Right Column (col-span-5): Illustration Card */}
+            <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
+              <div className="relative w-full max-w-[480px] overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-[#F7FBF9] shadow-[0_4px_24px_rgba(6,95,70,0.06)] group hover:shadow-[0_8px_32px_rgba(6,95,70,0.1)] transition-all duration-300">
+                <img
+                  src="/assets/services-hero-illustration.jpg"
+                  alt="In-Home Doctor Consultation and Healthcare Illustration"
+                  className="w-full h-auto max-h-[300px] sm:max-h-[320px] object-contain mx-auto"
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* MAIN CONTENT AREA */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-20">
+      <main className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 pb-20">
         {/* Dynamic Content: Search Results vs. Care Categories Grid */}
         {isSearching ? (
           <section className="animate-in fade-in duration-200">

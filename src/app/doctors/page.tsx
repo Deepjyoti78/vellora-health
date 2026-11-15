@@ -68,7 +68,7 @@ const DOCTORS_LIST: DoctorSpecialist[] = [
     qualification: '16 Years • MD (Cardiology)',
     rating: 4.85,
     reviewsCount: 129,
-    image: '/assets/chatgpt-card-4.webp',
+    image: '/assets/avatar-indian-2.jpg',
     bio: 'Specializes in heart health, preventive cardiology, and long-term management of chronic cardiac conditions.',
     tags: ['Heart Health', 'BP Management', 'Cardiac Rehab'],
     moreTagsCount: 2,
@@ -81,7 +81,7 @@ const DOCTORS_LIST: DoctorSpecialist[] = [
     qualification: '12 Years • MD (Orthopedics & Rehab)',
     rating: 4.9,
     reviewsCount: 104,
-    image: '/assets/chatgpt-card-3.webp',
+    image: '/assets/avatar-indian-3.jpg',
     bio: 'Guiding surgical recovery, mobility milestones, joint recovery, and bedside rehabilitation.',
     tags: ['Post-Op Rehab', 'Joint Mobility', 'Pain Management'],
     moreTagsCount: 2,
@@ -94,7 +94,7 @@ const DOCTORS_LIST: DoctorSpecialist[] = [
     qualification: '15 Years • MD (Emergency & Family Medicine)',
     rating: 4.9,
     reviewsCount: 98,
-    image: '/assets/chatgpt-card-4.webp',
+    image: '/assets/avatar-indian-4.jpg',
     bio: 'Rapid acute illness evaluations, fever management, and compassionate bedside general checkups.',
     tags: ['Acute Illness', 'Fever Care', 'General Checkup'],
     moreTagsCount: 2,
@@ -112,12 +112,89 @@ const DOCTORS_LIST: DoctorSpecialist[] = [
     tags: ['Infant Care', 'Immunizations', 'Nutrition'],
     moreTagsCount: 2,
   },
+  {
+    id: 'doc-7',
+    name: 'Dr. Vikram Sen',
+    specialty: 'Orthopedic & Joint Care',
+    category: 'REHAB',
+    qualification: '15 Years • MS (Orthopedics)',
+    rating: 4.92,
+    reviewsCount: 118,
+    image: '/assets/avatar-indian-5.jpg',
+    bio: 'Comprehensive musculoskeletal assessments, arthritis pain relief, and post-fracture home mobility guidance.',
+    tags: ['Joint Pain', 'Arthritis Care', 'Spine Mobility'],
+    moreTagsCount: 2,
+  },
+  {
+    id: 'doc-8',
+    name: 'Dr. Neha Kapoor',
+    specialty: 'Endocrinology & Diabetic Care',
+    category: 'INTERNAL',
+    qualification: '13 Years • MD, DM (Endocrinology)',
+    rating: 4.88,
+    reviewsCount: 142,
+    image: '/assets/avatar-indian-6.jpg',
+    bio: 'Targeted glucose control regimens, thyroid balance therapies, and lifestyle optimization at home.',
+    tags: ['Type 2 Diabetes', 'Thyroid Care', 'Metabolic Health'],
+    moreTagsCount: 2,
+  },
+  {
+    id: 'doc-9',
+    name: 'Dr. Siddharth Nair',
+    specialty: 'Physiotherapy & Neuro-Rehabilitation',
+    category: 'REHAB',
+    qualification: '14 Years • MPT (Neuro-Physiotherapy)',
+    rating: 4.94,
+    reviewsCount: 126,
+    image: '/assets/avatar-indian-8.jpg',
+    bio: 'Stroke rehabilitation, paralysis recovery, gait training, and personalized geriatric mobility protocols.',
+    tags: ['Stroke Rehab', 'Gait Training', 'Neuropathy'],
+    moreTagsCount: 2,
+  },
+  {
+    id: 'doc-10',
+    name: 'Dr. Kavita Deshmukh',
+    specialty: 'Geriatric Medicine & Palliative Care',
+    category: 'INTERNAL',
+    qualification: '18 Years • MD (Geriatric Medicine)',
+    rating: 4.96,
+    reviewsCount: 164,
+    image: '/assets/avatar-indian-10.jpg',
+    bio: 'Compassionate elderly palliative evaluations, polypharmacy simplification, and comfort care at home.',
+    tags: ['Senior Wellness', 'Dementia Care', 'Medication Review'],
+    moreTagsCount: 2,
+  },
+  {
+    id: 'doc-11',
+    name: 'Dr. Amitav Ghosh',
+    specialty: 'Family Medicine & Preventive Health',
+    category: 'GENERAL',
+    qualification: '12 Years • MD (Family Medicine)',
+    rating: 4.86,
+    reviewsCount: 94,
+    image: '/assets/avatar-indian-11.jpg',
+    bio: 'Annual family health screenings, vital sign surveillance, infection control, and doorstep routine diagnostics.',
+    tags: ['Routine Checkup', 'Preventive Care', 'Family Health'],
+    moreTagsCount: 2,
+  },
+  {
+    id: 'doc-12',
+    name: 'Dr. Sunita Joshi',
+    specialty: 'Pediatric Development & Allergy',
+    category: 'PEDIATRICS',
+    qualification: '11 Years • MD (Pediatrics & Allergy)',
+    rating: 4.91,
+    reviewsCount: 108,
+    image: '/assets/avatar-indian-12.jpg',
+    bio: 'Childhood asthma evaluations, food allergy management, and developmental milestone assessments.',
+    tags: ['Pediatric Asthma', 'Allergy Testing', 'Child Milestones'],
+    moreTagsCount: 2,
+  },
 ];
 
 export default function DoctorsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [showAll, setShowAll] = useState<boolean>(false);
 
   const filterTabs = [
     { id: 'ALL', label: 'All Specialists (48)', icon: LayoutGrid },
@@ -137,14 +214,15 @@ export default function DoctorsPage() {
     return matchesCategory && matchesSearch;
   });
 
-  const displayedDoctors = showAll ? filteredDoctors : filteredDoctors.slice(0, 3);
+  // Display ALL doctors directly — no truncation or "View All" toggle button
+  const displayedDoctors = filteredDoctors;
 
   return (
     <div className="min-h-screen bg-white text-[#15212B]">
       <Header theme="light" />
 
-      {/* Main Single Continuous Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Main Container - Expanded to 1400px to eliminate side empty spaces */}
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* ================= HERO SECTION ================= */}
         <section className="pt-6 pb-6 sm:pt-10 sm:pb-8 animate-fade-in-up">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
@@ -243,7 +321,7 @@ export default function DoctorsPage() {
           {/* Search & Counter Row */}
           <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <p className="text-xs sm:text-[13px] text-slate-600 font-medium">
-              Showing <span className="text-[#15212B] font-bold">48</span> verified specialists
+              Showing <span className="text-[#15212B] font-bold">{displayedDoctors.length}</span> verified specialists
             </p>
 
             <div className="relative w-full sm:w-[340px]">
@@ -260,7 +338,7 @@ export default function DoctorsPage() {
         </section>
 
         {/* ================= DOCTOR CARDS GRID ================= */}
-        <section className="mt-5 sm:mt-6">
+        <section className="mt-5 sm:mt-6 pb-14 sm:pb-20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {displayedDoctors.map((doc, idx) => {
               const delayClass =
@@ -275,101 +353,89 @@ export default function DoctorsPage() {
               return (
                 <div
                   key={doc.id}
-                  className={`group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E6EBE9] bg-white p-4.5 sm:p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-md hover:-translate-y-0.5 animate-fade-in-up ${delayClass} card-hover-lift`}
+                  className={`group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E6EBE9] bg-white p-5 sm:p-5.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-lg hover:-translate-y-0.5 animate-fade-in-up ${delayClass} card-hover-lift`}
                 >
-                <div>
-                  {/* Doctor Photo & Badges Header */}
-                  <div className="flex items-start gap-3.5">
-                    <div className="relative h-24 w-24 sm:h-[100px] sm:w-[100px] shrink-0 overflow-hidden rounded-[14px] border border-[#E6EBE9] bg-slate-50">
-                      <img
-                        src={doc.image}
-                        alt={doc.name}
-                        className="h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2 py-0.5 text-[10px] font-bold text-[#065F46]">
-                          <Check className="h-2.5 w-2.5 stroke-[2.5]" />
-                          <span>Verified</span>
-                        </span>
-
-                        <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600">
-                          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                          <span>
-                            {doc.rating} ({doc.reviewsCount}+)
-                          </span>
-                        </div>
+                  <div>
+                    {/* Doctor Photo & Badges Header */}
+                    <div className="flex items-start gap-3.5">
+                      <div className="relative h-24 w-24 sm:h-[100px] sm:w-[100px] shrink-0 overflow-hidden rounded-[14px] border border-[#E6EBE9] bg-slate-50">
+                        <img
+                          src={doc.image}
+                          alt={doc.name}
+                          className="h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
+                        />
                       </div>
 
-                      <h3 className="mt-1 truncate font-heading text-base sm:text-[17px] font-semibold text-[#15212B] group-hover:text-[#065F46] transition-colors">
-                        {doc.name}
-                      </h3>
-                      <p className="truncate text-xs font-medium text-[#065F46]">
-                        {doc.specialty}
-                      </p>
-                      <p className="mt-0.5 truncate text-[11px] text-slate-500">
-                        {doc.qualification}
-                      </p>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2 py-0.5 text-[10px] font-bold text-[#065F46]">
+                            <Check className="h-2.5 w-2.5 stroke-[2.5]" />
+                            <span>Verified</span>
+                          </span>
+
+                          <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600">
+                            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                            <span>
+                              {doc.rating} ({doc.reviewsCount}+)
+                            </span>
+                          </div>
+                        </div>
+
+                        <h3 className="mt-1 truncate font-heading text-base sm:text-[17px] font-semibold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                          {doc.name}
+                        </h3>
+                        <p className="truncate text-xs font-medium text-[#065F46]">
+                          {doc.specialty}
+                        </p>
+                        <p className="mt-0.5 truncate text-[11px] text-slate-500">
+                          {doc.qualification}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Bio / Description */}
+                    <p className="mt-3.5 text-xs sm:text-[13px] text-slate-600 leading-relaxed line-clamp-2">
+                      {doc.bio}
+                    </p>
+
+                    {/* Tags row */}
+                    <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
+                      {doc.tags.map((tag, i) => (
+                        <span
+                          key={i}
+                          className="rounded-md bg-[#F2F8F5] border border-[#E2EBE7] px-2.5 py-0.5 text-[11px] font-medium text-slate-600"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {doc.moreTagsCount > 0 && (
+                        <span className="rounded-md bg-[#F2F8F5] px-2 py-0.5 text-[11px] font-medium text-slate-400">
+                          +{doc.moreTagsCount} more
+                        </span>
+                      )}
                     </div>
                   </div>
 
-                  {/* Bio / Description */}
-                  <p className="mt-3 text-xs sm:text-[13px] text-slate-600 leading-relaxed line-clamp-2">
-                    {doc.bio}
-                  </p>
+                  {/* Bottom Actions Row */}
+                  <div className="mt-4.5 flex items-center justify-between border-t border-[#F2F8F5] pt-3.5">
+                    <Link
+                      href={`/book/doctor/${doc.id}`}
+                      className="text-xs font-bold text-[#065F46] hover:underline"
+                    >
+                      View Profile
+                    </Link>
 
-                  {/* Tags row */}
-                  <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                    {doc.tags.map((tag, i) => (
-                      <span
-                        key={i}
-                        className="rounded-md bg-[#F2F8F5] border border-[#E2EBE7] px-2.5 py-0.5 text-[11px] font-medium text-slate-600"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                    {doc.moreTagsCount > 0 && (
-                      <span className="rounded-md bg-[#F2F8F5] px-2 py-0.5 text-[11px] font-medium text-slate-400">
-                        +{doc.moreTagsCount} more
-                      </span>
-                    )}
+                    <Link
+                      href={`/book/doctor/${doc.id}`}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors"
+                    >
+                      <span>Book Consultation</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
                   </div>
                 </div>
-
-                {/* Bottom Actions Row */}
-                <div className="mt-4 flex items-center justify-between border-t border-[#F2F8F5] pt-3">
-                  <Link
-                    href={`/book/doctor/${doc.id}`}
-                    className="text-xs font-bold text-[#065F46] hover:underline"
-                  >
-                    View Profile
-                  </Link>
-
-                  <Link
-                    href={`/book/doctor/${doc.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors"
-                  >
-                    <span>Book Consultation</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-          {/* Bottom Centered "View All Specialists →" Button */}
-          <div className="mt-7 flex justify-center pb-10 sm:pb-14">
-            <button
-              type="button"
-              onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 rounded-full border border-[#CBDCD5] bg-white px-7 py-2.5 text-xs font-bold text-[#102820] shadow-xs hover:bg-[#F2F8F5] hover:border-[#064E3B] transition-all cursor-pointer active:scale-98"
-            >
-              <span>{showAll ? 'Show Fewer Specialists' : 'View All Specialists'}</span>
-              <ArrowRight className="h-3.5 w-3.5 text-[#064E3B]" />
-            </button>
+              );
+            })}
           </div>
         </section>
       </main>
