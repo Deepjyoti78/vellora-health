@@ -4,18 +4,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { Icon } from '@/components/common/Icon';
 import { ServiceRecord } from '@/lib/db';
 import {
   ArrowLeft,
   Check,
-  Clock,
-  ShieldCheck,
   Search,
-  Calendar,
-  Sparkles,
   ArrowRight,
-  Filter,
+  ShieldCheck,
 } from 'lucide-react';
 
 export interface CategoryPageConfig {
@@ -51,32 +46,36 @@ export const CategoryServiceDirectory: React.FC<CategoryServiceDirectoryProps> =
     <div className="min-h-screen bg-[#F5F9F7]">
       <Header theme="light" />
 
-      {/* Top Back Navigation Bar */}
-      <div className="border-b border-[#E2EBE7] bg-white py-3.5 sm:py-4">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-          <Link
-            href="/services"
-            className="inline-flex items-center gap-2 rounded-full border border-[#E2EBE7] bg-[#F2F8F5] px-3.5 py-1.5 text-xs font-bold text-[#065F46] hover:bg-[#E8F3EE] hover:text-[#064E3B] transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>All Service Categories</span>
-          </Link>
-        </div>
-      </div>
-
-      {/* Main Services List */}
-      <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
-        {/* Search & Counter Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E2EBE7] pb-6 mb-8">
-          <div>
-            <h2 className="font-heading text-xl font-bold text-[#102820]">
-              Available In-Home Procedures &amp; Shifts
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Showing {filteredServices.length} specialized service(s) available for doorstep booking
-            </p>
+      {/* Main Content Area - Shifted up with white bar removed */}
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-12 sm:pb-16">
+        {/* Header Bar: Back button inline with Title & Search on right */}
+        <div
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E2EBE7] pb-6 mb-8"
+          style={{
+            animation: 'smoothFadeInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          }}
+        >
+          {/* Back Arrow Button + Title */}
+          <div className="flex items-center gap-3 sm:gap-3.5">
+            <Link
+              href="/services"
+              aria-label="Back to all services"
+              className="inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-[#D1E2DB] bg-white text-[#065F46] hover:bg-[#E8F5EE] hover:text-[#064E3B] hover:border-[#065F46]/40 shadow-2xs hover:shadow-xs transition-all duration-200 group shrink-0 cursor-pointer"
+              title="Back to All Service Categories"
+            >
+              <ArrowLeft className="h-4 w-4 sm:h-4.5 sm:w-4.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
+            </Link>
+            <div>
+              <h1 className="font-heading text-xl sm:text-2xl font-bold text-[#102820] tracking-tight">
+                Available In-Home Procedures &amp; Shifts
+              </h1>
+              <p className="text-xs sm:text-[13px] text-slate-500 mt-0.5">
+                Showing {filteredServices.length} specialized service(s) available for doorstep booking
+              </p>
+            </div>
           </div>
 
+          {/* Search Input */}
           <div className="relative w-full sm:w-72">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
@@ -84,17 +83,22 @@ export const CategoryServiceDirectory: React.FC<CategoryServiceDirectoryProps> =
               placeholder="Search in this category..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full border border-[#E2EBE7] bg-white py-2 pl-10 pr-4 text-xs font-medium text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B] shadow-2xs"
-            />
+              className="w-full rounded-full border border-[#E2EBE7] bg-white py-2 pl-10 pr-4 text-xs font-medium text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B] shadow-2xs transition-colors"
+            >
+            </input>
           </div>
         </div>
 
-        {/* 10 Services Grid */}
+        {/* Services Grid with Card Entrance Animation */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredServices.map((service, index) => (
             <div
               key={service.id}
-              className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E2EBE7] bg-white shadow-xs transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-xl hover:-translate-y-1"
+              className="group flex flex-col justify-between overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-white shadow-xs hover:border-[#A7F3D0] hover:shadow-[0_16px_36px_rgba(6,78,59,0.1)] transition-all duration-300 hover:-translate-y-1.5"
+              style={{
+                opacity: 0,
+                animation: `cardSlideUpStagger 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${Math.min(index * 60, 600)}ms forwards`,
+              }}
             >
               <div>
                 {/* Image Header with Number & Price Tag */}
@@ -104,17 +108,17 @@ export const CategoryServiceDirectory: React.FC<CategoryServiceDirectoryProps> =
                     alt={service.name}
                     loading="lazy"
                     decoding="async"
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
 
-                  {/* Top-left number badge */}
+                  {/* Top-left number & duration badge */}
                   <div className="absolute left-3.5 top-3.5 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold text-[#064E3B] backdrop-blur-md border border-white/80 shadow-xs">
                     {String(index + 1).padStart(2, '0')} • {service.duration}
                   </div>
 
-                  {/* Top-right Price badge */}
-                  <div className="absolute bottom-3.5 right-3.5 rounded-full bg-white/95 px-3 py-1 text-xs font-black text-[#102820] shadow-md">
+                  {/* Bottom-right Price badge */}
+                  <div className="absolute bottom-3.5 right-3.5 rounded-full bg-white/95 px-3 py-1 text-xs font-black text-[#102820] shadow-md backdrop-blur-xs">
                     From ${service.basePrice}
                   </div>
                 </div>
@@ -175,7 +179,7 @@ export const CategoryServiceDirectory: React.FC<CategoryServiceDirectoryProps> =
                   </Link>
                   <Link
                     href={`/book/service/${service.slug}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-all duration-200 hover:shadow-sm"
                   >
                     <span>Book Service</span>
                     <ArrowRight className="h-3.5 w-3.5" />
