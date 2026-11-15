@@ -10,82 +10,114 @@ import {
   HeartPulse,
   FlaskConical,
   Activity,
+  Users,
+  Zap,
   Check,
   ArrowRight,
   Search,
   X,
   ShieldCheck,
-  Zap,
   Clock,
   Sparkles,
+  Layers,
+  Heart,
   ChevronRight,
 } from 'lucide-react';
 
-interface CategoryConfig {
-  slug: string;
+interface CategoryCardItem {
+  id: string;
   title: string;
   description: string;
   image: string;
-  href: string;
+  servicesCount: string;
+  countNumber: number;
   icon: React.ComponentType<{ className?: string }>;
-  highlights: string[];
+  href: string;
+  buttonLabel: string;
   filterCategories: string[];
 }
 
-const CATEGORIES_CONFIG: CategoryConfig[] = [
+const CATEGORIES_DATA: CategoryCardItem[] = [
   {
-    slug: 'doctor-consultations',
-    title: 'Doctor Consultations',
-    description:
-      'Comprehensive physician checkups, acute illness diagnosis, and chronic condition management delivered at your bedside.',
+    id: 'doctor-visit',
+    title: 'Doctor Visit',
+    description: 'Consult with licensed doctors at home for checkups, follow-ups, and ongoing care.',
     image: '/assets/doorstep-1.webp',
-    href: '/services/doctor-consultations',
+    servicesCount: '10 Services',
+    countNumber: 10,
     icon: Stethoscope,
-    highlights: ['Multi-specialty home visits', 'Digital prescriptions & follow-up care'],
+    href: '/services/doctor-consultations',
+    buttonLabel: 'Book Now →',
     filterCategories: ['DOCTOR_VISIT'],
   },
   {
-    slug: 'nursing-care',
-    title: 'Nursing & Care Support',
-    description:
-      'Registered clinical nurses providing sterile dressings, IV fluid infusions, catheter care, and post-operative recovery.',
+    id: 'nursing-care',
+    title: 'Nursing Care',
+    description: 'Professional at-home nursing support, from basic care to long-duration needs.',
     image: '/assets/doorstep-2.webp',
-    href: '/services/nursing-care',
+    servicesCount: '12 Services',
+    countNumber: 12,
     icon: HeartPulse,
-    highlights: ['Wound dressing & IV infusions', 'Catheter care & 12h/24h nursing shifts'],
+    href: '/services/nursing-care',
+    buttonLabel: 'Explore Services →',
     filterCategories: ['NURSING_CARE'],
   },
   {
-    slug: 'diagnostics-labs',
-    title: 'Diagnostics & Lab Services',
-    description:
-      'Certified phlebotomists collecting routine and specialized diagnostic samples safely and comfortably at your home.',
+    id: 'physiotherapy',
+    title: 'Physiotherapy',
+    description: 'Expert physiotherapy at home to restore mobility, strength, and comfort.',
+    image: '/assets/physiotherapy-card.webp',
+    servicesCount: '10 Services',
+    countNumber: 10,
+    icon: Activity,
+    href: '/services/rehab-critical-care',
+    buttonLabel: 'Book Now →',
+    filterCategories: ['REHAB_THERAPY'],
+  },
+  {
+    id: 'diagnostics-labs',
+    title: 'Home Diagnostics & Labs',
+    description: 'Routine and specialized blood tests with safe, sterile doorstep sample collection.',
     image: '/assets/diagnostics.webp',
-    href: '/services/diagnostics-labs',
+    servicesCount: '12 Services',
+    countNumber: 12,
     icon: FlaskConical,
-    highlights: ['Cold-chain blood sample collection', 'Accredited digital reports in 12–24h'],
+    href: '/services/diagnostics-labs',
+    buttonLabel: 'Book Now →',
     filterCategories: ['LAB_TESTS'],
   },
   {
-    slug: 'rehab-critical-care',
-    title: 'Rehab & Critical Care',
-    description:
-      'Trained patient attendants and licensed physical therapists supporting rehabilitation, elderly mobility, and step-down care.',
-    image: '/assets/doorstep-4.webp',
+    id: 'caretakers',
+    title: 'Patient Caretakers',
+    description: 'Compassionate support, daily living assistance, and bedside companionship for loved ones.',
+    image: '/assets/doorstep-3.webp',
+    servicesCount: '8 Services',
+    countNumber: 8,
+    icon: Users,
     href: '/services/rehab-critical-care',
-    icon: Activity,
-    highlights: ['Mobility assistance & physical therapy', 'Bedridden hygiene & respite care'],
-    filterCategories: ['CARETAKER', 'REHAB_THERAPY', 'CRITICAL_CARE'],
+    buttonLabel: 'Book Now →',
+    filterCategories: ['CARETAKER'],
+  },
+  {
+    id: 'critical-care',
+    title: 'Critical Care at Home',
+    description: 'ICU-trained nursing, medical equipment setups, and round-the-clock vital monitoring.',
+    image: '/assets/compassionate-hospital-care.webp',
+    servicesCount: '6 Services',
+    countNumber: 6,
+    icon: Zap,
+    href: '/services/rehab-critical-care',
+    buttonLabel: 'Book Now →',
+    filterCategories: ['CRITICAL_CARE'],
   },
 ];
 
-const POPULAR_SEARCH_TERMS = [
-  'Doctor Visit',
-  'Wound Dressing',
-  'Full Body Checkup',
-  '12-Hour Nursing',
-  'Physiotherapy',
-  'Elderly Attendant',
+const POPULAR_CHIPS = [
+  { label: 'Doctor Visit', query: 'Doctor Visit', icon: Stethoscope },
+  { label: 'Wound Dressing', query: 'Wound Dressing', icon: ShieldCheck },
+  { label: 'Full Body Checkup', query: 'Checkup', icon: Heart },
+  { label: '12-Hour Nursing', query: '12-Hour', icon: Clock },
+  { label: 'Physiotherapy', query: 'Physiotherapy', icon: Activity },
 ];
 
 export default function ServicesPage() {
@@ -94,17 +126,6 @@ export default function ServicesPage() {
   // Retrieve full verified dataset from local database
   const allServices = useMemo(() => db.getServices(), []);
 
-  // Compute accurate dynamic service count for each category
-  const categoriesWithCounts = useMemo(() => {
-    return CATEGORIES_CONFIG.map((cat) => {
-      const count = allServices.filter((s) => cat.filterCategories.includes(s.category)).length;
-      return {
-        ...cat,
-        count,
-      };
-    });
-  }, [allServices]);
-
   // Live search filtering across real service dataset
   const filteredServices = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
@@ -112,27 +133,16 @@ export default function ServicesPage() {
 
     return allServices.filter((service) => {
       const matchName = service.name.toLowerCase().includes(q);
-      const matchDesc = service.shortDesc.toLowerCase().includes(q) || service.description.toLowerCase().includes(q);
-      const matchCategory = service.categoryLabel.toLowerCase().includes(q) || service.category.toLowerCase().includes(q);
+      const matchDesc =
+        service.shortDesc.toLowerCase().includes(q) || service.description.toLowerCase().includes(q);
+      const matchCategory =
+        service.categoryLabel.toLowerCase().includes(q) || service.category.toLowerCase().includes(q);
       const matchFeatures = service.features?.some((f) => f.toLowerCase().includes(q));
       const matchOptions = service.supportedOptions?.some((opt) => opt.toLowerCase().includes(q));
 
       return matchName || matchDesc || matchCategory || matchFeatures || matchOptions;
     });
   }, [allServices, searchQuery]);
-
-  // Matching categories when searching
-  const matchingCategories = useMemo(() => {
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return [];
-    return categoriesWithCounts.filter((cat) => {
-      return (
-        cat.title.toLowerCase().includes(q) ||
-        cat.description.toLowerCase().includes(q) ||
-        cat.highlights.some((h) => h.toLowerCase().includes(q))
-      );
-    });
-  }, [categoriesWithCounts, searchQuery]);
 
   const isSearching = searchQuery.trim().length > 0;
 
@@ -142,70 +152,109 @@ export default function ServicesPage() {
       <Header theme="light" />
 
       {/* Main Container */}
-      <main className="mx-auto max-w-6xl px-4 sm:px-6 pt-6 pb-16">
-        {/* Hero Section - Clean, restrained, and purposeful */}
-        <section className="text-center py-6 sm:py-9">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-[11px] font-bold tracking-[0.16em] uppercase text-[#065F46] shadow-2xs mb-3">
-            <Sparkles className="h-3 w-3 stroke-[2.5]" />
-            <span>Our Services</span>
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 pb-20">
+        {/* HERO SECTION MATCHING REFERENCE IMAGE */}
+        <section className="relative overflow-hidden rounded-[28px] sm:rounded-[36px] bg-gradient-to-r from-[#F0F8F5] via-[#E8F5F0] to-[#E3F2EB] border border-[#D5E8DF] p-6 sm:p-10 lg:p-12 mb-12 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
+          {/* Subtle curved background wave for the right image */}
+          <div className="absolute right-0 top-0 bottom-0 w-full sm:w-[50%] lg:w-[46%] pointer-events-none overflow-hidden hidden md:block">
+            <div className="absolute -right-12 -top-12 -bottom-12 w-[120%] bg-gradient-to-l from-white/35 via-white/20 to-transparent rounded-l-[120px]" />
           </div>
 
-          <h1 className="font-heading text-[28px] sm:text-[36px] lg:text-[44px] font-extrabold text-[#102820] tracking-tight leading-[1.18] max-w-3xl mx-auto">
-            Expert Healthcare, Delivered to Your Home
-          </h1>
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
+            {/* Left Column: Heading, Search & Popular Tags */}
+            <div className="w-full lg:max-w-xl xl:max-w-2xl flex flex-col justify-center">
+              {/* Eyebrow Pill */}
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E6F4EE] border border-[#C6E6D8] px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#065F46] w-fit mb-4 shadow-2xs">
+                <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
+                <span>OUR SERVICES</span>
+              </div>
 
-          <p className="mt-2.5 max-w-2xl mx-auto text-xs sm:text-[15px] text-[#5E7171] leading-relaxed">
-            Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
-          </p>
+              {/* Main Heading */}
+              <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#102820] tracking-tight leading-[1.15] mb-3.5">
+                Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
+              </h1>
 
-          {/* Functional Search Field */}
-          <div className="mt-6 max-w-[580px] w-full mx-auto">
-            <div className="relative flex items-center">
-              <Search className="absolute left-4 h-4 w-4 text-slate-400 stroke-[2] pointer-events-none" />
-              <input
-                type="text"
-                role="searchbox"
-                aria-label="Search services, treatments, or care types"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Escape') setSearchQuery('');
-                }}
-                placeholder="Search services, treatments, or care types..."
-                className="w-full rounded-full border border-[#D1DCD6] bg-white py-3 pl-11 pr-11 text-xs sm:text-sm text-gray-900 placeholder:text-slate-400 shadow-[0_2px_10px_rgba(0,0,0,0.03)] focus:border-[#065F46] focus:outline-none focus:ring-2 focus:ring-[#065F46]/10 transition-all"
-              />
-              {searchQuery && (
+              {/* Subtitle */}
+              <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-xl mb-6 font-normal">
+                Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
+              </p>
+
+              {/* Search Bar Container */}
+              <div className="relative flex items-center w-full max-w-lg rounded-full border border-[#D1DCD6] bg-white p-1.5 pl-5 pr-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.04)] focus-within:border-[#065F46] focus-within:ring-4 focus-within:ring-[#065F46]/10 transition-all">
+                <Search className="h-5 w-5 text-slate-400 mr-3 shrink-0 stroke-[2]" />
+                <input
+                  type="text"
+                  role="searchbox"
+                  aria-label="Search services, treatments, or care types"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') setSearchQuery('');
+                  }}
+                  placeholder="Search services, treatments, or care types..."
+                  className="w-full bg-transparent text-xs sm:text-sm text-[#102820] placeholder-slate-400 focus:outline-none font-medium"
+                />
+
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="mr-2 p-1 text-slate-400 hover:text-slate-600 rounded-full transition-colors"
+                    title="Clear search"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3.5 rounded-full p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
-                  aria-label="Clear search query"
+                  onClick={() => {}}
+                  aria-label="Submit search"
+                  className="h-10 w-10 rounded-full bg-[#065F46] hover:bg-[#043328] text-white flex items-center justify-center shrink-0 shadow-xs transition-colors cursor-pointer group"
                 >
-                  <X className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
-              )}
+              </div>
+
+              {/* Popular Search Chips */}
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+                <span className="text-slate-500 font-semibold text-xs mr-0.5">Popular:</span>
+                {POPULAR_CHIPS.map((chip) => {
+                  const ChipIcon = chip.icon;
+                  const isSelected = searchQuery === chip.query;
+                  return (
+                    <button
+                      key={chip.label}
+                      type="button"
+                      onClick={() => setSearchQuery(isSelected ? '' : chip.query)}
+                      className={`rounded-full border px-3 py-1 flex items-center gap-1.5 text-xs font-medium shadow-2xs transition-all cursor-pointer ${
+                        isSelected
+                          ? 'border-[#065F46] bg-[#065F46] text-white'
+                          : 'border-slate-200/90 bg-white/90 hover:bg-white text-slate-700 hover:border-[#065F46] hover:text-[#065F46]'
+                      }`}
+                    >
+                      <ChipIcon className={`h-3.5 w-3.5 ${isSelected ? 'text-white' : 'text-slate-500'}`} />
+                      <span>{chip.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Quick Keyword Suggestions */}
-            {!isSearching && (
-              <div className="mt-2.5 flex flex-wrap items-center justify-center gap-1.5 text-[11px] text-[#5E7171]">
-                <span className="font-medium text-slate-400">Popular:</span>
-                {POPULAR_SEARCH_TERMS.map((term) => (
-                  <button
-                    key={term}
-                    type="button"
-                    onClick={() => setSearchQuery(term)}
-                    className="rounded-full bg-white border border-[#E2EBE7] px-2.5 py-0.5 text-slate-600 hover:text-[#065F46] hover:border-[#065F46]/30 transition-colors shadow-2xs"
-                  >
-                    {term}
-                  </button>
-                ))}
+            {/* Right Column: Doctor & Patient Scene Photo matching reference */}
+            <div className="w-full lg:w-[44%] relative flex items-center justify-center lg:justify-end">
+              <div className="relative overflow-hidden rounded-[24px] sm:rounded-[30px] shadow-sm max-h-[300px] sm:max-h-[340px] w-full">
+                <img
+                  src="/assets/services-hero-doctor.webp"
+                  alt="Doctor and patient consultation at home"
+                  className="w-full h-full object-cover object-center"
+                />
               </div>
-            )}
+            </div>
           </div>
         </section>
 
-        {/* Dynamic Content: Search Results vs. Care Categories Grid */}
+        {/* Dynamic Section: Search Results vs. Care Categories Grid */}
         {isSearching ? (
           <section className="mt-8 animate-in fade-in duration-200">
             {/* Search Header Bar */}
@@ -249,198 +298,134 @@ export default function ServicesPage() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-8">
-                {/* Grid of Matching Services */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                  {filteredServices.map((service) => (
-                    <div
-                      key={service.id}
-                      className="group flex flex-col justify-between rounded-[20px] border border-[#E2EBE7] bg-white p-5 shadow-xs hover:border-[#116b70]/40 hover:shadow-md transition-all duration-200"
-                    >
-                      <div>
-                        {/* Category Badge & Starting Fee */}
-                        <div className="flex items-center justify-between gap-2 text-xs">
-                          <span className="rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2.5 py-0.5 font-bold text-[#065F46] text-[11px]">
-                            {service.categoryLabel}
-                          </span>
-                          <span className="font-extrabold text-[#102820]">
-                            ${service.basePrice}
-                          </span>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="mt-2.5 font-heading text-[15px] font-bold text-[#102820] group-hover:text-[#065F46] transition-colors leading-snug">
-                          {service.name}
-                        </h3>
-
-                        {/* Short Description */}
-                        <p className="mt-1.5 text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                          {service.shortDesc}
-                        </p>
-
-                        {/* Feature Badges */}
-                        {service.features && service.features.length > 0 && (
-                          <div className="mt-3.5 space-y-1.5 border-t border-[#F2F6F4] pt-3 text-[11px] text-slate-600">
-                            {service.features.slice(0, 2).map((feat, i) => (
-                              <div key={i} className="flex items-center gap-1.5">
-                                <Check className="h-3 w-3 text-[#065F46] stroke-[2.5] shrink-0" />
-                                <span className="truncate">{feat}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+              /* Grid of Matching Individual Services */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {filteredServices.map((service) => (
+                  <div
+                    key={service.id}
+                    className="flex flex-col justify-between rounded-[20px] border border-[#E2EBE7] bg-white p-5 shadow-2xs hover:shadow-md hover:border-[#065F46]/30 transition-all duration-200"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="text-[11px] font-bold text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] px-2.5 py-0.5 rounded-full">
+                          {service.categoryLabel}
+                        </span>
+                        <span className="text-xs font-extrabold text-[#102820]">
+                          ${service.basePrice}
+                        </span>
                       </div>
+                      <h3 className="text-base font-bold text-[#102820] leading-snug">
+                        {service.name}
+                      </h3>
+                      <p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                        {service.shortDesc || service.description}
+                      </p>
 
-                      {/* Card Action Row */}
-                      <div className="mt-4 pt-3 border-t border-[#F2F6F4] flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1 text-[11px] text-slate-500 font-medium">
-                          <Clock className="h-3 w-3 text-slate-400" />
-                          <span>{service.duration}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Link
-                            href={`/services/${service.slug}`}
-                            className="text-[11px] font-bold text-slate-600 hover:text-slate-900 transition-colors"
-                          >
-                            Details
-                          </Link>
-                          <Link
-                            href={`/book/service/${service.slug}`}
-                            className="inline-flex items-center gap-1 rounded-full bg-[#064E3B] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-2xs"
-                          >
-                            <span>Book</span>
-                            <ArrowRight className="h-3 w-3" />
-                          </Link>
-                        </div>
+                      <div className="mt-3 flex items-center gap-3 text-[11px] text-slate-500">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3.5 w-3.5 text-slate-400" />
+                          {service.duration}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Check className="h-3.5 w-3.5 text-emerald-600" />
+                          Doorstep Care
+                        </span>
                       </div>
                     </div>
-                  ))}
-                </div>
 
-                {/* Also highlight matching parent categories if applicable */}
-                {matchingCategories.length > 0 && (
-                  <div className="pt-4 border-t border-[#E2EBE7]">
-                    <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">
-                      Matching Care Categories
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      {matchingCategories.map((cat) => (
-                        <Link
-                          key={cat.slug}
-                          href={cat.href}
-                          className="flex items-center justify-between rounded-xl border border-[#E2EBE7] bg-white p-3.5 shadow-2xs hover:border-[#065F46]/40 hover:bg-[#F9FCFA] transition-all"
-                        >
-                          <div>
-                            <p className="text-xs font-bold text-[#102820]">{cat.title}</p>
-                            <p className="text-[11px] text-slate-500">{cat.count} Services</p>
-                          </div>
-                          <ChevronRight className="h-4 w-4 text-slate-400" />
-                        </Link>
-                      ))}
+                    <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                      <Link
+                        href={`/book/service/${service.slug}`}
+                        className="w-full inline-flex items-center justify-center gap-1.5 rounded-full bg-[#064E3B] py-2 px-3 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-2xs"
+                      >
+                        <span>Book Service</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
                     </div>
                   </div>
-                )}
+                ))}
               </div>
             )}
           </section>
         ) : (
-          <section className="mt-8">
-            {/* Category Section Header */}
-            <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 border-b border-[#E2EBE7] pb-4">
+          /* DEFAULT VIEW: EXPLORE CARE CATEGORIES MATCHING REFERENCE IMAGE */
+          <section className="animate-in fade-in duration-200">
+            {/* Header Row */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
               <div>
-                <h2 className="font-heading text-xl sm:text-2xl font-extrabold text-[#102820] tracking-tight">
+                <h2 className="text-2xl sm:text-[30px] font-extrabold text-[#102820] tracking-tight">
                   Explore Care Categories
                 </h2>
-                <p className="mt-0.5 text-xs sm:text-sm text-[#5E7171]">
+                <p className="text-xs sm:text-sm text-slate-500 mt-1 font-normal">
                   Find the right healthcare services for you and your family.
                 </p>
               </div>
-              <span className="text-xs font-semibold text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 rounded-full w-fit">
-                {allServices.length} Total Services Available
-              </span>
+
+              {/* Total Services Count Badge */}
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#E6F4EE] border border-[#C6E6D8] px-3.5 py-1.5 text-xs font-bold text-[#065F46] shadow-2xs w-fit">
+                <Layers className="h-3.5 w-3.5 text-[#065F46]" />
+                <span>{allServices.length} Total Services Available</span>
+              </div>
             </div>
 
-            {/* 2-Column Responsive Category Card Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-              {categoriesWithCounts.map((cat) => {
-                const IconComponent = cat.icon;
+            {/* 3-Column Category Card Grid Matching Reference Image */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {CATEGORIES_DATA.map((cat) => {
+                const CategoryIcon = cat.icon;
                 return (
-                  <Link
-                    key={cat.slug}
-                    href={cat.href}
-                    className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E2EBE7] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] hover:border-[#116b70]/35 transition-all duration-200"
-                    aria-label={`View ${cat.title} services`}
+                  <div
+                    key={cat.id}
+                    className="group flex flex-col justify-between overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300"
                   >
-                    {/* Compact Image Banner Area (200-230px on desktop) */}
-                    <div className="relative h-44 sm:h-[215px] w-full overflow-hidden bg-slate-100">
+                    {/* Top Image with Badge */}
+                    <Link href={cat.href} className="relative h-[165px] sm:h-[180px] w-full overflow-hidden bg-slate-100 block">
                       <img
                         src={cat.image}
                         alt={cat.title}
                         loading="eager"
-                        className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-103"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
-
-                      {/* Meaningful Service Count Badge */}
-                      <div className="absolute right-3.5 top-3.5 rounded-full bg-white/95 backdrop-blur-md px-3 py-1 text-xs font-bold text-[#102820] border border-white/80 shadow-xs">
-                        {cat.count} Services
+                      {/* Floating Service Count Badge */}
+                      <div className="absolute top-3 right-3 rounded-full bg-white/95 backdrop-blur-xs px-3 py-1 text-[11px] font-bold text-slate-800 shadow-2xs border border-slate-100">
+                        {cat.servicesCount}
                       </div>
-                    </div>
+                    </Link>
 
-                    {/* Lower Card Content */}
-                    <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
-                      <div>
-                        {/* Title, Icon, & CTA */}
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                              <IconComponent className="h-5 w-5 stroke-[2]" />
-                            </div>
-                            <h3 className="font-heading text-lg sm:text-[19px] font-bold text-[#102820] group-hover:text-[#065F46] transition-colors leading-snug">
+                    {/* Lower Bar with Mint Icon Square, Title/Description & Emerald Pill Button */}
+                    <div className="p-4 sm:p-4.5 flex items-center justify-between gap-3 bg-white">
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Mint Icon Box */}
+                        <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-[#E6F4EE] flex items-center justify-center text-[#065F46] shrink-0 border border-[#D1EADC]">
+                          <CategoryIcon className="h-5 w-5" />
+                        </div>
+                        {/* Text Content */}
+                        <div className="min-w-0">
+                          <Link href={cat.href}>
+                            <h3 className="font-bold text-[15px] sm:text-[16px] text-[#102820] leading-snug group-hover:text-[#065F46] transition-colors truncate">
                               {cat.title}
                             </h3>
-                          </div>
-
-                          {/* Compact View Services CTA */}
-                          <div className="shrink-0 hidden sm:block">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-3.5 py-1.5 text-xs font-bold text-white transition-colors group-hover:bg-[#065F46] shadow-2xs">
-                              <span>View Services</span>
-                              <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Concise Category Description */}
-                        <p className="mt-2.5 text-[13px] sm:text-sm text-slate-600 leading-relaxed">
-                          {cat.description}
-                        </p>
-
-                        {/* Clean Two-Item Service Highlights */}
-                        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-[#F2F6F4] pt-3 text-xs text-slate-700">
-                          {cat.highlights.map((feat, i) => (
-                            <div key={i} className="flex items-center gap-1.5 font-medium">
-                              <Check className="h-3.5 w-3.5 text-[#065F46] stroke-[2.5] shrink-0" />
-                              <span>{feat}</span>
-                            </div>
-                          ))}
+                          </Link>
+                          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
+                            {cat.description}
+                          </p>
                         </div>
                       </div>
 
-                      {/* Mobile View Services Button */}
-                      <div className="mt-4 pt-2 sm:hidden border-t border-gray-100">
-                        <div className="w-full flex items-center justify-center gap-1.5 rounded-full bg-[#064E3B] py-2 px-3 text-xs font-bold text-white shadow-2xs">
-                          <span>View Services</span>
-                          <ArrowRight className="h-3 w-3" />
-                        </div>
-                      </div>
+                      {/* Action Pill Button */}
+                      <Link
+                        href={cat.href}
+                        className="inline-flex items-center gap-1 rounded-full bg-[#064E3B] hover:bg-[#043328] text-white px-3.5 py-2 text-xs font-bold whitespace-nowrap shadow-2xs group-hover:bg-[#059669] transition-all shrink-0"
+                      >
+                        <span>{cat.buttonLabel}</span>
+                      </Link>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
 
             {/* Subtle Reassurance Trust Banner */}
-            <div className="mt-10 rounded-[20px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-xs">
+            <div className="mt-12 rounded-[22px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-xs">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5 divide-y md:divide-y-0 md:divide-x divide-gray-100">
                 <div className="flex items-start gap-3 pt-2 md:pt-0">
                   <div className="rounded-xl bg-[#ECFDF5] p-2 text-[#065F46] shrink-0">
