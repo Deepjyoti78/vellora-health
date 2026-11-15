@@ -1,138 +1,147 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
-import { Stethoscope, Users, Syringe, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { SERVICES_DATA } from '@/data/site-content';
 
+// Distinct category tags matching the design specification
+const SERVICE_CATEGORY_TAGS: Record<string, string> = {
+  'doctor-visit': 'PRIMARY CARE',
+  'nursing-care': 'HOME CARE',
+  'caretakers': 'CARE SUPPORT',
+  'lab-tests': 'DIAGNOSTICS',
+};
+
 export const ServicesSection: React.FC = () => {
-  // Render matching medical icon for each service card
-  const renderServiceIcon = (id: string) => {
-    switch (id) {
-      case 'doctor-visit':
-        return <Stethoscope className="h-5 w-5 stroke-[2.2] group-hover:scale-110 transition-transform duration-300" />;
-      case 'nursing-care':
-        return (
-          <svg
-            className="h-5 w-5 group-hover:scale-110 transition-transform duration-300"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 7v10m-5-5h10" />
-            <rect x="3" y="3" width="18" height="18" rx="4" />
-          </svg>
-        );
-      case 'caretakers':
-        return <Users className="h-5 w-5 stroke-[2.2] group-hover:scale-110 transition-transform duration-300" />;
-      case 'lab-tests':
-        return <Syringe className="h-5 w-5 stroke-[2.2] group-hover:scale-110 transition-transform duration-300" />;
-      default:
-        return <Stethoscope className="h-5 w-5 stroke-[2.2] group-hover:scale-110 transition-transform duration-300" />;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 340;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
     }
   };
 
   return (
     <section
       id="services"
-      className="relative overflow-hidden bg-gradient-to-b from-[#F2FBF7] via-[#FAFDFB] to-white py-14 sm:py-18 lg:py-22"
+      className="relative overflow-hidden bg-white py-14 sm:py-18 lg:py-22"
       aria-labelledby="servicesTitle"
     >
-      {/* Soft ambient mint glow in background */}
-      <div
-        className="pointer-events-none absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 w-[560px] h-[560px] rounded-full bg-[#E3F8EE] opacity-65 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute top-1/3 right-0 translate-x-1/3 w-[500px] h-[500px] rounded-full bg-[#ECFDF5] opacity-55 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute bottom-0 left-1/3 w-[600px] h-[280px] rounded-full bg-[#E8F8F0] opacity-45 blur-3xl"
-        aria-hidden="true"
-      />
-
       <div className="relative mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
-        {/* Section Heading - Matches typography of "Meet Our Medical Specialists" exactly */}
-        <div className="text-center mb-10 sm:mb-12 lg:mb-14">
-          <h2
-            id="servicesTitle"
-            className="font-heading font-[750] text-[#11191b] tracking-[-0.052em] leading-[1.13] text-[clamp(34px,3.9vw,56px)] text-center"
-          >
-            Our Services
-          </h2>
+        {/* Section Header: Left Column (Eyebrow, Title, Subtitle) & Right Column (Navigation Arrows) */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-12 lg:mb-14">
+          <div className="max-w-2xl">
+            {/* Eyebrow Label */}
+            <p className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.18em] text-slate-500 mb-2">
+              COMPREHENSIVE HEALTHCARE AT HOME
+            </p>
+
+            {/* Main Section Heading */}
+            <h2
+              id="servicesTitle"
+              className="font-heading font-extrabold text-[#102723] tracking-tight leading-[1.12] text-3xl sm:text-4xl lg:text-[48px]"
+            >
+              Our Services
+            </h2>
+
+            {/* Subtitle Description */}
+            <p className="text-slate-600 text-sm sm:text-[15px] lg:text-[16px] leading-relaxed mt-3 max-w-[580px]">
+              From routine checkups to specialized treatment, our physicians bring
+              expertise and human kindness together under one roof.
+            </p>
+          </div>
+
+          {/* Carousel Navigation Arrow Controls */}
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 self-start sm:self-end">
+            <button
+              type="button"
+              onClick={() => handleScroll('left')}
+              aria-label="Previous services"
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-50 shadow-xs active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <ArrowLeft className="h-4.5 w-4.5 stroke-[2]" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleScroll('right')}
+              aria-label="Next services"
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-50 shadow-xs active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <ArrowRight className="h-4.5 w-4.5 stroke-[2]" />
+            </button>
+          </div>
         </div>
 
-        {/* 4 Service Cards Grid with Enhanced Card Background Effects & Aligned Spacing */}
+        {/* 4 Cards Grid - Responsive: Horizontally scrollable on mobile/small-tablet with snap, 4-col grid on desktop */}
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-5.5 xl:gap-6.5 w-full"
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 lg:pb-0 lg:grid lg:grid-cols-4 gap-5 sm:gap-6 no-scrollbar w-full"
           aria-label="Core home healthcare services"
         >
-          {SERVICES_DATA.map((service) => (
-            <Link
-              key={service.id}
-              href={service.href}
-              className="group relative flex flex-col h-full bg-gradient-to-b from-white via-[#FCFDFD] to-[#F4F9F6] rounded-[26px] sm:rounded-[28px] overflow-hidden border border-[#E2EBE6] hover:border-[#A7F3D0] shadow-[0_10px_30px_rgba(17,25,27,0.06)] hover:shadow-[0_22px_45px_rgba(6,95,70,0.14)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669]"
-              aria-label={service.title}
-            >
-              {/* Subtle ambient mint bloom inside card background on hover */}
-              <div
-                className="pointer-events-none absolute -right-10 -bottom-10 w-36 h-36 rounded-full bg-[#D1FAE5]/60 opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-500"
-                aria-hidden="true"
-              />
+          {SERVICES_DATA.map((service, index) => {
+            const categoryTag = SERVICE_CATEGORY_TAGS[service.id] || 'SPECIALTY CARE';
 
-              {/* Card Photo Top with smooth rounded crop */}
-              <div className="relative w-full h-[225px] sm:h-[235px] lg:h-[225px] xl:h-[240px] overflow-hidden bg-slate-100 shrink-0">
-                <img
-                  src={service.image}
-                  alt={service.alt}
-                  loading="lazy"
-                  className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
-                />
-                {/* Gentle subtle bottom fade to smoothly blend photo with card background */}
-                <div
-                  className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#FCFDFD]/40 to-transparent pointer-events-none"
-                  aria-hidden="true"
-                />
-              </div>
+            return (
+              <Link
+                key={service.id}
+                href={service.href}
+                className="group relative flex-none w-[280px] sm:w-[320px] lg:w-auto h-[440px] sm:h-[460px] lg:h-[480px] rounded-[28px] sm:rounded-[32px] overflow-hidden snap-start shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.18)] transition-all duration-500 hover:-translate-y-2 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669]"
+                aria-label={service.title}
+                style={{
+                  animationDelay: `${index * 120}ms`,
+                }}
+              >
+                {/* Full-Cover Background Image */}
+                <div className="absolute inset-0 w-full h-full bg-slate-900">
+                  <img
+                    src={service.image}
+                    alt={service.alt}
+                    loading="lazy"
+                    className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                  />
 
-              {/* Card Body Content */}
-              <div className="relative z-10 p-5 sm:p-5.5 flex flex-col flex-1 justify-between">
-                {/* Icon + Title & Description Row */}
-                <div className="flex items-start gap-3.5">
-                  {/* Mint rounded icon badge with gradient background effect */}
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-[#E8F8F2] to-[#D5F5E7] border border-[#BDEBD7] flex items-center justify-center shrink-0 text-[#065F46] group-hover:from-[#DCFCE7] group-hover:to-[#BBF7D0] shadow-2xs group-hover:shadow-xs transition-all duration-300">
-                    {renderServiceIcon(service.id)}
-                  </div>
+                  {/* Gradient Overlay for high-contrast legible text at bottom */}
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-[#061713] from-15% via-[#061713]/85 via-48% to-transparent pointer-events-none"
+                    aria-hidden="true"
+                  />
+                </div>
 
-                  {/* Title and Short Description with baseline alignment */}
-                  <div className="flex-1 min-w-0">
-                    <div className="min-h-[46px] flex items-center">
-                      <h3 className="font-heading font-bold text-[16.5px] sm:text-[17.5px] text-[#11191b] leading-snug group-hover:text-[#065F46] transition-colors">
-                        {service.title}
-                      </h3>
-                    </div>
-                    <div className="min-h-[38px] mt-1 flex items-start">
-                      <p className="text-slate-500 text-[12.5px] sm:text-[13px] leading-relaxed line-clamp-2">
-                        {service.description}
-                      </p>
+                {/* Card Content Aligned to the Bottom */}
+                <div className="relative z-10 h-full p-6 sm:p-7 flex flex-col justify-end">
+                  {/* Category Eyebrow Tag */}
+                  <span className="text-[#6EE7B7] font-bold text-[11px] sm:text-xs uppercase tracking-[0.16em] mb-1.5 drop-shadow-xs">
+                    {categoryTag}
+                  </span>
+
+                  {/* Service Title */}
+                  <h3 className="font-heading font-bold text-white text-lg sm:text-[21px] leading-[1.22] mb-3 group-hover:text-[#A7F3D0] transition-colors">
+                    {service.title}
+                  </h3>
+
+                  {/* Description + Circular Action Arrow Button Row */}
+                  <div className="flex items-end justify-between gap-3 pt-1">
+                    <p className="text-slate-200/90 text-xs sm:text-[13px] leading-relaxed max-w-[185px] sm:max-w-[205px]">
+                      {service.description}
+                    </p>
+
+                    {/* Circular White Action Button with Right Arrow */}
+                    <div
+                      className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#102723] flex items-center justify-center shrink-0 shadow-lg group-hover:bg-[#E6F4EA] group-hover:scale-110 active:scale-95 transition-all duration-300"
+                      aria-hidden="true"
+                    >
+                      <ArrowRight className="h-4 w-4 sm:h-4.5 sm:w-4.5 stroke-[2.3] text-[#102723]" />
                     </div>
                   </div>
                 </div>
-
-                {/* Bottom Full-Width "Book Now →" Pill Button with subtle depth */}
-                <div className="mt-5 w-full pt-1">
-                  <div className="w-full h-[45px] rounded-full bg-gradient-to-r from-[#064E3B] to-[#065F46] group-hover:from-[#065F46] group-hover:to-[#047857] text-white text-[13.5px] font-semibold flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(6,78,59,0.2)] group-hover:shadow-[0_6px_20px_rgba(6,78,59,0.3)] transition-all duration-300">
-                    <span>Book Now</span>
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
