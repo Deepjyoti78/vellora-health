@@ -75,12 +75,12 @@ export const PatientLayout: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f8faf9]">
+    <div className="flex min-h-screen flex-col bg-[#f8faf9] w-full max-w-full overflow-x-hidden">
       {/* 1. Main Website Navbar */}
       <Header theme="light" />
 
       {/* 2. Main Page Area */}
-      <main className="flex-1 pb-16">{children}</main>
+      <main className="flex-1 pb-16 w-full max-w-full overflow-x-hidden">{children}</main>
     </div>
   );
 };

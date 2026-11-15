@@ -121,13 +121,13 @@ export default function PatientBookingsPage() {
 
   return (
     <PatientLayout>
-      <div className="relative min-h-[calc(100vh-80px)] bg-[#F7FBF9]">
+      <div className="relative min-h-[calc(100vh-80px)] bg-[#F7FBF9] overflow-hidden w-full max-w-full">
         {/* Soft decorative background ambient glow */}
         <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full bg-[#E8F8F1] opacity-70 blur-3xl -translate-y-1/3 translate-x-1/3" />
         <div className="pointer-events-none absolute top-1/3 left-0 h-80 w-80 rounded-full bg-[#F0FAF5] opacity-60 blur-3xl -translate-x-1/3" />
 
         {/* Centered content container matching 1360px specification */}
-        <div className="relative mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 py-6 sm:py-9 animate-fade-in-up">
+        <div className="relative mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 py-6 sm:py-9 animate-fade-in-up w-full max-w-full">
           {/* Back to Dashboard Navigation Button */}
           <div className="mb-5 sm:mb-6">
             <BackButton
@@ -241,7 +241,7 @@ export default function PatientBookingsPage() {
                 return (
                   <div
                     key={b.id}
-                    className="group rounded-[20px] border border-[#D9ECE7] bg-white p-6 sm:p-7 sm:px-8 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-md transition-all duration-300"
+                    className="group rounded-[20px] border border-[#D9ECE7] bg-white p-6 sm:p-7 sm:px-8 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-md transition-all duration-300 w-full max-w-full overflow-hidden"
                   >
                     {/* Top Metadata Row: Booking ID | Status Badge | Category Badge */}
                     <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs text-slate-600 mb-2">
@@ -260,65 +260,65 @@ export default function PatientBookingsPage() {
                     </div>
 
                     {/* Main Appointment Title */}
-                    <h3 className="font-heading text-lg sm:text-[21px] font-bold text-[#102723] leading-snug mb-5 group-hover:text-[#065F46] transition-colors">
+                    <h3 className="font-heading text-lg sm:text-[21px] font-bold text-[#102723] leading-snug mb-5 group-hover:text-[#065F46] transition-colors truncate">
                       {b.serviceName}
                     </h3>
 
                     {/* Lower Info Grid & Actions */}
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pt-1">
+                    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 sm:gap-6 pt-1 w-full min-w-0">
                       {/* 4 Information Columns */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 flex-1">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 flex-1 min-w-0">
                         {/* Col 1: Date & Time */}
-                        <div className="flex items-start gap-2.5">
+                        <div className="flex items-start gap-2.5 min-w-0">
                           <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#F0FAF5] text-[#065F46] shrink-0 border border-[#D9ECE7]">
                             <Calendar className="h-3.5 w-3.5 stroke-[2.2]" />
                           </div>
-                          <div>
-                            <p className="font-bold text-xs sm:text-[13px] text-[#102723]">
+                          <div className="min-w-0">
+                            <p className="font-bold text-xs sm:text-[13px] text-[#102723] truncate">
                               {formatDateDisplay(b.scheduledDate)}
                             </p>
-                            <p className="text-[11px] text-slate-500 mt-0.5">
+                            <p className="text-[11px] text-slate-500 mt-0.5 truncate">
                               {b.scheduledTimeSlot}
                             </p>
                           </div>
                         </div>
 
                         {/* Col 2: Patient */}
-                        <div className="flex items-start gap-2.5">
+                        <div className="flex items-start gap-2.5 min-w-0">
                           <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#F0FAF5] text-[#065F46] shrink-0 border border-[#D9ECE7]">
                             <User className="h-3.5 w-3.5 stroke-[2.2]" />
                           </div>
-                          <div>
+                          <div className="min-w-0">
                             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                               Patient
                             </p>
-                            <p className="font-bold text-xs sm:text-[13px] text-[#102723] mt-0.5">
+                            <p className="font-bold text-xs sm:text-[13px] text-[#102723] mt-0.5 truncate">
                               {b.beneficiaryName} {b.beneficiaryRelation ? `(${b.beneficiaryRelation})` : '(Self)'}
                             </p>
                           </div>
                         </div>
 
                         {/* Col 3: Assigned Clinician */}
-                        <div className="flex items-start gap-2.5">
+                        <div className="flex items-start gap-2.5 min-w-0">
                           <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#F0FAF5] text-[#065F46] shrink-0 border border-[#D9ECE7]">
                             <Stethoscope className="h-3.5 w-3.5 stroke-[2.2]" />
                           </div>
-                          <div>
+                          <div className="min-w-0">
                             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                               Clinician
                             </p>
-                            <p className="font-bold text-xs sm:text-[13px] text-[#065F46] mt-0.5">
+                            <p className="font-bold text-xs sm:text-[13px] text-[#065F46] mt-0.5 truncate">
                               {b.providerName || 'Coordinator Dispatch'}
                             </p>
                           </div>
                         </div>
 
                         {/* Col 4: Location */}
-                        <div className="flex items-start gap-2.5">
+                        <div className="flex items-start gap-2.5 min-w-0">
                           <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#F0FAF5] text-[#065F46] shrink-0 border border-[#D9ECE7]">
                             <MapPin className="h-3.5 w-3.5 stroke-[2.2]" />
                           </div>
-                          <div>
+                          <div className="min-w-0">
                             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                               Location
                             </p>
@@ -330,7 +330,7 @@ export default function PatientBookingsPage() {
                       </div>
 
                       {/* Right Action Buttons */}
-                      <div className="flex flex-wrap items-center gap-2.5 shrink-0 self-start lg:self-center pt-2 lg:pt-0 border-t lg:border-t-0 border-[#F2F8F5]">
+                      <div className="flex flex-wrap items-center gap-2.5 shrink-0 self-start xl:self-center pt-3 xl:pt-0 border-t xl:border-t-0 border-[#F2F8F5]">
                         <Link
                           href={`/patient/bookings/${b.id}`}
                           className="inline-flex items-center gap-1.5 rounded-xl bg-[#064E3B] hover:bg-[#065F46] px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-colors whitespace-nowrap"
