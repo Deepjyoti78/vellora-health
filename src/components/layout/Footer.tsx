@@ -9,21 +9,8 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="site-footer">
+    <footer className="site-footer !pt-12 sm:!pt-16">
       <div className="container">
-        <div className="footer-top flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6">
-          <Link className="inline-block group" href="/" aria-label="Velora Healthcare, home">
-            <img
-              src="/assets/logo-white.png"
-              alt="Velora Healthcare"
-              className="h-10 sm:h-12 md:h-14 w-auto object-contain group-hover:opacity-90 transition-opacity"
-            />
-          </Link>
-          <p className="text-slate-400 text-sm">Exceptional healthcare, always.</p>
-        </div>
-
-        <div className="footer-divider"></div>
-
         <div className="footer-links-grid">
           <div className="footer-about">
             <p>
