@@ -51,6 +51,13 @@ export const PatientLayout: React.FC<{ children: React.ReactNode }> = ({ childre
             </button>
 
             <Link
+              href={`/patient/login?redirect=${encodeURIComponent(pathname)}`}
+              className="text-[11px] text-[#064E3B] font-semibold hover:underline"
+            >
+              Or open full login page
+            </Link>
+
+            <Link
               href="/"
               className="w-full flex items-center justify-center gap-2 rounded-full border border-slate-300 bg-white py-2.5 px-4 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
             >

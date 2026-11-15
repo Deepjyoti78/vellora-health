@@ -10,6 +10,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAuthLoading: boolean;
   login: (emailOrPhone: string, preferredRole?: UserRole) => boolean;
+  registerPatient: (data: { name: string; email: string; phone: string }) => UserRecord;
   logout: () => void;
   switchRole: (role: UserRole) => void;
   validateInternalRedirect: (target?: string | null, fallback?: string) => string;
@@ -133,6 +134,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  const registerPatient = useCallback((data: { name: string; email: string; phone: string }): UserRecord => {
+    const newUser = db.createUser({
+      name: data.name.trim(),
+      email: data.email.trim(),
+      phone: data.phone.trim(),
+      role: 'PATIENT',
+      verificationStatus: 'APPROVED',
+    });
+    setCurrentUser(newUser);
+    setIsAuthenticated(true);
+    try {
+      sessionStorage.setItem(CLIENT_SESSION_STORAGE_KEY, newUser.id);
+    } catch {}
+    return newUser;
+  }, []);
+
   const validateInternalRedirect = useCallback(
     (target?: string | null, fallback: string = '/') => validateInternalPath(target, fallback),
     []
@@ -145,6 +162,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated,
         isAuthLoading,
         login,
+        registerPatient,
         logout,
         switchRole,
         validateInternalRedirect,

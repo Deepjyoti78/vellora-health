@@ -1757,6 +1757,21 @@ class DataStore {
     }
     return null;
   }
+  createUser(data: Partial<UserRecord>): UserRecord {
+    const newUser: UserRecord = {
+      id: data.id || `pat-${Date.now().toString().slice(-6)}`,
+      name: data.name || 'New Patient',
+      email: data.email || '',
+      phone: data.phone || '',
+      role: data.role || 'PATIENT',
+      avatar: data.avatar || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=256&q=80',
+      verificationStatus: 'APPROVED',
+      rating: 5.0,
+      ...data,
+    };
+    this.users.push(newUser);
+    return newUser;
+  }
 
   // Services
   getServices() { return this.services; }
