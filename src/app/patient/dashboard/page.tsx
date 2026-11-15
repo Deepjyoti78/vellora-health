@@ -223,62 +223,7 @@ export default function PatientDashboardPage() {
             </div>
           </section>
 
-          {/* ================= 2. FOUR UNIFIED STATISTICS SUMMARY CARDS ================= */}
-          <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            {/* Stat 1: Total Bookings */}
-            <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-xs transition-all flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                <Calendar className="h-5 w-5 stroke-[2]" />
-              </div>
-              <div>
-                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#15212B] tracking-tight block">
-                  {bookings.length}
-                </span>
-                <span className="text-xs sm:text-[13px] text-[#64748B] font-medium block">Total Bookings</span>
-              </div>
-            </div>
-
-            {/* Stat 2: Active Visits */}
-            <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-xs transition-all flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                <Check className="h-5 w-5 stroke-[2.5]" />
-              </div>
-              <div>
-                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#15212B] tracking-tight block">
-                  {activeBookings.length}
-                </span>
-                <span className="text-xs sm:text-[13px] text-[#64748B] font-medium block">Active Visits</span>
-              </div>
-            </div>
-
-            {/* Stat 3: Family Members */}
-            <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-xs transition-all flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                <Users className="h-5 w-5 stroke-[2]" />
-              </div>
-              <div>
-                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#15212B] tracking-tight block">
-                  {familyMembers.length}
-                </span>
-                <span className="text-xs sm:text-[13px] text-[#64748B] font-medium block">Family Members</span>
-              </div>
-            </div>
-
-            {/* Stat 4: Medical Records */}
-            <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-xs transition-all flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
-                <FileText className="h-5 w-5 stroke-[2]" />
-              </div>
-              <div>
-                <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#15212B] tracking-tight block">
-                  {prescriptions.length + labReports.length}
-                </span>
-                <span className="text-xs sm:text-[13px] text-[#64748B] font-medium block">Medical Records</span>
-              </div>
-            </div>
-          </section>
-
-          {/* ================= 3. UPCOMING & ACTIVE APPOINTMENTS SECTION ================= */}
+          {/* ================= 2. UPCOMING & ACTIVE APPOINTMENTS SECTION ================= */}
           <section className="rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-8 shadow-[0_2px_16px_rgba(0,0,0,0.02)]">
             {/* Section Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#F2F8F5]">
