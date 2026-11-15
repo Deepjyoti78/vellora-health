@@ -111,14 +111,6 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
   },
 ];
 
-const POPULAR_CHIPS = [
-  { label: 'Doctor Visit', query: 'Doctor Visit', icon: Stethoscope },
-  { label: 'Wound Dressing', query: 'Wound Dressing', icon: ShieldCheck },
-  { label: 'Full Body Checkup', query: 'Checkup', icon: Heart },
-  { label: '12-Hour Nursing', query: '12-Hour', icon: Clock },
-  { label: 'Physiotherapy', query: 'Physiotherapy', icon: Activity },
-];
-
 export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -150,16 +142,31 @@ export default function ServicesPage() {
       {/* Top Header with active Services pill */}
       <Header theme="light" />
 
-      {/* FULL-WIDTH SEAMLESS HERO SECTION MATCHING TARGET REFERENCE */}
-      <section className="relative w-full bg-gradient-to-r from-[#F6FBFA] via-[#F3F9F7] to-[#EDF6F3] overflow-hidden border-b border-[#E8F0EC]">
-        {/* Subtle mint organic glow on left */}
-        <div className="absolute top-0 left-0 w-[420px] h-[420px] bg-[#E2F4EC]/50 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+      {/* FULL-WIDTH HERO SECTION WITH COMPASSIONATE CARE BACKGROUND */}
+      <section className="relative w-full overflow-hidden border-b border-[#E8F0EC] bg-[#FAFCFB]">
+        {/* Background Image: Compassionate Care in a Calm Setting */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <img
+            src="/assets/compassionate-care-in-calm-setting.webp"
+            alt="Compassionate Healthcare in a Calm Home Setting"
+            className="h-full w-full object-cover object-right lg:object-[80%_center] opacity-95"
+          />
+          {/* Smooth multi-stage gradient overlay: ensures crisp readability of the heading and search bar on the left */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(90deg, rgba(250,252,251,0.98) 0%, rgba(250,252,251,0.95) 36%, rgba(250,252,251,0.78) 54%, rgba(250,252,251,0.30) 78%, rgba(250,252,251,0.08) 100%)',
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#FAFCFB]/60 via-transparent to-[#FAFCFB]/30" />
+        </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 flex flex-col lg:flex-row lg:items-center justify-between min-h-[400px] lg:min-h-[440px]">
-          {/* Left Column: Heading, Search & Popular Tags */}
-          <div className="w-full lg:w-[52%] xl:w-[50%] z-10 flex flex-col justify-center">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-18 flex flex-col justify-center min-h-[380px] lg:min-h-[440px]">
+          {/* Content Column: Eyebrow, Heading, Subtitle & Search */}
+          <div className="w-full lg:w-[58%] xl:w-[54%] z-10 flex flex-col justify-center">
             {/* Eyebrow Pill */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-3.5 shadow-2xs">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2]/90 backdrop-blur-xs border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-3.5 shadow-2xs">
               <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
               <span>OUR SERVICES</span>
             </div>
@@ -170,12 +177,12 @@ export default function ServicesPage() {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-[#5A6E69] text-sm sm:text-[15.5px] leading-relaxed max-w-[580px] mb-6 font-normal">
+            <p className="text-[#475569] text-sm sm:text-[15.5px] leading-relaxed max-w-[560px] mb-6 font-normal">
               Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
             </p>
 
             {/* Search Bar Container */}
-            <div className="relative flex items-center w-full max-w-[590px] h-[54px] sm:h-[58px] rounded-full border border-[#DCE6E1] bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.04)] focus-within:border-[#065F46] focus-within:ring-4 focus-within:ring-[#065F46]/10 transition-all">
+            <div className="relative flex items-center w-full max-w-[560px] h-[54px] sm:h-[58px] rounded-full border border-[#DCE6E1] bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_4px_24px_rgba(0,0,0,0.06)] focus-within:border-[#065F46] focus-within:ring-4 focus-within:ring-[#065F46]/10 transition-all">
               <Search className="h-5 w-5 text-slate-400 mr-3 shrink-0 stroke-[2]" />
               <input
                 type="text"
@@ -209,39 +216,6 @@ export default function ServicesPage() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </button>
             </div>
-
-            {/* Popular Search Chips */}
-            <div className="mt-3.5 flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11.5px]">
-              <span className="text-slate-500 font-semibold mr-1">Popular:</span>
-              {POPULAR_CHIPS.map((chip) => {
-                const ChipIcon = chip.icon;
-                const isSelected = searchQuery === chip.query;
-                return (
-                  <button
-                    key={chip.label}
-                    type="button"
-                    onClick={() => setSearchQuery(isSelected ? '' : chip.query)}
-                    className={`rounded-full border px-2.5 sm:px-3 py-1 flex items-center gap-1.5 font-medium shadow-2xs transition-all cursor-pointer ${
-                      isSelected
-                        ? 'border-[#065F46] bg-[#065F46] text-white'
-                        : 'border-[#DCE6E1] bg-white hover:bg-slate-50 text-slate-700 hover:border-[#065F46] hover:text-[#065F46]'
-                    }`}
-                  >
-                    <ChipIcon className={`h-3.5 w-3.5 ${isSelected ? 'text-white' : 'text-[#065F46]'}`} />
-                    <span>{chip.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Right Column: Large Seamlessly Integrated Healthcare Photograph */}
-          <div className="w-full lg:w-[48%] xl:w-[50%] lg:absolute lg:right-0 lg:top-0 lg:bottom-0 flex items-center justify-end overflow-hidden pointer-events-none mt-6 lg:mt-0">
-            <img
-              src="/assets/services-hero-integrated.webp"
-              alt="Doctor and patient consultation in a warm home setting"
-              className="h-full w-auto max-h-[360px] sm:max-h-[400px] lg:max-h-full object-cover object-right"
-            />
           </div>
         </div>
       </section>
