@@ -24,10 +24,10 @@ export const ServicesSection: React.FC = () => {
         aria-hidden="true"
       />
 
-      {/* Expanded container: reduces side margins and increases card width */}
-      <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+      {/* Expanded container: fills up left/right space and maximizes card widths */}
+      <div className="relative mx-auto max-w-[1620px] px-3 sm:px-5 lg:px-6">
         {/* Centered Main Heading */}
-        <div className="mx-auto max-w-3xl text-center mb-10 sm:mb-14">
+        <div className="mx-auto max-w-3xl text-center mb-8 sm:mb-12">
           {/* Badge with horizontal lines */}
           <div className="flex items-center justify-center gap-3.5 mb-3.5">
             <span className="w-8 sm:w-10 h-[1.5px] bg-[#9ED2BE]/70" />
@@ -60,11 +60,11 @@ export const ServicesSection: React.FC = () => {
           />
         </div>
 
-        {/* 4 Cards Row: Reduced height, wider images, and reduced corner roundness */}
+        {/* 4 Cards Row: Wider cards, reduced gap between cards, filling left and right empty space */}
         <div
           ref={trackRef}
           id="serviceSlider"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 xl:gap-6 w-full"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-3.5 xl:gap-4 w-full"
           aria-label="Core home healthcare services"
         >
           {SERVICES_DATA.map((service) => (
