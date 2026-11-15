@@ -204,17 +204,14 @@ export default function DoctorsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // Doctor Pop-up Card & Confirmation Modal State
+  // Doctor Pop-up Card Details Modal State
   const [selectedDoctorModal, setSelectedDoctorModal] = useState<DoctorSpecialist | null>(null);
-  const [isBookingConfirmed, setIsBookingConfirmed] = useState<boolean>(false);
-  const [confirmedBookingRef, setConfirmedBookingRef] = useState<string>('');
 
   // Close modal with Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setSelectedDoctorModal(null);
-        setIsBookingConfirmed(false);
       }
     };
     if (selectedDoctorModal) {
@@ -225,17 +222,13 @@ export default function DoctorsPage() {
 
   const handleOpenDoctorModal = (doc: DoctorSpecialist) => {
     setSelectedDoctorModal(doc);
-    setIsBookingConfirmed(false);
-    setConfirmedBookingRef(`VEL-2026-DOC${Math.floor(100 + Math.random() * 900)}`);
   };
 
   const handleConfirmDoctorBooking = () => {
-    setIsBookingConfirmed(true);
-  };
-
-  const handleProceedToBookingSystem = () => {
     if (selectedDoctorModal) {
-      router.push(`/book/doctor/${selectedDoctorModal.id}`);
+      const docId = selectedDoctorModal.id;
+      setSelectedDoctorModal(null);
+      router.push(`/book/doctor/${docId}`);
     }
   };
 
@@ -495,7 +488,6 @@ export default function DoctorsPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setSelectedDoctorModal(null);
-              setIsBookingConfirmed(false);
             }
           }}
         >
@@ -503,241 +495,148 @@ export default function DoctorsPage() {
             {/* Top Close Button */}
             <button
               type="button"
-              onClick={() => {
-                setSelectedDoctorModal(null);
-                setIsBookingConfirmed(false);
-              }}
+              onClick={() => setSelectedDoctorModal(null)}
               aria-label="Close dialog"
               className="absolute top-5 right-5 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>
 
-            {!isBookingConfirmed ? (
-              /* ================= STEP 1: DOCTOR DETAILS POP-UP ================= */
-              <div className="space-y-4 sm:space-y-5">
-                {/* Eyebrow badge */}
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-[11px] font-bold text-[#065F46]">
-                  <Stethoscope className="h-3 w-3 stroke-[2.5]" />
-                  <span>DOORSTEP DOCTOR CONSULTATION</span>
-                </div>
-
-                {/* Doctor Header Profile */}
-                <div className="flex items-start gap-4 pt-1">
-                  <div className="relative h-20 w-20 sm:h-22 sm:w-22 shrink-0 overflow-hidden rounded-2xl border border-[#D1FAE5] bg-slate-50 shadow-2xs">
-                    <img
-                      src={selectedDoctorModal.image}
-                      alt={selectedDoctorModal.name}
-                      className="h-full w-full object-cover object-top"
-                    />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] px-2 py-0.5 text-[10px] font-bold text-[#065F46] border border-[#D1FAE5]">
-                        <Check className="h-2.5 w-2.5 stroke-[3]" />
-                        <span>Verified Specialist</span>
-                      </span>
-
-                      <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600 ml-auto">
-                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                        <span>{selectedDoctorModal.rating} ({selectedDoctorModal.reviewsCount}+)</span>
-                      </div>
-                    </div>
-
-                    <h3 id="doctor-modal-title" className="font-heading text-lg sm:text-xl font-bold text-[#102820]">
-                      {selectedDoctorModal.name}
-                    </h3>
-                    <p className="text-xs font-semibold text-[#065F46] mt-0.5">
-                      {selectedDoctorModal.specialty}
-                    </p>
-                    <p className="text-[11px] text-slate-500 font-medium mt-0.5">
-                      {selectedDoctorModal.qualification}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Clinical Bio */}
-                <div className="rounded-2xl bg-[#F8FAF9] border border-[#E8F0EC] p-3.5 text-xs text-slate-600 leading-relaxed">
-                  <p className="font-medium text-[#102820] mb-1 text-[11px] uppercase tracking-wider text-slate-400">
-                    Clinical Expertise &amp; Background
-                  </p>
-                  <p>{selectedDoctorModal.bio}</p>
-                  <div className="mt-2.5 flex flex-wrap gap-1.5">
-                    {selectedDoctorModal.tags.map((t, idx) => (
-                      <span
-                        key={idx}
-                        className="rounded-md bg-white border border-[#E2EBE7] px-2 py-0.5 text-[10.5px] font-medium text-slate-700"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Consultation Details Grid */}
-                <div className="grid grid-cols-2 gap-2.5 pt-1 text-xs">
-                  <div className="rounded-xl border border-[#E2EBE7] bg-white p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      Consultation Mode
-                    </p>
-                    <p className="font-bold text-[#102820] mt-0.5 flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5 text-[#065F46]" />
-                      Doorstep Home Visit
-                    </p>
-                    <p className="text-[10.5px] text-slate-500 mt-0.5">
-                      In-home clinical assessment
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-[#E2EBE7] bg-white p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      Standard Arrival
-                    </p>
-                    <p className="font-bold text-[#102820] mt-0.5 flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-[#065F46]" />
-                      30–45 Mins Arrival
-                    </p>
-                    <p className="text-[10.5px] text-slate-500 mt-0.5">
-                      Same-day availability
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-[#E2EBE7] bg-white p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      Consultation Duration
-                    </p>
-                    <p className="font-bold text-[#102820] mt-0.5">
-                      45–60 Mins Bedside
-                    </p>
-                    <p className="text-[10.5px] text-slate-500 mt-0.5">
-                      Thorough physical evaluation
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-[#E2EBE7] bg-white p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      Consultation Fee
-                    </p>
-                    <p className="font-bold text-[#065F46] text-sm mt-0.5">
-                      $85 Total
-                    </p>
-                    <p className="text-[10.5px] text-slate-500 mt-0.5">
-                      Includes e-prescription
-                    </p>
-                  </div>
-                </div>
-
-                {/* Footer Action Buttons */}
-                <div className="pt-2 flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedDoctorModal(null);
-                      setIsBookingConfirmed(false);
-                    }}
-                    className="flex-1 rounded-full border border-slate-200 bg-white py-2.5 px-4 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleConfirmDoctorBooking}
-                    className="flex-2 inline-flex items-center justify-center gap-2 rounded-full bg-[#064E3B] hover:bg-[#065F46] py-2.5 px-5 text-xs font-bold text-white shadow-xs transition-colors cursor-pointer"
-                  >
-                    <Check className="h-3.5 w-3.5 stroke-[2.5]" />
-                    <span>Confirm Booking</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </div>
+            {/* DOCTOR DETAILS POP-UP */}
+            <div className="space-y-4 sm:space-y-5">
+              {/* Eyebrow badge */}
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-[11px] font-bold text-[#065F46]">
+                <Stethoscope className="h-3 w-3 stroke-[2.5]" />
+                <span>DOORSTEP DOCTOR CONSULTATION</span>
               </div>
-            ) : (
-              /* ================= STEP 2: CONFIRMED BOOKING VIEW ================= */
-              <div className="space-y-5 animate-scale-in">
-                {/* Success Icon & Heading */}
-                <div className="text-center pt-2">
-                  <div className="h-14 w-14 rounded-full bg-[#ECFDF5] border-2 border-[#10B981] text-[#065F46] flex items-center justify-center mx-auto mb-3 animate-pulse-glow">
-                    <CheckCircle2 className="h-8 w-8 stroke-[2.2] text-[#059669]" />
+
+              {/* Doctor Header Profile */}
+              <div className="flex items-start gap-4 pt-1">
+                <div className="relative h-20 w-20 sm:h-22 sm:w-22 shrink-0 overflow-hidden rounded-2xl border border-[#D1FAE5] bg-slate-50 shadow-2xs">
+                  <img
+                    src={selectedDoctorModal.image}
+                    alt={selectedDoctorModal.name}
+                    className="h-full w-full object-cover object-top"
+                  />
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] px-2 py-0.5 text-[10px] font-bold text-[#065F46] border border-[#D1FAE5]">
+                      <Check className="h-2.5 w-2.5 stroke-[3]" />
+                      <span>Verified Specialist</span>
+                    </span>
+
+                    <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600 ml-auto">
+                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span>{selectedDoctorModal.rating} ({selectedDoctorModal.reviewsCount}+)</span>
+                    </div>
                   </div>
-                  <h3 className="font-heading text-xl font-bold text-[#102820]">
-                    Booking Confirmed!
+
+                  <h3 id="doctor-modal-title" className="font-heading text-lg sm:text-xl font-bold text-[#102820]">
+                    {selectedDoctorModal.name}
                   </h3>
-                  <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
-                    Your home visit doctor appointment with {selectedDoctorModal.name} has been placed.
+                  <p className="text-xs font-semibold text-[#065F46] mt-0.5">
+                    {selectedDoctorModal.specialty}
+                  </p>
+                  <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+                    {selectedDoctorModal.qualification}
+                  </p>
+                </div>
+              </div>
+
+              {/* Clinical Bio */}
+              <div className="rounded-2xl bg-[#F8FAF9] border border-[#E8F0EC] p-3.5 text-xs text-slate-600 leading-relaxed">
+                <p className="font-medium text-[#102820] mb-1 text-[11px] uppercase tracking-wider text-slate-400">
+                  Clinical Expertise &amp; Background
+                </p>
+                <p>{selectedDoctorModal.bio}</p>
+                <div className="mt-2.5 flex flex-wrap gap-1.5">
+                  {selectedDoctorModal.tags.map((t, idx) => (
+                    <span
+                      key={idx}
+                      className="rounded-md bg-white border border-[#E2EBE7] px-2 py-0.5 text-[10.5px] font-medium text-slate-700"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Consultation Details Grid */}
+              <div className="grid grid-cols-2 gap-2.5 pt-1 text-xs">
+                <div className="rounded-xl border border-[#E2EBE7] bg-white p-3">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Consultation Mode
+                  </p>
+                  <p className="font-bold text-[#102820] mt-0.5 flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-[#065F46]" />
+                    Doorstep Home Visit
+                  </p>
+                  <p className="text-[10.5px] text-slate-500 mt-0.5">
+                    In-home clinical assessment
                   </p>
                 </div>
 
-                {/* Clickable Confirmed Booking Card */}
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onClick={handleProceedToBookingSystem}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      handleProceedToBookingSystem();
-                    }
-                  }}
-                  className="group rounded-2xl border-2 border-[#10B981] bg-[#F0FDF4] p-4.5 text-left shadow-sm hover:shadow-md hover:border-[#059669] hover:bg-[#DCFCE7]/70 transition-all cursor-pointer relative"
-                >
-                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#A7F3D0]">
-                    <span className="font-mono text-xs font-bold text-[#065F46]">
-                      {confirmedBookingRef}
-                    </span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[#10B981] px-2.5 py-0.5 text-[10px] font-bold text-white shadow-2xs">
-                      ● Confirmed
-                    </span>
-                  </div>
-
-                  <div className="mt-3 flex items-start gap-3.5">
-                    <img
-                      src={selectedDoctorModal.image}
-                      alt={selectedDoctorModal.name}
-                      className="h-12 w-12 rounded-xl object-cover shrink-0 border border-[#A7F3D0] shadow-2xs"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-heading text-sm font-bold text-[#102820] group-hover:text-[#065F46] transition-colors truncate">
-                        {selectedDoctorModal.name}
-                      </h4>
-                      <p className="text-xs font-semibold text-[#065F46] truncate">
-                        {selectedDoctorModal.specialty}
-                      </p>
-                      <p className="text-[11px] text-slate-600 mt-0.5">
-                        Doorstep Home Visit • Today (30–45 min arrival)
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-3.5 flex items-center justify-between pt-2.5 border-t border-[#A7F3D0] text-xs font-bold text-[#065F46]">
-                    <span>Click this booking to open booking system</span>
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </div>
+                <div className="rounded-xl border border-[#E2EBE7] bg-white p-3">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Standard Arrival
+                  </p>
+                  <p className="font-bold text-[#102820] mt-0.5 flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5 text-[#065F46]" />
+                    30–45 Mins Arrival
+                  </p>
+                  <p className="text-[10.5px] text-slate-500 mt-0.5">
+                    Same-day availability
+                  </p>
                 </div>
 
-                {/* Direct Action Link */}
-                <div className="pt-1 flex flex-col gap-2">
-                  <button
-                    type="button"
-                    onClick={handleProceedToBookingSystem}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#064E3B] hover:bg-[#065F46] py-3 px-5 text-xs font-bold text-white shadow-xs transition-colors cursor-pointer"
-                  >
-                    <span>Proceed to Home Visit Doctor Booking</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
+                <div className="rounded-xl border border-[#E2EBE7] bg-white p-3">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Consultation Duration
+                  </p>
+                  <p className="font-bold text-[#102820] mt-0.5">
+                    45–60 Mins Bedside
+                  </p>
+                  <p className="text-[10.5px] text-slate-500 mt-0.5">
+                    Thorough physical evaluation
+                  </p>
+                </div>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedDoctorModal(null);
-                      setIsBookingConfirmed(false);
-                    }}
-                    className="text-center text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors py-1 cursor-pointer"
-                  >
-                    Dismiss &amp; Stay on Doctors List
-                  </button>
+                <div className="rounded-xl border border-[#E2EBE7] bg-white p-3">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Consultation Fee
+                  </p>
+                  <p className="font-bold text-[#065F46] text-sm mt-0.5">
+                    $85 Total
+                  </p>
+                  <p className="text-[10.5px] text-slate-500 mt-0.5">
+                    Includes e-prescription
+                  </p>
                 </div>
               </div>
-            )}
+
+              {/* Footer Action Buttons */}
+              <div className="pt-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSelectedDoctorModal(null)}
+                  className="flex-1 rounded-full border border-slate-200 bg-white py-2.5 px-4 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleConfirmDoctorBooking}
+                  className="flex-2 inline-flex items-center justify-center gap-2 rounded-full bg-[#064E3B] hover:bg-[#065F46] py-2.5 px-5 text-xs font-bold text-white shadow-xs transition-colors cursor-pointer"
+                >
+                  <Check className="h-3.5 w-3.5 stroke-[2.5]" />
+                  <span>Confirm Booking</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
