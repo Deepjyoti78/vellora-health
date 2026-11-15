@@ -91,23 +91,39 @@ export default function AboutPage() {
 
           <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Illustration: In-Home Bedside Doctor Visit */}
+              {/* Left Background Illustration: In-Home Bedside Doctor Visit (No Box, No Card) */}
               <div className="hidden lg:flex lg:col-span-3 xl:col-span-3.5 justify-start">
-                <div className="group relative w-full max-w-[340px] overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-white p-3 shadow-[0_4px_24px_rgba(6,95,70,0.06)] hover:shadow-[0_8px_32px_rgba(6,95,70,0.12)] transition-all duration-300">
-                  <div className="relative h-44 w-full overflow-hidden rounded-[16px] bg-[#ECFDF5]">
+                <div className="relative w-full max-w-[340px] flex items-center justify-center">
+                  {/* Soft Background Mint Aura */}
+                  <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-[#ECFDF5] via-[#D1FAE5]/50 to-transparent blur-2xl opacity-80 pointer-events-none" />
+
+                  {/* Decorative Floating Accents */}
+                  <div className="absolute -top-3 left-4 text-emerald-300/60 font-black text-xl select-none pointer-events-none animate-subtle-float">
+                    ✦
+                  </div>
+                  <div className="absolute bottom-6 -left-2 text-teal-400/50 font-black text-lg select-none pointer-events-none animate-subtle-float-reverse">
+                    +
+                  </div>
+
+                  {/* Floating Badge (Top Left) */}
+                  <div className="absolute -top-2 left-1 z-20 flex items-center gap-1.5 rounded-full border border-[#D1FAE5] bg-white/95 px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-[0_4px_16px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                    <span>Compassionate Care</span>
+                  </div>
+
+                  {/* Pure Background Illustration (Unboxed) */}
+                  <div className="relative z-10 w-full flex items-center justify-center">
                     <img
-                      src="/assets/services-hero-illustration.jpg"
+                      src="/assets/services-hero-illustration-transparent.png"
                       alt="In-Home Doctor Consultation Illustration"
-                      className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
+                      className="w-full h-auto max-h-[220px] object-contain drop-shadow-[0_10px_24px_rgba(6,95,70,0.08)] transition-transform duration-500 hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
-                    <div className="absolute bottom-3 left-3.5 right-3.5 text-white">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-0.5 text-[10px] font-bold text-[#065F46] shadow-xs">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#10B981]" />
-                        Compassionate Care
-                      </span>
-                      <p className="mt-1 text-xs font-bold leading-tight drop-shadow-xs">In-Home Clinical Consultations</p>
-                    </div>
+                  </div>
+
+                  {/* Floating Badge (Bottom Right) */}
+                  <div className="absolute -bottom-3 right-0 z-20 flex items-center gap-1.5 rounded-2xl border border-[#D1FAE5] bg-white/95 px-3 py-1.5 text-[11px] font-bold text-[#15212B] shadow-[0_4px_16px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float-reverse">
+                    <span className="text-[#065F46]">45–60 Min</span>
+                    <span className="text-slate-500 font-medium">Bedside Visits</span>
                   </div>
                 </div>
               </div>
@@ -140,23 +156,39 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              {/* Right Illustration: Modern Hospital Standards & Clinical Network */}
+              {/* Right Background Illustration: Modern Hospital Standards & Clinical Network (No Box, No Card) */}
               <div className="hidden lg:flex lg:col-span-3 xl:col-span-3.5 justify-end">
-                <div className="group relative w-full max-w-[340px] overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-white p-3 shadow-[0_4px_24px_rgba(6,95,70,0.06)] hover:shadow-[0_8px_32px_rgba(6,95,70,0.12)] transition-all duration-300">
-                  <div className="relative h-44 w-full overflow-hidden rounded-[16px] bg-[#ECFDF5]">
+                <div className="relative w-full max-w-[340px] flex items-center justify-center">
+                  {/* Soft Background Mint Aura */}
+                  <div className="absolute -inset-2 rounded-full bg-gradient-to-tl from-[#ECFDF5] via-[#D1FAE5]/50 to-transparent blur-2xl opacity-80 pointer-events-none" />
+
+                  {/* Decorative Floating Accents */}
+                  <div className="absolute -top-3 right-4 text-emerald-300/60 font-black text-xl select-none pointer-events-none animate-subtle-float">
+                    ✦
+                  </div>
+                  <div className="absolute bottom-6 -right-2 text-teal-400/50 font-black text-lg select-none pointer-events-none animate-subtle-float-reverse">
+                    +
+                  </div>
+
+                  {/* Floating Badge (Top Right) */}
+                  <div className="absolute -top-2 right-1 z-20 flex items-center gap-1.5 rounded-full border border-[#D1FAE5] bg-white/95 px-3 py-1 text-[11px] font-bold text-[#065F46] shadow-[0_4px_16px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float">
+                    <ShieldCheck className="h-3.5 w-3.5 text-[#065F46]" />
+                    <span>Hospital Grade</span>
+                  </div>
+
+                  {/* Pure Background Illustration (Unboxed) */}
+                  <div className="relative z-10 w-full flex items-center justify-center">
                     <img
-                      src="/assets/about-hero-hospital-illustration.png"
+                      src="/assets/about-hero-hospital-illustration-transparent.png"
                       alt="Modern Clinical Infrastructure & Hospital Standards Illustration"
-                      className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
+                      className="w-full h-auto max-h-[220px] object-contain drop-shadow-[0_10px_24px_rgba(6,95,70,0.08)] transition-transform duration-500 hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
-                    <div className="absolute bottom-3 left-3.5 right-3.5 text-white">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-0.5 text-[10px] font-bold text-[#065F46] shadow-xs">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#10B981]" />
-                        Clinical Excellence
-                      </span>
-                      <p className="mt-1 text-xs font-bold leading-tight drop-shadow-xs">Modern Medical Infrastructure</p>
-                    </div>
+                  </div>
+
+                  {/* Floating Badge (Bottom Left) */}
+                  <div className="absolute -bottom-3 left-0 z-20 flex items-center gap-1.5 rounded-2xl border border-[#D1FAE5] bg-white/95 px-3 py-1.5 text-[11px] font-bold text-[#15212B] shadow-[0_4px_16px_rgba(6,95,70,0.08)] backdrop-blur-xs animate-subtle-float-reverse">
+                    <span className="text-[#065F46]">NABL / ISO</span>
+                    <span className="text-slate-500 font-medium">Certified Standards</span>
                   </div>
                 </div>
               </div>
