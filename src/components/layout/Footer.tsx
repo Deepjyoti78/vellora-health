@@ -34,7 +34,6 @@ export const Footer: React.FC = () => {
             <Link href="/">Home</Link>
             <Link href="/services">Our Services</Link>
             <Link href="/doctors">Our Doctors</Link>
-            <Link href="/facilities">Facilities</Link>
             <Link href="/about">About Us</Link>
           </div>
 
@@ -63,7 +62,7 @@ export const Footer: React.FC = () => {
             <Link href="/doctors">General Medicine</Link>
             <Link href="/doctors">Geriatric Care</Link>
             <Link href="/doctors">Post-Surgical Nursing</Link>
-            <Link href="/facilities">Accredited Labs</Link>
+            <Link href="/services/diagnostics-labs">Accredited Labs</Link>
             <Link href="/about">Clinical Governance</Link>
           </div>
         </div>
