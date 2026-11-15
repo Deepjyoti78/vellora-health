@@ -8,16 +8,24 @@ import { Icon } from '@/components/common/Icon';
 
 export default function PatientSupportPage() {
   const { currentUser } = useAuth();
-  const [tickets, setTickets] = useState(db.getSupportTickets(currentUser.id));
+  const [tickets, setTickets] = useState(() =>
+    currentUser ? db.getSupportTickets(currentUser.id) : []
+  );
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [priority, setPriority] = useState<'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'>('MEDIUM');
   const [submitted, setSubmitted] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
+  React.useEffect(() => {
+    if (currentUser) {
+      setTickets(db.getSupportTickets(currentUser.id));
+    }
+  }, [currentUser]);
+
   const handleSubmitTicket = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!subject.trim() || !message.trim()) return;
+    if (!subject.trim() || !message.trim() || !currentUser) return;
 
     const newTicket = db.createSupportTicket({
       userId: currentUser.id,

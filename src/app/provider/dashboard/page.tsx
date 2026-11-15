@@ -13,7 +13,7 @@ export default function ProviderDashboardPage() {
 
   // Clinician's assigned visits or requested matching their role
   const myVisits = allBookings.filter(
-    (b) => b.providerId === currentUser.id || (!b.providerId && b.status === 'CONFIRMED')
+    (b) => (currentUser && b.providerId === currentUser.id) || (!b.providerId && b.status === 'CONFIRMED')
   );
 
   const activeVisits = myVisits.filter((b) =>
@@ -30,6 +30,7 @@ export default function ProviderDashboardPage() {
   const [acceptedId, setAcceptedId] = useState<string | null>(null);
 
   const handleAcceptRequest = (id: string) => {
+    if (!currentUser) return;
     db.assignProvider(id, currentUser.id);
     setAcceptedId(id);
     setTimeout(() => setAcceptedId(null), 3000);
@@ -43,18 +44,18 @@ export default function ProviderDashboardPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="rounded-md bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
-                {currentUser.role}
+                {currentUser?.role || 'Clinician'}
               </span>
               <span className="text-xs text-gray-400">•</span>
               <span className="text-xs font-semibold text-gray-500">
-                License: {currentUser.qualification || 'Board Certified'}
+                License: {currentUser?.qualification || 'Board Certified'}
               </span>
             </div>
             <h1 className="mt-1 text-2xl font-black text-gray-900 sm:text-3xl">
-              Good day, {currentUser.name}
+              Good day, {currentUser?.name || 'Doctor'}
             </h1>
             <p className="mt-0.5 text-xs text-gray-500">
-              {currentUser.specialty || 'General Practitioner'} • Central Bay Area Mobile Care Unit
+              {currentUser?.specialty || 'General Practitioner'} • Central Bay Area Mobile Care Unit
             </p>
           </div>
 
@@ -93,10 +94,10 @@ export default function ProviderDashboardPage() {
           <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-xs">
             <span className="text-xs font-bold text-gray-500">Patient Rating</span>
             <div className="mt-2 text-2xl font-black text-amber-500">
-              {currentUser.rating || 4.9} ★
+              {currentUser?.rating || 4.9} ★
             </div>
             <span className="text-[11px] text-gray-400">
-              {currentUser.reviewsCount || 124} verified reviews
+              {currentUser?.reviewsCount || 124} verified reviews
             </span>
           </div>
         </div>

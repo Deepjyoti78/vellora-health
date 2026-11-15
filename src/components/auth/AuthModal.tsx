@@ -25,15 +25,17 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultMode?: 'signin' | 'signup';
+  redirectUrl?: string;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   defaultMode = 'signin',
+  redirectUrl,
 }) => {
   const router = useRouter();
-  const { login, switchRole } = useAuth();
+  const { login, switchRole, validateInternalRedirect } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   const [mode, setMode] = useState<'signin' | 'signup'>(defaultMode);
@@ -98,12 +100,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setSuccessMsg(`Welcome back! Logged in as ${selectedRole.toLowerCase()}.`);
       setTimeout(() => {
         onClose();
-        if (selectedRole === 'PATIENT') {
-          router.push('/patient/dashboard');
-        } else if (selectedRole === 'DOCTOR') {
-          router.push('/admin/dashboard');
+        if (redirectUrl) {
+          router.push(validateInternalRedirect(redirectUrl, '/'));
         }
-      }, 600);
+      }, 500);
     }, 450);
   };
 
@@ -132,8 +132,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setSuccessMsg('Account created successfully! Welcome to Vellora Health.');
       setTimeout(() => {
         onClose();
-        router.push('/patient/account');
-      }, 600);
+        if (redirectUrl) {
+          router.push(validateInternalRedirect(redirectUrl, '/'));
+        }
+      }, 500);
     }, 500);
   };
 
@@ -147,12 +149,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setSuccessMsg(`Logged in as ${name} (${role.toLowerCase()})`);
       setTimeout(() => {
         onClose();
-        if (role === 'PATIENT') {
-          router.push('/patient/dashboard');
-        } else if (role === 'DOCTOR') {
-          router.push('/admin/dashboard');
+        if (redirectUrl) {
+          router.push(validateInternalRedirect(redirectUrl, '/'));
         }
-      }, 500);
+      }, 400);
     }, 300);
   };
 

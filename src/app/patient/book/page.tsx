@@ -11,8 +11,9 @@ export default function PatientBookPage() {
   const router = useRouter();
   const { currentUser } = useAuth();
   const services = db.getServices();
-  const familyMembers = db.getFamilyMembers(currentUser.id);
-  const savedAddresses = db.getAddresses(currentUser.id);
+  const userId = currentUser?.id || '';
+  const familyMembers = db.getFamilyMembers(userId);
+  const savedAddresses = db.getAddresses(userId);
 
   // Flow State
   const [step, setStep] = useState<number>(1);
@@ -61,6 +62,8 @@ export default function PatientBookPage() {
   };
 
   const handleConfirmBooking = () => {
+    if (!currentUser) return;
+
     setIsSubmitting(true);
 
     // Resolve beneficiary name
@@ -279,7 +282,7 @@ export default function PatientBookPage() {
                   }`}
                 >
                   <Icon name="user" className="mx-auto mb-2 h-5 w-5" />
-                  <div className="text-sm">Myself ({currentUser.name})</div>
+                  <div className="text-sm">Myself ({currentUser?.name || 'Self'})</div>
                 </div>
                 <div
                   onClick={() => setBeneficiaryType('FAMILY')}
@@ -548,7 +551,7 @@ export default function PatientBookPage() {
                     <span className="text-gray-500">Beneficiary</span>
                     <span className="font-medium text-gray-900">
                       {beneficiaryType === 'SELF'
-                        ? `${currentUser.name} (Self)`
+                        ? `${currentUser?.name || 'Self'} (Self)`
                         : beneficiaryType === 'FAMILY'
                         ? familyMembers.find((f) => f.id === selectedFamilyId)?.fullName || 'Family Member'
                         : newFamilyName || 'New Dependent'}

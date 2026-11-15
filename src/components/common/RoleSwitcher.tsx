@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Icon } from './Icon';
 
 export const RoleSwitcher: React.FC = () => {
-  const { currentUser, switchRole } = useAuth();
+  const { currentUser, switchRole, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -34,8 +34,11 @@ export const RoleSwitcher: React.FC = () => {
                 Vellora Platform Switcher
               </p>
               <p className="text-xs text-white/70">
-                Current: <span className="font-semibold text-white">{currentUser.name}</span> (
-                {currentUser.role})
+                Current:{' '}
+                <span className="font-semibold text-white">
+                  {currentUser ? currentUser.name : 'Guest Visitor'}
+                </span>{' '}
+                ({currentUser ? currentUser.role : 'Unauthenticated'})
               </p>
             </div>
             <button
@@ -51,13 +54,12 @@ export const RoleSwitcher: React.FC = () => {
               Switch Active Role
             </p>
             {roles.map((item) => {
-              const isSelected = currentUser.role === item.role;
+              const isSelected = currentUser?.role === item.role;
               return (
                 <button
                   key={item.role}
                   onClick={() => {
                     switchRole(item.role);
-                    router.push(item.path);
                     setIsOpen(false);
                   }}
                   className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition ${
@@ -71,6 +73,19 @@ export const RoleSwitcher: React.FC = () => {
                 </button>
               );
             })}
+
+            {currentUser && (
+              <button
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+                className="flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-medium text-rose-300 hover:bg-rose-500/20 transition mt-1"
+              >
+                <span>Log Out (Switch to Guest)</span>
+                <Icon name="close" size="xs" />
+              </button>
+            )}
           </div>
 
           <div className="mt-3 border-t border-white/10 pt-2">
@@ -119,7 +134,7 @@ export const RoleSwitcher: React.FC = () => {
       >
         <span className="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse"></span>
         <span>
-          Role: <strong className="text-teal-300">{currentUser.role}</strong>
+          Role: <strong className="text-teal-300">{currentUser ? currentUser.role : 'Guest'}</strong>
         </span>
         <Icon name="chevron-down" size="xs" className={isOpen ? 'rotate-180 transition' : ''} />
       </button>

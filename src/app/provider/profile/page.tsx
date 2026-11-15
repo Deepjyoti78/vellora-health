@@ -8,14 +8,15 @@ import { Icon } from '@/components/common/Icon';
 
 export default function ProviderProfilePage() {
   const { currentUser } = useAuth();
-  const [specialty, setSpecialty] = useState(currentUser.specialty || 'General Medicine');
-  const [bio, setBio] = useState(currentUser.bio || 'Compassionate healthcare provider dedicated to mobile home health delivery.');
-  const [hourlyRate, setHourlyRate] = useState(currentUser.hourlyRate || 85);
-  const [phone, setPhone] = useState(currentUser.phone);
+  const [specialty, setSpecialty] = useState(currentUser?.specialty || 'General Medicine');
+  const [bio, setBio] = useState(currentUser?.bio || 'Compassionate healthcare provider dedicated to mobile home health delivery.');
+  const [hourlyRate, setHourlyRate] = useState(currentUser?.hourlyRate || 85);
+  const [phone, setPhone] = useState(currentUser?.phone || '');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentUser) return;
     db.updateUser(currentUser.id, { specialty, bio, hourlyRate, phone });
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 3000);
@@ -73,7 +74,7 @@ export default function ProviderProfilePage() {
                     <input
                       type="text"
                       disabled
-                      value={currentUser.name}
+                      value={currentUser?.name || ''}
                       className="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-600 font-bold"
                     />
                   </div>
@@ -82,7 +83,7 @@ export default function ProviderProfilePage() {
                     <input
                       type="text"
                       disabled
-                      value={currentUser.role}
+                      value={currentUser?.role || ''}
                       className="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-600 font-bold"
                     />
                   </div>
@@ -134,7 +135,7 @@ export default function ProviderProfilePage() {
                     <input
                       type="email"
                       disabled
-                      value={currentUser.email}
+                      value={currentUser?.email || ''}
                       className="mt-1 block w-full rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-500"
                     />
                   </div>
@@ -163,7 +164,7 @@ export default function ProviderProfilePage() {
                   <p className="text-xs text-gray-500">Collected post-visit from authenticated consultations.</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-2xl font-black text-amber-500">{currentUser.rating || 4.9} ★</span>
+                  <span className="text-2xl font-black text-amber-500">{currentUser?.rating || 4.9} ★</span>
                   <span className="block text-[10px] text-gray-400">100% Recommended</span>
                 </div>
               </div>

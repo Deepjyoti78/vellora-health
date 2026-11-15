@@ -8,8 +8,16 @@ import { Icon } from '@/components/common/Icon';
 
 export default function PatientFamilyPage() {
   const { currentUser } = useAuth();
-  const [familyMembers, setFamilyMembers] = useState(db.getFamilyMembers(currentUser.id));
+  const [familyMembers, setFamilyMembers] = useState(() =>
+    currentUser ? db.getFamilyMembers(currentUser.id) : []
+  );
   const [showAddModal, setShowAddModal] = useState(false);
+
+  React.useEffect(() => {
+    if (currentUser) {
+      setFamilyMembers(db.getFamilyMembers(currentUser.id));
+    }
+  }, [currentUser]);
 
   // Form State
   const [fullName, setFullName] = useState('');
@@ -20,7 +28,7 @@ export default function PatientFamilyPage() {
 
   const handleAddMember = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim()) return;
+    if (!fullName.trim() || !currentUser) return;
 
     const newMember = db.addFamilyMember({
       patientId: currentUser.id,

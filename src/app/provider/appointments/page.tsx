@@ -13,7 +13,7 @@ export default function ProviderAppointmentsPage() {
 
   const allBookings = db.getBookings();
   const myBookings = allBookings.filter(
-    (b) => b.providerId === currentUser.id || !b.providerId
+    (b) => (currentUser && b.providerId === currentUser.id) || !b.providerId
   );
 
   const filtered = myBookings.filter((b) => {

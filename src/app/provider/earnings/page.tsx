@@ -8,7 +8,7 @@ import { Icon } from '@/components/common/Icon';
 
 export default function ProviderEarningsPage() {
   const { currentUser } = useAuth();
-  const [payouts, setPayouts] = useState(db.getPayouts(currentUser.id));
+  const [payouts, setPayouts] = useState(() => (currentUser ? db.getPayouts(currentUser.id) : []));
   const [instantPayoutDone, setInstantPayoutDone] = useState(false);
 
   const totalEarned = payouts.reduce((sum, p) => sum + p.netPayout, 0) + 1485;

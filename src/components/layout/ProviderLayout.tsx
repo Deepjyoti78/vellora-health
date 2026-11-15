@@ -10,10 +10,11 @@ import { Icon } from '@/components/common/Icon';
 export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   const { currentUser } = useAuth();
-  const [isOnline, setIsOnline] = useState<boolean>(currentUser.isOnline ?? true);
+  const [isOnline, setIsOnline] = useState<boolean>(currentUser?.isOnline ?? true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleDutyStatus = () => {
+    if (!currentUser) return;
     const nextStatus = !isOnline;
     setIsOnline(nextStatus);
     db.updateUser(currentUser.id, { isOnline: nextStatus });
@@ -106,17 +107,19 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
             {/* Provider Avatar */}
             <div className="flex items-center gap-2 pl-2 border-l border-gray-200">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#116b70]/10 text-[#116b70] font-bold text-xs">
-                {currentUser.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')}
+                {currentUser?.name
+                  ? currentUser.name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                  : 'PR'}
               </div>
               <div className="hidden sm:block text-left text-xs leading-tight">
                 <span className="block font-bold text-gray-900 truncate max-w-[120px]">
-                  {currentUser.name}
+                  {currentUser?.name || 'Staff Clinician'}
                 </span>
                 <span className="block text-[10px] font-semibold text-[#116b70]">
-                  {currentUser.role}
+                  {currentUser?.role || 'PROVIDER'}
                 </span>
               </div>
             </div>

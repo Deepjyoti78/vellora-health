@@ -11,9 +11,10 @@ export default function PatientRecordsPage() {
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState<'PRESCRIPTIONS' | 'VITALS' | 'LABS'>('PRESCRIPTIONS');
 
-  const prescriptions = db.getPrescriptionsByPatient(currentUser.id);
-  const vitals = db.getVitalsByPatient(currentUser.id);
-  const labReports = db.getLabReportsByPatient(currentUser.id);
+  const userId = currentUser?.id || '';
+  const prescriptions = db.getPrescriptionsByPatient(userId);
+  const vitals = db.getVitalsByPatient(userId);
+  const labReports = db.getLabReportsByPatient(userId);
 
   return (
     <PatientLayout>

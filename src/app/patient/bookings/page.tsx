@@ -13,7 +13,7 @@ export default function PatientBookingsPage() {
   const [cancellingBookingId, setCancellingBookingId] = useState<string | null>(null);
   const [cancelReason, setCancelReason] = useState<string>('Personal emergency');
 
-  const allBookings = db.getBookingsByPatient(currentUser.id);
+  const allBookings = db.getBookingsByPatient(currentUser?.id || '');
 
   const filteredBookings = allBookings.filter((b) => {
     if (activeTab === 'ACTIVE') {

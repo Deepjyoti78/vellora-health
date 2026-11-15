@@ -124,7 +124,7 @@ export default function ProviderAppointmentCockpitPage({
       bookingId: booking.id,
       patientId: booking.patientId,
       patientName: booking.beneficiaryName,
-      doctorName: currentUser.name,
+      doctorName: currentUser?.name || 'Dr. Attending',
       diagnosis,
       medications,
       advice,
@@ -137,7 +137,7 @@ export default function ProviderAppointmentCockpitPage({
       bookingId: booking.id,
       patientId: booking.patientId,
       patientName: booking.beneficiaryName,
-      recordedBy: `${currentUser.name} (${currentUser.role})`,
+      recordedBy: currentUser ? `${currentUser.name} (${currentUser.role})` : 'Clinician',
       bloodPressure: bp,
       heartRate: hr,
       spo2: spo2,
@@ -298,7 +298,7 @@ export default function ProviderAppointmentCockpitPage({
           {/* Clinical Documentation Panel */}
           <div className="lg:col-span-2 space-y-6">
             {/* DOCTOR MODULE */}
-            {(currentUser.role === 'DOCTOR' || booking.category === 'DOCTOR_VISIT') && (
+            {(currentUser?.role === 'DOCTOR' || booking.category === 'DOCTOR_VISIT') && (
               <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div>
@@ -408,7 +408,7 @@ export default function ProviderAppointmentCockpitPage({
             )}
 
             {/* NURSE MODULE: VITALS */}
-            {(currentUser.role === 'NURSE' || booking.category === 'NURSING_CARE') && (
+            {(currentUser?.role === 'NURSE' || booking.category === 'NURSING_CARE') && (
               <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div>
@@ -509,7 +509,7 @@ export default function ProviderAppointmentCockpitPage({
             )}
 
             {/* PHLEBOTOMIST MODULE: SPECIMEN */}
-            {(currentUser.role === 'PHLEBOTOMIST' || booking.category === 'LAB_TESTS') && (
+            {(currentUser?.role === 'PHLEBOTOMIST' || booking.category === 'LAB_TESTS') && (
               <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div>
@@ -577,7 +577,7 @@ export default function ProviderAppointmentCockpitPage({
             )}
 
             {/* CARETAKER MODULE */}
-            {(currentUser.role === 'CARETAKER' || booking.category === 'CARETAKER') && (
+            {(currentUser?.role === 'CARETAKER' || booking.category === 'CARETAKER') && (
               <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div>

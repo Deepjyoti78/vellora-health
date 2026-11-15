@@ -9,13 +9,14 @@ import { Icon } from '@/components/common/Icon';
 
 export default function PatientDashboardPage() {
   const { currentUser } = useAuth();
-  const bookings = db.getBookingsByPatient(currentUser.id);
+  const userId = currentUser?.id || '';
+  const bookings = db.getBookingsByPatient(userId);
   const activeBookings = bookings.filter((b) =>
     ['REQUESTED', 'CONFIRMED', 'ASSIGNED', 'ON_THE_WAY', 'ARRIVED', 'IN_PROGRESS'].includes(b.status)
   );
-  const prescriptions = db.getPrescriptionsByPatient(currentUser.id);
-  const labReports = db.getLabReportsByPatient(currentUser.id);
-  const familyMembers = db.getFamilyMembers(currentUser.id);
+  const prescriptions = db.getPrescriptionsByPatient(userId);
+  const labReports = db.getLabReportsByPatient(userId);
+  const familyMembers = db.getFamilyMembers(userId);
 
   const quickServices = [
     { name: 'Doctor Visit', slug: 'home-doctor-visit', icon: 'stethoscope' as const, bg: 'bg-emerald-50 text-emerald-800' },
@@ -34,7 +35,7 @@ export default function PatientDashboardPage() {
               Patient Portal
             </span>
             <h1 className="text-2xl font-black text-gray-900 sm:text-3xl">
-              Welcome back, {currentUser.name.split(' ')[0]}
+              Welcome back, {currentUser?.name?.split(' ')[0] || 'Patient'}
             </h1>
             <p className="mt-1 text-xs text-gray-500">
               Manage your upcoming visits, family profiles, prescriptions, and diagnostic lab reports.
