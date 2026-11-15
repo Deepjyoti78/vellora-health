@@ -152,23 +152,23 @@ export default function ServicesPage() {
             {/* Left Column (col-span-7): Eyebrow, Heading, Subtitle & Search */}
             <div className="lg:col-span-7 flex flex-col justify-center">
               {/* Eyebrow Pill */}
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-3 shadow-2xs">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] w-fit mb-3 shadow-2xs animate-fade-in-up animate-delay-1">
                 <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
                 <span>OUR SERVICES</span>
               </div>
 
               {/* Main Heading */}
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#15212B] tracking-tight leading-[1.15] mb-3">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#15212B] tracking-tight leading-[1.15] mb-3 animate-fade-in-up animate-delay-2">
                 Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
               </h1>
 
               {/* Subtitle */}
-              <p className="text-[#475569] text-sm sm:text-[15px] leading-relaxed max-w-[540px] mb-5 font-normal">
+              <p className="text-[#475569] text-sm sm:text-[15px] leading-relaxed max-w-[540px] mb-5 font-normal animate-fade-in-up animate-delay-3">
                 Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
               </p>
 
               {/* Search Bar Container */}
-              <div className="relative flex items-center w-full max-w-[560px] h-[50px] sm:h-[54px] rounded-full border border-[#DCE6E1] bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] focus-within:border-[#065F46] focus-within:ring-3 focus-within:ring-[#065F46]/10 transition-all">
+              <div className="relative flex items-center w-full max-w-[560px] h-[50px] sm:h-[54px] rounded-full border border-[#DCE6E1] bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] focus-within:border-[#065F46] focus-within:ring-3 focus-within:ring-[#065F46]/10 transition-all animate-fade-in-up animate-delay-4">
                 <Search className="h-4.5 w-4.5 text-slate-400 mr-2.5 shrink-0 stroke-[2]" />
                 <input
                   type="text"
@@ -205,7 +205,7 @@ export default function ServicesPage() {
             </div>
 
             {/* Right Column (col-span-5): Illustration Card */}
-            <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
+            <div className="lg:col-span-5 flex items-center justify-center lg:justify-end animate-card-slide-right animate-delay-2">
               <div className="relative w-full max-w-[480px] overflow-hidden rounded-[22px] border border-[#E2EBE7] bg-[#F7FBF9] shadow-[0_4px_24px_rgba(6,95,70,0.06)] group hover:shadow-[0_8px_32px_rgba(6,95,70,0.1)] transition-all duration-300">
                 <img
                   src="/assets/services-hero-illustration.jpg"
@@ -317,7 +317,7 @@ export default function ServicesPage() {
           /* DEFAULT VIEW: EXPLORE CARE CATEGORIES MATCHING REFERENCE IMAGE */
           <section className="animate-in fade-in duration-200">
             {/* Header Row */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 animate-fade-in-up animate-delay-2">
               <div>
                 <h2 className="font-heading text-2xl sm:text-[30px] font-bold text-[#15212B] tracking-tight">
                   Explore Care Categories
@@ -334,14 +334,15 @@ export default function ServicesPage() {
               </div>
             </div>
 
-            {/* 3-Column Category Card Grid Matching Reference Image */}
+            {/* 3-Column Category Card Grid Matching Reference Image with Staggered Cascading Animation */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {CATEGORIES_DATA.map((cat) => {
+              {CATEGORIES_DATA.map((cat, idx) => {
                 const CategoryIcon = cat.icon;
                 return (
                   <div
                     key={cat.id}
-                    className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E2EBE7] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)] transition-all duration-300"
+                    style={{ animationDelay: `${idx * 90 + 120}ms` }}
+                    className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E2EBE7] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)] transition-all duration-300 animate-card-slide-up card-hover-lift"
                   >
                     {/* Top Image with Badge (185-200px height) */}
                     <Link href={cat.href} className="relative h-[185px] sm:h-[195px] lg:h-[200px] w-full overflow-hidden bg-slate-100 block">

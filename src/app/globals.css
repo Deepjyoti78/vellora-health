@@ -2384,8 +2384,99 @@ h1, h2 {
 .stagger-container > *:nth-child(6) { transition-delay: 550ms; }
 
 /* ==========================================================================
-   Smooth Page Entrance & Card Cascading Animations
+   Smooth Page Entrance, Navbar Rise, Card Cascading & Booking Slide Animations
    ========================================================================== */
+
+@keyframes navTextRise {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardSlideUpStagger {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardSlideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(36px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes stepTransitionIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+}
+
+.animate-nav-rise {
+  opacity: 0;
+  animation: navTextRise 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-card-slide-up {
+  opacity: 0;
+  animation: cardSlideUpStagger 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-card-slide-right {
+  opacity: 0;
+  animation: cardSlideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-step-transition {
+  animation: stepTransitionIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-pop {
+  animation: modalPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
 
 @keyframes smoothFadeInUp {
   from {
@@ -2455,6 +2546,8 @@ h1, h2 {
 .animate-delay-4 { animation-delay: 320ms; }
 .animate-delay-5 { animation-delay: 400ms; }
 .animate-delay-6 { animation-delay: 480ms; }
+.animate-delay-7 { animation-delay: 560ms; }
+.animate-delay-8 { animation-delay: 640ms; }
 
 .card-hover-lift {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;

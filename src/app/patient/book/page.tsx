@@ -163,7 +163,7 @@ export default function PatientBookPage() {
 
         {/* STEP 1: SERVICE SELECTION */}
         {step === 1 && (
-          <div className="space-y-6">
+          <div key="step-1" className="space-y-6 animate-step-transition">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
               <h2 className="text-lg font-bold text-gray-900">Select Healthcare Service</h2>
               <p className="mt-1 text-xs text-gray-500">
@@ -274,7 +274,7 @@ export default function PatientBookPage() {
 
         {/* STEP 2: BENEFICIARY & ADDRESS */}
         {step === 2 && (
-          <div className="space-y-6">
+          <div key="step-2" className="space-y-6 animate-step-transition">
             {/* Beneficiary */}
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
               <h2 className="text-lg font-bold text-gray-900">Who is this visit for?</h2>
@@ -458,7 +458,7 @@ export default function PatientBookPage() {
 
         {/* STEP 3: SCHEDULE & CLINICAL NOTES */}
         {step === 3 && (
-          <div className="space-y-6">
+          <div key="step-3" className="space-y-6 animate-step-transition">
             <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">
               <h2 className="text-lg font-bold text-gray-900">Select Date & Preferred Window</h2>
               <p className="mt-1 text-xs text-gray-500">
@@ -527,7 +527,7 @@ export default function PatientBookPage() {
 
         {/* STEP 4: REVIEW & CONFIRM */}
         {step === 4 && (
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div key="step-4" className="grid grid-cols-1 gap-6 lg:grid-cols-3 animate-step-transition">
             <div className="lg:col-span-2 space-y-6">
               {/* Summary Card */}
               <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xs">

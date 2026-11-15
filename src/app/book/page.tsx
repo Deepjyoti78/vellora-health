@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db } from '@/lib/db';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
+import { BackButton } from '@/components/common/BackButton';
 import {
   PhoneCall,
   User,
@@ -124,18 +125,21 @@ function QuickEnquiryContent() {
       {/* Integrated Booking Header */}
       <header className="border-b border-[#E2EBE7] bg-white">
         <div className="container max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 group"
-            aria-label="Vellora Health Home"
-          >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-white font-black text-sm shadow-2xs group-hover:bg-[#065F46] transition-colors">
-              +
-            </div>
-            <span className="font-heading text-lg font-black tracking-tight text-[#102820]">
-              Vellora Health
-            </span>
-          </Link>
+          <div className="flex items-center gap-3">
+            <BackButton href="/services" label="Back" />
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 group"
+              aria-label="Vellora Health Home"
+            >
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#064E3B] text-white font-black text-sm shadow-2xs group-hover:bg-[#065F46] transition-colors">
+                +
+              </div>
+              <span className="font-heading text-lg font-black tracking-tight text-[#102820]">
+                Vellora Health
+              </span>
+            </Link>
+          </div>
 
           <Link
             href="/"
@@ -160,7 +164,7 @@ function QuickEnquiryContent() {
             ]}
           />
         ) : (
-          <div className="w-full max-w-lg overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white p-6 sm:p-9 shadow-xs">
+          <div className="w-full max-w-lg overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white p-6 sm:p-9 shadow-xs animate-card-slide-right">
             {/* Header Icon & Title */}
             <div className="text-center">
               <div className="mx-auto flex h-13 w-13 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs mb-4">

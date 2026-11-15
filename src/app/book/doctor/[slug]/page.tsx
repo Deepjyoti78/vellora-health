@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { db, UserRecord } from '@/lib/db';
 import { useAuth } from '@/context/AuthContext';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
+import { BackButton } from '@/components/common/BackButton';
 import {
   Stethoscope,
   Video,
@@ -255,14 +256,19 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
           />
         ) : (
           <div>
+            {/* Back to Doctors Navigation Button */}
+            <div className="mb-4 animate-fade-in-down">
+              <BackButton href="/doctors" label="Back to Doctors" />
+            </div>
+
             {/* Main Heading - Clean and Minimal */}
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-6 sm:mb-8 animate-fade-in-up">
               <h1 className="font-heading text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#102820] tracking-tight">
                 Booking Home Visit Doctor
               </h1>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-card-slide-right">
             {/* Form Column (8 cols) */}
             <div className="lg:col-span-8">
               <div className="overflow-hidden rounded-[24px] border border-[#E2EBE7] bg-white p-6 sm:p-8 shadow-xs">
@@ -275,7 +281,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
 
                 {/* ================= STEP 1: DOCTOR & VISIT ================= */}
                 {step === 1 && (
-                  <div className="space-y-6">
+                  <div key="step-1" className="space-y-6 animate-step-transition">
                     <div>
                       <h2 className="font-heading text-lg sm:text-xl font-extrabold text-[#102820]">
                         Step 1: Choose Consultation Type &amp; Schedule
@@ -559,7 +565,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
 
                 {/* ================= STEP 2: PATIENT DETAILS ================= */}
                 {step === 2 && (
-                  <div className="space-y-6">
+                  <div key="step-2" className="space-y-6 animate-step-transition">
                     <div>
                       <h2 className="font-heading text-lg sm:text-xl font-extrabold text-[#102820]">
                         Step 2: Patient Information &amp; Clinical Needs
@@ -870,7 +876,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
 
                 {/* ================= STEP 3: REVIEW & CONFIRMATION ================= */}
                 {step === 3 && (
-                  <form onSubmit={handleSubmitBooking} className="space-y-6">
+                  <form key="step-3" onSubmit={handleSubmitBooking} className="space-y-6 animate-step-transition">
                     <div>
                       <h2 className="font-heading text-lg sm:text-xl font-extrabold text-[#102820]">
                         Step 3: Review &amp; Request Consultation
@@ -1047,7 +1053,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
             </div>
 
             {/* Sidebar Summary (4 cols) */}
-            <div className="lg:col-span-4 space-y-5">
+            <div className="lg:col-span-4 space-y-5 animate-card-slide-up animate-delay-2">
               <div className="rounded-[24px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-xs">
                 <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#065F46] mb-3">
                   Consultation Overview

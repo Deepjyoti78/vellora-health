@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { db, ServiceRecord } from '@/lib/db';
 import { useAuth } from '@/context/AuthContext';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
+import { BackButton } from '@/components/common/BackButton';
 import {
   MapPin,
   Calendar,
@@ -194,14 +195,19 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
           />
         ) : (
           <div>
+            {/* Back to Services Navigation Button */}
+            <div className="mb-4 animate-fade-in-down">
+              <BackButton href="/services" label="Back to Services" />
+            </div>
+
             {/* Main Heading - Clean and Minimal */}
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-6 sm:mb-8 animate-fade-in-up">
               <h1 className="font-heading text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#102820] tracking-tight">
                 {pageTitle}
               </h1>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-card-slide-right">
             {/* Left Column: Multi-Step Form (65%) */}
             <div className="lg:col-span-8 bg-white border border-[#E2EBE7] rounded-[24px] p-6 sm:p-8 shadow-xs">
               {errorMsg && (
@@ -213,7 +219,7 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
 
               {/* STEP 1: CARE & LOCATION */}
               {step === 1 && (
-                <div className="space-y-6 animate-in fade-in">
+                <div key="step-1" className="space-y-6 animate-step-transition">
                   <div>
                     <h2 className="font-heading text-xl font-bold text-[#102820]">
                       1. Confirm Care Options &amp; Service Area
@@ -325,7 +331,7 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
 
               {/* STEP 2: PATIENT & SCHEDULE */}
               {step === 2 && (
-                <div className="space-y-6 animate-in fade-in">
+                <div key="step-2" className="space-y-6 animate-step-transition">
                   <div>
                     <h2 className="font-heading text-xl font-bold text-[#102820]">
                       2. Patient &amp; Schedule Details
@@ -593,7 +599,7 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
 
               {/* STEP 3: REVIEW & SUBMIT */}
               {step === 3 && (
-                <div className="space-y-6 animate-in fade-in">
+                <div key="step-3" className="space-y-6 animate-step-transition">
                   <div>
                     <h2 className="font-heading text-xl font-bold text-[#102820]">
                       3. Review Care Request &amp; Submit
@@ -710,7 +716,7 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
             </div>
 
             {/* Right Column: Preselected Service Sidebar Summary (35%) */}
-            <div className="lg:col-span-4 space-y-4">
+            <div className="lg:col-span-4 space-y-4 animate-card-slide-up animate-delay-2">
               <div className="rounded-[22px] border border-[#E2EBE7] bg-white p-5 shadow-xs">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#065F46]">
                   Preselected Service

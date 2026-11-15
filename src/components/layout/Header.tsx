@@ -107,7 +107,7 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
         id="siteNav"
         aria-label="Main navigation"
       >
-        {NAV_LINKS.map((link) => {
+        {NAV_LINKS.map((link, idx) => {
           const isActive =
             pathname === link.href ||
             (link.href !== '/' && pathname.startsWith(link.href));
@@ -116,7 +116,8 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
               key={link.href}
               href={link.href}
               prefetch={true}
-              className={isActive ? 'nav-active' : ''}
+              style={{ animationDelay: `${idx * 60 + 60}ms` }}
+              className={`animate-nav-rise ${isActive ? 'nav-active' : ''}`}
               onClick={closeMenu}
             >
               {link.label}
