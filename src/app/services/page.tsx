@@ -20,7 +20,6 @@ import {
   Clock,
   Sparkles,
   Layers,
-  Heart,
   User,
   Pill,
 } from 'lucide-react';
@@ -116,7 +115,6 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
 const POPULAR_SERVICES = [
   { label: 'Doctor Visit', icon: User, query: 'Doctor Visit' },
   { label: 'Wound Dressing', icon: Pill, query: 'Wound Dressing' },
-  { label: 'Full Body Checkup', icon: Heart, query: 'Checkup' },
   { label: '12-Hour Nursing', icon: Clock, query: '12-Hour' },
   { label: 'Physiotherapy', icon: Activity, query: 'Physiotherapy' },
 ];
@@ -168,7 +166,7 @@ export default function ServicesPage() {
               </div>
 
               {/* Main Heading with curved mint accent line under Home */}
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#102820] tracking-tight leading-[1.14] mb-2.5 animate-fade-in-up animate-delay-2">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#102820] tracking-tight leading-[1.14] mb-5 sm:mb-6 animate-fade-in-up animate-delay-2">
                 Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your{' '}
                 <span className="relative inline-block">
                   Home
@@ -188,11 +186,6 @@ export default function ServicesPage() {
                   </svg>
                 </span>
               </h1>
-
-              {/* Subtitle */}
-              <p className="text-[#475569] text-sm sm:text-[15px] leading-relaxed max-w-[540px] mb-4.5 font-normal animate-fade-in-up animate-delay-3">
-                Explore doctor consultations, nursing care, diagnostics, and personalized healthcare services designed around your needs.
-              </p>
 
               {/* Search Bar Container with Enhanced Floating Shadow */}
               <div className="relative flex items-center w-full max-w-[580px] h-[52px] sm:h-[56px] rounded-full border border-slate-200/90 bg-white p-1.5 pl-4 sm:pl-5 pr-1.5 shadow-[0_12px_36px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_40px_rgba(6,78,59,0.11)] focus-within:shadow-[0_16px_40px_rgba(6,78,59,0.12)] focus-within:border-[#065F46] focus-within:ring-4 focus-within:ring-[#065F46]/10 transition-all animate-fade-in-up animate-delay-4">
