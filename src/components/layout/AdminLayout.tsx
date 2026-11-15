@@ -25,7 +25,7 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
 
         {/* Page Canvas */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto max-w-7xl">{children}</div>
+          <div className="mx-auto max-w-[1500px]">{children}</div>
         </main>
       </div>
 

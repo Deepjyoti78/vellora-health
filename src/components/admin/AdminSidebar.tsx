@@ -81,16 +81,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
                 className="h-9 w-9 object-contain shrink-0"
               />
             ) : (
-              <div className="flex flex-col items-start overflow-hidden">
-                <img
-                  src="/assets/logo-dark.png"
-                  alt="Velora Healthcare"
-                  className="h-7 w-auto object-contain group-hover:opacity-90 transition-opacity"
-                />
-                <span className="block text-[10px] font-extrabold tracking-widest text-[#065F46] uppercase pl-1 mt-0.5">
-                  Command Center
-                </span>
-              </div>
+              <img
+                src="/assets/logo-dark.png"
+                alt="Valora Healthcare"
+                className="h-8 w-auto object-contain group-hover:opacity-90 transition-opacity"
+              />
             )}
           </Link>
           {onToggleCollapse && (
