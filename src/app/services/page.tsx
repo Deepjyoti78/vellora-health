@@ -164,8 +164,8 @@ export default function ServicesPage() {
               <span>OUR SERVICES</span>
             </div>
 
-            {/* Main Heading */}
-            <h1 className="text-3xl sm:text-4xl lg:text-[46px] xl:text-[50px] font-extrabold text-[#102820] tracking-tight leading-[1.12] mb-3.5">
+            {/* Main Heading matching the refined font heading of Meet Our Visiting Medical Specialists */}
+            <h1 className="font-heading text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#15212B] tracking-tight leading-[1.14] mb-3.5">
               Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
             </h1>
 
@@ -347,7 +347,7 @@ export default function ServicesPage() {
             {/* Header Row */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
               <div>
-                <h2 className="text-2xl sm:text-[30px] font-extrabold text-[#102820] tracking-tight">
+                <h2 className="font-heading text-2xl sm:text-[30px] font-bold text-[#15212B] tracking-tight">
                   Explore Care Categories
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-normal">
