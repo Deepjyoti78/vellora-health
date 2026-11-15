@@ -2,8 +2,9 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { SERVICES_DATA } from '@/data/site-content';
+import { SliderArrows } from '@/components/common/SliderArrows';
 
 // Distinct category tags matching the reference design
 const SERVICE_CATEGORY_TAGS: Record<string, string> = {
@@ -36,16 +37,6 @@ export const ServicesSection: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleScroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 340;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   return (
     <section
       ref={sectionRef}
@@ -63,56 +54,30 @@ export const ServicesSection: React.FC = () => {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
-        {/* Section Header: Left Column & Right Navigation Controls with entrance transition */}
+      {/* Main Container - Aligns pixel-for-pixel with "Meet Our Medical Specialists" */}
+      <div className="container relative">
+        {/* Section Heading Row - Exact same layout, typography, and margins as Specialists section */}
         <div
-          className={`flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-11 sm:mb-13 lg:mb-14 transition-all duration-700 ease-out ${
+          className={`section-heading-row transition-all duration-700 ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <div className="max-w-2xl">
-            {/* Small uppercase eyebrow tag */}
-            <p className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.16em] text-slate-500 mb-2">
-              COMPREHENSIVE HEALTHCARE AT HOME
-            </p>
-
-            {/* Main Section Heading with refined typography and soft depth */}
-            <h2
-              id="servicesTitle"
-              className="font-heading font-extrabold text-[#102723] tracking-tight leading-[1.1] text-3xl sm:text-4xl lg:text-[48px] drop-shadow-[0_2px_4px_rgba(16,39,35,0.06)]"
-            >
-              Our Services
-            </h2>
-
-            {/* Subtitle Description */}
-            <p className="text-slate-600 text-sm sm:text-[15px] lg:text-[15.5px] leading-relaxed mt-2.5 max-w-[560px]">
-              From routine checkups to specialized treatment, our physicians bring
-              expertise and human kindness together under one roof.
+          <div>
+            <p className="eyebrow">COMPREHENSIVE HEALTHCARE AT HOME</p>
+            <h2 id="servicesTitle">Our Services</h2>
+            <p className="section-lead">
+              From routine checkups to specialized treatment, our physicians bring expertise and human kindness together under one roof.
             </p>
           </div>
 
-          {/* Carousel Navigation Arrow Controls with subtle shadow and border */}
-          <div className="flex items-center gap-3 shrink-0 self-start sm:self-end">
-            <button
-              type="button"
-              onClick={() => handleScroll('left')}
-              aria-label="Previous services"
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-slate-200/90 bg-white flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-50 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-sm active:scale-95 transition-all duration-200 cursor-pointer"
-            >
-              <ArrowLeft className="h-4.5 w-4.5 stroke-[2] text-[#102723]" />
-            </button>
-            <button
-              type="button"
-              onClick={() => handleScroll('right')}
-              aria-label="Next services"
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-slate-200/90 bg-white flex items-center justify-center text-slate-700 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-50 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-sm active:scale-95 transition-all duration-200 cursor-pointer"
-            >
-              <ArrowRight className="h-4.5 w-4.5 stroke-[2] text-[#102723]" />
-            </button>
-          </div>
+          <SliderArrows
+            trackRef={scrollContainerRef}
+            prevLabel="Previous service"
+            nextLabel="Next service"
+          />
         </div>
 
-        {/* 4 Cards Grid with Staggered Entrance Animations & Enhanced Floating Shadows */}
+        {/* 4 Cards Grid with Staggered Entrance Animations & Floating Shadows */}
         <div
           ref={scrollContainerRef}
           className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 no-scrollbar w-full"
@@ -164,7 +129,7 @@ export const ServicesSection: React.FC = () => {
                     {categoryTag}
                   </span>
 
-                  {/* Service Title - Reduced to ~19-20px for balanced composition */}
+                  {/* Service Title - Refined size for balanced composition */}
                   <h3 className="font-heading font-bold text-white text-[18px] sm:text-[19px] lg:text-[20px] leading-[1.2] mb-2 group-hover:text-[#A7F3D0] transition-colors">
                     {service.title}
                   </h3>
