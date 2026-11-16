@@ -11,7 +11,7 @@ import {
 import { Colors, Typography, BorderRadius, Spacing, TouchTargets } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 
-type ButtonVariant = 'primary' | 'secondary' | 'teal' | 'ghost' | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'sage';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps {
@@ -43,8 +43,8 @@ export const Button: React.FC<ButtonProps> = ({
     switch (variant) {
       case 'secondary':
         return styles.secondaryContainer;
-      case 'teal':
-        return styles.tealContainer;
+      case 'sage':
+        return styles.sageContainer;
       case 'ghost':
         return styles.ghostContainer;
       case 'danger':
@@ -59,11 +59,12 @@ export const Button: React.FC<ButtonProps> = ({
     switch (variant) {
       case 'secondary':
         return styles.secondaryText;
+      case 'sage':
+        return styles.sageText;
       case 'ghost':
         return styles.ghostText;
       case 'danger':
         return styles.dangerText;
-      case 'teal':
       case 'primary':
       default:
         return styles.primaryText;
@@ -82,28 +83,18 @@ export const Button: React.FC<ButtonProps> = ({
     }
   };
 
-  const getTextSizeStyle = (): TextStyle => {
-    switch (size) {
-      case 'sm':
-        return styles.textSizeSm;
-      case 'lg':
-        return styles.textSizeLg;
-      case 'md':
-      default:
-        return styles.textSizeMd;
-    }
-  };
-
   const iconColor =
     variant === 'secondary'
-      ? Colors.ink
+      ? Colors.textPrimary
       : variant === 'ghost'
-      ? Colors.forest
-      : Colors.white;
+      ? Colors.primary
+      : variant === 'sage'
+      ? Colors.primaryDark
+      : Colors.textInverse;
 
   return (
     <TouchableOpacity
-      activeOpacity={0.82}
+      activeOpacity={0.85}
       onPress={onPress}
       disabled={disabled || loading}
       style={[
@@ -130,7 +121,6 @@ export const Button: React.FC<ButtonProps> = ({
             style={[
               styles.baseText,
               getTextStyle(),
-              getTextSizeStyle(),
               disabled ? styles.disabledText : undefined,
               textStyle,
             ]}
@@ -164,25 +154,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   primaryContainer: {
-    backgroundColor: Colors.forest,
-    shadowColor: Colors.forest,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
+    backgroundColor: Colors.primary, // #075239
+    shadowColor: Colors.primaryDark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
     elevation: 3,
   },
   secondaryContainer: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.surface,
     borderWidth: 1,
-    borderColor: Colors.line,
+    borderColor: Colors.border,
   },
-  tealContainer: {
-    backgroundColor: Colors.teal,
-    shadowColor: Colors.teal,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 3,
+  sageContainer: {
+    backgroundColor: Colors.sage,
   },
   ghostContainer: {
     backgroundColor: 'transparent',
@@ -191,51 +176,46 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.rose,
   },
   disabledContainer: {
-    backgroundColor: Colors.line,
-    borderColor: Colors.line,
+    backgroundColor: '#CBD5CD',
+    borderColor: '#CBD5CD',
     shadowOpacity: 0,
     elevation: 0,
   },
   sizeSm: {
-    height: 38,
+    height: 40,
     paddingHorizontal: Spacing.md,
   },
   sizeMd: {
-    height: TouchTargets.minHeight, // 48px WCAG compliance
+    height: 52, // High-fidelity touch target matching reference
     paddingHorizontal: Spacing.xl,
   },
   sizeLg: {
-    height: 54,
+    height: 56,
     paddingHorizontal: Spacing.xxl,
   },
   baseText: {
-    fontFamily: Typography.fontFamily.semibold,
+    fontFamily: Typography.fontFamily.medium,
     fontWeight: Typography.fontWeight.semibold,
     textAlign: 'center',
-  },
-  primaryText: {
-    color: Colors.white,
-  },
-  secondaryText: {
-    color: Colors.ink,
-  },
-  ghostText: {
-    color: Colors.forest,
-  },
-  dangerText: {
-    color: Colors.white,
-  },
-  disabledText: {
-    color: Colors.muted,
-  },
-  textSizeSm: {
-    fontSize: Typography.fontSize.sm,
-  },
-  textSizeMd: {
     fontSize: Typography.fontSize.base,
   },
-  textSizeLg: {
-    fontSize: Typography.fontSize.md,
+  primaryText: {
+    color: Colors.textInverse,
+  },
+  secondaryText: {
+    color: Colors.textPrimary,
+  },
+  sageText: {
+    color: Colors.primaryDark,
+  },
+  ghostText: {
+    color: Colors.primary,
+  },
+  dangerText: {
+    color: Colors.textInverse,
+  },
+  disabledText: {
+    color: '#8A9993',
   },
   leftIcon: {
     marginRight: Spacing.xs,

@@ -7,12 +7,15 @@ export default function AuthLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: { backgroundColor: Colors.white },
+        contentStyle: { backgroundColor: Colors.background },
         animation: 'slide_from_right',
       }}
     >
+      <Stack.Screen name="welcome" />
       <Stack.Screen name="login" />
       <Stack.Screen name="otp" />
+      <Stack.Screen name="create-account" />
+      <Stack.Screen name="patient-setup" />
     </Stack>
   );
 }

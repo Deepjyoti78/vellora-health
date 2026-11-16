@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ViewStyle,
   TextInputProps,
-  TouchableOpacity,
 } from 'react-native';
 import { Colors, Typography, BorderRadius, Spacing, TouchTargets } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,6 +14,7 @@ interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
   iconName?: keyof typeof Ionicons.glyphMap;
+  prefixComponent?: React.ReactNode;
   containerStyle?: ViewStyle;
   rightAction?: React.ReactNode;
 }
@@ -23,6 +23,7 @@ export const Input: React.FC<InputProps> = ({
   label,
   error,
   iconName,
+  prefixComponent,
   containerStyle,
   rightAction,
   onFocus,
@@ -41,16 +42,17 @@ export const Input: React.FC<InputProps> = ({
           Boolean(error) ? styles.inputError : undefined,
         ]}
       >
+        {prefixComponent}
         {Boolean(iconName) ? (
           <Ionicons
             name={iconName!}
             size={18}
-            color={Boolean(error) ? Colors.rose : isFocused ? Colors.forest : Colors.muted}
+            color={Boolean(error) ? Colors.rose : isFocused ? Colors.primary : Colors.textSecondary}
             style={styles.leftIcon}
           />
         ) : null}
         <TextInput
-          placeholderTextColor={Colors.mutedLight}
+          placeholderTextColor={Colors.textMuted}
           style={styles.textInput}
           onFocus={(e) => {
             setIsFocused(true);
@@ -77,35 +79,35 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontFamily.medium,
     fontWeight: Typography.fontWeight.medium,
     fontSize: Typography.fontSize.sm,
-    color: Colors.ink,
+    color: Colors.textPrimary,
     marginBottom: Spacing.xs,
   },
   inputContainer: {
-    height: TouchTargets.minHeight, // 48px
-    backgroundColor: Colors.surfaceSubtle,
-    borderRadius: BorderRadius.md,
-    borderWidth: 1.5,
-    borderColor: Colors.line,
+    height: 52, // High-fidelity touch target matching reference
+    backgroundColor: Colors.surface,
+    borderRadius: 14,
+    borderWidth: 1.2,
+    borderColor: Colors.border,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: Spacing.md,
   },
   inputFocused: {
-    borderColor: Colors.forest,
-    backgroundColor: Colors.white,
+    borderColor: Colors.borderFocused,
+    backgroundColor: Colors.surface,
   },
   inputError: {
     borderColor: Colors.rose,
   },
   leftIcon: {
-    marginRight: Spacing.xs,
+    marginRight: Spacing.sm,
   },
   textInput: {
     flex: 1,
     height: '100%',
     fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.base,
-    color: Colors.ink,
+    color: Colors.textPrimary,
   },
   errorText: {
     fontFamily: Typography.fontFamily.regular,
