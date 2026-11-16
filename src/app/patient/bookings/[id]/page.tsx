@@ -22,6 +22,7 @@ import {
   User,
   AlertCircle,
   XCircle,
+  X,
 } from 'lucide-react';
 
 // Format YYYY-MM-DD into "Nov 15, 2026"
@@ -237,253 +238,227 @@ export default function BookingDetailPage({
             {/* Ambient Background Glow in Top-Right */}
             <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-[#EAF8F2]/60 blur-3xl pointer-events-none" />
 
-            {/* ================= 4. APPOINTMENT HEADER + RIGHT ILLUSTRATION ================= */}
-            <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
+            {/* ================= 4. APPOINTMENT HEADER + STATUS PILL ================= */}
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
               {/* Left Column: Category Badge, Heading, Subtitle */}
               <div className="max-w-2xl">
                 {/* Category Badge */}
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-xs font-semibold text-[#065F46] mb-3.5 shadow-2xs">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-xs font-semibold text-[#065F46] mb-3 shadow-2xs">
                   <Home className="h-3.5 w-3.5" />
                   <span>{categoryBadgeLabel}</span>
                 </div>
 
-                {/* Main Heading */}
-                <h1 className="font-heading text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#15212B] tracking-tight leading-tight">
+                {/* Main Heading - Refined, clean, not overly thick */}
+                <h1 className="font-heading text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#102723] tracking-tight leading-snug">
                   {booking.serviceName}
                 </h1>
 
                 {/* Subtitle with Scheduled Date & Slot */}
-                <p className="mt-2 text-xs sm:text-sm text-[#64748B] font-normal">
-                  Scheduled for {booking.scheduledDate} ({booking.scheduledTimeSlot})
-                </p>
-              </div>
-
-              {/* Right Column: Medical Clipboard & Stethoscope Illustration */}
-              <div className="hidden md:flex items-center justify-end shrink-0">
-                <MedicalClipboardIllustration />
-              </div>
-            </div>
-
-            {/* ================= 5. APPOINTMENT INFORMATION STRIP ================= */}
-            <div className="mt-8 sm:mt-10 rounded-[18px] sm:rounded-[20px] bg-[#F7FAF9] border border-[#E8F0EC] p-5 sm:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-[#E5ECE9]">
-                {/* Section 1: Booking ID */}
-                <div className="flex items-center gap-3.5 pt-0 md:pt-0">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
-                    <Calendar className="h-5 w-5 stroke-[2]" />
-                  </div>
-                  <div>
-                    <span className="block text-[11px] font-medium text-[#64748B] uppercase tracking-wider">
-                      Booking ID
-                    </span>
-                    <span className="font-heading text-base sm:text-lg font-bold text-[#15212B] tracking-tight">
-                      {booking.bookingNumber}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Section 2: Appointment Date */}
-                <div className="flex items-center gap-3.5 pt-4 md:pt-0 md:pl-6">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
-                    <Calendar className="h-5 w-5 stroke-[2]" />
-                  </div>
-                  <div>
-                    <span className="block text-[11px] font-medium text-[#64748B] uppercase tracking-wider">
-                      Appointment Date
-                    </span>
-                    <span className="font-heading text-base sm:text-lg font-bold text-[#15212B] tracking-tight">
-                      {formatDisplayDate(booking.scheduledDate)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Section 3: Time Slot */}
-                <div className="flex items-center gap-3.5 pt-4 md:pt-0 md:pl-6">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
-                    <Clock className="h-5 w-5 stroke-[2]" />
-                  </div>
-                  <div>
-                    <span className="block text-[11px] font-medium text-[#64748B] uppercase tracking-wider">
-                      Time
-                    </span>
-                    <span className="font-heading text-base sm:text-lg font-bold text-[#15212B] tracking-tight">
-                      {booking.scheduledTimeSlot}
-                    </span>
-                  </div>
+                <div className="mt-2.5 flex items-center gap-2 text-xs sm:text-[13.5px] text-[#64748B] font-normal">
+                  <Calendar className="h-4 w-4 text-[#64748B] shrink-0" />
+                  <span>
+                    Scheduled for {formatDisplayDate(booking.scheduledDate)} ({booking.scheduledTimeSlot})
+                  </span>
                 </div>
               </div>
-            </div>
 
-            {/* ================= 6. CURRENT BOOKING STATUS ROW ================= */}
-            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#F2F8F5] pb-6">
-              {/* Left Side: Status Icon, Label & Large Status */}
-              <div className="flex items-center gap-3.5">
+              {/* Right Column: Confirmed Status Glowing Pill Badge with Stethoscope & Sparkles */}
+              <div className="relative shrink-0 flex items-center self-start md:self-center">
+                {/* Ambient Soft Glow Behind */}
                 <div
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full shadow-xs ${
+                  className={`absolute inset-0 blur-xl rounded-full scale-125 pointer-events-none ${
+                    isCancelled ? 'bg-rose-200/50' : 'bg-[#A7F3D0]/60'
+                  }`}
+                />
+
+                {/* Subtle Decorative Sparkles (+) */}
+                {!isCancelled && (
+                  <>
+                    <span className="absolute -top-3.5 left-4 text-[#10B981] text-xs font-bold select-none pointer-events-none">+</span>
+                    <span className="absolute -top-1 -left-2 text-[#34D399] text-[10px] font-bold select-none pointer-events-none">+</span>
+                    <span className="absolute -bottom-2 -right-1 text-[#10B981] text-sm font-bold select-none pointer-events-none">+</span>
+
+                    {/* Faint stethoscope outline */}
+                    <div className="absolute -right-6 -top-4 opacity-35 pointer-events-none text-[#059669]">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
+                        <path d="M4.5 3v5a4.5 4.5 0 0 0 9 0V3" />
+                        <path d="M9 12.5v2a3.5 3.5 0 0 0 7 0v-2" />
+                        <circle cx="18" cy="10" r="2.5" />
+                      </svg>
+                    </div>
+                  </>
+                )}
+
+                {/* The Pill Badge */}
+                <div
+                  className={`relative z-10 flex items-center gap-3 rounded-full border px-6 sm:px-7 py-2.5 sm:py-3 shadow-[0_4px_20px_rgba(16,185,129,0.12)] ${
                     isCancelled
-                      ? 'bg-rose-500 text-white'
-                      : booking.status === 'COMPLETED'
-                      ? 'bg-[#10B981] text-white'
-                      : 'bg-[#10B981] text-white'
+                      ? 'bg-gradient-to-r from-rose-50 to-rose-100 border-rose-200 text-rose-800'
+                      : 'bg-gradient-to-r from-[#F0FDF4] via-[#E8FAF0] to-[#DCFCE7] border-[#A7F3D0] text-[#064E3B]'
                   }`}
                 >
-                  {isCancelled ? (
-                    <XCircle className="h-6 w-6 stroke-[2.2]" />
-                  ) : (
-                    <Check className="h-6 w-6 stroke-[2.5]" />
-                  )}
-                </div>
-
-                <div>
-                  <span
-                    className={`block text-[11px] font-bold tracking-wider uppercase ${
-                      isCancelled ? 'text-rose-600' : 'text-[#059669]'
+                  <div
+                    className={`flex h-8 w-8 items-center justify-center rounded-full text-white shadow-xs ${
+                      isCancelled ? 'bg-rose-600' : 'bg-[#059669]'
                     }`}
                   >
-                    CURRENT STATUS
-                  </span>
-                  <span className="font-heading text-xl sm:text-2xl font-bold text-[#15212B] tracking-tight">
+                    {isCancelled ? (
+                      <X className="h-4 w-4 stroke-[2.5]" />
+                    ) : (
+                      <Check className="h-5 w-5 stroke-[2.8]" />
+                    )}
+                  </div>
+                  <span className="font-heading text-lg sm:text-[21px] font-bold tracking-tight">
                     {displayStatus}
                   </span>
                 </div>
               </div>
-
-              {/* Right Side: Action Buttons */}
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="inline-flex items-center gap-2 rounded-full border border-[#DCE6E1] bg-white px-4 sm:px-5 py-2.5 text-xs font-semibold text-[#15212B] hover:bg-[#F2F8F5] hover:border-slate-300 transition-colors shadow-2xs cursor-pointer active:scale-98"
-                >
-                  <Download className="h-3.5 w-3.5 text-slate-600" />
-                  <span>Download Receipt</span>
-                </button>
-
-                <Link
-                  href="/patient/support"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#DCE6E1] bg-white px-4 sm:px-5 py-2.5 text-xs font-semibold text-[#15212B] hover:bg-[#F2F8F5] hover:border-slate-300 transition-colors shadow-2xs cursor-pointer active:scale-98"
-                >
-                  <MessageSquare className="h-3.5 w-3.5 text-slate-600" />
-                  <span>Support</span>
-                </Link>
-              </div>
             </div>
 
-            {/* ================= 7. HORIZONTAL BOOKING PROGRESS TRACKER ================= */}
-            {isCancelled ? (
-              <div className="mt-8 rounded-2xl bg-rose-50 border border-rose-200 p-5 text-xs text-rose-800">
-                <div className="flex items-center gap-2 font-bold text-rose-900 text-sm">
-                  <AlertCircle className="h-4 w-4" />
-                  <span>This appointment was cancelled</span>
+            {/* ================= 5. VISIT PROGRESS ROW & ACTIONS ================= */}
+            <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-[#F2F8F5]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                {/* Left: VISIT PROGRESS Label */}
+                <h3 className="text-xs sm:text-[13px] font-bold uppercase tracking-wider text-[#065F46]">
+                  VISIT PROGRESS
+                </h3>
+
+                {/* Right: Download Receipt & Support Buttons */}
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="inline-flex items-center gap-2 rounded-full border border-[#DCE6E1] bg-white px-4 py-2 text-xs font-semibold text-[#15212B] hover:bg-[#F2F8F5] hover:border-slate-300 transition-colors shadow-2xs cursor-pointer active:scale-98"
+                  >
+                    <Download className="h-3.5 w-3.5 text-slate-600" />
+                    <span>Download Receipt</span>
+                  </button>
+
+                  <Link
+                    href="/patient/support"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#DCE6E1] bg-white px-4 py-2 text-xs font-semibold text-[#15212B] hover:bg-[#F2F8F5] hover:border-slate-300 transition-colors shadow-2xs cursor-pointer active:scale-98"
+                  >
+                    <MessageSquare className="h-3.5 w-3.5 text-slate-600" />
+                    <span>Support</span>
+                  </Link>
                 </div>
-                <p className="mt-1 text-slate-600">
-                  Reason: {booking.notes || 'Cancelled by request.'}
-                </p>
               </div>
-            ) : (
-              <>
-                {/* Desktop Horizontal Tracker (7 Stages) */}
-                <div className="hidden md:block mt-8 pt-4">
-                  <div className="grid grid-cols-7 gap-2 relative">
-                    {stages.map((stage, idx) => {
-                      const isDone = idx < currentStageIndex;
-                      const isCurrent = idx === currentStageIndex;
-                      const isLineActive = idx < currentStageIndex;
 
-                      return (
-                        <div key={stage.key} className="relative flex flex-col items-center text-center">
-                          {/* Horizontal Connector to next stage */}
-                          {idx < stages.length - 1 && (
-                            <div
-                              className={`absolute top-4 left-1/2 w-full h-[2px] -translate-y-1/2 z-0 ${
-                                isLineActive ? 'bg-[#059669]' : 'bg-[#E2E8F0]'
-                              }`}
-                            />
-                          )}
-
-                          {/* Node Circle */}
-                          <div
-                            className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all ${
-                              isDone
-                                ? 'bg-[#059669] text-white shadow-xs'
-                                : isCurrent
-                                ? 'bg-[#064E3B] text-white ring-4 ring-[#ECFDF5] border-2 border-white shadow-xs'
-                                : 'bg-[#F8FAFC] border border-[#CBD5E1] text-[#64748B]'
-                            }`}
-                          >
-                            {isDone ? (
-                              <Check className="h-4 w-4 stroke-[2.5]" />
-                            ) : (
-                              <span>{idx + 1}</span>
-                            )}
-                          </div>
-
-                          {/* Stage Name */}
-                          <h4
-                            className={`mt-3 text-xs sm:text-[13px] font-semibold leading-tight ${
-                              isCurrent
-                                ? 'text-[#064E3B] font-bold'
-                                : isDone
-                                ? 'text-[#15212B]'
-                                : 'text-[#64748B]'
-                            }`}
-                          >
-                            {stage.label}
-                          </h4>
-
-                          {/* Stage Description */}
-                          <p className="mt-1 text-[11px] text-[#64748B] leading-snug px-1 line-clamp-3">
-                            {stage.desc}
-                          </p>
-                        </div>
-                      );
-                    })}
+              {/* ================= 6. HORIZONTAL BOOKING PROGRESS TRACKER ================= */}
+              {isCancelled ? (
+                <div className="rounded-2xl bg-rose-50 border border-rose-200 p-5 text-xs text-rose-800">
+                  <div className="flex items-center gap-2 font-bold text-rose-900 text-sm">
+                    <AlertCircle className="h-4 w-4" />
+                    <span>This appointment was cancelled</span>
                   </div>
+                  <p className="mt-1 text-slate-600">
+                    Reason: {booking.notes || 'Cancelled by request.'}
+                  </p>
                 </div>
+              ) : (
+                <>
+                  {/* Desktop Horizontal Tracker (7 Stages) */}
+                  <div className="hidden md:block pt-2">
+                    <div className="grid grid-cols-7 gap-2 relative">
+                      {stages.map((stage, idx) => {
+                        const isDone = idx < currentStageIndex;
+                        const isCurrent = idx === currentStageIndex;
+                        const isCompletedOrActive = idx <= currentStageIndex;
 
-                {/* Mobile Responsive Vertical Tracker */}
-                <div className="md:hidden mt-6 space-y-4 pt-2">
-                  <div className="relative pl-6 border-l-2 border-[#E2E8F0] space-y-5">
-                    {stages.map((stage, idx) => {
-                      const isDone = idx < currentStageIndex;
-                      const isCurrent = idx === currentStageIndex;
+                        return (
+                          <div key={stage.key} className="relative flex flex-col items-center text-center">
+                            {/* Horizontal Connector to next stage */}
+                            {idx < stages.length - 1 && (
+                              <div
+                                className={`absolute top-4 left-1/2 w-full h-[2px] -translate-y-1/2 z-0 ${
+                                  idx < currentStageIndex ? 'bg-[#059669]' : 'bg-[#E2E8F0]'
+                                }`}
+                              />
+                            )}
 
-                      return (
-                        <div key={stage.key} className="relative flex items-start gap-3">
-                          {/* Node Circle */}
-                          <div
-                            className={`absolute -left-[31px] top-0 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
-                              isDone
-                                ? 'bg-[#059669] text-white'
-                                : isCurrent
-                                ? 'bg-[#064E3B] text-white ring-2 ring-[#ECFDF5]'
-                                : 'bg-slate-100 text-slate-400 border border-slate-300'
-                            }`}
-                          >
-                            {isDone ? <Check className="h-3 w-3 stroke-[2.5]" /> : idx + 1}
-                          </div>
+                            {/* Node Circle */}
+                            <div
+                              className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all ${
+                                isDone
+                                  ? 'bg-[#059669] text-white shadow-xs'
+                                  : isCurrent
+                                  ? 'bg-[#059669] text-white ring-4 ring-[#ECFDF5] shadow-xs'
+                                  : 'bg-white border border-[#CBD5E1] text-[#64748B]'
+                              }`}
+                            >
+                              {isCompletedOrActive ? (
+                                <Check className="h-4 w-4 stroke-[2.5]" />
+                              ) : (
+                                <span>{idx + 1}</span>
+                              )}
+                            </div>
 
-                          <div className="pt-0.5">
+                            {/* Stage Name */}
                             <h4
-                              className={`text-xs font-semibold ${
+                              className={`mt-3 text-xs sm:text-[13px] leading-tight ${
                                 isCurrent
-                                  ? 'text-[#064E3B] font-bold'
+                                  ? 'text-[#065F46] font-bold'
                                   : isDone
-                                  ? 'text-[#15212B]'
-                                  : 'text-slate-400'
+                                  ? 'text-[#15212B] font-bold'
+                                  : 'text-[#64748B] font-semibold'
                               }`}
                             >
                               {stage.label}
                             </h4>
-                            <p className="text-[11px] text-slate-500 mt-0.5">{stage.desc}</p>
+
+                            {/* Stage Description */}
+                            <p className="mt-1 text-[11px] text-[#64748B] leading-snug px-1 line-clamp-3">
+                              {stage.desc}
+                            </p>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
+
+                  {/* Mobile Responsive Vertical Tracker */}
+                  <div className="md:hidden space-y-4 pt-1">
+                    <div className="relative pl-6 border-l-2 border-[#E2E8F0] space-y-5">
+                      {stages.map((stage, idx) => {
+                        const isDone = idx < currentStageIndex;
+                        const isCurrent = idx === currentStageIndex;
+                        const isCompletedOrActive = idx <= currentStageIndex;
+
+                        return (
+                          <div key={stage.key} className="relative flex items-start gap-3">
+                            {/* Node Circle */}
+                            <div
+                              className={`absolute -left-[31px] top-0 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
+                                isCompletedOrActive
+                                  ? 'bg-[#059669] text-white'
+                                  : 'bg-white text-slate-400 border border-slate-300'
+                              }`}
+                            >
+                              {isCompletedOrActive ? <Check className="h-3 w-3 stroke-[2.5]" /> : idx + 1}
+                            </div>
+
+                            <div className="pt-0.5">
+                              <h4
+                                className={`text-xs font-semibold ${
+                                  isCurrent
+                                    ? 'text-[#065F46] font-bold'
+                                    : isDone
+                                    ? 'text-[#15212B] font-bold'
+                                    : 'text-slate-400'
+                                }`}
+                              >
+                                {stage.label}
+                              </h4>
+                              <p className="text-[11px] text-slate-500 mt-0.5">{stage.desc}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* ================= 10. RESTRAINED COLLAPSIBLE CLINICAL & PAYMENT DETAILS ================= */}
             <div className="mt-10 pt-6 border-t border-[#F2F8F5]">
@@ -572,13 +547,22 @@ export default function BookingDetailPage({
                       </span>
                       <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                         <div className="rounded-xl bg-white border border-[#E2EBE7] p-3">
+                          <span className="text-slate-500 font-medium block">Booking Reference</span>
+                          <span className="text-sm font-bold font-mono text-[#065F46] mt-0.5 block">
+                            {booking.bookingNumber}
+                          </span>
+                          <span className="text-slate-500 mt-1 block">
+                            {formatDisplayDate(booking.scheduledDate)} • {booking.scheduledTimeSlot}
+                          </span>
+                        </div>
+                        <div className="rounded-xl bg-white border border-[#E2EBE7] p-3">
                           <span className="text-slate-500 font-medium block">Patient Name</span>
                           <span className="text-sm font-bold text-[#15212B] mt-0.5 block">
                             {booking.beneficiaryName} ({booking.beneficiaryRelation})
                           </span>
                           <span className="text-slate-500 mt-1 block">Phone: {booking.patientPhone}</span>
                         </div>
-                        <div className="rounded-xl bg-white border border-[#E2EBE7] p-3">
+                        <div className="rounded-xl bg-white border border-[#E2EBE7] p-3 sm:col-span-2">
                           <span className="text-slate-500 font-medium block">Home Address</span>
                           <span className="text-xs font-bold text-[#15212B] mt-0.5 block">
                             {booking.addressText}
