@@ -857,20 +857,22 @@ const styles = StyleSheet.create({
   },
   greetingName: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 19,
-    fontWeight: '700',
+    fontSize: 22,
+    fontWeight: '600',
     color: Palette.textDark,
-    letterSpacing: -0.3,
+    letterSpacing: -0.4,
+    lineHeight: 28,
   },
   greetingEmoji: {
-    fontSize: 18,
+    fontSize: 20,
   },
   greetingSubtext: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13,
+    fontSize: 13.5,
     color: Palette.textMuted,
     marginTop: 2,
     fontWeight: '400',
+    lineHeight: 18,
   },
 
   /* 3. Search Bar */
@@ -910,15 +912,16 @@ const styles = StyleSheet.create({
   },
   sectionHeading: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 19,
+    fontWeight: '600',
     color: Palette.textDark,
-    letterSpacing: -0.2,
+    letterSpacing: -0.3,
+    lineHeight: 25,
   },
   seeAllText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '500',
     color: Palette.primary,
   },
 
@@ -1180,10 +1183,11 @@ const styles = StyleSheet.create({
   },
   scheduleHeading: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 16.5,
+    fontSize: 19,
     fontWeight: '600',
     color: Palette.primary,
-    letterSpacing: -0.2,
+    letterSpacing: -0.3,
+    lineHeight: 25,
   },
   scheduleMonthPill: {
     backgroundColor: Palette.mint,

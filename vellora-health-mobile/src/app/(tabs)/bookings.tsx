@@ -261,38 +261,27 @@ export default function BookingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* ============================================================ */}
-        {/* 1. TOP HEADER WITH BACK ARROW & CENTERED BRAND LOGO          */}
+        {/* 1. TOP BRAND HEADER: LOGO + "MY BOOKINGS" TITLE              */}
         {/* ============================================================ */}
         <View style={styles.topHeaderBar}>
-          <TouchableOpacity
-            style={styles.backButton}
-            activeOpacity={0.7}
-            onPress={() => router.back()}
-            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-          >
-            <Ionicons name="arrow-back" size={24} color={Palette.textDark} />
-          </TouchableOpacity>
-
-          <View style={styles.brandCenterContainer}>
+          <View style={styles.brandTitleContainer}>
             <Image
               source={require('../../../assets/images/logo-dark.png')}
               style={styles.brandLogo}
               resizeMode="contain"
             />
+            <View style={styles.brandTitleDivider} />
+            <Text style={styles.pageHeadingInline}>My Bookings</Text>
           </View>
 
-          <View style={styles.headerRightSpacer} />
+          <View style={styles.activeBadgeContainer}>
+            <View style={styles.activeDot} />
+            <Text style={styles.activeBadgeText}>{upcomingList.length} Active</Text>
+          </View>
         </View>
 
         {/* ============================================================ */}
-        {/* 2. REFINED PAGE HEADING                                      */}
-        {/* ============================================================ */}
-        <View style={styles.headingSection}>
-          <Text style={styles.pageHeading}>My Bookings</Text>
-        </View>
-
-        {/* ============================================================ */}
-        {/* 3. SEGMENTED FILTER TABS: Upcoming | Completed | Cancelled   */}
+        {/* 2. SEGMENTED FILTER TABS: Upcoming | Completed | Cancelled   */}
         {/* ============================================================ */}
         <View style={styles.segmentedContainer}>
           <TouchableOpacity
@@ -710,48 +699,59 @@ const styles = StyleSheet.create({
     paddingBottom: 110,
   },
 
-  /* 1. Top Header Bar */
+  /* 1. Top Header Bar: Logo + "My Bookings" Title */
   topHeaderBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    paddingTop: 8,
+    paddingBottom: 14,
     marginBottom: 4,
   },
-  backButton: {
-    width: 40,
-    height: 40,
+  brandTitleContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-  },
-  brandCenterContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   brandLogo: {
-    width: 126,
-    height: 34,
+    width: 114,
+    height: 32,
   },
-  headerRightSpacer: {
-    width: 40,
-    height: 40,
+  brandTitleDivider: {
+    width: 1.5,
+    height: 18,
+    backgroundColor: '#DCE9E1',
+    marginHorizontal: 10,
+    borderRadius: 1,
   },
-
-  /* 2. Heading Section */
-  headingSection: {
-    marginTop: 8,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  pageHeading: {
+  pageHeadingInline: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 24,
+    fontSize: 17,
     fontWeight: '700',
     color: Palette.primary,
-    textAlign: 'center',
-    letterSpacing: -0.3,
+    letterSpacing: -0.2,
+  },
+  activeBadgeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Palette.primaryLight,
+    paddingHorizontal: 8.5,
+    paddingVertical: 4.5,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#D2E6DA',
+  },
+  activeDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#059669',
+    marginRight: 5,
+  },
+  activeBadgeText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '600',
+    color: Palette.primary,
   },
 
   /* 3. Segmented Filter Tabs */
