@@ -23,11 +23,13 @@ export const DoctorsSection: React.FC = () => {
               Board-certified doctors dedicated to compassionate, unhurried examinations right at your bedside.
             </p>
           </div>
-          <SliderArrows
-            trackRef={trackRef}
-            prevLabel="Previous doctor"
-            nextLabel="Next doctor"
-          />
+          <div className="hidden md:flex">
+            <SliderArrows
+              trackRef={trackRef}
+              prevLabel="Previous doctor"
+              nextLabel="Next doctor"
+            />
+          </div>
         </div>
 
         <div
