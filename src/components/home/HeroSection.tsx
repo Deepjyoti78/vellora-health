@@ -68,7 +68,7 @@ export const HeroSection: React.FC = () => {
               ))}
             </div>
             <span>
-              Trusted by <strong>135k+ people</strong>
+              Trusted by <strong>135K+ people</strong>
             </span>
           </div>
 

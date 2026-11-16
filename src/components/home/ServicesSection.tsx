@@ -155,7 +155,7 @@ export const ServicesSection: React.FC = () => {
               <Link
                 key={service.id}
                 href={service.href}
-                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-auto h-[370px] sm:h-[360px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.12)] hover:shadow-[0_22px_48px_rgba(6,78,59,0.22)] transition-all duration-500 hover:-translate-y-2.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
+                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-auto h-[315px] sm:h-[335px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.12)] hover:shadow-[0_22px_48px_rgba(6,78,59,0.22)] transition-all duration-500 hover:-translate-y-2.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
                   isVisible
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-8 scale-[0.98]'
@@ -187,40 +187,43 @@ export const ServicesSection: React.FC = () => {
                   />
                 </div>
 
-                {/* Card Content */}
-                <div className="relative z-10 h-full p-5 sm:p-6 flex flex-col justify-end">
-                  {/* Category Eyebrow Tag: Mint Pill Badge on mobile, Clean Text on desktop */}
-                  <div>
-                    {/* Mobile Pill Badge */}
-                    <span className="md:hidden inline-block rounded-full bg-[#A7F3D0] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#064E3B] mb-2 shadow-xs">
+                {/* Card Content: Top pill badge on mobile + Bottom title & actions */}
+                <div className="relative z-10 h-full p-4 sm:p-5 lg:p-6 flex flex-col justify-between md:justify-end">
+                  {/* Category Eyebrow Tag: Mint Pill Badge pinned to TOP on mobile */}
+                  <div className="md:hidden">
+                    <span className="inline-block rounded-full bg-[#A7F3D0] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#064E3B] shadow-xs">
                       {mobileDetails.tag}
                     </span>
+                  </div>
+
+                  {/* Bottom Content Block */}
+                  <div>
                     {/* Desktop Category Text */}
                     <span className="hidden md:inline-block text-[#6EE7B7] font-bold text-[11px] uppercase tracking-[0.14em] mb-1 drop-shadow-xs">
                       {categoryTagDesktop}
                     </span>
-                  </div>
 
-                  {/* Service Title */}
-                  <h3 className="font-heading font-bold text-white text-[19px] sm:text-[19px] lg:text-[20px] leading-[1.2] mb-1.5 group-hover:text-[#A7F3D0] transition-colors">
-                    <span className="md:hidden">{mobileDetails.title}</span>
-                    <span className="hidden md:inline">{service.title}</span>
-                  </h3>
+                    {/* Service Title */}
+                    <h3 className="font-heading font-bold text-white text-[18px] sm:text-[19px] lg:text-[20px] leading-[1.2] mb-1.5 group-hover:text-[#A7F3D0] transition-colors">
+                      <span className="md:hidden">{mobileDetails.title}</span>
+                      <span className="hidden md:inline">{service.title}</span>
+                    </h3>
 
-                  {/* Description + Circular Action Arrow Button Row */}
-                  <div className="flex items-end justify-between gap-3 pt-0.5">
-                    {/* Description Text */}
-                    <p className="text-slate-200/95 text-[12px] sm:text-[12.5px] leading-relaxed max-w-[190px] line-clamp-2">
-                      <span className="md:hidden">{mobileDetails.desc}</span>
-                      <span className="hidden md:inline">{service.description}</span>
-                    </p>
+                    {/* Description + Circular Action Arrow Button Row */}
+                    <div className="flex items-end justify-between gap-3 pt-0.5">
+                      {/* Description Text */}
+                      <p className="text-slate-200/95 text-[11.5px] sm:text-[12.5px] leading-relaxed max-w-[190px] line-clamp-2">
+                        <span className="md:hidden">{mobileDetails.desc}</span>
+                        <span className="hidden md:inline">{service.description}</span>
+                      </p>
 
-                    {/* Circular White Action Button */}
-                    <div
-                      className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#075239] flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.18)] group-hover:bg-[#E6F7F0] group-hover:scale-110 group-hover:shadow-[0_6px_16px_rgba(0,0,0,0.24)] active:scale-95 transition-all duration-300"
-                      aria-hidden="true"
-                    >
-                      <ArrowRight className="h-4.5 w-4.5 stroke-[2.4] text-[#075239] group-hover:translate-x-0.5 transition-transform duration-200" />
+                      {/* Circular White Action Button */}
+                      <div
+                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#075239] flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.18)] group-hover:bg-[#E6F7F0] group-hover:scale-110 active:scale-95 transition-all duration-300"
+                        aria-hidden="true"
+                      >
+                        <ArrowRight className="h-4.5 w-4.5 stroke-[2.4] text-[#075239] group-hover:translate-x-0.5 transition-transform duration-200" />
+                      </div>
                     </div>
                   </div>
                 </div>

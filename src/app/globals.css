@@ -1985,7 +1985,7 @@ h1, h2 {
   .hero {
     height: 820px;
     min-height: 760px;
-    background-position: 42% center;
+    background-position: 66% 20%;
   }
   .hero-main {
     height: calc(100% - 71px);
@@ -1997,12 +1997,42 @@ h1, h2 {
     max-width: none;
   }
   .trust-row {
-    font-size: 11px;
+    font-size: 12px;
     margin-bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(22, 54, 38, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(75, 130, 100, 0.55);
+    border-radius: 9999px;
+    padding: 3px 14px 3px 4px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+  .trust-avatars {
+    display: flex;
+    align-items: center;
   }
   .trust-avatars img {
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
+    border-radius: 9999px;
+    border: 1.5px solid #163626;
+    margin-right: -6px;
+  }
+  .trust-avatars img:last-child {
+    margin-right: 0;
+  }
+  .trust-row span {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.01em;
+  }
+  .trust-row strong {
+    font-weight: 600;
+    color: #ffffff;
   }
   .hero h1,
   .hero-title {
@@ -2726,6 +2756,17 @@ h1, h2 {
 
 .animate-subtle-float-reverse {
   animation: subtleFloatReverse 6s ease-in-out infinite;
+}
+
+/* Universal scrollbar hiding */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
