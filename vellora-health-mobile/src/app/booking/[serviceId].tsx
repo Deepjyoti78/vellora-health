@@ -364,25 +364,10 @@ export default function BookingScreen() {
   };
 
   // -------------------------------------------------------------
-  // Top Header Component (Matches all 8 images with Official Logo & Arrow)
+  // Top Header Component (Centered Official Logo, No Back Button)
   // -------------------------------------------------------------
-  const renderHeader = (showCloseIcon = false) => (
+  const renderHeader = (_showCloseIcon = false) => (
     <View style={styles.topHeader}>
-      <TouchableOpacity
-        onPress={handleBack}
-        style={styles.headerIconButton}
-        activeOpacity={0.7}
-        accessibilityRole="button"
-        accessibilityLabel="Go back"
-        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-      >
-        <Ionicons
-          name={showCloseIcon ? 'close' : 'arrow-back'}
-          size={24}
-          color="#102820"
-        />
-      </TouchableOpacity>
-
       <View style={styles.headerLogoContainer}>
         <Image
           source={require('../../../assets/images/logo-dark.png')}
@@ -390,8 +375,6 @@ export default function BookingScreen() {
           resizeMode="contain"
         />
       </View>
-
-      <View style={styles.headerRightSpacer} />
     </View>
   );
 
@@ -1999,31 +1982,20 @@ const styles = StyleSheet.create({
   // Header Bar
   // -------------------------------------------------------------
   topHeader: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingTop: 10,
+    paddingBottom: 6,
     backgroundColor: '#FBFAF7',
   },
-  headerIconButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
   headerLogoContainer: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerBrandLogo: {
-    width: 125,
-    height: 34,
-  },
-  headerRightSpacer: {
-    width: 38,
+    width: 130,
+    height: 36,
   },
 
   // -------------------------------------------------------------
