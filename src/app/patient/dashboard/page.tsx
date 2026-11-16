@@ -263,16 +263,22 @@ export default function PatientDashboardPage() {
                 {activeBookings.map((booking) => {
                   const isConfirmed = booking.status === 'CONFIRMED';
                   const isInProgress = ['IN_PROGRESS', 'ON_THE_WAY', 'ARRIVED'].includes(booking.status);
+                  const providerRoleLabel =
+                    booking.category === 'DOCTOR_VISIT'
+                      ? 'Doctor'
+                      : booking.category === 'NURSING_CARE'
+                      ? 'Nurse'
+                      : 'Clinician';
 
                   return (
                     <div
                       key={booking.id}
-                      className="group rounded-[18px] sm:rounded-[20px] border border-[#E5EAE9] bg-[#FAFCFB] p-3.5 sm:p-5 transition-all duration-200 hover:border-[#A7F3D0] hover:bg-white hover:shadow-xs"
+                      className="group rounded-2xl border border-[#E5EAE9] bg-white p-4 sm:p-5 transition-all duration-200 hover:border-[#A7F3D0] hover:shadow-xs"
                     >
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-                        {/* Column 1: Service Icon, Title & Reference */}
-                        <div className="lg:col-span-4 flex items-center gap-3.5">
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
+                      {/* Top Header Row: Service + Status */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
                             {booking.category === 'DOCTOR_VISIT' ? (
                               <Home className="h-5 w-5 stroke-[2]" />
                             ) : (
@@ -280,11 +286,11 @@ export default function PatientDashboardPage() {
                             )}
                           </div>
                           <div className="min-w-0">
-                            <h3 className="font-heading text-sm sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors truncate">
+                            <h3 className="font-heading text-sm sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors leading-snug">
                               {booking.serviceName}
                             </h3>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="font-mono text-[11px] font-bold text-[#065F46] bg-white border border-[#D9ECE7] px-2 py-0.5 rounded-md">
+                              <span className="font-mono text-[11px] font-bold text-[#065F46] bg-[#ECFDF5] border border-[#D1FAE5] px-2 py-0.5 rounded-md">
                                 {booking.bookingNumber}
                               </span>
                               {booking.category && (
@@ -296,85 +302,85 @@ export default function PatientDashboardPage() {
                           </div>
                         </div>
 
-                        {/* Column 2: Date, Time, Patient & Address */}
-                        <div className="lg:col-span-5 space-y-1.5 text-xs text-[#64748B]">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="inline-flex items-center gap-1 text-[#15212B] font-semibold">
-                              <Calendar className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
-                              <span>{formatDisplayDate(booking.scheduledDate)}</span>
-                            </span>
-                            <span className="text-slate-300">•</span>
-                            <span className="inline-flex items-center gap-1 text-slate-600">
-                              <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                              <span>{booking.scheduledTimeSlot}</span>
-                            </span>
-                            {booking.providerName && (
-                              <>
-                                <span className="text-slate-300">•</span>
-                                <span className="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[11px] font-bold">
-                                  <Stethoscope className="h-3 w-3" />
-                                  <span>{booking.providerName}</span>
-                                </span>
-                              </>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-3 text-[11px] text-slate-500">
-                            <span className="inline-flex items-center gap-1 shrink-0">
-                              <User className="h-3 w-3 text-slate-400" />
-                              <strong className="text-slate-700">{booking.beneficiaryName || booking.patientName}</strong> ({booking.beneficiaryRelation || 'Self'})
-                            </span>
-                            <span className="text-slate-300">•</span>
-                            <span className="inline-flex items-center gap-1 truncate max-w-xs">
-                              <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
-                              <span className="truncate">{booking.addressText}</span>
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Column 3: Status Badge & Actions */}
-                        <div className="lg:col-span-3 flex items-center justify-between lg:justify-end gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-[#F2F8F5]">
-                          <span
-                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
-                              isConfirmed
-                                ? 'bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]'
-                                : isInProgress
-                                ? 'bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309]'
-                                : 'bg-slate-100 text-slate-700'
-                            }`}
-                          >
-                            {isConfirmed ? (
-                              <Check className="h-3 w-3 stroke-[3]" />
-                            ) : (
-                              <Clock className="h-3 w-3 stroke-[2.5]" />
-                            )}
-                            <span>
-                              {isConfirmed
-                                ? 'Confirmed'
-                                : isInProgress
-                                ? 'In Progress'
-                                : booking.status.replace(/_/g, ' ')}
-                            </span>
+                        {/* Status Badge */}
+                        <span
+                          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] sm:text-xs font-bold ${
+                            isConfirmed
+                              ? 'bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46]'
+                              : isInProgress
+                              ? 'bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309]'
+                              : 'bg-slate-100 text-slate-700'
+                          }`}
+                        >
+                          {isConfirmed ? (
+                            <Check className="h-3 w-3 stroke-[3]" />
+                          ) : (
+                            <Clock className="h-3 w-3 stroke-[2.5]" />
+                          )}
+                          <span>
+                            {isConfirmed
+                              ? 'Confirmed'
+                              : isInProgress
+                              ? 'In Progress'
+                              : booking.status.replace(/_/g, ' ')}
                           </span>
+                        </span>
+                      </div>
 
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedBooking(booking)}
-                              className="rounded-full border border-[#DCE6E1] bg-white px-3 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
-                            >
-                              Details
-                            </button>
+                      {/* Appointment Core Details: Minimal, clean, high readability */}
+                      <div className="mt-3.5 rounded-xl bg-[#FAFCFB] border border-[#EDF3F0] p-3 text-xs space-y-2">
+                        {/* Date & Time */}
+                        <div className="flex items-center gap-2 text-[#15212B]">
+                          <Calendar className="h-3.5 w-3.5 text-[#065F46] shrink-0" />
+                          <span className="font-semibold">{formatDisplayDate(booking.scheduledDate)}</span>
+                          <span className="text-slate-300">•</span>
+                          <span className="text-slate-600 font-medium">{booking.scheduledTimeSlot}</span>
+                        </div>
 
-                            <Link
-                              href={`/patient/bookings/${booking.id}`}
-                              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] hover:bg-[#D1FAE5] transition-colors shadow-2xs"
-                              title="Open Booking Tracker"
-                            >
-                              <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
-                            </Link>
+                        {/* Clinician & Patient Beneficiary */}
+                        <div className="flex items-center justify-between gap-2 flex-wrap text-slate-600 pt-1.5 border-t border-[#EDF3F0]">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <Stethoscope className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                            <span className="truncate">
+                              {booking.providerName ? (
+                                <>
+                                  <span className="text-slate-500 mr-1">{providerRoleLabel}:</span>
+                                  <strong className="text-slate-800 font-semibold">{booking.providerName}</strong>
+                                </>
+                              ) : (
+                                <span className="text-slate-400 italic">Clinician assigning shortly</span>
+                              )}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 text-slate-500 text-[11px] shrink-0">
+                            <User className="h-3 w-3 text-slate-400 shrink-0" />
+                            <span>
+                              For:{' '}
+                              <strong className="text-slate-700 font-medium">
+                                {booking.beneficiaryName || booking.patientName}
+                              </strong>
+                            </span>
                           </div>
                         </div>
+                      </div>
+
+                      {/* Card Actions: Single clean, clear button */}
+                      <div className="mt-3.5 pt-2.5 border-t border-[#F8FAF9] flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 min-w-0">
+                          <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <span className="sm:hidden">Doorstep Care Visit</span>
+                          <span className="hidden sm:inline truncate max-w-sm">{booking.addressText}</span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => setSelectedBooking(booking)}
+                          className="inline-flex items-center gap-1.5 rounded-xl border border-[#D1FAE5] bg-[#ECFDF5] px-3.5 py-1.5 text-xs font-bold text-[#065F46] hover:bg-[#064E3B] hover:text-white transition-all shadow-2xs cursor-pointer ml-auto shrink-0"
+                        >
+                          <span>View Details</span>
+                          <ArrowRight className="h-3.5 w-3.5 stroke-[2]" />
+                        </button>
                       </div>
                     </div>
                   );
