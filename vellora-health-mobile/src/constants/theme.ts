@@ -62,15 +62,47 @@ export const Colors = {
 
 export const Typography = {
   fontFamily: {
-    // Serif for prominent editorial headings ("Care, closer to home.", "Your care starts here.", etc.)
-    serif: Platform.select({ ios: 'Georgia', android: 'serif', default: 'serif' }),
-    // Clean sans-serif for UI, inputs, buttons, body copy
-    sans: Platform.select({ ios: 'System', android: 'sans-serif', default: 'sans-serif' }),
-    medium: Platform.select({ ios: 'System', android: 'sans-serif-medium', default: 'sans-serif' }),
-    semibold: Platform.select({ ios: 'System', android: 'sans-serif-medium', default: 'sans-serif' }),
-    bold: Platform.select({ ios: 'System', android: 'sans-serif', default: 'sans-serif' }),
-    heavy: Platform.select({ ios: 'System', android: 'sans-serif', default: 'sans-serif' }),
-    regular: Platform.select({ ios: 'System', android: 'sans-serif', default: 'sans-serif' }),
+    // Unified modern sans-serif typography across all screens (matching booking page)
+    serif: Platform.select({
+      ios: 'System',
+      android: 'sans-serif',
+      default: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    }),
+    sans: Platform.select({
+      ios: 'System',
+      android: 'sans-serif',
+      default: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    }),
+    heading: Platform.select({
+      ios: 'System',
+      android: 'sans-serif',
+      default: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    }),
+    medium: Platform.select({
+      ios: 'System',
+      android: 'sans-serif-medium',
+      default: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    }),
+    semibold: Platform.select({
+      ios: 'System',
+      android: 'sans-serif-medium',
+      default: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    }),
+    bold: Platform.select({
+      ios: 'System',
+      android: 'sans-serif',
+      default: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    }),
+    heavy: Platform.select({
+      ios: 'System',
+      android: 'sans-serif',
+      default: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    }),
+    regular: Platform.select({
+      ios: 'System',
+      android: 'sans-serif',
+      default: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    }),
   },
   fontSize: {
     xs: 12,

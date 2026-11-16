@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  Animated,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,8 +18,49 @@ import { Button } from '../../components/common/Button';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function WelcomeScreen() {
+  const contentFade = useRef(new Animated.Value(0)).current;
+  const contentSlide = useRef(new Animated.Value(20)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+  const heroOpacity = useRef(new Animated.Value(0.2)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(heroOpacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.timing(contentFade, {
+        toValue: 1,
+        duration: 450,
+        useNativeDriver: true,
+      }),
+      Animated.spring(contentSlide, {
+        toValue: 0,
+        friction: 7,
+        tension: 50,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   const handleGetStarted = () => {
-    router.push('/(auth)/login');
+    // Tactile press & bounce animation
+    Animated.sequence([
+      Animated.timing(buttonScale, {
+        toValue: 0.94,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        friction: 4,
+        tension: 100,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      router.push('/(auth)/login');
+    });
   };
 
   const handleAlreadyHaveAccount = () => {
@@ -33,7 +75,7 @@ export default function WelcomeScreen() {
       <SafeAreaView edges={['top']} style={styles.topHeaderArea}>
         <View style={styles.brandHeader}>
           <Image
-            source={require('../../../assets/images/vellora-logo.png')}
+            source={require('../../../assets/images/logo-dark.png')}
             style={styles.topLogo}
             resizeMode="contain"
           />
@@ -41,7 +83,7 @@ export default function WelcomeScreen() {
       </SafeAreaView>
 
       {/* Full-Width Hero Photograph Section */}
-      <View style={styles.heroWrapper}>
+      <Animated.View style={[styles.heroWrapper, { opacity: heroOpacity }]}>
         <Image
           source={require('../../../assets/images/nurse-elder-care.png')}
           style={styles.heroImage}
@@ -49,11 +91,19 @@ export default function WelcomeScreen() {
         />
         {/* Organic Curved Wave Transition to Ivory Content */}
         <View style={styles.waveOverlay} />
-      </View>
+      </Animated.View>
 
       {/* Bottom Content Area with Ivory Background */}
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.contentSafeArea}>
-        <View style={styles.contentCard}>
+        <Animated.View
+          style={[
+            styles.contentCard,
+            {
+              opacity: contentFade,
+              transform: [{ translateY: contentSlide }],
+            },
+          ]}
+        >
           {/* Editorial Headline & Subtitle */}
           <View style={styles.textSection}>
             <Text style={styles.headline}>Care, closer to home.</Text>
@@ -71,13 +121,15 @@ export default function WelcomeScreen() {
 
           {/* Bottom Actions */}
           <View style={styles.actionsBlock}>
-            <Button
-              title="Get Started"
-              onPress={handleGetStarted}
-              iconName="arrow-forward"
-              size="lg"
-              style={styles.getStartedButton}
-            />
+            <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+              <Button
+                title="Get Started"
+                onPress={handleGetStarted}
+                iconName="arrow-forward"
+                size="lg"
+                style={styles.getStartedButton}
+              />
+            </Animated.View>
 
             <TouchableOpacity
               onPress={handleAlreadyHaveAccount}
@@ -88,7 +140,7 @@ export default function WelcomeScreen() {
               <Text style={styles.secondaryLinkText}>I already have an account</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
       </SafeAreaView>
     </View>
   );
@@ -111,7 +163,7 @@ const styles = StyleSheet.create({
   },
   topLogo: {
     width: 140,
-    height: 34,
+    height: 38,
   },
   heroWrapper: {
     width: '100%',

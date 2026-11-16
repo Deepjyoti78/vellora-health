@@ -61,6 +61,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="antialiased" suppressHydrationWarning>
+        {process.env.NODE_ENV === 'development' && (
+          <script dangerouslySetInnerHTML={{ __html: `if (['localhost','127.0.0.1'].includes(location.hostname) && location.hash.includes('figmacapture=')) { const boot = () => { document.title = new URLSearchParams(location.hash.slice(1)).get('velloracapturelabel') || document.title; const css = document.createElement('style'); css.textContent = 'nextjs-portal {display:none!important} [class*="scroll-reveal"] {opacity:1!important;transform:none!important}'; document.head.append(css); const script = document.createElement('script'); script.src = 'https://mcp.figma.com/mcp/html-to-design/capture.js'; document.head.appendChild(script); }; if (document.readyState === 'complete') boot(); else window.addEventListener('load',boot,{once:true}); }` }} />
+        )}
         <a className="skip-link" href="#main">
           Skip to content
         </a>

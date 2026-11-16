@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
   FlatList,
+  Animated,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -37,6 +38,41 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Animation values
+  const headerFade = useRef(new Animated.Value(0)).current;
+  const headerSlide = useRef(new Animated.Value(-16)).current;
+  const formFade = useRef(new Animated.Value(0)).current;
+  const formSlide = useRef(new Animated.Value(24)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(headerFade, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlide, {
+        toValue: 0,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+      Animated.timing(formFade, {
+        toValue: 1,
+        duration: 450,
+        delay: 100,
+        useNativeDriver: true,
+      }),
+      Animated.spring(formSlide, {
+        toValue: 0,
+        friction: 7,
+        tension: 50,
+        delay: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   const handleContinue = async () => {
     const cleaned = phoneNumber.replace(/\D/g, '');
     if (cleaned.length < selectedCountry.minDigits) {
@@ -44,13 +80,28 @@ export default function LoginScreen() {
       return;
     }
     setError('');
-    setLoading(true);
-    const fullPhone = `${selectedCountry.code} ${phoneNumber}`;
-    await loginPhone(fullPhone);
-    setLoading(false);
-    router.push({
-      pathname: '/(auth)/otp',
-      params: { phone: fullPhone },
+
+    // Tactile button bounce
+    Animated.sequence([
+      Animated.timing(buttonScale, {
+        toValue: 0.95,
+        duration: 90,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        friction: 4,
+        useNativeDriver: true,
+      }),
+    ]).start(async () => {
+      setLoading(true);
+      const fullPhone = `${selectedCountry.code} ${phoneNumber}`;
+      await loginPhone(fullPhone);
+      setLoading(false);
+      router.push({
+        pathname: '/(auth)/otp',
+        params: { phone: fullPhone },
+      });
     });
   };
 
@@ -91,13 +142,29 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Main Title & Subtitle */}
-          <View style={styles.headerBlock}>
+          <Animated.View
+            style={[
+              styles.headerBlock,
+              {
+                opacity: headerFade,
+                transform: [{ translateY: headerSlide }],
+              },
+            ]}
+          >
             <Text style={styles.title}>Your care starts here.</Text>
             <Text style={styles.subtitle}>Enter your mobile number to continue.</Text>
-          </View>
+          </Animated.View>
 
           {/* Phone Input & Action Section */}
-          <View style={styles.formSection}>
+          <Animated.View
+            style={[
+              styles.formSection,
+              {
+                opacity: formFade,
+                transform: [{ translateY: formSlide }],
+              },
+            ]}
+          >
             <Input
               prefixComponent={prefixElement}
               placeholder="Enter mobile number"
@@ -113,15 +180,17 @@ export default function LoginScreen() {
               autoFocus={false}
             />
 
-            <Button
-              title="Continue"
-              onPress={handleContinue}
-              loading={loading}
-              iconName="arrow-forward"
-              size="lg"
-              style={styles.continueButton}
-            />
-          </View>
+            <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+              <Button
+                title="Continue"
+                onPress={handleContinue}
+                loading={loading}
+                iconName="arrow-forward"
+                size="lg"
+                style={styles.continueButton}
+              />
+            </Animated.View>
+          </Animated.View>
 
           {/* Naturally Blended Garden Home Illustration */}
           <View style={styles.illustrationContainer}>

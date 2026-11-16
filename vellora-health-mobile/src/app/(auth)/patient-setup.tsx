@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Animated,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -31,19 +32,71 @@ export default function PatientSetupScreen() {
   const [familyMemberAge, setFamilyMemberAge] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Animations
+  const progressAnim = useRef(new Animated.Value(0.5)).current;
+  const stepFade = useRef(new Animated.Value(1)).current;
+  const stepSlide = useRef(new Animated.Value(0)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+  const myselfScale = useRef(new Animated.Value(1)).current;
+  const familyScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    // Animate progress bar width smoothly
+    Animated.timing(progressAnim, {
+      toValue: currentStep === 1 ? 0.5 : 1,
+      duration: 350,
+      useNativeDriver: false,
+    }).start();
+
+    // Animate step entrance
+    stepFade.setValue(0);
+    stepSlide.setValue(currentStep === 2 ? 30 : -30);
+    Animated.parallel([
+      Animated.timing(stepFade, {
+        toValue: 1,
+        duration: 320,
+        useNativeDriver: true,
+      }),
+      Animated.spring(stepSlide, {
+        toValue: 0,
+        friction: 8,
+        tension: 60,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [currentStep]);
+
+  const selectMyself = () => {
+    Animated.sequence([
+      Animated.timing(myselfScale, { toValue: 0.96, duration: 80, useNativeDriver: true }),
+      Animated.spring(myselfScale, { toValue: 1, friction: 4, useNativeDriver: true }),
+    ]).start();
+    setRecipient('myself');
+  };
+
+  const selectFamily = () => {
+    Animated.sequence([
+      Animated.timing(familyScale, { toValue: 0.96, duration: 80, useNativeDriver: true }),
+      Animated.spring(familyScale, { toValue: 1, friction: 4, useNativeDriver: true }),
+    ]).start();
+    setRecipient('family');
+  };
+
   const handleContinue = async () => {
-    if (currentStep === 1) {
-      if (recipient === 'family') {
-        // Advance to step 2 of 2 for family member details
-        setCurrentStep(2);
-        return;
+    Animated.sequence([
+      Animated.timing(buttonScale, { toValue: 0.95, duration: 80, useNativeDriver: true }),
+      Animated.spring(buttonScale, { toValue: 1, friction: 4, useNativeDriver: true }),
+    ]).start(async () => {
+      if (currentStep === 1) {
+        if (recipient === 'family') {
+          setCurrentStep(2);
+          return;
+        }
+        await completeOnboarding();
+      } else {
+        await completeOnboarding();
       }
-      // If "Myself", profile setup is complete!
-      await completeOnboarding();
-    } else {
-      // Step 2 complete
-      await completeOnboarding();
-    }
+    });
   };
 
   const completeOnboarding = async () => {
@@ -83,155 +136,173 @@ export default function PatientSetupScreen() {
 
           {/* Dynamic Green Progress Bar (50% on step 1, 100% on step 2) */}
           <View style={styles.progressBarTrack}>
-            <View
+            <Animated.View
               style={[
                 styles.progressBarFill,
-                { width: currentStep === 1 ? '50%' : '100%' },
+                {
+                  width: progressAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0%', '100%'],
+                  }),
+                },
               ]}
             />
           </View>
 
-          {currentStep === 1 ? (
-            /* STEP 1: Who will receive care? */
-            <>
-              {/* Main Title & Subtitle */}
-              <View style={styles.headerBlock}>
-                <Text style={styles.title}>Who will receive care?</Text>
-                <Text style={styles.subtitle}>
-                  Let us know who the healthcare service is for.
-                </Text>
-              </View>
-
-              {/* Option 1: Myself */}
-              <TouchableOpacity
-                activeOpacity={0.85}
-                onPress={() => setRecipient('myself')}
-                style={[
-                  styles.optionCard,
-                  recipient === 'myself' ? styles.optionCardActive : undefined,
-                ]}
-              >
-                <View style={styles.avatarContainer}>
-                  <Image
-                    source={require('../../../assets/images/patient-myself.png')}
-                    style={styles.avatarThumbnail}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View style={styles.optionContent}>
-                  <Text style={styles.optionTitle}>Myself</Text>
-                  <Text style={styles.optionDescription}>I need care or services for me.</Text>
-                </View>
-                <View
-                  style={[
-                    styles.radioOuter,
-                    recipient === 'myself' ? styles.radioOuterActive : undefined,
-                  ]}
-                >
-                  {recipient === 'myself' && <View style={styles.radioInner} />}
-                </View>
-              </TouchableOpacity>
-
-              {/* Option 2: Family Member */}
-              <TouchableOpacity
-                activeOpacity={0.85}
-                onPress={() => setRecipient('family')}
-                style={[
-                  styles.optionCard,
-                  recipient === 'family' ? styles.optionCardActive : undefined,
-                ]}
-              >
-                <View style={styles.avatarContainer}>
-                  <Image
-                    source={require('../../../assets/images/patient-family.png')}
-                    style={styles.avatarThumbnail}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View style={styles.optionContent}>
-                  <Text style={styles.optionTitle}>Family member</Text>
-                  <Text style={styles.optionDescription}>
-                    I'm booking care for a family member (e.g., parent, spouse, child).
+          <Animated.View
+            style={{
+              opacity: stepFade,
+              transform: [{ translateX: stepSlide }],
+            }}
+          >
+            {currentStep === 1 ? (
+              /* STEP 1: Who will receive care? */
+              <>
+                {/* Main Title & Subtitle */}
+                <View style={styles.headerBlock}>
+                  <Text style={styles.title}>Who will receive care?</Text>
+                  <Text style={styles.subtitle}>
+                    Let us know who the healthcare service is for.
                   </Text>
                 </View>
-                <View
-                  style={[
-                    styles.radioOuter,
-                    recipient === 'family' ? styles.radioOuterActive : undefined,
-                  ]}
-                >
-                  {recipient === 'family' && <View style={styles.radioInner} />}
-                </View>
-              </TouchableOpacity>
-            </>
-          ) : (
-            /* STEP 2: Family Member Details */
-            <>
-              <View style={styles.headerBlock}>
-                <Text style={styles.title}>Family Member Info</Text>
-                <Text style={styles.subtitle}>
-                  Add details so healthcare providers can prepare proper bedside care.
-                </Text>
-              </View>
 
-              {/* Relationship Pills */}
-              <Text style={styles.sectionLabel}>Relationship</Text>
-              <View style={styles.relationRow}>
-                {(['Parent', 'Spouse', 'Child', 'Other'] as const).map((rel) => {
-                  const isSelected = familyRelation === rel;
-                  return (
-                    <TouchableOpacity
-                      key={rel}
-                      onPress={() => setFamilyRelation(rel)}
+                {/* Option 1: Myself */}
+                <Animated.View style={{ transform: [{ scale: myselfScale }] }}>
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    onPress={selectMyself}
+                    style={[
+                      styles.optionCard,
+                      recipient === 'myself' ? styles.optionCardActive : undefined,
+                    ]}
+                  >
+                    <View style={styles.avatarContainer}>
+                      <Image
+                        source={require('../../../assets/images/patient-myself.png')}
+                        style={styles.avatarThumbnail}
+                        resizeMode="cover"
+                      />
+                    </View>
+                    <View style={styles.optionContent}>
+                      <Text style={styles.optionTitle}>Myself</Text>
+                      <Text style={styles.optionDescription}>I need care or services for me.</Text>
+                    </View>
+                    <View
                       style={[
-                        styles.relationPill,
-                        isSelected ? styles.relationPillActive : undefined,
+                        styles.radioOuter,
+                        recipient === 'myself' ? styles.radioOuterActive : undefined,
                       ]}
                     >
-                      <Text
+                      {recipient === 'myself' && <View style={styles.radioInner} />}
+                    </View>
+                  </TouchableOpacity>
+                </Animated.View>
+
+                {/* Option 2: Family Member */}
+                <Animated.View style={{ transform: [{ scale: familyScale }] }}>
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    onPress={selectFamily}
+                    style={[
+                      styles.optionCard,
+                      recipient === 'family' ? styles.optionCardActive : undefined,
+                    ]}
+                  >
+                    <View style={styles.avatarContainer}>
+                      <Image
+                        source={require('../../../assets/images/patient-family.png')}
+                        style={styles.avatarThumbnail}
+                        resizeMode="cover"
+                      />
+                    </View>
+                    <View style={styles.optionContent}>
+                      <Text style={styles.optionTitle}>Family member</Text>
+                      <Text style={styles.optionDescription}>
+                        I'm booking care for a family member (e.g., parent, spouse, child).
+                      </Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.radioOuter,
+                        recipient === 'family' ? styles.radioOuterActive : undefined,
+                      ]}
+                    >
+                      {recipient === 'family' && <View style={styles.radioInner} />}
+                    </View>
+                  </TouchableOpacity>
+                </Animated.View>
+              </>
+            ) : (
+              /* STEP 2: Family Member Details */
+              <>
+                <View style={styles.headerBlock}>
+                  <Text style={styles.title}>Family Member Info</Text>
+                  <Text style={styles.subtitle}>
+                    Add details so healthcare providers can prepare proper bedside care.
+                  </Text>
+                </View>
+
+                {/* Relationship Pills */}
+                <Text style={styles.sectionLabel}>Relationship</Text>
+                <View style={styles.relationRow}>
+                  {(['Parent', 'Spouse', 'Child', 'Other'] as const).map((rel) => {
+                    const isSelected = familyRelation === rel;
+                    return (
+                      <TouchableOpacity
+                        key={rel}
+                        onPress={() => setFamilyRelation(rel)}
                         style={[
-                          styles.relationPillText,
-                          isSelected ? styles.relationPillTextActive : undefined,
+                          styles.relationPill,
+                          isSelected ? styles.relationPillActive : undefined,
                         ]}
                       >
-                        {rel}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
+                        <Text
+                          style={[
+                            styles.relationPillText,
+                            isSelected ? styles.relationPillTextActive : undefined,
+                          ]}
+                        >
+                          {rel}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
 
-              <Input
-                iconName="person-outline"
-                placeholder="Family Member's Full Name"
-                value={familyMemberName}
-                onChangeText={setFamilyMemberName}
-                containerStyle={styles.inputSpacing}
-              />
+                <Input
+                  iconName="person-outline"
+                  placeholder="Family Member's Full Name"
+                  value={familyMemberName}
+                  onChangeText={setFamilyMemberName}
+                  containerStyle={styles.inputSpacing}
+                />
 
-              <Input
-                iconName="calendar-outline"
-                placeholder="Age (Years)"
-                value={familyMemberAge}
-                onChangeText={setFamilyMemberAge}
-                keyboardType="number-pad"
-                maxLength={3}
-                containerStyle={styles.inputSpacing}
-              />
-            </>
-          )}
+                <Input
+                  iconName="calendar-outline"
+                  placeholder="Age (Years)"
+                  value={familyMemberAge}
+                  onChangeText={setFamilyMemberAge}
+                  keyboardType="number-pad"
+                  maxLength={3}
+                  containerStyle={styles.inputSpacing}
+                />
+              </>
+            )}
+          </Animated.View>
         </View>
 
         {/* Primary Action Button */}
         <View style={styles.actionContainer}>
-          <Button
-            title={currentStep === 1 && recipient === 'family' ? 'Next: Family Details' : 'Continue'}
-            onPress={handleContinue}
-            loading={loading}
-            iconName="arrow-forward"
-            size="lg"
-            style={styles.continueButton}
-          />
+          <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+            <Button
+              title={currentStep === 1 && recipient === 'family' ? 'Next: Family Details' : 'Continue'}
+              onPress={handleContinue}
+              loading={loading}
+              iconName="arrow-forward"
+              size="lg"
+              style={styles.continueButton}
+            />
+          </Animated.View>
 
           {currentStep === 2 && (
             <TouchableOpacity

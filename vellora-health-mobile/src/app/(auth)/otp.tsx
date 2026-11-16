@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Animated,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -29,6 +30,38 @@ export default function OtpScreen() {
   const [error, setError] = useState('');
   const [isExpired, setIsExpired] = useState(false);
   const inputRef = useRef<any>(null);
+
+  // Animations
+  const headerFade = useRef(new Animated.Value(0)).current;
+  const headerSlide = useRef(new Animated.Value(-16)).current;
+  const boxAnims = useRef([0, 1, 2, 3, 4, 5].map(() => new Animated.Value(0))).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(headerFade, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlide, {
+        toValue: 0,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+      Animated.stagger(
+        40,
+        boxAnims.map((val) =>
+          Animated.spring(val, {
+            toValue: 1,
+            friction: 5,
+            tension: 80,
+            useNativeDriver: true,
+          })
+        )
+      ),
+    ]).start();
+  }, []);
 
   useEffect(() => {
     if (timer <= 0) {
@@ -59,21 +92,34 @@ export default function OtpScreen() {
       return;
     }
     setError('');
-    setLoading(true);
-    try {
-      // Validate code (supports 6-digit reference 482976 or simulated 4829)
-      const isValid = otp === '482976' || (await verifyOtp(otp));
-      setLoading(false);
 
-      if (isValid) {
-        router.push('/(auth)/create-account');
-      } else {
-        setError('Invalid verification code. Please check and try again.');
+    Animated.sequence([
+      Animated.timing(buttonScale, {
+        toValue: 0.95,
+        duration: 90,
+        useNativeDriver: true,
+      }),
+      Animated.spring(buttonScale, {
+        toValue: 1,
+        friction: 4,
+        useNativeDriver: true,
+      }),
+    ]).start(async () => {
+      setLoading(true);
+      try {
+        const isValid = otp === '482976' || (await verifyOtp(otp));
+        setLoading(false);
+
+        if (isValid) {
+          router.push('/(auth)/create-account');
+        } else {
+          setError('Invalid verification code. Please check and try again.');
+        }
+      } catch (e) {
+        setLoading(false);
+        setError('Network error verifying code. Please try again.');
       }
-    } catch (e) {
-      setLoading(false);
-      setError('Network error verifying code. Please try again.');
-    }
+    });
   };
 
   const handleChangeNumber = () => {
@@ -122,13 +168,21 @@ export default function OtpScreen() {
         >
           <View style={styles.mainBlock}>
             {/* Title & Subtitle */}
-            <View style={styles.headerBlock}>
+            <Animated.View
+              style={[
+                styles.headerBlock,
+                {
+                  opacity: headerFade,
+                  transform: [{ translateY: headerSlide }],
+                },
+              ]}
+            >
               <Text style={styles.title}>Verify your number</Text>
               <Text style={styles.subtitle}>
                 Enter the 6-digit code sent to{'\n'}
                 <Text style={styles.phoneHighlight}>{getMaskedPhone()}</Text>
               </Text>
-            </View>
+            </Animated.View>
 
             {/* Hidden Input for Native Keypad, Auto-Advance, Paste & SMS Auto-Fill */}
             <TextInput
@@ -155,16 +209,20 @@ export default function OtpScreen() {
                 const digit = otp[index] || '';
                 const isCurrent = index === otp.length;
                 return (
-                  <View
+                  <Animated.View
                     key={index}
                     style={[
                       styles.digitBox,
                       isCurrent ? styles.digitBoxActive : undefined,
                       Boolean(error) ? styles.digitBoxError : undefined,
+                      {
+                        transform: [{ scale: boxAnims[index] }],
+                        opacity: boxAnims[index],
+                      },
                     ]}
                   >
                     <Text style={styles.digitText}>{digit}</Text>
-                  </View>
+                  </Animated.View>
                 );
               })}
             </TouchableOpacity>
@@ -190,14 +248,16 @@ export default function OtpScreen() {
             </View>
 
             {/* Primary Action Button */}
-            <Button
-              title="Verify & Continue"
-              onPress={handleVerify}
-              loading={loading}
-              iconName="arrow-forward"
-              size="lg"
-              style={styles.verifyButton}
-            />
+            <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+              <Button
+                title="Verify & Continue"
+                onPress={handleVerify}
+                loading={loading}
+                iconName="arrow-forward"
+                size="lg"
+                style={styles.verifyButton}
+              />
+            </Animated.View>
 
             {/* Developer Fast Demo Fill (DEV Only) */}
             {__DEV__ && (

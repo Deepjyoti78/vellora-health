@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Animated,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -28,6 +29,41 @@ export default function CreateAccountScreen() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [error, setError] = useState('');
 
+  // Animations
+  const headerFade = useRef(new Animated.Value(0)).current;
+  const headerSlide = useRef(new Animated.Value(-16)).current;
+  const formFade = useRef(new Animated.Value(0)).current;
+  const formSlide = useRef(new Animated.Value(24)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(headerFade, {
+        toValue: 1,
+        duration: 380,
+        useNativeDriver: true,
+      }),
+      Animated.spring(headerSlide, {
+        toValue: 0,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+      Animated.timing(formFade, {
+        toValue: 1,
+        duration: 420,
+        delay: 80,
+        useNativeDriver: true,
+      }),
+      Animated.spring(formSlide, {
+        toValue: 0,
+        friction: 7,
+        tension: 50,
+        delay: 80,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   const handleContinue = () => {
     if (!fullName.trim()) {
       setError('Please enter your full name');
@@ -38,9 +74,15 @@ export default function CreateAccountScreen() {
       return;
     }
     setError('');
-    router.push({
-      pathname: '/(auth)/patient-setup',
-      params: { userName: fullName.trim() },
+
+    Animated.sequence([
+      Animated.timing(buttonScale, { toValue: 0.95, duration: 80, useNativeDriver: true }),
+      Animated.spring(buttonScale, { toValue: 1, friction: 4, useNativeDriver: true }),
+    ]).start(() => {
+      router.push({
+        pathname: '/(auth)/patient-setup',
+        params: { userName: fullName.trim() },
+      });
     });
   };
 
@@ -61,13 +103,29 @@ export default function CreateAccountScreen() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Main Title & Subtitle with Tight Proportional Spacing */}
-          <View style={styles.headerBlock}>
+          <Animated.View
+            style={[
+              styles.headerBlock,
+              {
+                opacity: headerFade,
+                transform: [{ translateY: headerSlide }],
+              },
+            ]}
+          >
             <Text style={styles.title}>Let's get to know you.</Text>
             <Text style={styles.subtitle}>Create your account to book and manage care.</Text>
-          </View>
+          </Animated.View>
 
           {/* Form Fields Section */}
-          <View style={styles.formContainer}>
+          <Animated.View
+            style={[
+              styles.formContainer,
+              {
+                opacity: formFade,
+                transform: [{ translateY: formSlide }],
+              },
+            ]}
+          >
             {/* Full Name */}
             <Input
               iconName="person-outline"
@@ -150,17 +208,19 @@ export default function CreateAccountScreen() {
             {error.includes('Terms') ? (
               <Text style={styles.termsErrorText}>{error}</Text>
             ) : null}
-          </View>
+          </Animated.View>
 
           {/* Primary Action Button */}
           <View style={styles.actionContainer}>
-            <Button
-              title="Continue"
-              onPress={handleContinue}
-              iconName="arrow-forward"
-              size="lg"
-              style={styles.continueButton}
-            />
+            <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+              <Button
+                title="Continue"
+                onPress={handleContinue}
+                iconName="arrow-forward"
+                size="lg"
+                style={styles.continueButton}
+              />
+            </Animated.View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

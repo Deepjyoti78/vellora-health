@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,110 +6,241 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Alert,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors, Typography, Spacing, BorderRadius, Shadows, TouchTargets } from '../../constants/theme';
-import { useAuth } from '../../context/AuthContext';
-import { Header } from '../../components/common/Header';
-import { Badge } from '../../components/common/Badge';
-import { Button } from '../../components/common/Button';
-import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import Svg, { Path } from 'react-native-svg';
+import { Typography, Shadows } from '../../constants/theme';
+import { useAuth } from '../../context/AuthContext';
 
-export default function AccountScreen() {
+const Palette = {
+  primary: '#0F5B43',        // Primary forest green
+  mint: '#EAF5EE',           // Soft mint accent
+  bgWarm: '#FBFAF7',         // Warm ivory page background
+  surface: '#FFFFFF',        // Card white
+  textDark: '#1B2A24',       // Primary text
+  textMuted: '#7A8B84',      // Secondary text
+  border: '#DCE9E1',         // Clean border
+  badgeDot: '#E53E3E',       // Red notification dot
+  logoutRed: '#E11D48',      // Red for logout
+};
+
+export default function ProfileScreen() {
   const { user, logout } = useAuth();
 
+  const patientName = user?.name || 'Emma Kapoor';
+  const patientEmail = user?.email || 'emma.kapoor@example.com';
+
   const handleLogout = () => {
-    logout();
-    router.replace('/(auth)/login');
+    Alert.alert(
+      'Log Out',
+      'Are you sure you want to log out of your Velora Health account?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Log Out',
+          style: 'destructive',
+          onPress: () => {
+            logout();
+            router.replace('/(auth)/login');
+          },
+        },
+      ]
+    );
   };
+
+  const menuItems = [
+    {
+      id: 'bookings',
+      icon: 'calendar-outline' as const,
+      label: 'My Bookings',
+      onPress: () => router.push('/(tabs)/bookings'),
+    },
+    {
+      id: 'records',
+      icon: 'folder-outline' as const,
+      label: 'Health Records',
+      onPress: () => router.push('/(tabs)/records' as any),
+    },
+    {
+      id: 'prescriptions',
+      icon: 'medical-outline' as const,
+      label: 'Prescriptions',
+      onPress: () => router.push('/(tabs)/records' as any),
+    },
+    {
+      id: 'saved',
+      icon: 'bookmark-outline' as const,
+      label: 'Saved Services',
+      onPress: () => router.push('/(tabs)/services'),
+    },
+    {
+      id: 'payment',
+      icon: 'card-outline' as const,
+      label: 'Payment Methods',
+      onPress: () => Alert.alert('Payment Methods', 'UPI, Net Banking, and Cards are verified and linked securely.'),
+    },
+    {
+      id: 'notifications',
+      icon: 'notifications-outline' as const,
+      label: 'Notifications',
+      onPress: () => Alert.alert('Notifications', 'Care visit updates and prescription alerts are enabled via Push and SMS.'),
+    },
+    {
+      id: 'help',
+      icon: 'help-circle-outline' as const,
+      label: 'Help & Support',
+      onPress: () => Alert.alert('24/7 Clinical Concierge', 'Connect with our team at support@velorahealth.com or call 1800-VELORA.'),
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <Header title="Patient Account" subtitle="Medical Profile & Settings" showBack={false} />
+      <StatusBar style="dark" />
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Profile Card */}
-        <View style={styles.profileCard}>
-          <View style={styles.profileHeader}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ============================================================ */}
+        {/* 1. TOP BRAND HEADER                                          */}
+        {/* ============================================================ */}
+        <View style={styles.topBrandBar}>
+          {/* Brand Logo */}
+          <TouchableOpacity
+            style={styles.brandContainer}
+            activeOpacity={0.8}
+            onPress={() => router.push('/(tabs)')}
+          >
             <Image
-              source={{ uri: user?.avatarUrl }}
-              style={styles.avatar}
+              source={require('../../../assets/images/logo-dark.png')}
+              style={styles.brandLogo}
+              resizeMode="contain"
             />
-            <View style={styles.profileInfo}>
-              <Text style={styles.userName}>{user?.name}</Text>
-              <Text style={styles.userPhone}>{user?.phone}</Text>
-              <Text style={styles.userEmail}>{user?.email}</Text>
-              <View style={styles.roleRow}>
-                <Badge label="VERIFIED PATIENT" variant="emerald" size="sm" />
-                <Badge label={`Blood: ${user?.bloodGroup || 'A+'}`} variant="teal" size="sm" />
-              </View>
-            </View>
-          </View>
-        </View>
+          </TouchableOpacity>
 
-        {/* Clinical Health Snapshot */}
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Medical Information</Text>
+          <View style={styles.topActionButtons}>
+            <TouchableOpacity
+              style={styles.bellBtn}
+              activeOpacity={0.75}
+              onPress={() => router.push('/(tabs)/bookings')}
+            >
+              <Ionicons name="notifications-outline" size={20} color={Palette.textDark} />
+              <View style={styles.bellBadgeDot} />
+            </TouchableOpacity>
 
-          <View style={styles.infoRow}>
-            <Ionicons name="warning-outline" size={18} color={Colors.rose} />
-            <View style={styles.infoCol}>
-              <Text style={styles.infoLabel}>Documented Allergies</Text>
-              <Text style={styles.infoVal}>{user?.allergies?.join(', ') || 'None'}</Text>
-            </View>
-          </View>
-
-          <View style={styles.divider} />
-
-          <View style={styles.infoRow}>
-            <Ionicons name="pulse-outline" size={18} color={Colors.teal} />
-            <View style={styles.infoCol}>
-              <Text style={styles.infoLabel}>Chronic Medical Conditions</Text>
-              <Text style={styles.infoVal}>{user?.chronicConditions?.join(', ') || 'None'}</Text>
-            </View>
-          </View>
-
-          <View style={styles.divider} />
-
-          <View style={styles.infoRow}>
-            <Ionicons name="location-outline" size={18} color={Colors.forest} />
-            <View style={styles.infoCol}>
-              <Text style={styles.infoLabel}>Primary Home Address</Text>
-              <Text style={styles.infoVal}>{user?.address?.street}, {user?.address?.city} {user?.address?.postalCode}</Text>
-              <Text style={styles.landmarkText}>{user?.address?.landmark}</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Emergency Contact */}
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Primary Emergency Contact</Text>
-          <View style={styles.emergencyRow}>
-            <View style={styles.emergencyLeft}>
-              <Text style={styles.emergencyName}>{user?.emergencyContact?.name}</Text>
-              <Text style={styles.emergencyRel}>{user?.emergencyContact?.relationship}</Text>
-              <Text style={styles.emergencyPhone}>{user?.emergencyContact?.phone}</Text>
-            </View>
-            <TouchableOpacity activeOpacity={0.8} style={styles.callCircle}>
-              <Ionicons name="call" size={18} color={Colors.forest} />
+            <TouchableOpacity
+              style={styles.plusBtn}
+              activeOpacity={0.75}
+              onPress={() => router.push('/(tabs)/bookings')}
+            >
+              <Ionicons name="add" size={22} color={Palette.textDark} />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Support & Logout Buttons */}
-        <View style={styles.actionSection}>
-          <Button
-            title="Switch Persona / Sign Out"
-            variant="secondary"
-            onPress={handleLogout}
-            iconName="log-out-outline"
-            iconPosition="left"
-            style={styles.logoutBtn}
+        {/* ============================================================ */}
+        {/* 2. PROFILE HEADER ROW: AVATAR + DETAILS + EDIT PROFILE       */}
+        {/* ============================================================ */}
+        <View style={styles.profileHeaderCard}>
+          <Image
+            source={require('../../../assets/images/avatar-indian-1.jpg')}
+            style={styles.profileAvatar}
+            resizeMode="cover"
           />
 
-          <Text style={styles.versionText}>Vellora Health Mobile v1.0.0 • React Native & Expo</Text>
+          <View style={styles.profileInfoCol}>
+            <Text style={styles.profileNameText}>{patientName}</Text>
+            <Text style={styles.profileEmailText}>{patientEmail}</Text>
+
+            <TouchableOpacity
+              style={styles.editProfileBtn}
+              activeOpacity={0.8}
+              onPress={() => Alert.alert('Edit Profile', 'Profile editing is available in your clinical account dashboard.')}
+            >
+              <Ionicons name="pencil-outline" size={13} color={Palette.primary} style={{ marginRight: 5 }} />
+              <Text style={styles.editProfileText}>Edit Profile</Text>
+            </TouchableOpacity>
+          </View>
         </View>
+
+        {/* ============================================================ */}
+        {/* 3. QUICK STATS ROW: 3 Bookings | 5 Reports | 2 Health Plans  */}
+        {/* ============================================================ */}
+        <View style={styles.statsRow}>
+          {/* Stat 1: Bookings */}
+          <TouchableOpacity
+            style={styles.statCard}
+            activeOpacity={0.85}
+            onPress={() => router.push('/(tabs)/bookings')}
+          >
+            <Ionicons name="calendar-outline" size={19} color={Palette.primary} style={{ marginBottom: 4 }} />
+            <Text style={styles.statNumber}>3</Text>
+            <Text style={styles.statLabel}>Bookings</Text>
+          </TouchableOpacity>
+
+          {/* Stat 2: Reports */}
+          <TouchableOpacity
+            style={styles.statCard}
+            activeOpacity={0.85}
+            onPress={() => router.push('/(tabs)/records' as any)}
+          >
+            <Ionicons name="document-text-outline" size={19} color={Palette.primary} style={{ marginBottom: 4 }} />
+            <Text style={styles.statNumber}>5</Text>
+            <Text style={styles.statLabel}>Reports</Text>
+          </TouchableOpacity>
+
+          {/* Stat 3: Health Plans */}
+          <TouchableOpacity
+            style={styles.statCard}
+            activeOpacity={0.85}
+            onPress={() => Alert.alert('Health Plans', 'You are currently enrolled in 2 active care plans: Primary Care & Family Wellness.')}
+          >
+            <Ionicons name="heart-outline" size={19} color={Palette.primary} style={{ marginBottom: 4 }} />
+            <Text style={styles.statNumber}>2</Text>
+            <Text style={styles.statLabel}>Health Plans</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* ============================================================ */}
+        {/* 4. SETTINGS & MENU LIST CARD                                 */}
+        {/* ============================================================ */}
+        <View style={styles.menuContainerCard}>
+          {menuItems.map((item, idx) => (
+            <React.Fragment key={item.id}>
+              <TouchableOpacity
+                style={styles.menuRowItem}
+                activeOpacity={0.7}
+                onPress={item.onPress}
+              >
+                <View style={styles.menuItemLeft}>
+                  <Ionicons name={item.icon} size={19} color={Palette.textDark} style={styles.menuIcon} />
+                  <Text style={styles.menuLabel}>{item.label}</Text>
+                </View>
+
+                <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
+              </TouchableOpacity>
+
+              {idx < menuItems.length - 1 && <View style={styles.menuDivider} />}
+            </React.Fragment>
+          ))}
+        </View>
+
+        {/* ============================================================ */}
+        {/* 5. LOG OUT ACTION                                            */}
+        {/* ============================================================ */}
+        <TouchableOpacity
+          style={styles.logoutBtn}
+          activeOpacity={0.75}
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out-outline" size={18} color={Palette.logoutRed} style={{ marginRight: 8 }} />
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -118,154 +249,200 @@ export default function AccountScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Palette.bgWarm,
   },
   scrollContent: {
-    paddingHorizontal: Spacing.screenPadding,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.xxxl,
-    backgroundColor: Colors.mist,
+    paddingHorizontal: 20,
+    paddingTop: Platform.OS === 'android' ? 14 : 8,
+    paddingBottom: 110,
   },
-  profileCard: {
-    backgroundColor: Colors.white,
-    borderRadius: BorderRadius.card,
-    borderWidth: 1,
-    borderColor: Colors.line,
-    padding: Spacing.lg,
-    marginBottom: Spacing.md,
-    ...Shadows.card,
-  },
-  profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: Colors.mist,
-  },
-  profileInfo: {
-    marginLeft: Spacing.md,
-    flex: 1,
-  },
-  userName: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.lg,
-    color: Colors.ink,
-  },
-  userPhone: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.muted,
-    marginTop: 1,
-  },
-  userEmail: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.muted,
-  },
-  roleRow: {
-    flexDirection: 'row',
-    gap: 6,
-    marginTop: 6,
-  },
-  sectionCard: {
-    backgroundColor: Colors.white,
-    borderRadius: BorderRadius.card,
-    borderWidth: 1,
-    borderColor: Colors.line,
-    padding: Spacing.lg,
-    marginBottom: Spacing.md,
-    ...Shadows.subtle,
-  },
-  sectionTitle: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.sm,
-    color: Colors.muted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
-    marginBottom: Spacing.md,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Spacing.sm,
-  },
-  infoCol: {
-    flex: 1,
-  },
-  infoLabel: {
-    fontFamily: Typography.fontFamily.medium,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.muted,
-  },
-  infoVal: {
-    fontFamily: Typography.fontFamily.semibold,
-    fontWeight: Typography.fontWeight.semibold,
-    fontSize: Typography.fontSize.sm,
-    color: Colors.ink,
-    marginTop: 2,
-  },
-  landmarkText: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.teal,
-    marginTop: 1,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: Colors.line,
-    marginVertical: Spacing.sm,
-  },
-  emergencyRow: {
+
+  /* 1. Top Brand Header */
+  topBrandBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingVertical: 6,
+    marginBottom: 16,
   },
-  emergencyLeft: {
-    flex: 1,
-  },
-  emergencyName: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.base,
-    color: Colors.ink,
-  },
-  emergencyRel: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.teal,
-    marginTop: 1,
-  },
-  emergencyPhone: {
-    fontFamily: Typography.fontFamily.semibold,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.muted,
-    marginTop: 2,
-  },
-  callCircle: {
-    width: TouchTargets.minWidth,
-    height: TouchTargets.minHeight,
-    borderRadius: 24,
-    backgroundColor: Colors.tealLight,
-    alignItems: 'center',
+  brandContainer: {
     justifyContent: 'center',
   },
-  actionSection: {
-    marginTop: Spacing.lg,
+  brandLogo: {
+    width: 124,
+    height: 34,
+  },
+  topActionButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  bellBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Palette.surface,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    ...Shadows.subtle,
+  },
+  bellBadgeDot: {
+    position: 'absolute',
+    top: 9,
+    right: 10,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: Palette.badgeDot,
+  },
+  plusBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Palette.mint,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Shadows.subtle,
+  },
+
+  /* 2. Profile Header */
+  profileHeaderCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 16,
+  },
+  profileAvatar: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    borderWidth: 1.5,
+    borderColor: Palette.border,
+  },
+  profileInfoCol: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  profileNameText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 18,
+    fontWeight: '700',
+    color: Palette.textDark,
+    letterSpacing: -0.2,
+    marginBottom: 2,
+  },
+  profileEmailText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '400',
+    color: Palette.textMuted,
+    marginBottom: 8,
+  },
+  editProfileBtn: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Palette.surface,
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    ...Shadows.subtle,
+  },
+  editProfileText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: Palette.textDark,
+  },
+
+  /* 3. Quick Stats Row */
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+    marginBottom: 20,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: Palette.surface,
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Shadows.subtle,
+  },
+  statNumber: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 16,
+    fontWeight: '700',
+    color: Palette.textDark,
+    marginBottom: 1,
+  },
+  statLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '500',
+    color: Palette.textMuted,
+  },
+
+  /* 4. Menu Card */
+  menuContainerCard: {
+    backgroundColor: Palette.surface,
+    borderRadius: 22,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    ...Shadows.subtle,
+  },
+  menuRowItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+  },
+  menuItemLeft: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  logoutBtn: {
-    width: '100%',
-    borderColor: Colors.rose,
+  menuIcon: {
+    marginRight: 14,
+    width: 20,
   },
-  versionText: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.mutedLight,
-    marginTop: Spacing.md,
+  menuLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '500',
+    color: Palette.textDark,
+  },
+  menuDivider: {
+    height: 1,
+    backgroundColor: '#F0F4F1',
+    marginLeft: 34,
+  },
+
+  /* 5. Logout Button */
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignSelf: 'flex-start',
+  },
+  logoutText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '600',
+    color: Palette.logoutRed,
   },
 });

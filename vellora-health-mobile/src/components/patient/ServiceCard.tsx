@@ -11,6 +11,7 @@ import { CoreServiceItem } from '../../types';
 import { Colors, Typography, BorderRadius, Spacing, Shadows } from '../../constants/theme';
 import { Badge } from '../common/Badge';
 import { Ionicons } from '@expo/vector-icons';
+import { formatCurrency } from '../../data/mockData';
 
 interface ServiceCardProps {
   service: CoreServiceItem;
@@ -40,7 +41,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
           />
         </View>
         <View style={styles.priceTag}>
-          <Text style={styles.priceTagText}>From ${service.priceStartingAt}</Text>
+          <Text style={styles.priceTagText}>From {formatCurrency(service.priceStartingAt)}</Text>
         </View>
       </View>
 
@@ -77,7 +78,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
           <View>
             <Text style={styles.priceLabel}>Starting from</Text>
             <View style={styles.priceRow}>
-              <Text style={styles.priceAmount}>${service.priceStartingAt}</Text>
+              <Text style={styles.priceAmount}>{formatCurrency(service.priceStartingAt)}</Text>
               <Text style={styles.priceUnit}> / {service.priceUnit.replace('per ', '')}</Text>
             </View>
           </View>

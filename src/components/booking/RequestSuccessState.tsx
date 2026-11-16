@@ -49,7 +49,7 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
     : 'Your care request has been logged in our dispatch stream and is awaiting clinician assignment.';
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 py-8 sm:py-12">
+    <div className="w-full max-w-2xl mx-auto px-0 sm:px-4 py-2 sm:py-8">
       {/* Inline styles for guaranteed high-priority smooth animations */}
       <style>{`
         @keyframes successCardSpring {
@@ -94,7 +94,7 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
 
       {/* Animated Success Card Container */}
       <div
-        className="overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white p-6 sm:p-10 shadow-[0_18px_45px_rgba(6,78,59,0.09)] text-center relative"
+        className="overflow-hidden rounded-2xl sm:rounded-[26px] border border-[#E2EBE7] bg-white p-4 sm:p-9 shadow-[0_18px_45px_rgba(6,78,59,0.09)] text-center relative"
         style={{
           animation: 'successCardSpring 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         }}
@@ -195,15 +195,15 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
         {/* Summary Details if provided */}
         {details.length > 0 && (
           <div
-            className="relative z-10 mt-5 divide-y divide-[#F2F8F5] rounded-xl border border-[#E2EBE7] bg-white p-3.5 text-xs text-left shadow-2xs"
+            className="relative z-10 mt-5 divide-y divide-[#F0F5F2] rounded-2xl border border-[#E2EBE7] bg-[#FAFCFB] p-3.5 sm:p-4 text-xs text-left shadow-2xs"
             style={{
               animation: 'successItemSlideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.50s both',
             }}
           >
             {details.map((d, i) => (
-              <div key={i} className="flex justify-between py-2 text-slate-600">
-                <span className="font-medium text-slate-400">{d.label}</span>
-                <span className="font-bold text-[#102820]">{d.value}</span>
+              <div key={i} className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-2 gap-1 sm:gap-4 text-slate-600">
+                <span className="font-bold text-[11px] uppercase tracking-wider text-slate-400 shrink-0">{d.label}</span>
+                <span className="font-bold text-[#102820] sm:text-right break-words">{d.value}</span>
               </div>
             ))}
           </div>

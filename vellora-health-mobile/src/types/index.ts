@@ -89,6 +89,12 @@ export interface PatientBooking {
   etaMinutes?: number;
   createdAt: string;
   shiftDuration?: string;
+  paymentMethod?: string;
+  cancellationReason?: string;
+  completedAt?: string;
+  rating?: number;
+  feedback?: string;
+  rescheduledCount?: number;
 }
 
 export interface LabResultItem {
@@ -97,6 +103,20 @@ export interface LabResultItem {
   unit: string;
   referenceRange: string;
   status: 'NORMAL' | 'HIGH' | 'LOW' | 'CRITICAL';
+  category?: string;
+  interpretation?: string;
+}
+
+export interface DetailedMedication {
+  name: string;
+  form?: string;
+  strength?: string;
+  dosage: string;
+  route?: string;
+  frequency: string;
+  duration: string;
+  instructions?: string;
+  warnings?: string;
 }
 
 export interface MedicalRecordItem {
@@ -104,21 +124,33 @@ export interface MedicalRecordItem {
   bookingId: string;
   serviceTitle: string;
   clinicianName: string;
+  clinicianRole?: string;
+  registrationNumber?: string;
+  facilityName?: string;
   date: string;
   recordType: 'PRESCRIPTION' | 'VITALS_LOG' | 'LAB_REPORT' | 'CARE_SUMMARY';
+  patientId?: string;
+  patientName?: string;
+  patientRelationship?: string;
   summary: string;
+  diagnosis?: string;
+  chiefComplaint?: string;
+  clinicalNotes?: string;
+  followUp?: string;
+  status?: string;
+  verifiedAt?: string;
+  sampleCollectionTime?: string;
   vitals?: {
     bloodPressure?: string;
     heartRate?: string;
     oxygenSaturation?: string;
     bloodGlucose?: string;
     temperature?: string;
+    respiratoryRate?: string;
+    notes?: string;
+    measuredAt?: string;
+    trendNote?: string;
   };
   labResults?: LabResultItem[];
-  medications?: {
-    name: string;
-    dosage: string;
-    frequency: string;
-    duration: string;
-  }[];
+  medications?: DetailedMedication[];
 }

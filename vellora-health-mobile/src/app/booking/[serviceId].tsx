@@ -11,16 +11,19 @@ import {
   Alert,
   Dimensions,
   Platform,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '../../constants/theme';
+import { Typography } from '../../constants/theme';
 import { DOCTOR_ROHAN, addBooking } from '../../data/mockData';
 import { PatientBooking } from '../../types';
 
-type BookingStep =
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+export type BookingStep =
   | 'details'      // Image 1: Enter Booking Details (Step 1)
   | 'schedule'     // Image 6: Choose Date & Time (Step 2)
   | 'review'       // Image 5: Review & Confirm (Step 3)
@@ -64,6 +67,11 @@ const RESCHEDULE_TIMES = [
   '04:00 PM',
 ];
 
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
 const CANCELLATION_REASONS = [
   'Change of plans',
   'Doctor not available at preferred time',
@@ -79,23 +87,86 @@ export default function BookingScreen() {
     doctorId?: string;
     doctorName?: string;
     specialty?: string;
+    serviceTitle?: string;
+    providerName?: string;
+    date?: string;
+    time?: string;
+    status?: string;
+    address?: string;
     step?: BookingStep;
   }>();
 
+  // Determine if this is viewing an existing booking from My Bookings or Dashboard
+  const isExistingBooking = Boolean(
+    params.step === 'details_view' ||
+    params.serviceId?.startsWith('bkg-') ||
+    params.providerName ||
+    params.serviceTitle
+  );
+
   // Active step in the workflow
-  const [currentStep, setCurrentStep] = useState<BookingStep>(params.step || 'details');
+  const [currentStep, setCurrentStep] = useState<BookingStep>(
+    params.step || (isExistingBooking ? 'details_view' : 'details')
+  );
+
+  // Booking display state
+  const [serviceTitle, setServiceTitle] = useState(
+    params.serviceTitle || (params.serviceId === 'nursing' ? 'Home Nursing Care' : 'Home Visit Consultation')
+  );
+  const [providerName, setProviderName] = useState(
+    params.providerName || params.doctorName || 'Dr. Arjun Mehta'
+  );
+  const [bookingStatus, setBookingStatus] = useState(
+    params.status || 'Confirmed'
+  );
 
   // Step 1: Details (Image 1)
   const [fullName, setFullName] = useState('Arjun Mehta');
   const [phoneNumber, setPhoneNumber] = useState('+91 98765 43210');
   const [emailAddress, setEmailAddress] = useState('arjun.mehta@gmail.com');
   const [serviceAddress, setServiceAddress] = useState(
-    'A-402, Green Valley Apartments, Bangalore - 560068'
+    params.address || 'A-402, Green Valley Apartments,\nBangalore - 560068'
   );
+  const [patientType, setPatientType] = useState<'myself' | 'family' | 'senior'>('myself');
+  const [selectedReason, setSelectedReason] = useState('General Consultation');
 
-  // Step 2: Schedule (Image 6)
-  const [selectedDayIndex, setSelectedDayIndex] = useState(1); // Wed 21 (Image 6)
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState('02:00 PM'); // 02:00 PM (Image 6)
+  // Step 2: Schedule & Calendar
+  const [calendarYear, setCalendarYear] = useState(2025);
+  const [calendarMonth, setCalendarMonth] = useState(4); // 0-indexed: 4 is May
+  const [selectedDayNumber, setSelectedDayNumber] = useState(21); // 21 May 2025 default
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('02:00 PM'); // 02:00 PM
+
+  const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+  const firstDayRaw = new Date(calendarYear, calendarMonth, 1).getDay();
+  const firstDayOffset = (firstDayRaw + 6) % 7; // Monday = 0, Sunday = 6
+
+  const handlePrevMonth = () => {
+    if (calendarMonth === 0) {
+      setCalendarMonth(11);
+      setCalendarYear((y) => y - 1);
+    } else {
+      setCalendarMonth((m) => m - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (calendarMonth === 11) {
+      setCalendarMonth(0);
+      setCalendarYear((y) => y + 1);
+    } else {
+      setCalendarMonth((m) => m + 1);
+    }
+  };
+
+  const handleSelectDay = (d: number) => {
+    setSelectedDayNumber(d);
+    const dateObj = new Date(calendarYear, calendarMonth, d);
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayName = dayNames[dateObj.getDay()];
+    const monthShort = MONTH_NAMES[calendarMonth].slice(0, 3);
+    const dateString = `${dayName}, ${d} ${monthShort} ${calendarYear}`;
+    setBookingConfirmedDate(dateString);
+  };
 
   // Step 4: Payment (Image 8)
   const [paymentMethod, setPaymentMethod] = useState<'UPI' | 'CARD' | 'NETBANKING' | 'WALLET'>('UPI');
@@ -109,10 +180,73 @@ export default function BookingScreen() {
   const [showCancelReasonModal, setShowCancelReasonModal] = useState(false);
 
   // Dynamic booking state
-  const [bookingConfirmedDate, setBookingConfirmedDate] = useState('Wed, 21 May 2025');
-  const [bookingConfirmedTime, setBookingConfirmedTime] = useState('02:00 PM');
+  const [bookingConfirmedDate, setBookingConfirmedDate] = useState(
+    params.date || 'Wed, 21 May 2025'
+  );
+  const [bookingConfirmedTime, setBookingConfirmedTime] = useState(
+    params.time || '02:00 PM'
+  );
 
-  const selectedDateStr = SCHEDULE_DAYS[selectedDayIndex]?.fullDate || 'Wed, 21 May 2025';
+  // Keep state synchronized when navigating between bookings
+  React.useEffect(() => {
+    if (params.step) {
+      setCurrentStep(params.step);
+    } else if (params.serviceId?.startsWith('bkg-')) {
+      setCurrentStep('details_view');
+    }
+    if (params.serviceTitle) setServiceTitle(params.serviceTitle);
+    if (params.providerName || params.doctorName) setProviderName(params.providerName || params.doctorName || 'Dr. Arjun Mehta');
+    if (params.status) setBookingStatus(params.status);
+    if (params.date) setBookingConfirmedDate(params.date);
+    if (params.time) setBookingConfirmedTime(params.time);
+    if (params.address) setServiceAddress(params.address);
+  }, [
+    params.serviceId,
+    params.step,
+    params.serviceTitle,
+    params.providerName,
+    params.doctorName,
+    params.status,
+    params.date,
+    params.time,
+    params.address,
+  ]);
+
+  const getProviderAvatar = () => {
+    if (providerName.includes('Priya') || serviceTitle.includes('Nursing')) {
+      return require('../../../assets/images/doctor-maya-patel.jpg');
+    }
+    if (providerName.includes('Rajesh') || serviceTitle.includes('Lab')) {
+      return require('../../../assets/images/avatar-indian-4.jpg');
+    }
+    if (providerName.includes('Ananya') || serviceTitle.includes('Physio')) {
+      return require('../../../assets/images/avatar-indian-3.jpg');
+    }
+    if (providerName.includes('Daniel')) {
+      return require('../../../assets/images/doctor-daniel-reed.jpg');
+    }
+    return require('../../../assets/images/doctor-rohan.png');
+  };
+
+  const getStatusBadgeStyle = () => {
+    switch (bookingStatus) {
+      case 'Scheduled':
+        return { bg: '#FEF3C7', text: '#D97706' };
+      case 'Completed':
+        return { bg: '#EAF6ED', text: '#059669' };
+      case 'Cancelled':
+        return { bg: '#FEE2E2', text: '#DC2626' };
+      case 'Confirmed':
+      default:
+        return { bg: '#EAF6ED', text: '#059669' };
+    }
+  };
+
+  const dateObj = new Date(calendarYear, calendarMonth, selectedDayNumber);
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dayName = dayNames[dateObj.getDay()];
+  const monthShort = MONTH_NAMES[calendarMonth].slice(0, 3);
+  const selectedDateStr = `${dayName}, ${selectedDayNumber} ${monthShort} ${calendarYear}`;
 
   // Navigation handlers
   const handleBack = () => {
@@ -137,7 +271,7 @@ export default function BookingScreen() {
         router.replace('/(tabs)/services');
         break;
       case 'details_view':
-        router.replace('/(tabs)/services');
+        router.replace('/(tabs)/bookings');
         break;
       case 'reschedule':
         setCurrentStep('details_view');
@@ -159,7 +293,12 @@ export default function BookingScreen() {
   };
 
   const handleStep2Continue = () => {
-    setBookingConfirmedDate(selectedDateStr);
+    const dateObj = new Date(calendarYear, calendarMonth, selectedDayNumber);
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayName = dayNames[dateObj.getDay()];
+    const monthShort = MONTH_NAMES[calendarMonth].slice(0, 3);
+    const dateString = `${dayName}, ${selectedDayNumber} ${monthShort} ${calendarYear}`;
+    setBookingConfirmedDate(dateString);
     setBookingConfirmedTime(selectedTimeSlot);
     setCurrentStep('review');
   };
@@ -183,7 +322,7 @@ export default function BookingScreen() {
       urgency: 'STANDARD',
       totalPrice: 1200,
       securityPin: '4829',
-      address: serviceAddress,
+      address: serviceAddress.replace('\n', ' '),
       symptoms: 'Doctor home visit consultation',
       assignedClinician: DOCTOR_ROHAN,
       createdAt: new Date().toISOString(),
@@ -195,8 +334,8 @@ export default function BookingScreen() {
   };
 
   const handleViewMyBookings = () => {
-    // Show Booking Details screen (Image 4)
-    setCurrentStep('details_view');
+    // Navigate directly to My Bookings tab page
+    router.replace('/(tabs)/bookings');
   };
 
   const handleBookAnotherService = () => {
@@ -212,7 +351,7 @@ export default function BookingScreen() {
   };
 
   const handleUpdateBooking = () => {
-    const updatedDate = `${rescheduleDay} May 2025`;
+    const updatedDate = `Fri, ${rescheduleDay} May 2025`;
     setBookingConfirmedDate(updatedDate);
     setBookingConfirmedTime(rescheduleTime);
     Alert.alert('Booking Rescheduled', `Your consultation has been updated to ${updatedDate} at ${rescheduleTime}.`);
@@ -225,7 +364,7 @@ export default function BookingScreen() {
   };
 
   // -------------------------------------------------------------
-  // Top Header Component (Matches all 8 images with Logo & Arrow)
+  // Top Header Component (Matches all 8 images with Official Logo & Arrow)
   // -------------------------------------------------------------
   const renderHeader = (showCloseIcon = false) => (
     <View style={styles.topHeader}>
@@ -233,6 +372,8 @@ export default function BookingScreen() {
         onPress={handleBack}
         style={styles.headerIconButton}
         activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
       >
         <Ionicons
@@ -243,13 +384,11 @@ export default function BookingScreen() {
       </TouchableOpacity>
 
       <View style={styles.headerLogoContainer}>
-        {/* Leaf Icon + Brand Text */}
-        <View style={styles.logoLeafIcon}>
-          <Ionicons name="leaf" size={20} color="#0F5B43" />
-        </View>
-        <Text style={styles.headerLogoText}>
-          Velora <Text style={{ fontWeight: '400' }}>Health</Text>
-        </Text>
+        <Image
+          source={require('../../../assets/images/logo-dark.png')}
+          style={styles.headerBrandLogo}
+          resizeMode="contain"
+        />
       </View>
 
       <View style={styles.headerRightSpacer} />
@@ -271,7 +410,7 @@ export default function BookingScreen() {
             ]}
           >
             {activeStepNumber > 1 ? (
-              <Ionicons name="checkmark" size={14} color="#FFFFFF" />
+              <Ionicons name="checkmark" size={16} color="#FFFFFF" />
             ) : (
               <Text style={styles.stepBadgeTextActive}>1</Text>
             )}
@@ -303,7 +442,7 @@ export default function BookingScreen() {
             ]}
           >
             {activeStepNumber > 2 ? (
-              <Ionicons name="checkmark" size={14} color="#FFFFFF" />
+              <Ionicons name="checkmark" size={16} color="#FFFFFF" />
             ) : (
               <Text
                 style={
@@ -382,78 +521,249 @@ export default function BookingScreen() {
             {renderProgressStepper(1)}
 
             <Text style={styles.pageTitle}>Enter Booking Details</Text>
+            <Text style={styles.pageSubtitle}>
+              Please confirm patient information and doorstep service location
+            </Text>
 
-            {/* Input Card 1: Full Name */}
-            <View style={styles.inputCard}>
-              <View style={styles.inputIconCircle}>
-                <Ionicons name="person-outline" size={20} color="#102820" />
-              </View>
-              <View style={styles.inputCol}>
-                <Text style={styles.inputLabel}>Full Name</Text>
-                <TextInput
-                  value={fullName}
-                  onChangeText={setFullName}
-                  style={styles.inputTextValue}
-                  placeholder="Enter full name"
-                  placeholderTextColor="#94A3B8"
-                />
+            {/* Contextual Service Header Summary Card */}
+            <View style={styles.step1ServiceCard}>
+              <Image
+                source={getProviderAvatar()}
+                style={styles.step1ServiceAvatar}
+                resizeMode="cover"
+              />
+              <View style={styles.step1ServiceInfo}>
+                <View style={styles.step1ServiceBadgeRow}>
+                  <View style={styles.step1ServiceCategoryBadge}>
+                    <Ionicons name="sparkles" size={11} color="#0F5B43" style={{ marginRight: 3 }} />
+                    <Text style={styles.step1ServiceCategoryText}>Doorstep Care</Text>
+                  </View>
+                  <Text style={styles.step1ServicePriceText}>₹1,200</Text>
+                </View>
+                <Text style={styles.step1ServiceTitle} numberOfLines={1}>
+                  {serviceTitle}
+                </Text>
+                <Text style={styles.step1ServiceProvider} numberOfLines={1}>
+                  {providerName} • Consultant Physician
+                </Text>
               </View>
             </View>
 
-            {/* Input Card 2: Phone Number */}
-            <View style={styles.inputCard}>
-              <View style={styles.inputIconCircle}>
-                <Ionicons name="call-outline" size={20} color="#102820" />
-              </View>
-              <View style={styles.inputCol}>
-                <Text style={styles.inputLabel}>Phone Number</Text>
-                <TextInput
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
-                  keyboardType="phone-pad"
-                  style={styles.inputTextValue}
-                  placeholder="+91 00000 00000"
-                  placeholderTextColor="#94A3B8"
-                />
+            {/* "Booking For" Patient Segment Switcher */}
+            <View style={styles.patientSelectorCard}>
+              <Text style={styles.patientSelectorTitle}>Who is this appointment for?</Text>
+              <View style={styles.patientTabsRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.patientTabPill,
+                    patientType === 'myself' && styles.patientTabPillActive,
+                  ]}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    setPatientType('myself');
+                    setFullName('Arjun Mehta');
+                    setPhoneNumber('+91 98765 43210');
+                  }}
+                >
+                  <Ionicons
+                    name="person"
+                    size={13}
+                    color={patientType === 'myself' ? '#FFFFFF' : '#0F5B43'}
+                    style={{ marginRight: 4 }}
+                  />
+                  <Text
+                    style={[
+                      styles.patientTabText,
+                      patientType === 'myself' && styles.patientTabTextActive,
+                    ]}
+                  >
+                    Myself
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.patientTabPill,
+                    patientType === 'family' && styles.patientTabPillActive,
+                  ]}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    setPatientType('family');
+                    setFullName('Sneha Mehta');
+                  }}
+                >
+                  <Ionicons
+                    name="people"
+                    size={13}
+                    color={patientType === 'family' ? '#FFFFFF' : '#0F5B43'}
+                    style={{ marginRight: 4 }}
+                  />
+                  <Text
+                    style={[
+                      styles.patientTabText,
+                      patientType === 'family' && styles.patientTabTextActive,
+                    ]}
+                  >
+                    Family
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.patientTabPill,
+                    patientType === 'senior' && styles.patientTabPillActive,
+                  ]}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    setPatientType('senior');
+                    setFullName('Ramesh Mehta (Senior)');
+                  }}
+                >
+                  <Ionicons
+                    name="heart"
+                    size={13}
+                    color={patientType === 'senior' ? '#FFFFFF' : '#0F5B43'}
+                    style={{ marginRight: 4 }}
+                  />
+                  <Text
+                    style={[
+                      styles.patientTabText,
+                      patientType === 'senior' && styles.patientTabTextActive,
+                    ]}
+                  >
+                    Senior Care
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
 
-            {/* Input Card 3: Email Address */}
-            <View style={styles.inputCard}>
-              <View style={styles.inputIconCircle}>
-                <Ionicons name="mail-outline" size={20} color="#102820" />
+            {/* Input Form Fields Container */}
+            <View style={styles.formSectionContainer}>
+              <Text style={styles.formSectionHeading}>Patient & Contact Details</Text>
+
+              {/* Input Card 1: Full Name */}
+              <View style={styles.inputCard}>
+                <View style={styles.inputIconCircle}>
+                  <Ionicons name="person-outline" size={18} color="#0F5B43" />
+                </View>
+                <View style={styles.inputCol}>
+                  <Text style={styles.inputLabel}>Full Name</Text>
+                  <TextInput
+                    value={fullName}
+                    onChangeText={setFullName}
+                    style={styles.inputTextValue}
+                    placeholder="Enter full name"
+                    placeholderTextColor="#94A3B8"
+                  />
+                </View>
               </View>
-              <View style={styles.inputCol}>
-                <Text style={styles.inputLabel}>Email Address</Text>
-                <TextInput
-                  value={emailAddress}
-                  onChangeText={setEmailAddress}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  style={styles.inputTextValue}
-                  placeholder="name@example.com"
-                  placeholderTextColor="#94A3B8"
-                />
+
+              {/* Input Card 2: Phone Number */}
+              <View style={styles.inputCard}>
+                <View style={styles.inputIconCircle}>
+                  <Ionicons name="call-outline" size={18} color="#0F5B43" />
+                </View>
+                <View style={styles.inputCol}>
+                  <Text style={styles.inputLabel}>Phone Number</Text>
+                  <TextInput
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                    keyboardType="phone-pad"
+                    style={styles.inputTextValue}
+                    placeholder="+91 00000 00000"
+                    placeholderTextColor="#94A3B8"
+                  />
+                </View>
+                <View style={styles.inputVerifiedPill}>
+                  <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 3 }} />
+                  <Text style={styles.inputVerifiedText}>Verified</Text>
+                </View>
+              </View>
+
+              {/* Input Card 3: Email Address */}
+              <View style={styles.inputCard}>
+                <View style={styles.inputIconCircle}>
+                  <Ionicons name="mail-outline" size={18} color="#0F5B43" />
+                </View>
+                <View style={styles.inputCol}>
+                  <Text style={styles.inputLabel}>Email Address</Text>
+                  <TextInput
+                    value={emailAddress}
+                    onChangeText={setEmailAddress}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    style={styles.inputTextValue}
+                    placeholder="name@example.com"
+                    placeholderTextColor="#94A3B8"
+                  />
+                </View>
+                <View style={styles.inputVerifiedPill}>
+                  <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 3 }} />
+                  <Text style={styles.inputVerifiedText}>Verified</Text>
+                </View>
+              </View>
+
+              {/* Input Card 4: Service Address */}
+              <View style={styles.inputCard}>
+                <View style={styles.inputIconCircle}>
+                  <Ionicons name="location-outline" size={18} color="#0F5B43" />
+                </View>
+                <View style={styles.inputCol}>
+                  <View style={styles.addressLabelRow}>
+                    <Text style={styles.inputLabel}>Service Address</Text>
+                    <View style={styles.defaultAddressTag}>
+                      <Text style={styles.defaultAddressTagText}>Home</Text>
+                    </View>
+                  </View>
+                  <TextInput
+                    value={serviceAddress}
+                    onChangeText={setServiceAddress}
+                    multiline
+                    style={styles.inputTextValue}
+                    placeholder="Enter street, apartment, city, pincode"
+                    placeholderTextColor="#94A3B8"
+                  />
+                </View>
+                <Ionicons name="chevron-forward" size={18} color="#6B7E75" />
               </View>
             </View>
 
-            {/* Input Card 4: Service Address */}
-            <View style={styles.inputCard}>
-              <View style={styles.inputIconCircle}>
-                <Ionicons name="location-outline" size={20} color="#102820" />
+            {/* Visit Reason / Symptoms (Optional) */}
+            <View style={styles.visitReasonCard}>
+              <View style={styles.visitReasonHeader}>
+                <Ionicons name="medkit-outline" size={15} color="#0F5B43" style={{ marginRight: 6 }} />
+                <Text style={styles.visitReasonTitle}>Reason for Visit (Optional)</Text>
               </View>
-              <View style={styles.inputCol}>
-                <Text style={styles.inputLabel}>Service Address</Text>
-                <TextInput
-                  value={serviceAddress}
-                  onChangeText={setServiceAddress}
-                  multiline
-                  style={styles.inputTextValue}
-                  placeholder="Enter street, apartment, city, pincode"
-                  placeholderTextColor="#94A3B8"
-                />
+              <View style={styles.reasonChipsRow}>
+                {['General Checkup', 'Fever / Cold', 'Blood Pressure', 'Bedside Care'].map((tag) => (
+                  <TouchableOpacity
+                    key={tag}
+                    style={[
+                      styles.reasonChip,
+                      selectedReason === tag && styles.reasonChipActive,
+                    ]}
+                    activeOpacity={0.75}
+                    onPress={() => setSelectedReason(selectedReason === tag ? '' : tag)}
+                  >
+                    <Text
+                      style={[
+                        styles.reasonChipText,
+                        selectedReason === tag && styles.reasonChipTextActive,
+                      ]}
+                    >
+                      {tag}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
-              <Ionicons name="chevron-forward" size={18} color="#64748B" />
+            </View>
+
+            {/* Trust & Safety Assurance Banner */}
+            <View style={styles.step1TrustBanner}>
+              <Ionicons name="shield-checkmark" size={16} color="#0F5B43" style={{ marginRight: 8 }} />
+              <Text style={styles.step1TrustText}>
+                100% Background-Verified Clinician • Sterile Kit • Free Rescheduling
+              </Text>
             </View>
           </ScrollView>
 
@@ -464,7 +774,7 @@ export default function BookingScreen() {
               onPress={handleStep1Continue}
               activeOpacity={0.88}
             >
-              <Text style={styles.primaryActionButtonText}>Continue →</Text>
+              <Text style={styles.primaryActionButtonText}>Continue to Schedule →</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -484,57 +794,86 @@ export default function BookingScreen() {
 
             <Text style={styles.pageTitle}>Choose Date & Time</Text>
 
-            {/* Select Date Section */}
+            {/* Select Date Section with Full Interactive Calendar */}
             <View style={styles.sectionHeaderRow}>
               <Text style={styles.sectionHeadingText}>Select Date</Text>
               <Ionicons name="calendar-outline" size={20} color="#102820" />
             </View>
 
-            {/* Horizontal Day Selector Pills */}
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.dayPillsScroll}
-            >
-              {SCHEDULE_DAYS.map((day, idx) => {
-                const isSelected = selectedDayIndex === idx;
-                return (
-                  <TouchableOpacity
-                    key={day.dayNum}
-                    onPress={() => setSelectedDayIndex(idx)}
-                    activeOpacity={0.85}
-                    style={[
-                      styles.dayPillCard,
-                      isSelected ? styles.dayPillCardActive : styles.dayPillCardInactive,
-                    ]}
-                  >
-                    <Text
+            <View style={styles.calendarCard}>
+              {/* Calendar Month Header with Prev/Next Controls */}
+              <View style={styles.calendarHeaderRow}>
+                <TouchableOpacity
+                  onPress={handlePrevMonth}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  activeOpacity={0.7}
+                  accessibilityLabel="Previous month"
+                >
+                  <Ionicons name="chevron-back" size={20} color="#102820" />
+                </TouchableOpacity>
+                <Text style={styles.calendarMonthText}>
+                  {MONTH_NAMES[calendarMonth]} {calendarYear}
+                </Text>
+                <TouchableOpacity
+                  onPress={handleNextMonth}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  activeOpacity={0.7}
+                  accessibilityLabel="Next month"
+                >
+                  <Ionicons name="chevron-forward" size={20} color="#102820" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Weekday Labels (Mon - Sun) */}
+              <View style={styles.calendarWeekdaysRow}>
+                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((w) => (
+                  <Text key={w} style={styles.calendarWeekdayLabel}>
+                    {w}
+                  </Text>
+                ))}
+              </View>
+
+              {/* Full Month Calendar Grid */}
+              <View style={styles.calendarDaysGrid}>
+                {/* Empty cells before 1st of month */}
+                {Array.from({ length: firstDayOffset }).map((_, i) => (
+                  <View key={`empty-${i}`} style={styles.calendarDayCell} />
+                ))}
+
+                {/* Day cells for the month */}
+                {Array.from({ length: daysInMonth }).map((_, i) => {
+                  const d = i + 1;
+                  const isSelected = selectedDayNumber === d;
+                  return (
+                    <TouchableOpacity
+                      key={d}
+                      onPress={() => handleSelectDay(d)}
+                      activeOpacity={0.75}
                       style={[
-                        styles.dayPillDayName,
-                        isSelected ? styles.dayPillTextActive : styles.dayPillTextInactive,
+                        styles.calendarDayCell,
+                        isSelected && styles.calendarDayCellActive,
                       ]}
                     >
-                      {day.dayName}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.dayPillDayNum,
-                        isSelected ? styles.dayPillTextActive : styles.dayPillTextInactive,
-                      ]}
-                    >
-                      {day.dayNum}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
+                      <Text
+                        style={[
+                          styles.calendarDayText,
+                          isSelected && styles.calendarDayTextActive,
+                        ]}
+                      >
+                        {d}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
 
             {/* Select Time Section */}
             <View style={[styles.sectionHeaderRow, { marginTop: 24 }]}>
               <Text style={styles.sectionHeadingText}>Select Time</Text>
             </View>
 
-            {/* Time Slot Grid (2 columns or 3 columns) */}
+            {/* Time Slot Grid (3 columns matching Image 6) */}
             <View style={styles.timeSlotGrid}>
               {SCHEDULE_TIMES.map((time) => {
                 const isSelected = selectedTimeSlot === time;
@@ -578,7 +917,7 @@ export default function BookingScreen() {
       )}
 
       {/* ========================================================================= */}
-      {/* 3. STEP 3: REVIEW & CONFIRM (Image 5)                                     */}
+      {/* 3. STEP 3: REVIEW & CONFIRM (Enhanced UI/UX)                               */}
       {/* ========================================================================= */}
       {currentStep === 'review' && (
         <View style={styles.screenContainer}>
@@ -590,50 +929,154 @@ export default function BookingScreen() {
             {renderProgressStepper(3)}
 
             <Text style={styles.pageTitle}>Review & Confirm</Text>
+            <Text style={styles.pageSubtitle}>
+              Please verify your appointment and patient details before proceeding.
+            </Text>
 
-            {/* Summary Card with Image Thumbnail */}
-            <View style={styles.reviewSummaryCard}>
-              <View style={styles.reviewImageWrap}>
-                <Image
-                  source={require('../../../assets/images/service-doctor.png')}
-                  style={styles.reviewImageThumbnail}
-                  resizeMode="cover"
-                />
+            {/* 1. Doctor & Service Hero Card */}
+            <View style={styles.reviewDoctorCard}>
+              <Image
+                source={getProviderAvatar()}
+                style={styles.reviewDoctorAvatar}
+                resizeMode="cover"
+              />
+              <View style={styles.reviewDoctorInfo}>
+                <View style={styles.reviewVerifiedBadge}>
+                  <Ionicons name="shield-checkmark" size={13} color="#059669" />
+                  <Text style={styles.reviewVerifiedText}>Verified Home Doctor</Text>
+                </View>
+                <Text style={styles.reviewServiceName}>{serviceTitle}</Text>
+                <Text style={styles.reviewDoctorName}>{providerName}</Text>
+                <Text style={styles.reviewDoctorMeta}>MBBS, MD • 8+ Years Experience</Text>
+              </View>
+            </View>
+
+            {/* 2. Schedule & Location Card */}
+            <View style={styles.reviewSectionCard}>
+              <View style={styles.reviewCardHeader}>
+                <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
+                <Text style={styles.reviewCardHeaderText}>Appointment Schedule</Text>
               </View>
 
-              <View style={styles.reviewCardBody}>
-                <Text style={styles.reviewServiceTitle}>
-                  Home Visit Doctor Consultation
+              <View style={styles.reviewItemRow}>
+                <View style={styles.reviewItemIconWrap}>
+                  <Ionicons name="calendar" size={16} color="#102820" />
+                </View>
+                <View style={styles.reviewItemTextCol}>
+                  <Text style={styles.reviewItemLabel}>Date</Text>
+                  <Text style={styles.reviewItemValue}>{bookingConfirmedDate}</Text>
+                </View>
+              </View>
+
+              <View style={styles.reviewInnerDivider} />
+
+              <View style={styles.reviewItemRow}>
+                <View style={styles.reviewItemIconWrap}>
+                  <Ionicons name="time" size={16} color="#102820" />
+                </View>
+                <View style={styles.reviewItemTextCol}>
+                  <Text style={styles.reviewItemLabel}>Time Slot</Text>
+                  <Text style={styles.reviewItemValue}>{bookingConfirmedTime} (30 mins visit)</Text>
+                </View>
+              </View>
+
+              <View style={styles.reviewInnerDivider} />
+
+              <View style={styles.reviewItemRow}>
+                <View style={styles.reviewItemIconWrap}>
+                  <Ionicons name="location" size={16} color="#102820" />
+                </View>
+                <View style={styles.reviewItemTextCol}>
+                  <Text style={styles.reviewItemLabel}>Service Address</Text>
+                  <Text style={styles.reviewItemValue}>{serviceAddress}</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* 3. Patient Information Card */}
+            <View style={styles.reviewSectionCard}>
+              <View style={styles.reviewCardHeader}>
+                <Ionicons name="person-outline" size={18} color="#0F5B43" />
+                <Text style={styles.reviewCardHeaderText}>Patient Information</Text>
+              </View>
+
+              <View style={styles.reviewItemRow}>
+                <View style={styles.reviewItemIconWrap}>
+                  <Ionicons name="person" size={16} color="#102820" />
+                </View>
+                <View style={styles.reviewItemTextCol}>
+                  <Text style={styles.reviewItemLabel}>Patient Name</Text>
+                  <Text style={styles.reviewItemValue}>{fullName} (Self, 34 yrs)</Text>
+                </View>
+              </View>
+
+              <View style={styles.reviewInnerDivider} />
+
+              <View style={styles.reviewItemRow}>
+                <View style={styles.reviewItemIconWrap}>
+                  <Ionicons name="call" size={16} color="#102820" />
+                </View>
+                <View style={styles.reviewItemTextCol}>
+                  <Text style={styles.reviewItemLabel}>Contact Number</Text>
+                  <Text style={styles.reviewItemValue}>{phoneNumber}</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* 4. Bill Details / Pricing Summary Card */}
+            <View style={styles.reviewSectionCard}>
+              <View style={styles.reviewCardHeader}>
+                <Ionicons name="receipt-outline" size={18} color="#0F5B43" />
+                <Text style={styles.reviewCardHeaderText}>Bill Summary</Text>
+              </View>
+
+              <View style={styles.billRow}>
+                <Text style={styles.billLabel}>Doctor Consultation Fee</Text>
+                <Text style={styles.billValue}>₹1,200</Text>
+              </View>
+
+              <View style={styles.billRow}>
+                <Text style={styles.billLabel}>Home Visit Convenience</Text>
+                <View style={styles.freeBadgeRow}>
+                  <Text style={styles.billStrikeValue}>₹200</Text>
+                  <Text style={styles.freeBadgeText}>FREE</Text>
+                </View>
+              </View>
+
+              <View style={styles.billRow}>
+                <Text style={styles.billLabel}>Medical Sanitization Kit</Text>
+                <Text style={styles.freeBadgeText}>FREE</Text>
+              </View>
+
+              <View style={styles.reviewInnerDivider} />
+
+              <View style={[styles.billRow, { marginTop: 4 }]}>
+                <Text style={styles.billTotalLabel}>Total Payable Amount</Text>
+                <Text style={styles.billTotalValue}>₹1,200</Text>
+              </View>
+            </View>
+
+            {/* 5. Trust & Cancellation Policy Banner */}
+            <View style={styles.trustBanner}>
+              <Ionicons name="shield-checkmark-outline" size={20} color="#0F5B43" />
+              <View style={styles.trustBannerTextCol}>
+                <Text style={styles.trustBannerTitle}>Free Cancellation & Rescheduling</Text>
+                <Text style={styles.trustBannerSub}>
+                  Cancel or change your slot up to 2 hours before the visit with 100% refund.
                 </Text>
-
-                <View style={styles.reviewDetailRow}>
-                  <Ionicons name="calendar-outline" size={17} color="#0F5B43" />
-                  <Text style={styles.reviewDetailText}>
-                    Date: <Text style={styles.reviewDetailBold}>{bookingConfirmedDate}</Text>
-                  </Text>
-                </View>
-
-                <View style={styles.reviewDetailRow}>
-                  <Ionicons name="time-outline" size={17} color="#0F5B43" />
-                  <Text style={styles.reviewDetailText}>
-                    Time: <Text style={styles.reviewDetailBold}>{bookingConfirmedTime}</Text>
-                  </Text>
-                </View>
-
-                <View style={styles.reviewDetailRow}>
-                  <Ionicons name="location-outline" size={17} color="#0F5B43" />
-                  <Text style={styles.reviewDetailText}>
-                    Address: <Text style={styles.reviewDetailBold}>{serviceAddress}</Text>
-                  </Text>
-                </View>
               </View>
             </View>
           </ScrollView>
 
-          {/* Sticky Bottom Action Button */}
-          <View style={styles.bottomActionBar}>
+          {/* Sticky Bottom Action Bar with Total on Left */}
+          <View style={styles.reviewBottomBar}>
+            <View style={styles.reviewBottomPriceCol}>
+              <Text style={styles.reviewBottomPriceLabel}>Total Payable</Text>
+              <Text style={styles.reviewBottomPriceValue}>₹1,200</Text>
+            </View>
+
             <TouchableOpacity
-              style={styles.primaryActionButton}
+              style={styles.reviewBottomButton}
               onPress={handleStep3ProceedToPayment}
               activeOpacity={0.88}
             >
@@ -642,9 +1085,8 @@ export default function BookingScreen() {
           </View>
         </View>
       )}
-
       {/* ========================================================================= */}
-      {/* 4. PAYMENT SCREEN (Image 8)                                              */}
+      {/* 4. PAYMENT SCREEN (Enhanced UI/UX)                                        */}
       {/* ========================================================================= */}
       {currentStep === 'payment' && (
         <View style={styles.screenContainer}>
@@ -655,100 +1097,164 @@ export default function BookingScreen() {
           >
             <Text style={styles.pageTitle}>Payment</Text>
             <Text style={styles.pageSubtitle}>
-              Complete your booking by making a secure payment.
+              Complete your booking with 100% safe & encrypted payment.
             </Text>
 
-            {/* Booking Amount Mint Card */}
+            {/* 1. Enhanced Booking Amount Card with Breakdown Pill */}
             <View style={styles.bookingAmountCard}>
-              <Text style={styles.bookingAmountLabel}>Booking Amount</Text>
-              <Text style={styles.bookingAmountValue}>₹1,200</Text>
+              <View style={styles.bookingAmountTopRow}>
+                <View>
+                  <Text style={styles.bookingAmountLabel}>Total Amount Payable</Text>
+                  <Text style={styles.bookingAmountValue}>₹1,200</Text>
+                </View>
+                <View style={styles.instantRefundBadge}>
+                  <Ionicons name="shield-checkmark" size={14} color="#0F5B43" />
+                  <Text style={styles.instantRefundText}>Safe Checkout</Text>
+                </View>
+              </View>
+
+              <View style={styles.amountBreakdownPill}>
+                <Text style={styles.amountBreakdownPillText}>
+                  Home Doctor Visit • Dr. Arjun Mehta • {bookingConfirmedDate}
+                </Text>
+              </View>
             </View>
 
-            {/* Payment Options Radio List */}
-            <View style={styles.paymentOptionsList}>
+            {/* 2. Interactive Payment Methods List */}
+            <View style={styles.paymentOptionsContainer}>
               {/* Option 1: UPI */}
               <TouchableOpacity
                 onPress={() => setPaymentMethod('UPI')}
                 activeOpacity={0.85}
                 style={[
-                  styles.paymentOptionCard,
-                  paymentMethod === 'UPI' && styles.paymentOptionCardActive,
+                  styles.paymentOptionItem,
+                  paymentMethod === 'UPI' && styles.paymentOptionItemActive,
                 ]}
               >
                 <View style={styles.paymentOptionLeft}>
-                  <View style={styles.radioOuter}>
-                    {paymentMethod === 'UPI' && <View style={styles.radioInner} />}
+                  <View style={styles.upiIconBox}>
+                    <Ionicons name="flash-outline" size={18} color="#0F5B43" />
                   </View>
-                  <View style={styles.paymentOptionTextWrap}>
-                    <Text style={styles.paymentOptionTitle}>UPI</Text>
-                    <View style={styles.upiBadgesRow}>
-                      <View style={styles.upiBadge}>
-                        <Text style={styles.upiBadgeText}>GPay</Text>
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                      <Text style={styles.paymentOptionTitle}>UPI</Text>
+                      <View style={styles.popularBadge}>
+                        <Text style={styles.popularBadgeText}>FASTEST</Text>
                       </View>
-                      <View style={styles.upiBadge}>
-                        <Text style={styles.upiBadgeText}>PhonePe</Text>
-                      </View>
-                      <View style={styles.upiBadge}>
-                        <Text style={styles.upiBadgeText}>Paytm</Text>
-                      </View>
+                    </View>
+                    <Text style={styles.paymentOptionSub}>Google Pay, PhonePe, Paytm & UPI ID</Text>
+                  </View>
+                </View>
+
+                <View style={styles.radioOuter}>
+                  {paymentMethod === 'UPI' && <View style={styles.radioInner} />}
+                </View>
+              </TouchableOpacity>
+
+              {/* UPI Sub-option when active */}
+              {paymentMethod === 'UPI' && (
+                <View style={styles.upiExpandedContent}>
+                  <Text style={styles.upiExpandedLabel}>Select your preferred app:</Text>
+                  <View style={styles.upiAppsGrid}>
+                    <View style={styles.upiAppPill}>
+                      <Text style={[styles.upiAppPillText, { color: '#4285F4' }]}>Google Pay</Text>
+                    </View>
+                    <View style={styles.upiAppPill}>
+                      <Text style={[styles.upiAppPillText, { color: '#5F259F' }]}>PhonePe</Text>
+                    </View>
+                    <View style={styles.upiAppPill}>
+                      <Text style={[styles.upiAppPillText, { color: '#00BAF2' }]}>Paytm</Text>
                     </View>
                   </View>
                 </View>
-              </TouchableOpacity>
+              )}
+
+              <View style={styles.paymentDivider} />
 
               {/* Option 2: Debit / Credit Card */}
               <TouchableOpacity
                 onPress={() => setPaymentMethod('CARD')}
                 activeOpacity={0.85}
                 style={[
-                  styles.paymentOptionCard,
-                  paymentMethod === 'CARD' && styles.paymentOptionCardActive,
+                  styles.paymentOptionItem,
+                  paymentMethod === 'CARD' && styles.paymentOptionItemActive,
                 ]}
               >
                 <View style={styles.paymentOptionLeft}>
-                  <View style={styles.radioOuter}>
-                    {paymentMethod === 'CARD' && <View style={styles.radioInner} />}
+                  <View style={styles.upiIconBox}>
+                    <Ionicons name="card-outline" size={18} color="#0F5B43" />
                   </View>
-                  <Ionicons name="card-outline" size={20} color="#102820" style={{ marginLeft: 6, marginRight: 8 }} />
-                  <Text style={styles.paymentOptionTitle}>Debit / Credit Card</Text>
+                  <View>
+                    <Text style={styles.paymentOptionTitle}>Debit / Credit Card</Text>
+                    <Text style={styles.paymentOptionSub}>Visa, Mastercard, RuPay & Amex</Text>
+                  </View>
+                </View>
+                <View style={styles.radioOuter}>
+                  {paymentMethod === 'CARD' && <View style={styles.radioInner} />}
                 </View>
               </TouchableOpacity>
+
+              <View style={styles.paymentDivider} />
 
               {/* Option 3: Net Banking */}
               <TouchableOpacity
                 onPress={() => setPaymentMethod('NETBANKING')}
                 activeOpacity={0.85}
                 style={[
-                  styles.paymentOptionCard,
-                  paymentMethod === 'NETBANKING' && styles.paymentOptionCardActive,
+                  styles.paymentOptionItem,
+                  paymentMethod === 'NETBANKING' && styles.paymentOptionItemActive,
                 ]}
               >
                 <View style={styles.paymentOptionLeft}>
-                  <View style={styles.radioOuter}>
-                    {paymentMethod === 'NETBANKING' && <View style={styles.radioInner} />}
+                  <View style={styles.upiIconBox}>
+                    <Ionicons name="business-outline" size={18} color="#0F5B43" />
                   </View>
-                  <Ionicons name="business-outline" size={20} color="#102820" style={{ marginLeft: 6, marginRight: 8 }} />
-                  <Text style={styles.paymentOptionTitle}>Net Banking</Text>
+                  <View>
+                    <Text style={styles.paymentOptionTitle}>Net Banking</Text>
+                    <Text style={styles.paymentOptionSub}>All Indian Major Banks Supported</Text>
+                  </View>
+                </View>
+                <View style={styles.radioOuter}>
+                  {paymentMethod === 'NETBANKING' && <View style={styles.radioInner} />}
                 </View>
               </TouchableOpacity>
 
-              {/* Option 4: Wallet */}
+              <View style={styles.paymentDivider} />
+
+              {/* Option 4: Wallets */}
               <TouchableOpacity
                 onPress={() => setPaymentMethod('WALLET')}
                 activeOpacity={0.85}
                 style={[
-                  styles.paymentOptionCard,
-                  paymentMethod === 'WALLET' && styles.paymentOptionCardActive,
+                  styles.paymentOptionItem,
+                  paymentMethod === 'WALLET' && styles.paymentOptionItemActive,
                 ]}
               >
                 <View style={styles.paymentOptionLeft}>
-                  <View style={styles.radioOuter}>
-                    {paymentMethod === 'WALLET' && <View style={styles.radioInner} />}
+                  <View style={styles.upiIconBox}>
+                    <Ionicons name="wallet-outline" size={18} color="#0F5B43" />
                   </View>
-                  <Ionicons name="wallet-outline" size={20} color="#102820" style={{ marginLeft: 6, marginRight: 8 }} />
-                  <Text style={styles.paymentOptionTitle}>Wallet</Text>
+                  <View>
+                    <Text style={styles.paymentOptionTitle}>Wallets</Text>
+                    <Text style={styles.paymentOptionSub}>Amazon Pay, Paytm Wallet & Mobikwik</Text>
+                  </View>
+                </View>
+                <View style={styles.radioOuter}>
+                  {paymentMethod === 'WALLET' && <View style={styles.radioInner} />}
                 </View>
               </TouchableOpacity>
+            </View>
+
+            {/* 3. Security Trust Badges */}
+            <View style={styles.paymentTrustRow}>
+              <View style={styles.paymentTrustItem}>
+                <Ionicons name="lock-closed" size={15} color="#0F5B43" />
+                <Text style={styles.paymentTrustText}>256-Bit SSL Encrypted</Text>
+              </View>
+              <View style={styles.paymentTrustItem}>
+                <Ionicons name="shield-checkmark" size={15} color="#0F5B43" />
+                <Text style={styles.paymentTrustText}>PCI-DSS Compliant</Text>
+              </View>
             </View>
           </ScrollView>
 
@@ -759,60 +1265,156 @@ export default function BookingScreen() {
               onPress={handleStep4Pay}
               activeOpacity={0.88}
             >
-              <Text style={styles.primaryActionButtonText}>Pay ₹1,200 →</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Ionicons name="lock-closed" size={16} color="#FFFFFF" />
+                <Text style={styles.primaryActionButtonText}>Pay ₹1,200 Securely →</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
       )}
 
       {/* ========================================================================= */}
-      {/* 5. BOOKING CONFIRMED! SCREEN (Image 7)                                    */}
+      {/* 5. BOOKING CONFIRMED! SCREEN (Enhanced UI/UX)                             */}
       {/* ========================================================================= */}
       {currentStep === 'confirmed' && (
         <View style={styles.screenContainer}>
-          {renderHeader(true)}
           <ScrollView
-            contentContainerStyle={[styles.scrollContent, { alignItems: 'center' }]}
+            contentContainerStyle={[styles.scrollContent, { alignItems: 'center', paddingTop: 24, paddingBottom: 40 }]}
             showsVerticalScrollIndicator={false}
           >
             {/* Celebration Icon with Confetti particles */}
             <View style={styles.celebrationContainer}>
-              <View style={styles.confettiParticle1} />
-              <View style={styles.confettiParticle2} />
-              <View style={styles.confettiParticle3} />
-              <View style={styles.confettiParticle4} />
-              <View style={styles.confettiParticle5} />
-              <View style={styles.confettiParticle6} />
+              <View style={[styles.confettiDash, { top: 4, left: 16, backgroundColor: '#34D399', transform: [{ rotate: '-30deg' }] }]} />
+              <View style={[styles.confettiDash, { top: 0, right: 26, backgroundColor: '#FBBF24', transform: [{ rotate: '45deg' }] }]} />
+              <View style={[styles.confettiDash, { top: 22, right: 10, backgroundColor: '#F59E0B', transform: [{ rotate: '15deg' }] }]} />
+              <View style={[styles.confettiDash, { bottom: 18, left: 14, backgroundColor: '#FBBF24', transform: [{ rotate: '30deg' }] }]} />
+              <View style={[styles.confettiDash, { bottom: 16, right: 18, backgroundColor: '#34D399', transform: [{ rotate: '-45deg' }] }]} />
 
-              <View style={styles.confirmedCheckCircle}>
-                <Ionicons name="checkmark" size={42} color="#FFFFFF" />
+              <View style={styles.celebrationOuterGlow}>
+                <View style={styles.confirmedCheckCircle}>
+                  <Ionicons name="checkmark" size={38} color="#FFFFFF" />
+                </View>
               </View>
             </View>
 
             <Text style={styles.confirmedTitle}>Booking Confirmed!</Text>
             <Text style={styles.confirmedSubtitle}>
-              Your home visit doctor consultation has been successfully booked.
+              Your home visit consultation has been successfully scheduled.
             </Text>
 
-            {/* Confirmed Details Card */}
-            <View style={styles.confirmedSummaryCard}>
-              <View style={styles.confirmedInfoRow}>
-                <Text style={styles.confirmedInfoLabel}>Date</Text>
-                <Text style={styles.confirmedInfoValue}>{bookingConfirmedDate}</Text>
+            {/* Booking Reference Pill */}
+            <TouchableOpacity
+              style={styles.bookingRefPill}
+              activeOpacity={0.85}
+              onPress={handleViewMyBookings}
+            >
+              <Text style={styles.bookingRefLabel}>Booking Reference:</Text>
+              <Text style={styles.bookingRefCode}>#VEL-2025-8492</Text>
+              <Ionicons name="copy-outline" size={15} color="#0F5B43" />
+            </TouchableOpacity>
+
+            {/* 1. Bedside Verification PIN Card (Crucial Healthcare Feature) */}
+            <View style={styles.bedsidePinCard}>
+              <View style={styles.bedsidePinHeader}>
+                <Ionicons name="key" size={18} color="#0F5B43" />
+                <Text style={styles.bedsidePinTitle}>Bedside Verification PIN</Text>
               </View>
-              <View style={styles.confirmedDivider} />
-              <View style={styles.confirmedInfoRow}>
-                <Text style={styles.confirmedInfoLabel}>Time</Text>
-                <Text style={styles.confirmedInfoValue}>{bookingConfirmedTime}</Text>
+              <View style={styles.pinDigitsRow}>
+                {['4', '8', '2', '9'].map((digit, idx) => (
+                  <View key={idx} style={styles.pinDigitBox}>
+                    <Text style={styles.pinDigitText}>{digit}</Text>
+                  </View>
+                ))}
               </View>
+              <Text style={styles.bedsidePinHelp}>
+                Share this 4-digit code with {providerName} when they arrive at your home to verify identity.
+              </Text>
+            </View>
+
+            {/* 2. Confirmed Summary Card with Doctor Info */}
+            <TouchableOpacity
+              style={styles.confirmedSummaryCard}
+              activeOpacity={0.9}
+              onPress={handleViewMyBookings}
+            >
+              {/* Doctor Row */}
+              <View style={styles.confirmedDoctorRow}>
+                <Image
+                  source={getProviderAvatar()}
+                  style={styles.confirmedDoctorAvatar}
+                  resizeMode="cover"
+                />
+                <View style={styles.confirmedDoctorCol}>
+                  <Text style={styles.confirmedDoctorName}>{providerName}</Text>
+                  <Text style={styles.confirmedDoctorRole}>{serviceTitle}</Text>
+                  <View style={styles.confirmedBadgeSmall}>
+                    <Text style={styles.confirmedBadgeSmallText}>Doctor Assigned</Text>
+                  </View>
+                </View>
+              </View>
+
               <View style={styles.confirmedDivider} />
+
               <View style={styles.confirmedInfoRow}>
-                <Text style={styles.confirmedInfoLabel}>Address</Text>
-                <Text style={styles.confirmedInfoValue}>{serviceAddress}</Text>
+                <Ionicons name="calendar-outline" size={19} color="#102820" style={{ marginRight: 12 }} />
+                <View>
+                  <Text style={styles.confirmedRowLabel}>Date</Text>
+                  <Text style={styles.confirmedInfoValue}>{bookingConfirmedDate}</Text>
+                </View>
+              </View>
+
+              <View style={styles.confirmedDivider} />
+
+              <View style={styles.confirmedInfoRow}>
+                <Ionicons name="time-outline" size={19} color="#102820" style={{ marginRight: 12 }} />
+                <View>
+                  <Text style={styles.confirmedRowLabel}>Time Slot</Text>
+                  <Text style={styles.confirmedInfoValue}>{bookingConfirmedTime}</Text>
+                </View>
+              </View>
+
+              <View style={styles.confirmedDivider} />
+
+              <View style={styles.confirmedInfoRow}>
+                <Ionicons name="location-outline" size={19} color="#102820" style={{ marginRight: 12 }} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.confirmedRowLabel}>Visit Address</Text>
+                  <Text style={[styles.confirmedInfoValue, { flex: 1 }]}>{serviceAddress}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            {/* 3. Next Steps Timeline */}
+            <View style={styles.nextStepsCard}>
+              <Text style={styles.nextStepsHeading}>What happens next?</Text>
+
+              <View style={styles.timelineItem}>
+                <View style={styles.timelineDotActive} />
+                <View style={styles.timelineTextCol}>
+                  <Text style={styles.timelineTitle}>1. Confirmation SMS & Email</Text>
+                  <Text style={styles.timelineSub}>Details sent to your registered phone & email.</Text>
+                </View>
+              </View>
+
+              <View style={styles.timelineItem}>
+                <View style={styles.timelineDot} />
+                <View style={styles.timelineTextCol}>
+                  <Text style={styles.timelineTitle}>2. Doctor Pre-Visit Call</Text>
+                  <Text style={styles.timelineSub}>Doctor will call 15 minutes before reaching.</Text>
+                </View>
+              </View>
+
+              <View style={styles.timelineItem}>
+                <View style={styles.timelineDot} />
+                <View style={styles.timelineTextCol}>
+                  <Text style={styles.timelineTitle}>3. Home Consultation</Text>
+                  <Text style={styles.timelineSub}>Comprehensive checkup, prescription & guidance.</Text>
+                </View>
               </View>
             </View>
 
-            {/* Action Buttons */}
+            {/* 4. Action Buttons */}
             <View style={styles.confirmedActionsWrap}>
               <TouchableOpacity
                 style={styles.primaryActionButton}
@@ -833,90 +1435,308 @@ export default function BookingScreen() {
           </ScrollView>
         </View>
       )}
-
       {/* ========================================================================= */}
-      {/* 6. BOOKING DETAILS SCREEN (Image 4)                                       */}
+      {/* 6. BOOKING DETAILS SCREEN (Image 4 Improved UI/UX)                        */}
       {/* ========================================================================= */}
       {currentStep === 'details_view' && (
         <View style={styles.screenContainer}>
-          {renderHeader(false)}
+          {/* Top Bar with Back, Logo & Helpdesk */}
+          <View style={styles.detailsHeaderBar}>
+            <TouchableOpacity
+              style={styles.detailsHeaderBtn}
+              activeOpacity={0.7}
+              onPress={handleBack}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#102820" />
+            </TouchableOpacity>
+
+            <Image
+              source={require('../../../assets/images/logo-dark.png')}
+              style={styles.detailsHeaderLogo}
+              resizeMode="contain"
+            />
+
+            <TouchableOpacity
+              style={styles.detailsHeaderBtn}
+              activeOpacity={0.7}
+              onPress={() => {
+                Alert.alert(
+                  'Vellora Care Desk',
+                  'Need assistance with this booking? Our 24/7 care team is available.',
+                  [
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Call Helpline', onPress: () => Linking.openURL('tel:+918049108800') },
+                  ]
+                );
+              }}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            >
+              <Ionicons name="help-circle-outline" size={24} color="#0F5B43" />
+            </TouchableOpacity>
+          </View>
+
           <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.pageTitle}>Booking Details</Text>
+            {/* Title & Reference Info */}
+            <View style={styles.detailsHeadingWrap}>
+              <Text style={styles.pageTitle}>Booking Details</Text>
+              <View style={styles.detailsRefBadgeRow}>
+                <Text style={styles.detailsRefCode}>
+                  {typeof params.serviceId === 'string' && params.serviceId.startsWith('bkg-')
+                    ? `#VEL-2025-${params.serviceId.slice(4).toUpperCase()}`
+                    : '#VEL-2025-8492'}
+                </Text>
+                <View style={styles.detailsRefDot} />
+                <Text style={styles.detailsRefType}>Doorstep Clinical Care</Text>
+              </View>
+            </View>
 
-            {/* Booking Details Card */}
-            <View style={styles.bookingDetailsCard}>
-              {/* Doctor Avatar Header */}
-              <View style={styles.detailsCardHeader}>
+
+
+            {/* 2. Top Doctor / Specialist Card */}
+            <View style={styles.bookingDetailsDoctorCard}>
+              <View style={styles.detailsAvatarWrap}>
                 <Image
-                  source={require('../../../assets/images/doctor-rohan.png')}
+                  source={getProviderAvatar()}
                   style={styles.detailsDoctorAvatar}
                   resizeMode="cover"
                 />
-                <View style={styles.detailsHeaderInfo}>
-                  <Text style={styles.detailsServiceTitle}>Home Visit Consultation</Text>
-                  <View style={styles.confirmedBadge}>
-                    <Text style={styles.confirmedBadgeText}>Confirmed</Text>
+                {bookingStatus !== 'Cancelled' && (
+                  <View style={styles.detailsVerifiedBadge}>
+                    <Ionicons name="shield-checkmark" size={11} color="#FFFFFF" />
                   </View>
+                )}
+              </View>
+
+              <View style={styles.detailsHeaderInfo}>
+                <View style={styles.doctorHeaderNameRow}>
+                  <Text style={styles.detailsDoctorName}>{providerName}</Text>
+                  <View style={styles.doctorRatingTag}>
+                    <Ionicons name="star" size={11} color="#D97706" style={{ marginRight: 2 }} />
+                    <Text style={styles.doctorRatingTagText}>4.9</Text>
+                  </View>
+                </View>
+
+                <Text style={styles.detailsServiceTitle}>{serviceTitle}</Text>
+                <Text style={styles.detailsDoctorSubtext}>
+                  {serviceTitle.includes('Nursing')
+                    ? 'Registered Senior Nurse • Critical Care'
+                    : serviceTitle.includes('Lab')
+                    ? 'Certified Phlebotomist • Sterile Draw'
+                    : serviceTitle.includes('Physio')
+                    ? 'Lead Physiotherapist • BPT, MPT'
+                    : 'Consultant Physician, MBBS, MD'}
+                </Text>
+
+                <View style={styles.doctorBadgeTagsRow}>
+                  <View style={styles.doctorPillTag}>
+                    <Ionicons name="ribbon-outline" size={11} color="#0F5B43" style={{ marginRight: 3 }} />
+                    <Text style={styles.doctorPillTagText}>12+ Yrs Exp</Text>
+                  </View>
+                  <View style={styles.doctorPillTag}>
+                    <Ionicons name="shield-checkmark-outline" size={11} color="#0F5B43" style={{ marginRight: 3 }} />
+                    <Text style={styles.doctorPillTagText}>Verified Clinician</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            {/* 3. Doorstep Bedside Verification PIN */}
+            {bookingStatus !== 'Cancelled' && (
+              <View style={styles.detailsBedsidePinCard}>
+                <View style={styles.bedsidePinLeftCol}>
+                  <View style={styles.bedsidePinIconWrap}>
+                    <Ionicons name="key-outline" size={20} color="#0F5B43" />
+                  </View>
+                  <View style={{ flex: 1, marginLeft: 10 }}>
+                    <Text style={styles.bedsidePinHeading}>Doorstep Verification PIN</Text>
+                    <Text style={styles.bedsidePinSubheading}>
+                      Share this 4-digit code with the clinician upon arrival
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.bedsidePinBadge}>
+                  <Text style={styles.bedsidePinBadgeText}>4 8 2 9</Text>
+                </View>
+              </View>
+            )}
+
+            {/* 4. Appointment & Location Schedule Card */}
+            <View style={styles.bookingDetailsListCard}>
+              <Text style={styles.cardHeaderTitleText}>Schedule & Location</Text>
+
+              {/* Row 1: Date */}
+              <View style={styles.detailsDataRow}>
+                <View style={styles.detailsIconCircle}>
+                  <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
+                </View>
+                <View style={styles.detailsDataCol}>
+                  <Text style={styles.detailsDataLabel}>Scheduled Date</Text>
+                  <Text style={styles.detailsDataValue}>{bookingConfirmedDate}</Text>
                 </View>
               </View>
 
               <View style={styles.detailsCardDivider} />
 
-              {/* Rows */}
+              {/* Row 2: Time */}
               <View style={styles.detailsDataRow}>
-                <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
+                <View style={styles.detailsIconCircle}>
+                  <Ionicons name="time-outline" size={18} color="#0F5B43" />
+                </View>
                 <View style={styles.detailsDataCol}>
-                  <Text style={styles.detailsDataLabel}>Date</Text>
-                  <Text style={styles.detailsDataValue}>{bookingConfirmedDate}</Text>
+                  <Text style={styles.detailsDataLabel}>Time Slot</Text>
+                  <Text style={styles.detailsDataValue}>
+                    {bookingConfirmedTime} (30 mins bedside consultation)
+                  </Text>
                 </View>
               </View>
 
-              <View style={styles.detailsDataRow}>
-                <Ionicons name="time-outline" size={18} color="#0F5B43" />
-                <View style={styles.detailsDataCol}>
-                  <Text style={styles.detailsDataLabel}>Time</Text>
-                  <Text style={styles.detailsDataValue}>{bookingConfirmedTime}</Text>
-                </View>
-              </View>
+              <View style={styles.detailsCardDivider} />
 
+              {/* Row 3: Address */}
               <View style={styles.detailsDataRow}>
-                <Ionicons name="location-outline" size={18} color="#0F5B43" />
+                <View style={styles.detailsIconCircle}>
+                  <Ionicons name="location-outline" size={18} color="#0F5B43" />
+                </View>
                 <View style={styles.detailsDataCol}>
-                  <Text style={styles.detailsDataLabel}>Address</Text>
+                  <Text style={styles.detailsDataLabel}>Service Address</Text>
                   <Text style={styles.detailsDataValue}>{serviceAddress}</Text>
                 </View>
               </View>
 
+              <View style={styles.detailsCardDivider} />
+
+              {/* Row 4: Patient Info */}
               <View style={styles.detailsDataRow}>
-                <Ionicons name="person-outline" size={18} color="#0F5B43" />
+                <View style={styles.detailsIconCircle}>
+                  <Ionicons name="person-outline" size={18} color="#0F5B43" />
+                </View>
                 <View style={styles.detailsDataCol}>
-                  <Text style={styles.detailsDataLabel}>Doctor</Text>
-                  <Text style={styles.detailsDataValue}>Dr. Arjun Mehta</Text>
+                  <Text style={styles.detailsDataLabel}>Patient Details</Text>
+                  <Text style={styles.detailsDataValue}>
+                    {fullName || 'Arjun Sharma'} (Age: 34, Self) • {phoneNumber || '+91 98765 43210'}
+                  </Text>
                 </View>
               </View>
             </View>
 
-            {/* Action Buttons: Reschedule & Cancel */}
-            <View style={styles.detailsActionButtonsCol}>
-              <TouchableOpacity
-                style={styles.rescheduleButton}
-                onPress={handleOpenReschedule}
-                activeOpacity={0.85}
-              >
-                <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
-                <Text style={styles.rescheduleButtonText}>Reschedule</Text>
-              </TouchableOpacity>
+            {/* 5. Payment & Invoice Breakdown Card */}
+            <View style={styles.detailsBillingCard}>
+              <View style={styles.billingHeaderRow}>
+                <Text style={styles.cardHeaderTitleText}>Payment & Receipt</Text>
+                <View style={styles.billingPaidBadge}>
+                  <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 4 }} />
+                  <Text style={styles.billingPaidBadgeText}>Paid Online (UPI)</Text>
+                </View>
+              </View>
+
+              <View style={styles.billRowItem}>
+                <Text style={styles.billRowLabel}>Bedside Consultation</Text>
+                <Text style={styles.billRowValue}>₹1,000</Text>
+              </View>
+
+              <View style={styles.billRowItem}>
+                <Text style={styles.billRowLabel}>Doorstep Transit & Sterile Kit</Text>
+                <Text style={styles.billRowValue}>₹200</Text>
+              </View>
+
+              <View style={styles.billRowItem}>
+                <Text style={styles.billRowLabel}>Healthcare GST (5%)</Text>
+                <Text style={styles.billRowValue}>Included</Text>
+              </View>
+
+              <View style={styles.billRowDivider} />
+
+              <View style={styles.billTotalRow}>
+                <Text style={styles.detailsBillTotalLabel}>Total Amount Paid</Text>
+                <Text style={styles.detailsBillTotalValue}>₹1,200</Text>
+              </View>
 
               <TouchableOpacity
-                style={styles.cancelBookingButton}
-                onPress={handleOpenCancel}
-                activeOpacity={0.85}
+                style={styles.downloadInvoiceBtn}
+                activeOpacity={0.7}
+                onPress={() => {
+                  Alert.alert('Invoice Downloaded', 'Tax invoice #INV-2025-8492 has been saved to your device.');
+                }}
               >
-                <Ionicons name="close" size={18} color="#DC2626" />
-                <Text style={styles.cancelBookingButtonText}>Cancel Booking</Text>
+                <Ionicons name="document-text-outline" size={15} color="#0F5B43" style={{ marginRight: 6 }} />
+                <Text style={styles.downloadInvoiceBtnText}>Download Tax Invoice</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* 6. Home Visit Preparation & Clinical Checklist */}
+            <View style={styles.detailsPreparationCard}>
+              <View style={styles.prepHeaderRow}>
+                <Ionicons name="shield-checkmark" size={18} color="#0F5B43" style={{ marginRight: 8 }} />
+                <Text style={styles.cardHeaderTitleText}>What to expect during your visit</Text>
+              </View>
+
+              <View style={styles.prepStepRow}>
+                <View style={styles.prepNumberCircle}><Text style={styles.prepNumberText}>1</Text></View>
+                <Text style={styles.prepStepText}>
+                  The clinician will call 15 minutes prior to arrival to confirm entry and gate access.
+                </Text>
+              </View>
+
+              <View style={styles.prepStepRow}>
+                <View style={styles.prepNumberCircle}><Text style={styles.prepNumberText}>2</Text></View>
+                <Text style={styles.prepStepText}>
+                  Please keep your previous medical records, prescriptions, and allergy notes handy.
+                </Text>
+              </View>
+
+              <View style={styles.prepStepRow}>
+                <View style={styles.prepNumberCircle}><Text style={styles.prepNumberText}>3</Text></View>
+                <Text style={styles.prepStepText}>
+                  Your official digital e-Prescription (e-Rx) will be synced to your app immediately after the visit.
+                </Text>
+              </View>
+            </View>
+
+            {/* 7. Action Buttons: Reschedule & Cancel */}
+            <View style={styles.detailsActionButtonsCol}>
+              {bookingStatus !== 'Cancelled' ? (
+                <>
+                  <TouchableOpacity
+                    style={styles.rescheduleButton}
+                    onPress={handleOpenReschedule}
+                    activeOpacity={0.85}
+                  >
+                    <Ionicons name="calendar-outline" size={19} color="#0F5B43" />
+                    <Text style={styles.rescheduleButtonText}>Reschedule Appointment</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.cancelBookingButton}
+                    onPress={handleOpenCancel}
+                    activeOpacity={0.85}
+                  >
+                    <Ionicons name="close-circle-outline" size={19} color="#DC2626" />
+                    <Text style={styles.cancelBookingButtonText}>Cancel Booking</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <View style={styles.cancelledNoticeCard}>
+                  <Ionicons name="information-circle" size={20} color="#DC2626" />
+                  <Text style={styles.cancelledNoticeText}>
+                    This appointment has been cancelled. Full refund initiated to original payment source.
+                  </Text>
+                </View>
+              )}
+
+              {/* 24/7 Helpline Link */}
+              <TouchableOpacity
+                style={styles.helplineLinkRow}
+                activeOpacity={0.7}
+                onPress={() => Linking.openURL('tel:+918049108800')}
+              >
+                <Ionicons name="call-outline" size={15} color="#64748B" style={{ marginRight: 6 }} />
+                <Text style={styles.helplineLinkText}>
+                  Need immediate help? Call Care Desk (+91 80 4910 8800)
+                </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -938,25 +1758,19 @@ export default function BookingScreen() {
               Choose a new date and time for your appointment.
             </Text>
 
-            {/* Month Calendar Picker */}
+            {/* Month Calendar Picker Card */}
             <View style={styles.calendarCard}>
               <View style={styles.calendarHeaderRow}>
-                <TouchableOpacity
-                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                  activeOpacity={0.7}
-                >
+                <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }} activeOpacity={0.7}>
                   <Ionicons name="chevron-back" size={20} color="#102820" />
                 </TouchableOpacity>
                 <Text style={styles.calendarMonthText}>May 2025</Text>
-                <TouchableOpacity
-                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                  activeOpacity={0.7}
-                >
+                <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }} activeOpacity={0.7}>
                   <Ionicons name="chevron-forward" size={20} color="#102820" />
                 </TouchableOpacity>
               </View>
 
-              {/* Weekday Labels */}
+              {/* Weekday Labels (Mon - Sun) */}
               <View style={styles.calendarWeekdaysRow}>
                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((w) => (
                   <Text key={w} style={styles.calendarWeekdayLabel}>
@@ -965,14 +1779,9 @@ export default function BookingScreen() {
                 ))}
               </View>
 
-              {/* Calendar Grid (Days 1 to 31) */}
+              {/* Calendar Grid (Days 12 to 25 matching Image 3) */}
               <View style={styles.calendarDaysGrid}>
-                {/* 3 offset empty spaces for May 2025 starting Thursday */}
-                <View style={styles.calendarDayCell} />
-                <View style={styles.calendarDayCell} />
-                <View style={styles.calendarDayCell} />
-
-                {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => {
+                {[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25].map((d) => {
                   const isSelected = rescheduleDay === d;
                   return (
                     <TouchableOpacity
@@ -1055,19 +1864,39 @@ export default function BookingScreen() {
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.pageTitle}>Cancel Booking</Text>
-            <Text style={styles.pageSubtitle}>
+            <Text style={[styles.pageTitle, { textAlign: 'center', marginTop: 10 }]}>
+              Cancel Booking
+            </Text>
+            <Text style={[styles.pageSubtitle, { textAlign: 'center' }]}>
               Are you sure you want to cancel this appointment?
             </Text>
 
-            {/* Summary Card */}
+            {/* Summary Card with Doctor Avatar & Appointment Info */}
             <View style={styles.cancelSummaryCard}>
-              <Text style={styles.cancelSummaryTitle}>
-                Home Visit Doctor Consultation
-              </Text>
-              <Text style={styles.cancelSummaryDateTime}>
-                {bookingConfirmedDate} • {bookingConfirmedTime}
-              </Text>
+              <View style={styles.cancelDoctorHeader}>
+                <Image
+                  source={require('../../../assets/images/doctor-rohan.png')}
+                  style={styles.cancelDoctorAvatar}
+                  resizeMode="cover"
+                />
+                <Text style={styles.cancelSummaryTitle}>
+                  Home Visit{'\n'}Doctor Consultation
+                </Text>
+              </View>
+
+              <View style={styles.cancelDivider} />
+
+              <View style={styles.cancelInfoRow}>
+                <Ionicons name="calendar-outline" size={20} color="#102820" style={{ marginRight: 12 }} />
+                <Text style={styles.cancelInfoValue}>{bookingConfirmedDate}</Text>
+              </View>
+
+              <View style={styles.cancelDivider} />
+
+              <View style={styles.cancelInfoRow}>
+                <Ionicons name="time-outline" size={20} color="#102820" style={{ marginRight: 12 }} />
+                <Text style={styles.cancelInfoValue}>{bookingConfirmedTime}</Text>
+              </View>
             </View>
 
             {/* Reason for Cancellation Dropdown */}
@@ -1087,7 +1916,7 @@ export default function BookingScreen() {
               >
                 {cancelReason}
               </Text>
-              <Ionicons name="chevron-down" size={20} color="#64748B" />
+              <Ionicons name="chevron-down" size={20} color="#102820" />
             </TouchableOpacity>
 
             {/* Action Buttons: Red Cancel Booking & Outline Keep Booking */}
@@ -1154,11 +1983,11 @@ export default function BookingScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FBFAF7',
   },
   screenContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FBFAF7',
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -1174,34 +2003,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F3',
-    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
+    backgroundColor: '#FBFAF7',
   },
   headerIconButton: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   headerLogoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  logoLeafIcon: {
-    width: 24,
-    height: 24,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerLogoText: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#102820',
-    letterSpacing: -0.3,
+  headerBrandLogo: {
+    width: 125,
+    height: 34,
   },
   headerRightSpacer: {
     width: 38,
@@ -1215,16 +2034,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
-    marginBottom: 26,
-    paddingHorizontal: 16,
+    marginBottom: 24,
+    paddingHorizontal: 14,
   },
   stepColumn: {
     alignItems: 'center',
   },
   stepBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1232,43 +2051,46 @@ const styles = StyleSheet.create({
     backgroundColor: '#0F5B43',
   },
   stepBadgeInactive: {
-    backgroundColor: '#F1F5F3',
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
   },
   stepBadgeTextActive: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
+    fontFamily: Typography.fontFamily.sans,
   },
   stepBadgeTextInactive: {
     color: '#64748B',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '500',
+    fontFamily: Typography.fontFamily.sans,
   },
   stepLabel: {
-    marginTop: 5,
+    marginTop: 6,
     fontSize: 12,
+    fontFamily: Typography.fontFamily.sans,
   },
   stepLabelActive: {
     color: '#102820',
-    fontWeight: '700',
+    fontWeight: '600',
   },
   stepLabelInactive: {
     color: '#64748B',
-    fontWeight: '500',
+    fontWeight: '400',
   },
   stepConnector: {
     flex: 1,
     height: 2,
     marginHorizontal: 8,
-    marginBottom: 16,
+    marginBottom: 18,
   },
   stepConnectorGreen: {
     backgroundColor: '#0F5B43',
   },
   stepConnectorInactive: {
-    backgroundColor: '#E2EBE7',
+    backgroundColor: '#DCE9E1',
   },
 
   // -------------------------------------------------------------
@@ -1276,17 +2098,20 @@ const styles = StyleSheet.create({
   // -------------------------------------------------------------
   pageTitle: {
     fontSize: 22,
-    fontWeight: '800',
-    color: '#102820',
+    fontWeight: '600',
+    color: '#0F5B43',
     marginBottom: 16,
-    letterSpacing: -0.4,
+    letterSpacing: -0.3,
+    fontFamily: Typography.fontFamily.sans,
   },
   pageSubtitle: {
-    fontSize: 13,
+    fontSize: 13.5,
+    fontWeight: '400',
     color: '#64748B',
     marginBottom: 20,
     marginTop: -8,
     lineHeight: 18,
+    fontFamily: Typography.fontFamily.sans,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
@@ -1296,35 +2121,165 @@ const styles = StyleSheet.create({
   },
   sectionHeadingText: {
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
   },
 
   // -------------------------------------------------------------
-  // Input Cards (Step 1)
+  // Input Cards & Enhanced Step 1
   // -------------------------------------------------------------
+  step1ServiceCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 12,
+    marginBottom: 14,
+    shadowColor: '#102820',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  step1ServiceAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: '#DCE9E1',
+  },
+  step1ServiceInfo: {
+    flex: 1,
+  },
+  step1ServiceBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
+  step1ServiceCategoryBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EAF5EE',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  step1ServiceCategoryText: {
+    fontSize: 10.5,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  step1ServicePriceText: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  step1ServiceTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  step1ServiceProvider: {
+    fontSize: 11.5,
+    fontWeight: '400',
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 1,
+  },
+
+  patientSelectorCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 12,
+    marginBottom: 14,
+    shadowColor: '#102820',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  patientSelectorTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 8,
+  },
+  patientTabsRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  patientTabPill: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F5FAF7',
+    borderRadius: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#DCE9E1',
+  },
+  patientTabPillActive: {
+    backgroundColor: '#0F5B43',
+    borderColor: '#0F5B43',
+  },
+  patientTabText: {
+    fontSize: 11.5,
+    fontWeight: '500',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  patientTabTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+
+  formSectionContainer: {
+    marginBottom: 6,
+  },
+  formSectionHeading: {
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 8,
+  },
+
   inputCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
-    paddingHorizontal: 16,
-    paddingVertical: 13,
-    marginBottom: 12,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginBottom: 10,
     shadowColor: '#102820',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
+    shadowOpacity: 0.03,
     shadowRadius: 3,
     elevation: 1,
   },
   inputIconCircle: {
-    width: 32,
-    height: 32,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#EAF5EE',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 10,
   },
   inputCol: {
     flex: 1,
@@ -1334,16 +2289,120 @@ const styles = StyleSheet.create({
     color: '#64748B',
     fontWeight: '500',
     marginBottom: 2,
+    fontFamily: Typography.fontFamily.sans,
   },
   inputTextValue: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 14.5,
+    fontWeight: '500',
     color: '#102820',
     padding: 0,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  inputVerifiedPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EAF6ED',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  inputVerifiedText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#059669',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  addressLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  defaultAddressTag: {
+    backgroundColor: '#EAF5EE',
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  defaultAddressTagText: {
+    fontSize: 9,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+
+  visitReasonCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: '#102820',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  visitReasonHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  visitReasonTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reasonChipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  reasonChip: {
+    backgroundColor: '#F5FAF7',
+    paddingVertical: 5.5,
+    paddingHorizontal: 9.5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#DCE9E1',
+  },
+  reasonChipActive: {
+    backgroundColor: '#0F5B43',
+    borderColor: '#0F5B43',
+  },
+  reasonChipText: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#4B5E55',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reasonChipTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+
+  step1TrustBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EAF5EE',
+    borderRadius: 14,
+    paddingVertical: 9,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#CDE5D7',
+  },
+  step1TrustText: {
+    fontSize: 10.5,
+    color: '#0F5B43',
+    fontWeight: '500',
+    fontFamily: Typography.fontFamily.sans,
+    flex: 1,
   },
 
   // -------------------------------------------------------------
-  // Day Selector Pills (Step 2)
+  // Day Selector Pills (Step 2 - Image 6)
   // -------------------------------------------------------------
   dayPillsScroll: {
     flexDirection: 'row',
@@ -1351,12 +2410,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   dayPillCard: {
-    width: 60,
-    height: 68,
-    borderRadius: 14,
+    width: 58,
+    height: 72,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: 1.2,
   },
   dayPillCardActive: {
     backgroundColor: '#0F5B43',
@@ -1364,27 +2423,29 @@ const styles = StyleSheet.create({
   },
   dayPillCardInactive: {
     backgroundColor: '#FFFFFF',
-    borderColor: '#E2EBE7',
+    borderColor: '#DCE9E1',
   },
   dayPillDayName: {
     fontSize: 12,
-    marginBottom: 2,
+    marginBottom: 4,
+    fontFamily: Typography.fontFamily.sans,
   },
   dayPillDayNum: {
-    fontSize: 17,
-    fontWeight: '800',
+    fontSize: 18,
+    fontWeight: '600',
+    fontFamily: Typography.fontFamily.sans,
   },
   dayPillTextActive: {
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontWeight: '600',
   },
   dayPillTextInactive: {
     color: '#102820',
-    fontWeight: '500',
+    fontWeight: '400',
   },
 
   // -------------------------------------------------------------
-  // Time Slot Grid (Step 2 & Reschedule)
+  // Time Slot Grid (3 columns matching Image 6 & Image 3)
   // -------------------------------------------------------------
   timeSlotGrid: {
     flexDirection: 'row',
@@ -1393,12 +2454,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   timeSlotPill: {
-    width: (Dimensions.get('window').width - 60) / 2,
+    width: (SCREEN_WIDTH - 64) / 3,
     paddingVertical: 12,
-    borderRadius: 24,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: 1.2,
   },
   timeSlotPillActive: {
     backgroundColor: '#0F5B43',
@@ -1406,110 +2467,158 @@ const styles = StyleSheet.create({
   },
   timeSlotPillInactive: {
     backgroundColor: '#FFFFFF',
-    borderColor: '#E2EBE7',
+    borderColor: '#DCE9E1',
   },
   timeSlotPillText: {
-    fontSize: 13,
+    fontSize: 12.5,
+    fontFamily: Typography.fontFamily.sans,
   },
   timeSlotTextActive: {
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontWeight: '600',
   },
   timeSlotTextInactive: {
     color: '#102820',
-    fontWeight: '600',
+    fontWeight: '400',
   },
 
   // -------------------------------------------------------------
-  // Review Summary Card (Step 3)
+  // Review Summary Card (Step 3 - Image 5)
   // -------------------------------------------------------------
   reviewSummaryCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
-    overflow: 'hidden',
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 16,
     shadowColor: '#102820',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.04,
     shadowRadius: 6,
     elevation: 2,
   },
-  reviewImageWrap: {
-    width: '100%',
-    height: 160,
+  reviewHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  reviewThumbnail: {
+    width: 76,
+    height: 60,
+    borderRadius: 12,
     backgroundColor: '#EAF5EE',
   },
-  reviewImageThumbnail: {
-    width: '100%',
-    height: '100%',
-  },
-  reviewCardBody: {
-    padding: 18,
-  },
   reviewServiceTitle: {
-    fontSize: 17,
-    fontWeight: '800',
+    fontSize: 16,
+    fontWeight: '600',
     color: '#102820',
-    marginBottom: 14,
+    marginLeft: 14,
+    flex: 1,
+    lineHeight: 21,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewDivider: {
+    height: 1,
+    backgroundColor: '#F1F5F3',
+    marginVertical: 10,
   },
   reviewDetailRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 10,
+    alignItems: 'flex-start',
+    paddingVertical: 4,
   },
-  reviewDetailText: {
-    fontSize: 13,
-    color: '#64748B',
+  reviewDetailCol: {
     flex: 1,
+    marginLeft: 12,
   },
-  reviewDetailBold: {
+  reviewDetailLabel: {
+    fontSize: 11,
+    color: '#64748B',
+    fontWeight: '400',
+    marginBottom: 2,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewDetailValue: {
+    fontSize: 14,
+    fontWeight: '500',
     color: '#102820',
-    fontWeight: '700',
+    lineHeight: 19,
+    fontFamily: Typography.fontFamily.sans,
   },
 
   // -------------------------------------------------------------
-  // Payment Screen (Step 4)
+  // Payment Screen (Step 4 - Image 8)
   // -------------------------------------------------------------
   bookingAmountCard: {
+    backgroundColor: '#EAF5EE',
+    borderRadius: 18,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    marginBottom: 18,
+  },
+  bookingAmountLabel: {
+    fontSize: 13,
+    color: '#0F5B43',
+    fontWeight: '500',
+    marginBottom: 4,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  bookingAmountValue: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  paymentOptionsContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    overflow: 'hidden',
+  },
+  paymentOptionItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#EAF5EE',
-    borderRadius: 16,
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    marginBottom: 20,
-  },
-  bookingAmountLabel: {
-    fontSize: 14,
-    color: '#0F5B43',
-    fontWeight: '600',
-  },
-  bookingAmountValue: {
-    fontSize: 22,
-    fontWeight: '900',
-    color: '#0F5B43',
-  },
-  paymentOptionsList: {
-    gap: 12,
-  },
-  paymentOptionCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
     paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  paymentOptionCardActive: {
-    borderColor: '#0F5B43',
-    backgroundColor: '#F7FCF9',
+    paddingVertical: 16,
   },
   paymentOptionLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  upiIconBox: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    backgroundColor: '#EAF5EE',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  paymentIcon: {
+    marginRight: 10,
+  },
+  paymentOptionTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  paymentOptionRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  upiBadgesRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  upiAppBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    fontFamily: Typography.fontFamily.sans,
   },
   radioOuter: {
     width: 20,
@@ -1519,7 +2628,6 @@ const styles = StyleSheet.create({
     borderColor: '#0F5B43',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
   },
   radioInner: {
     width: 10,
@@ -1527,146 +2635,88 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#0F5B43',
   },
-  paymentOptionTextWrap: {
-    flex: 1,
-  },
-  paymentOptionTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#102820',
-  },
-  upiBadgesRow: {
-    flexDirection: 'row',
-    gap: 6,
-    marginTop: 4,
-  },
-  upiBadge: {
+  paymentDivider: {
+    height: 1,
     backgroundColor: '#F1F5F3',
-    borderRadius: 6,
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-  },
-  upiBadgeText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#0F5B43',
+    marginHorizontal: 16,
   },
 
   // -------------------------------------------------------------
-  // Booking Confirmed (Step 5)
+  // Booking Confirmed (Step 5 - Image 7)
   // -------------------------------------------------------------
   celebrationContainer: {
-    width: 100,
-    height: 100,
+    width: 130,
+    height: 130,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 16,
+    marginBottom: 20,
     position: 'relative',
   },
+  confettiDash: {
+    position: 'absolute',
+    width: 10,
+    height: 3,
+    borderRadius: 1.5,
+  },
+  celebrationOuterGlow: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#E4F4EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   confirmedCheckCircle: {
-    width: 76,
-    height: 76,
-    borderRadius: 38,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
     backgroundColor: '#0F5B43',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#0F5B43',
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 10,
+    shadowRadius: 8,
     elevation: 4,
-  },
-  confettiParticle1: {
-    position: 'absolute',
-    top: 6,
-    left: 10,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#10B981',
-  },
-  confettiParticle2: {
-    position: 'absolute',
-    top: 4,
-    right: 14,
-    width: 7,
-    height: 7,
-    borderRadius: 2,
-    backgroundColor: '#F59E0B',
-  },
-  confettiParticle3: {
-    position: 'absolute',
-    bottom: 8,
-    left: 6,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#3B82F6',
-  },
-  confettiParticle4: {
-    position: 'absolute',
-    bottom: 12,
-    right: 8,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#EC4899',
-  },
-  confettiParticle5: {
-    position: 'absolute',
-    top: 45,
-    left: -6,
-    width: 7,
-    height: 7,
-    borderRadius: 2,
-    backgroundColor: '#8B5CF6',
-  },
-  confettiParticle6: {
-    position: 'absolute',
-    top: 40,
-    right: -8,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#10B981',
   },
   confirmedTitle: {
     fontSize: 22,
-    fontWeight: '800',
-    color: '#102820',
+    fontWeight: '600',
+    color: '#0F5B43',
     textAlign: 'center',
-    marginBottom: 6,
+    marginBottom: 8,
+    fontFamily: Typography.fontFamily.sans,
   },
   confirmedSubtitle: {
-    fontSize: 13,
+    fontSize: 13.5,
+    fontWeight: '400',
     color: '#64748B',
     textAlign: 'center',
-    maxWidth: 280,
-    marginBottom: 20,
-    lineHeight: 18,
+    maxWidth: 290,
+    marginBottom: 24,
+    lineHeight: 19,
+    fontFamily: Typography.fontFamily.sans,
   },
   confirmedSummaryCard: {
     width: '100%',
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
     padding: 16,
-    marginBottom: 24,
+    marginBottom: 28,
   },
   confirmedInfoRow: {
-    paddingVertical: 6,
-  },
-  confirmedInfoLabel: {
-    fontSize: 11,
-    color: '#64748B',
-    fontWeight: '500',
-    marginBottom: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
   },
   confirmedInfoValue: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '500',
     color: '#102820',
+    lineHeight: 19,
+    fontFamily: Typography.fontFamily.sans,
   },
   confirmedDivider: {
     height: 1,
@@ -1684,68 +2734,330 @@ const styles = StyleSheet.create({
   },
   secondaryLinkButtonText: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
   },
 
   // -------------------------------------------------------------
-  // Booking Details Screen (Step 6)
+  // Booking Details Screen (Step 6 - Image 4)
   // -------------------------------------------------------------
-  bookingDetailsCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
-    padding: 18,
-    marginBottom: 20,
-    shadowColor: '#102820',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
-  },
-  detailsCardHeader: {
+  detailsHeaderBar: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  detailsHeaderBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#DCE9E1',
+  },
+  detailsHeaderLogo: {
+    width: 124,
+    height: 34,
+  },
+  detailsHeadingWrap: {
+    marginTop: 4,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  detailsRefBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    backgroundColor: '#EAF5EE',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  detailsRefCode: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  detailsRefDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#8C9E96',
+    marginHorizontal: 6,
+  },
+  detailsRefType: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#556A61',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  statusTrackerCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 14,
+    marginBottom: 14,
+  },
+  trackerHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+  },
+  trackerStatusWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  trackerStatusText: {
+    fontSize: 13,
+    fontWeight: '600',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  trackerEtaPill: {
+    backgroundColor: '#EAF6ED',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  trackerEtaText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#059669',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  trackerPipelineRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 4,
+  },
+  trackerStep: {
+    alignItems: 'center',
+    width: 56,
+  },
+  trackerCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  trackerCircleDone: {
+    backgroundColor: '#0F5B43',
+  },
+  trackerCircleActive: {
+    backgroundColor: '#059669',
+  },
+  trackerCircleInactive: {
+    backgroundColor: '#E2E8F0',
+  },
+  trackerLine: {
+    flex: 1,
+    height: 2,
+    marginBottom: 16,
+    marginHorizontal: -4,
+  },
+  trackerLineActive: {
+    backgroundColor: '#059669',
+  },
+  trackerLineInactive: {
+    backgroundColor: '#E2E8F0',
+  },
+  trackerStepText: {
+    fontSize: 10,
+    fontWeight: '500',
+    color: '#94A3B8',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  trackerStepTextActive: {
+    color: '#0F5B43',
+    fontWeight: '600',
+  },
+  trackerStepTextInactive: {
+    color: '#94A3B8',
+  },
+  bookingDetailsDoctorCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 14,
+    marginBottom: 14,
     gap: 12,
   },
+  detailsAvatarWrap: {
+    position: 'relative',
+  },
   detailsDoctorAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 58,
+    height: 58,
+    borderRadius: 29,
     backgroundColor: '#EAF5EE',
+  },
+  detailsVerifiedBadge: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#0F5B43',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
   },
   detailsHeaderInfo: {
     flex: 1,
   },
-  detailsServiceTitle: {
+  doctorHeaderNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
+  detailsDoctorName: {
     fontSize: 15,
-    fontWeight: '800',
+    fontWeight: '600',
     color: '#102820',
-    marginBottom: 4,
+    fontFamily: Typography.fontFamily.sans,
   },
-  confirmedBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#EAF6ED',
-    borderRadius: 12,
-    paddingHorizontal: 9,
-    paddingVertical: 3,
+  doctorRatingTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF3C7',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
   },
-  confirmedBadgeText: {
+  doctorRatingTagText: {
     fontSize: 11,
-    fontWeight: '700',
-    color: '#059669',
+    fontWeight: '600',
+    color: '#D97706',
+    fontFamily: Typography.fontFamily.sans,
   },
-  detailsCardDivider: {
-    height: 1,
-    backgroundColor: '#F1F5F3',
-    marginVertical: 14,
+  detailsServiceTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#0F5B43',
+    marginBottom: 2,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  detailsDoctorSubtext: {
+    fontSize: 11.5,
+    color: '#64748B',
+    fontWeight: '400',
+    marginBottom: 8,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  doctorBadgeTagsRow: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  doctorPillTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EAF5EE',
+    paddingHorizontal: 7,
+    paddingVertical: 2.5,
+    borderRadius: 6,
+  },
+  doctorPillTagText: {
+    fontSize: 10.5,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  detailsBedsidePinCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#EAF6ED',
+    borderRadius: 16,
+    borderWidth: 1.2,
+    borderColor: '#C9E1D4',
+    padding: 12,
+    marginBottom: 14,
+  },
+  bedsidePinLeftCol: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
+  },
+  bedsidePinIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bedsidePinHeading: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  bedsidePinSubheading: {
+    fontSize: 11,
+    fontWeight: '400',
+    color: '#52695E',
+    lineHeight: 15,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  bedsidePinBadge: {
+    backgroundColor: '#0F5B43',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
+  },
+  bedsidePinBadgeText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 2,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cardHeaderTitleText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#102820',
+    marginBottom: 12,
+    letterSpacing: -0.2,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  bookingDetailsListCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 16,
+    marginBottom: 14,
   },
   detailsDataRow: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 6,
+  },
+  detailsIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#EAF5EE',
     alignItems: 'center',
-    gap: 12,
-    marginBottom: 12,
+    justifyContent: 'center',
+    marginRight: 12,
+    marginTop: 1,
   },
   detailsDataCol: {
     flex: 1,
@@ -1754,15 +3066,148 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#64748B',
     fontWeight: '500',
+    marginBottom: 2,
+    fontFamily: Typography.fontFamily.sans,
   },
   detailsDataValue: {
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 13.5,
+    fontWeight: '500',
     color: '#102820',
+    lineHeight: 18,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  detailsCardDivider: {
+    height: 1,
+    backgroundColor: '#F1F5F3',
+    marginVertical: 6,
+  },
+  detailsBillingCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 16,
+    marginBottom: 14,
+  },
+  billingHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  billingPaidBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EAF6ED',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  billingPaidBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#059669',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  billRowItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 4,
+  },
+  billRowLabel: {
+    fontSize: 12.5,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  billRowValue: {
+    fontSize: 12.5,
+    fontWeight: '500',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  billRowDivider: {
+    height: 1,
+    backgroundColor: '#EDF2EE',
+    marginVertical: 8,
+  },
+  billTotalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  detailsBillTotalLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  detailsBillTotalValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  downloadInvoiceBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 9,
+    borderRadius: 12,
+    backgroundColor: '#EAF5EE',
+    borderWidth: 1,
+    borderColor: '#DCE9E1',
+  },
+  downloadInvoiceBtnText: {
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  detailsPreparationCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 16,
+    marginBottom: 18,
+  },
+  prepHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  prepStepRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  prepNumberCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#EAF5EE',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
     marginTop: 1,
   },
+  prepNumberText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  prepStepText: {
+    flex: 1,
+    fontSize: 12,
+    color: '#64748B',
+    lineHeight: 17,
+    fontFamily: Typography.fontFamily.sans,
+  },
   detailsActionButtonsCol: {
-    gap: 12,
+    gap: 10,
+    marginBottom: 20,
   },
   rescheduleButton: {
     flexDirection: 'row',
@@ -1770,37 +3215,55 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     backgroundColor: '#EAF5EE',
-    borderRadius: 28,
+    borderRadius: 26,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
     paddingVertical: 14,
   },
   rescheduleButtonText: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
   },
   cancelBookingButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: '#FEE2E2',
-    borderRadius: 28,
+    backgroundColor: '#FEECEC',
+    borderRadius: 26,
+    borderWidth: 1.2,
+    borderColor: '#FCA5A5',
     paddingVertical: 14,
   },
   cancelBookingButtonText: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#DC2626',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  helplineLinkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+  },
+  helplineLinkText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
   },
 
   // -------------------------------------------------------------
-  // Reschedule Calendar (Step 7)
+  // Reschedule Calendar (Step 7 - Image 3)
   // -------------------------------------------------------------
   calendarCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
     padding: 16,
   },
   calendarHeaderRow: {
@@ -1812,8 +3275,9 @@ const styles = StyleSheet.create({
   },
   calendarMonthText: {
     fontSize: 15,
-    fontWeight: '800',
+    fontWeight: '600',
     color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
   },
   calendarWeekdaysRow: {
     flexDirection: 'row',
@@ -1821,11 +3285,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   calendarWeekdayLabel: {
-    width: 38,
+    width: (SCREEN_WIDTH - 74) / 7,
     textAlign: 'center',
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 11.5,
+    fontWeight: '500',
     color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
   },
   calendarDaysGrid: {
     flexDirection: 'row',
@@ -1833,52 +3298,77 @@ const styles = StyleSheet.create({
     rowGap: 8,
   },
   calendarDayCell: {
-    width: (Dimensions.get('window').width - 74) / 7,
-    height: 36,
+    width: (SCREEN_WIDTH - 74) / 7,
+    height: 38,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 18,
+    borderRadius: 14,
   },
   calendarDayCellActive: {
     backgroundColor: '#0F5B43',
   },
   calendarDayText: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 13.5,
+    fontWeight: '400',
     color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
   },
   calendarDayTextActive: {
     color: '#FFFFFF',
-    fontWeight: '800',
+    fontWeight: '600',
   },
 
   // -------------------------------------------------------------
-  // Cancel Booking (Step 8)
+  // Cancel Booking (Step 8 - Image 2)
   // -------------------------------------------------------------
   cancelSummaryCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
     padding: 16,
     marginBottom: 20,
   },
+  cancelDoctorHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  cancelDoctorAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#EAF5EE',
+  },
   cancelSummaryTitle: {
     fontSize: 15,
-    fontWeight: '800',
-    color: '#102820',
-    marginBottom: 4,
-  },
-  cancelSummaryDateTime: {
-    fontSize: 13,
-    color: '#64748B',
     fontWeight: '600',
+    color: '#102820',
+    lineHeight: 19,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cancelDivider: {
+    height: 1,
+    backgroundColor: '#F1F5F3',
+    marginVertical: 10,
+  },
+  cancelInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 2,
+  },
+  cancelInfoValue: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
   },
   cancelReasonLabel: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '500',
     color: '#102820',
     marginBottom: 8,
+    fontFamily: Typography.fontFamily.sans,
   },
   cancelReasonSelectBox: {
     flexDirection: 'row',
@@ -1886,16 +3376,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
     borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#E2EBE7',
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
     paddingHorizontal: 16,
-    paddingVertical: 13,
+    paddingVertical: 14,
     marginBottom: 24,
   },
   cancelReasonSelectText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
   },
   cancelActionButtonsCol: {
     gap: 12,
@@ -1903,28 +3394,30 @@ const styles = StyleSheet.create({
   confirmCancelButton: {
     backgroundColor: '#DC2626',
     borderRadius: 28,
-    paddingVertical: 14,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
   confirmCancelButtonText: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '600',
     color: '#FFFFFF',
+    fontFamily: Typography.fontFamily.sans,
   },
   keepBookingButton: {
     backgroundColor: '#FFFFFF',
     borderRadius: 28,
     borderWidth: 1.5,
     borderColor: '#0F5B43',
-    paddingVertical: 14,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
   keepBookingButtonText: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '600',
     color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
   },
 
   // Cancel Modal
@@ -1942,9 +3435,10 @@ const styles = StyleSheet.create({
   },
   modalHeading: {
     fontSize: 16,
-    fontWeight: '800',
+    fontWeight: '600',
     color: '#102820',
     marginBottom: 16,
+    fontFamily: Typography.fontFamily.sans,
   },
   modalReasonOption: {
     flexDirection: 'row',
@@ -1956,8 +3450,9 @@ const styles = StyleSheet.create({
   },
   modalReasonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
   },
 
   // -------------------------------------------------------------
@@ -1968,7 +3463,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FBFAF7',
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderTopWidth: 1,
@@ -1986,9 +3481,550 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
+  cancelledNoticeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#FEE2E2',
+    borderRadius: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  cancelledNoticeText: {
+    fontSize: 13.5,
+    fontWeight: '500',
+    color: '#DC2626',
+    fontFamily: Typography.fontFamily.sans,
+  },
+
+  // -------------------------------------------------------------
+  // Enhanced Review Styles (Step 3)
+  // -------------------------------------------------------------
+  reviewDoctorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 16,
+    marginBottom: 14,
+    gap: 14,
+  },
+  reviewDoctorAvatar: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: '#EAF5EE',
+  },
+  reviewDoctorInfo: {
+    flex: 1,
+  },
+  reviewVerifiedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    alignSelf: 'flex-start',
+    backgroundColor: '#EAF6ED',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    marginBottom: 4,
+  },
+  reviewVerifiedText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#059669',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewServiceName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 2,
+  },
+  reviewDoctorName: {
+    fontSize: 13.5,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewDoctorMeta: {
+    fontSize: 11.5,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 2,
+  },
+  reviewSectionCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 16,
+    marginBottom: 14,
+  },
+  reviewCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 14,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F3',
+  },
+  reviewCardHeaderText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewItemRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 4,
+  },
+  reviewItemIconWrap: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#F4FAF6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+    marginTop: 2,
+  },
+  reviewItemTextCol: {
+    flex: 1,
+  },
+  reviewItemLabel: {
+    fontSize: 11,
+    color: '#64748B',
+    fontWeight: '400',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 2,
+  },
+  reviewItemValue: {
+    fontSize: 13.5,
+    fontWeight: '500',
+    color: '#102820',
+    lineHeight: 18,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewInnerDivider: {
+    height: 1,
+    backgroundColor: '#F1F5F3',
+    marginVertical: 8,
+  },
+  billRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 4,
+  },
+  billLabel: {
+    fontSize: 13,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  billValue: {
+    fontSize: 13.5,
+    fontWeight: '500',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  freeBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  billStrikeValue: {
+    fontSize: 12,
+    color: '#94A3B8',
+    textDecorationLine: 'line-through',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  freeBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#059669',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  billTotalLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  billTotalValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  trustBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: '#EAF5EE',
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 20,
+  },
+  trustBannerTextCol: {
+    flex: 1,
+  },
+  trustBannerTitle: {
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 2,
+  },
+  trustBannerSub: {
+    fontSize: 11.5,
+    color: '#4B6358',
+    fontFamily: Typography.fontFamily.sans,
+    lineHeight: 16,
+  },
+  reviewBottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FBFAF7',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#F1F5F3',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 16,
+  },
+  reviewBottomPriceCol: {
+    justifyContent: 'center',
+  },
+  reviewBottomPriceLabel: {
+    fontSize: 11,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 2,
+  },
+  reviewBottomPriceValue: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewBottomButton: {
+    flex: 1,
+    backgroundColor: '#0F5B43',
+    borderRadius: 28,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0F5B43',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+
+  // -------------------------------------------------------------
+  // Enhanced Payment Styles (Step 4)
+  // -------------------------------------------------------------
+  bookingAmountTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  instantRefundBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: '#D4E7DC',
+  },
+  instantRefundText: {
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  amountBreakdownPill: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#D4E7DC',
+  },
+  amountBreakdownPillText: {
+    fontSize: 11.5,
+    color: '#4B6358',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  paymentOptionItemActive: {
+    backgroundColor: '#F8FCF9',
+  },
+  paymentOptionSub: {
+    fontSize: 11.5,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 2,
+  },
+  popularBadge: {
+    backgroundColor: '#EAF6ED',
+    borderRadius: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 1.5,
+  },
+  popularBadgeText: {
+    fontSize: 9.5,
+    fontWeight: '600',
+    color: '#059669',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  upiExpandedContent: {
+    backgroundColor: '#F8FCF9',
+    paddingHorizontal: 16,
+    paddingBottom: 14,
+  },
+  upiExpandedLabel: {
+    fontSize: 11.5,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 8,
+  },
+  upiAppsGrid: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  upiAppPill: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#DCE9E1',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  upiAppPillText: {
+    fontSize: 12,
+    fontWeight: '600',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  paymentTrustRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 20,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  paymentTrustItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  paymentTrustText: {
+    fontSize: 11.5,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+  },
+
+  // -------------------------------------------------------------
+  // Enhanced Confirmed Styles (Step 5)
+  // -------------------------------------------------------------
+  bookingRefPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    marginBottom: 18,
+  },
+  bookingRefLabel: {
+    fontSize: 12,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  bookingRefCode: {
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  bedsidePinCard: {
+    width: '100%',
+    backgroundColor: '#EAF5EE',
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: '#CCE4D5',
+    padding: 18,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  bedsidePinHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 12,
+  },
+  bedsidePinTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  pinDigitsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 12,
+  },
+  pinDigitBox: {
+    width: 44,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#0F5B43',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0F5B43',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  pinDigitText: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  bedsidePinHelp: {
+    fontSize: 11.5,
+    color: '#4B6358',
+    textAlign: 'center',
+    fontFamily: Typography.fontFamily.sans,
+    lineHeight: 16,
+    maxWidth: 290,
+  },
+  confirmedDoctorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingBottom: 10,
+  },
+  confirmedDoctorAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#EAF5EE',
+  },
+  confirmedDoctorCol: {
+    flex: 1,
+  },
+  confirmedDoctorName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  confirmedDoctorRole: {
+    fontSize: 12,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 1,
+  },
+  confirmedBadgeSmall: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#EAF6ED',
+    borderRadius: 10,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    marginTop: 4,
+  },
+  confirmedBadgeSmallText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#059669',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  confirmedRowLabel: {
+    fontSize: 11,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 1,
+  },
+  nextStepsCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 18,
+    marginBottom: 24,
+  },
+  nextStepsHeading: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+    marginBottom: 14,
+  },
+  timelineItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  timelineDotActive: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#0F5B43',
+    marginRight: 12,
+    marginTop: 4,
+  },
+  timelineDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#DCE9E1',
+    marginRight: 12,
+    marginTop: 4,
+  },
+  timelineTextCol: {
+    flex: 1,
+  },
+  timelineTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  timelineSub: {
+    fontSize: 11.5,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 2,
+  },
+
   primaryActionButtonText: {
     fontSize: 15,
-    fontWeight: '800',
+    fontWeight: '600',
     color: '#FFFFFF',
+    fontFamily: Typography.fontFamily.sans,
   },
 });

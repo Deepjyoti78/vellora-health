@@ -40,7 +40,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
 
       <View style={styles.centerContainer}>
         <Image
-          source={require('../../../assets/images/vellora-logo.png')}
+          source={require('../../../assets/images/logo-dark.png')}
           style={styles.logo}
           resizeMode="contain"
         />
@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 124,
-    height: 32,
+    width: 130,
+    height: 36,
   },
   rightContainer: {
     width: 40,
