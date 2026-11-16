@@ -132,8 +132,10 @@ export const HeroSection: React.FC = () => {
 
         <div className="hero-detail animate-hero-detail">
           <p className="hero-detail-text">
-            Accessible Modern Medical Care — where technology meets compassion.<br />
-            From routine checkups to specialized treatment, our physicians bring<br />
+            Accessible Modern Medical Care — where technology meets compassion.{' '}
+            <br className="hidden md:inline" />
+            From routine checkups to specialized treatment, our physicians bring{' '}
+            <br className="hidden md:inline" />
             expertise and human kindness together under one roof.
           </p>
         </div>

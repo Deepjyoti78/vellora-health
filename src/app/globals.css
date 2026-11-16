@@ -2095,14 +2095,15 @@ h1, h2 {
     left: 0;
     right: 0;
     bottom: clamp(14px, 2.5vh, 22px);
-    max-width: 360px;
+    max-width: calc(100% - 16px);
     z-index: 2;
   }
   .hero-detail-text {
-    font-size: 11.5px;
+    font-size: 11px;
     line-height: 1.5;
-    color: rgba(235, 243, 244, 0.8);
+    color: rgba(235, 243, 244, 0.82);
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+    text-wrap: pretty;
   }
   .section {
     padding-block: 70px;
