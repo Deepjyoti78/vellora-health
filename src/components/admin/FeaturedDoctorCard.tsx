@@ -1,34 +1,31 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { Stethoscope, ArrowUpRight, Star } from 'lucide-react';
+import { User, ArrowUpRight, ArrowUp, Calendar } from 'lucide-react';
 
 interface FeaturedDoctorCardProps {
   name?: string;
   specialty?: string;
   consultations?: number | string;
   trend?: string;
-  rating?: number;
   image?: string;
 }
 
 export const FeaturedDoctorCard: React.FC<FeaturedDoctorCardProps> = ({
-  name = 'Dr. Maya Patel',
-  specialty = 'Cardiologist & General Medicine',
-  consultations = '248 Consultations',
-  trend = '+14% this month',
-  rating = 4.9,
-  image = '/assets/doctor-maya-patel.webp',
+  name = 'Dr. Arjun Mehta',
+  specialty = 'Cardiologist',
+  consultations = 248,
+  trend = '+12%',
+  image = '/assets/top-doctor-illustration-clean.png',
 }) => {
   return (
-    <div className="flex h-full flex-col justify-between rounded-[18px] border border-[#E2EBE7] bg-white p-6 shadow-xs transition-all hover:border-[#CBDCD5]">
-      {/* Header: Icon + "Top Doctor" + Circular Arrow button */}
+    <div className="flex h-full flex-col justify-between rounded-[20px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-xs transition-all hover:border-[#CBDCD5]">
+      {/* Header: User Icon + "Top Doctor" + Dark Green Arrow Button */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ECFDF5] text-[#07583F]">
-            <Stethoscope className="h-4 w-4 stroke-[2.2]" />
+        <div className="flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#075239]">
+            <User className="h-4 w-4 fill-[#075239] text-[#075239]" />
           </div>
           <h3 className="font-heading text-base font-bold text-[#102820]">
             Top Doctor
@@ -37,52 +34,54 @@ export const FeaturedDoctorCard: React.FC<FeaturedDoctorCardProps> = ({
 
         <Link
           href="/admin/providers"
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E2EBE7] bg-white text-slate-500 shadow-2xs hover:bg-[#F2F8F5] hover:text-[#07583F] transition-colors"
+          className="group flex h-8 w-8 items-center justify-center rounded-full bg-[#075239] text-white hover:bg-[#06422D] transition-colors shadow-2xs"
           aria-label="View doctor profile"
         >
-          <ArrowUpRight className="h-4 w-4 stroke-[2.2]" />
+          <ArrowUpRight className="h-4 w-4 stroke-[2.5] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </Link>
       </div>
 
-      {/* Middle: Doctor Portrait with Soft Abstract Mint Shape */}
-      <div className="my-5 flex items-center justify-center">
+      {/* Middle: Doctor Illustration with Soft Mint Backdrop */}
+      <div className="my-2 sm:my-3 flex items-center justify-center min-h-[130px] flex-1">
         <div className="relative flex items-center justify-center">
-          {/* Organic soft mint background backdrop */}
-          <div className="absolute h-36 w-36 sm:h-40 sm:w-40 rounded-full bg-gradient-to-tr from-[#ECFDF5] via-[#D1FAE5] to-[#F2F8F5] shadow-inner" />
-          
-          {/* Circular framed doctor photo */}
-          <div className="relative h-28 w-28 sm:h-32 sm:w-32 overflow-hidden rounded-full border-4 border-white shadow-md bg-white">
-            <img
-              src={image}
-              alt={name}
-              className="h-full w-full object-cover object-top"
-            />
-          </div>
-
-          {/* Floating rating badge */}
-          <div className="absolute -bottom-1 right-2 flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-bold text-[#102820] shadow-md border border-[#E2EBE7]">
-            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-            <span>{rating}</span>
-          </div>
+          <img
+            src={image}
+            alt={name}
+            className="h-32 sm:h-36 w-auto object-contain"
+          />
         </div>
       </div>
 
-      {/* Bottom: Doctor Name, Specialty & Consultations Metric */}
-      <div className="text-center pt-1 border-t border-[#F2F8F5]">
-        <h4 className="font-heading text-lg font-black text-[#102820]">
-          {name}
-        </h4>
-        <p className="mt-0.5 text-xs text-slate-500 font-medium">
-          {specialty}
-        </p>
+      {/* Bottom: Doctor Name, Specialty, Metric & Pagination Dots */}
+      <div className="space-y-3">
+        <div>
+          <h4 className="font-heading text-base font-extrabold text-[#102820] tracking-tight">
+            {name}
+          </h4>
+          <p className="text-xs text-slate-500 font-medium mt-0.5">
+            {specialty}
+          </p>
+        </div>
 
-        <div className="mt-4 flex items-center justify-center gap-2">
-          <span className="rounded-full bg-[#F2F8F5] border border-[#E2EBE7] px-3 py-1 text-xs font-bold text-[#102820]">
-            {consultations}
-          </span>
-          <span className="rounded-full bg-[#ECFDF5] px-2.5 py-1 text-[11px] font-bold text-[#07583F]">
-            {trend}
-          </span>
+        <div className="flex items-center justify-between pt-0.5">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            <Calendar className="h-4 w-4 text-slate-400 stroke-[1.8]" />
+            <span>
+              <strong className="font-bold text-[#102820]">{consultations}</strong> Consultations
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1 rounded-full bg-[#ECFDF5] px-2.5 py-0.5 text-xs font-bold text-[#059669] border border-[#A7F3D0]/60">
+            <ArrowUp className="h-3 w-3 stroke-[2.5]" />
+            <span>{trend}</span>
+          </div>
+        </div>
+
+        {/* Pagination Dots */}
+        <div className="flex items-center justify-center gap-1.5 pt-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#075239]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[#D1DCD6]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[#D1DCD6]" />
         </div>
       </div>
     </div>
