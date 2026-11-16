@@ -135,8 +135,8 @@ export const RecentAppointmentsTable: React.FC = () => {
       </div>
 
       {/* Table Content */}
-      <div className="mt-5 overflow-x-auto">
-        <table className="w-full text-left">
+      <div className="mt-5 overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+        <table className="min-w-[580px] w-full text-left">
           <thead>
             <tr className="border-b border-[#E2EBE7] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
               <th className="pb-3 pl-1">Patient</th>

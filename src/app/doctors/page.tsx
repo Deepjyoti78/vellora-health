@@ -308,7 +308,7 @@ export default function DoctorsPage() {
             </div>
 
             {/* Right Column: Hero Asset with Organic Soft Mint Wave & Cross */}
-            <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end">
+            <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end overflow-hidden py-2">
               {/* Organic Soft Mint Wave & Plus Sign */}
               <div className="absolute -right-8 -top-8 h-64 w-64 rounded-full bg-[#ECFDF5] blur-3xl opacity-80 pointer-events-none" />
               <div className="absolute right-4 top-4 text-[#A7F3D0]/60 pointer-events-none font-light text-5xl select-none">

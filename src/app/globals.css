@@ -1887,8 +1887,21 @@ h1, h2 {
   .specialty-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  .doctor-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 16px;
+  }
+  .doctor-track::-webkit-scrollbar {
+    display: none;
+  }
   .doctor-card {
-    flex-basis: calc((100% - 18px)/2.4);
+    flex: 0 0 290px;
+    scroll-snap-align: start;
+    height: 420px;
   }
   .experience-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1901,7 +1914,10 @@ h1, h2 {
   }
   .section-faq {
     gap: 35px;
-    grid-template-columns: 1fr 1.4fr;
+  }
+  .faq-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
   }
   .footer-brand {
     font-size: clamp(82px, 15vw, 160px);
@@ -2013,9 +2029,13 @@ h1, h2 {
     padding-block: 70px;
   }
   .section-heading-row {
-    gap: 15px;
-    margin-bottom: 27px;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .section-heading-row .slider-arrows {
+    align-self: flex-start;
   }
   .section-heading-row h2,
   .faq-intro h2 {
@@ -2047,9 +2067,20 @@ h1, h2 {
   .doctor-track,
   .review-track,
   .facility-track {
-    margin-right: -19px;
-    padding-right: 19px;
-    gap: 12px;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-right: -16px;
+    padding-right: 16px;
+    gap: 14px;
+  }
+  .service-track::-webkit-scrollbar,
+  .doctor-track::-webkit-scrollbar,
+  .review-track::-webkit-scrollbar,
+  .facility-track::-webkit-scrollbar {
+    display: none;
   }
   .service-photo-card {
     flex-basis: 78%;
@@ -2110,8 +2141,9 @@ h1, h2 {
     display: none;
   }
   .doctor-card {
-    flex-basis: 79%;
-    height: 455px;
+    flex: 0 0 280px;
+    height: 420px;
+    scroll-snap-align: start;
   }
   .experience-header {
     flex-direction: column;
@@ -2152,8 +2184,12 @@ h1, h2 {
     display: block;
     padding-block: 75px 90px;
   }
+  .faq-container {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
   .faq-list {
-    margin-top: 35px;
+    margin-top: 24px;
   }
   .faq-list summary {
     font-size: 13px;
@@ -2210,25 +2246,29 @@ h1, h2 {
   }
   .footer-links-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 36px 20px;
+    gap: 32px 18px;
   }
   .footer-about {
     grid-column: 1 / -1;
   }
   .footer-col h3 {
-    font-size: 10px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
   }
   .footer-col a,
   .footer-col button {
-    font-size: 12px;
+    font-size: 12.5px;
   }
   .footer-bottom {
-    margin-top: 62px;
-    flex-wrap: wrap;
-    font-size: 10px;
+    margin-top: 48px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    font-size: 11px;
   }
   .footer-bottom > span:last-child {
-    display: none;
+    display: inline;
   }
   .booking-modal {
     padding: 24px 19px;
@@ -2354,6 +2394,17 @@ h1, h2 {
 .scroll-reveal-right.is-revealed {
   opacity: 1;
   transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  .scroll-reveal-left,
+  .scroll-reveal-right {
+    transform: translateY(20px);
+  }
+  .scroll-reveal-left.is-revealed,
+  .scroll-reveal-right.is-revealed {
+    transform: translateY(0);
+  }
 }
 
 .scroll-reveal-scale {

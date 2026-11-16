@@ -20,6 +20,7 @@ import {
   DollarSign,
   ChevronRight,
   PlusCircle,
+  X,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -88,6 +89,16 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               />
             )}
           </Link>
+          {onCloseMobile && (
+            <button
+              type="button"
+              onClick={onCloseMobile}
+              className="md:hidden flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-[#E2EBE7] hover:text-[#102820] transition-colors"
+              aria-label="Close sidebar"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
           {onToggleCollapse && (
             <button
               type="button"

@@ -96,7 +96,7 @@ export default function ContactPage() {
             </div>
 
             {/* Inquiry Form */}
-            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-lg lg:col-span-2 scroll-reveal-right">
+            <div className="rounded-2xl sm:rounded-3xl border border-gray-200 bg-white p-5 sm:p-8 shadow-lg lg:col-span-2 scroll-reveal-right">
               <span className="text-xs font-bold uppercase tracking-wider text-teal-700">Online Dispatch &amp; Support</span>
               <h2 className="text-2xl font-bold text-gray-900 mt-1">Send a Care Coordination Inquiry</h2>
               <p className="mt-1 text-xs text-gray-600">

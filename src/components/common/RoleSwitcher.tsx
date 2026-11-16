@@ -27,7 +27,7 @@ export const RoleSwitcher: React.FC = () => {
       className="fixed bottom-3 left-3 sm:bottom-4 sm:left-4 z-50 flex flex-col items-start gap-2"
     >
       {isOpen && (
-        <div className="w-[calc(100vw-24px)] sm:w-80 max-w-sm rounded-2xl border border-[#273a3d] bg-[#11191b]/95 p-4 text-white shadow-2xl backdrop-blur-xl">
+        <div className="w-[calc(100vw-24px)] sm:w-80 max-w-sm max-h-[75vh] overflow-y-auto rounded-2xl border border-[#273a3d] bg-[#11191b]/95 p-3.5 sm:p-4 text-white shadow-2xl backdrop-blur-xl">
           <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-teal-400">
@@ -130,12 +130,12 @@ export const RoleSwitcher: React.FC = () => {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-full border border-teal-500/40 bg-[#11191b] px-3.5 py-2 text-xs font-semibold text-white shadow-xl transition hover:border-teal-400 hover:bg-[#1a2629]"
+        className="flex items-center gap-1.5 rounded-full border border-teal-500/40 bg-[#11191b]/95 backdrop-blur-md px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-[10.5px] sm:text-xs font-semibold text-white shadow-xl transition hover:border-teal-400 hover:bg-[#1a2629] cursor-pointer active:scale-95"
+        aria-expanded={isOpen}
       >
-        <span className="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse"></span>
-        <span>
-          Role: <strong className="text-teal-300">{currentUser ? currentUser.role : 'Guest'}</strong>
-        </span>
+        <span className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-teal-400 animate-pulse"></span>
+        <span className="hidden sm:inline">Role: </span>
+        <strong className="text-teal-300 font-bold">{currentUser ? currentUser.role : 'Guest'}</strong>
         <Icon name="chevron-down" size="xs" className={isOpen ? 'rotate-180 transition' : ''} />
       </button>
     </aside>

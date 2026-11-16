@@ -421,11 +421,11 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
               closeMenu();
               setIsAuthOpen(true);
             }}
-            className="header-signin-btn inline-flex items-center gap-2 rounded-full border border-slate-300/80 bg-white/95 px-4 py-2 text-xs font-bold text-[#102820] hover:bg-white hover:border-[#064E3B] hover:text-[#064E3B] transition-all shadow-2xs hover:shadow-xs active:scale-98"
+            className="header-signin-btn inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-slate-300/80 bg-white/95 px-2.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-[#102820] hover:bg-white hover:border-[#064E3B] hover:text-[#064E3B] transition-all shadow-2xs hover:shadow-xs active:scale-98"
             aria-label="Log in or create account"
           >
             <User className="h-3.5 w-3.5 text-[#065F46]" />
-            <span>Sign In</span>
+            <span className="hidden sm:inline">Sign In</span>
           </button>
         )}
       </div>
