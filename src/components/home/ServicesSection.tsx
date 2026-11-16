@@ -14,10 +14,38 @@ const SERVICE_CATEGORY_TAGS: Record<string, string> = {
   'lab-tests': 'DIAGNOSTICS',
 };
 
+// Mobile-specific copy matching user's mobile reference design
+const MOBILE_SERVICE_DETAILS: Record<
+  string,
+  { title: string; desc: string; tag: string }
+> = {
+  'doctor-visit': {
+    title: 'Doctor Home Consultation',
+    desc: 'Qualified doctors at your doorstep for timely care.',
+    tag: 'DOCTOR VISIT',
+  },
+  'nursing-care': {
+    title: 'Home Nursing Care',
+    desc: 'Professional nursing care at home.',
+    tag: 'NURSING CARE',
+  },
+  'caretakers': {
+    title: 'Patient Caretakers & Attendants',
+    desc: 'Compassionate support for your loved ones.',
+    tag: 'CARE SUPPORT',
+  },
+  'lab-tests': {
+    title: 'Home Diagnostic & Vaccination',
+    desc: 'Tests and vaccinations at your convenience.',
+    tag: 'DIAGNOSTICS',
+  },
+};
+
 export const ServicesSection: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [activeMobileIndex, setActiveMobileIndex] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -36,6 +64,26 @@ export const ServicesSection: React.FC = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  const handleMobileScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const scrollLeft = container.scrollLeft;
+    const cardWidth = container.clientWidth * 0.78;
+    if (cardWidth > 0) {
+      const idx = Math.round(scrollLeft / cardWidth);
+      setActiveMobileIndex(Math.min(Math.max(idx, 0), SERVICES_DATA.length - 1));
+    }
+  };
+
+  const scrollToCard = (index: number) => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const card = container.children[index] as HTMLElement;
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+    }
+  };
 
   return (
     <section
@@ -56,41 +104,58 @@ export const ServicesSection: React.FC = () => {
 
       {/* Main Container - Aligns pixel-for-pixel with "Meet Our Medical Specialists" */}
       <div className="container relative">
-        {/* Section Heading Row - Exact same layout, typography, and margins as Specialists section */}
+        {/* Section Heading Row */}
         <div
           className={`section-heading-row transition-all duration-700 ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
           <div>
-            <p className="eyebrow">COMPREHENSIVE HEALTHCARE AT HOME</p>
+            <p className="eyebrow flex items-center gap-2">
+              <span>COMPREHENSIVE HEALTHCARE AT HOME</span>
+              <span className="md:hidden inline-block h-[1.5px] w-6 bg-[#07583F]/60" />
+            </p>
             <h2 id="servicesTitle">Our Services</h2>
             <p className="section-lead">
-              From routine checkups to specialized treatment, our physicians bring expertise and human kindness together under one roof.
+              <span className="md:hidden">
+                From routine checkups to specialized treatment, our care team brings expert healthcare to your home.
+              </span>
+              <span className="hidden md:inline">
+                From routine checkups to specialized treatment, our physicians bring expertise and human kindness together under one roof.
+              </span>
             </p>
           </div>
 
-          <SliderArrows
-            trackRef={scrollContainerRef}
-            prevLabel="Previous service"
-            nextLabel="Next service"
-          />
+          {/* Desktop Slider Arrows - Hidden on mobile in favor of bottom pill indicator */}
+          <div className="hidden md:flex">
+            <SliderArrows
+              trackRef={scrollContainerRef}
+              prevLabel="Previous service"
+              nextLabel="Next service"
+            />
+          </div>
         </div>
 
-        {/* 4 Cards Grid with Staggered Entrance Animations & Floating Shadows */}
+        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop */}
         <div
           ref={scrollContainerRef}
-          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 no-scrollbar w-full"
+          onScroll={handleMobileScroll}
+          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 snap-x snap-mandatory scroll-smooth pb-3 md:pb-0 no-scrollbar w-full"
           aria-label="Core home healthcare services"
         >
           {SERVICES_DATA.map((service, index) => {
-            const categoryTag = SERVICE_CATEGORY_TAGS[service.id] || 'SPECIALTY CARE';
+            const categoryTagDesktop = SERVICE_CATEGORY_TAGS[service.id] || 'SPECIALTY CARE';
+            const mobileDetails = MOBILE_SERVICE_DETAILS[service.id] || {
+              title: service.title,
+              desc: service.description,
+              tag: categoryTagDesktop,
+            };
 
             return (
               <Link
                 key={service.id}
                 href={service.href}
-                className={`group relative flex-none w-[285px] sm:w-[320px] md:w-auto h-[350px] sm:h-[360px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.12)] hover:shadow-[0_22px_48px_rgba(6,78,59,0.22)] transition-all duration-500 hover:-translate-y-2.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
+                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-auto h-[370px] sm:h-[360px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.12)] hover:shadow-[0_22px_48px_rgba(6,78,59,0.22)] transition-all duration-500 hover:-translate-y-2.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
                   isVisible
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-8 scale-[0.98]'
@@ -122,37 +187,63 @@ export const ServicesSection: React.FC = () => {
                   />
                 </div>
 
-                {/* Card Content with Refined Font Sizes & Deliberate Proportions */}
+                {/* Card Content */}
                 <div className="relative z-10 h-full p-5 sm:p-6 flex flex-col justify-end">
-                  {/* Category Eyebrow Tag - Compact and Clean */}
-                  <span className="text-[#6EE7B7] font-bold text-[10.5px] sm:text-[11px] uppercase tracking-[0.14em] mb-1 drop-shadow-xs">
-                    {categoryTag}
-                  </span>
+                  {/* Category Eyebrow Tag: Mint Pill Badge on mobile, Clean Text on desktop */}
+                  <div>
+                    {/* Mobile Pill Badge */}
+                    <span className="md:hidden inline-block rounded-full bg-[#A7F3D0] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#064E3B] mb-2 shadow-xs">
+                      {mobileDetails.tag}
+                    </span>
+                    {/* Desktop Category Text */}
+                    <span className="hidden md:inline-block text-[#6EE7B7] font-bold text-[11px] uppercase tracking-[0.14em] mb-1 drop-shadow-xs">
+                      {categoryTagDesktop}
+                    </span>
+                  </div>
 
-                  {/* Service Title - Refined size for balanced composition */}
-                  <h3 className="font-heading font-bold text-white text-[18px] sm:text-[19px] lg:text-[20px] leading-[1.2] mb-2 group-hover:text-[#A7F3D0] transition-colors">
-                    {service.title}
+                  {/* Service Title */}
+                  <h3 className="font-heading font-bold text-white text-[19px] sm:text-[19px] lg:text-[20px] leading-[1.2] mb-1.5 group-hover:text-[#A7F3D0] transition-colors">
+                    <span className="md:hidden">{mobileDetails.title}</span>
+                    <span className="hidden md:inline">{service.title}</span>
                   </h3>
 
                   {/* Description + Circular Action Arrow Button Row */}
                   <div className="flex items-end justify-between gap-3 pt-0.5">
-                    {/* Refined Description Font Size */}
-                    <p className="text-slate-200/95 text-[11.5px] sm:text-[12.5px] leading-relaxed max-w-[180px] sm:max-w-[195px] line-clamp-2">
-                      {service.description}
+                    {/* Description Text */}
+                    <p className="text-slate-200/95 text-[12px] sm:text-[12.5px] leading-relaxed max-w-[190px] line-clamp-2">
+                      <span className="md:hidden">{mobileDetails.desc}</span>
+                      <span className="hidden md:inline">{service.description}</span>
                     </p>
 
-                    {/* Circular White Action Button with Enhanced Floating Shadow */}
+                    {/* Circular White Action Button */}
                     <div
-                      className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#102723] flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.18)] group-hover:bg-[#E6F7F0] group-hover:scale-110 group-hover:shadow-[0_6px_16px_rgba(0,0,0,0.24)] active:scale-95 transition-all duration-300"
+                      className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#075239] flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.18)] group-hover:bg-[#E6F7F0] group-hover:scale-110 group-hover:shadow-[0_6px_16px_rgba(0,0,0,0.24)] active:scale-95 transition-all duration-300"
                       aria-hidden="true"
                     >
-                      <ArrowRight className="h-4 w-4 sm:h-4.5 sm:w-4.5 stroke-[2.3] text-[#102723] group-hover:translate-x-0.5 transition-transform duration-200" />
+                      <ArrowRight className="h-4.5 w-4.5 stroke-[2.4] text-[#075239] group-hover:translate-x-0.5 transition-transform duration-200" />
                     </div>
                   </div>
                 </div>
               </Link>
             );
           })}
+        </div>
+
+        {/* Mobile Carousel Indicators matching Reference Image */}
+        <div className="flex md:hidden items-center justify-center gap-2 pt-4">
+          {SERVICES_DATA.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => scrollToCard(idx)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                activeMobileIndex === idx
+                  ? 'w-7 bg-[#075239]'
+                  : 'w-5 bg-[#D1DCD6]'
+              }`}
+              aria-label={`Go to service ${idx + 1}`}
+            />
+          ))}
         </div>
       </div>
     </section>
