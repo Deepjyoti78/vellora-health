@@ -241,96 +241,112 @@ export default function PatientBookingsPage() {
                 return (
                   <div
                     key={b.id}
-                    className="group rounded-[20px] border border-[#D9ECE7] bg-white p-6 sm:p-7 sm:px-8 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-md transition-all duration-300 w-full max-w-full overflow-hidden"
+                    className="group rounded-[22px] border border-[#D9ECE7] bg-white p-5 sm:p-7 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-[#A7F3D0] hover:shadow-md transition-all duration-300 w-full max-w-full overflow-hidden"
                   >
-                    {/* Top Metadata Row: Booking ID | Status Badge | Category Badge */}
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs text-slate-600 mb-2">
-                      <span className="font-medium text-slate-500">
-                        Booking ID: <strong className="font-mono text-[#102723]">{b.bookingNumber}</strong>
-                      </span>
-
-                      {getStatusBadge(b.status)}
-
-                      <span className="text-slate-300 font-light select-none">|</span>
-
-                      <div className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700">
-                        <CategoryIcon className="h-3.5 w-3.5 text-[#065F46]" />
+                    {/* Top Header Row: Category Badge + Status Badge */}
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-xs font-semibold text-[#065F46] shadow-2xs">
+                        <CategoryIcon className="h-3.5 w-3.5" />
                         <span>{categoryInfo.label}</span>
+                      </div>
+                      {getStatusBadge(b.status)}
+                    </div>
+
+                    {/* Main Appointment Title & Scheduled Subtitle */}
+                    <div>
+                      <h3 className="font-heading text-lg sm:text-[21px] font-bold text-[#102723] leading-snug group-hover:text-[#065F46] transition-colors">
+                        {b.serviceName}
+                      </h3>
+                      <p className="mt-1 text-xs sm:text-[13px] text-slate-500 font-normal">
+                        Scheduled for {formatDateDisplay(b.scheduledDate)} ({b.scheduledTimeSlot})
+                      </p>
+                    </div>
+
+                    {/* Main Highlight Strip: BOOKING ID, APPOINTMENT DATE, and TIME as the 3 Main Focal Points */}
+                    <div className="mt-4 rounded-[18px] bg-[#F7FAF9] border border-[#E8F0EC] p-4 sm:p-5">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 divide-y md:divide-y-0 md:divide-x divide-[#E5ECE9]">
+                        {/* Main 1: BOOKING ID */}
+                        <div className="flex items-center gap-3.5 pt-0 md:pt-0">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
+                            <Calendar className="h-5 w-5 stroke-[2]" />
+                          </div>
+                          <div className="min-w-0">
+                            <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                              Booking ID
+                            </span>
+                            <span className="font-heading text-sm sm:text-base font-bold font-mono text-[#102723] tracking-tight block truncate">
+                              {b.bookingNumber}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Main 2: APPOINTMENT DATE */}
+                        <div className="flex items-center gap-3.5 pt-3 md:pt-0 md:pl-6">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
+                            <Calendar className="h-5 w-5 stroke-[2]" />
+                          </div>
+                          <div className="min-w-0">
+                            <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                              Appointment Date
+                            </span>
+                            <span className="font-heading text-sm sm:text-base font-bold text-[#102723] tracking-tight block truncate">
+                              {formatDateDisplay(b.scheduledDate)}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Main 3: TIME */}
+                        <div className="flex items-center gap-3.5 pt-3 md:pt-0 md:pl-6">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-[#E2EBE7] text-[#065F46] shadow-2xs">
+                            <Clock className="h-5 w-5 stroke-[2]" />
+                          </div>
+                          <div className="min-w-0">
+                            <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                              Time
+                            </span>
+                            <span className="font-heading text-sm sm:text-base font-bold text-[#102723] tracking-tight block truncate">
+                              {b.scheduledTimeSlot}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Main Appointment Title */}
-                    <h3 className="font-heading text-lg sm:text-[21px] font-bold text-[#102723] leading-snug mb-5 group-hover:text-[#065F46] transition-colors truncate">
-                      {b.serviceName}
-                    </h3>
-
-                    {/* Lower Info Grid & Actions */}
-                    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 sm:gap-6 pt-1 w-full min-w-0">
-                      {/* 4 Information Columns */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 flex-1 min-w-0">
-                        {/* Col 1: Date & Time */}
-                        <div className="flex items-start gap-2.5 min-w-0">
-                          <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#F0FAF5] text-[#065F46] shrink-0 border border-[#D9ECE7]">
-                            <Calendar className="h-3.5 w-3.5 stroke-[2.2]" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="font-bold text-xs sm:text-[13px] text-[#102723] truncate">
-                              {formatDateDisplay(b.scheduledDate)}
-                            </p>
-                            <p className="text-[11px] text-slate-500 mt-0.5 truncate">
-                              {b.scheduledTimeSlot}
-                            </p>
-                          </div>
+                    {/* Supporting Details & Actions Footer */}
+                    <div className="mt-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 pt-3 border-t border-[#F2F8F5]">
+                      {/* Secondary Info: Patient, Clinician, Location */}
+                      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-600">
+                        <div className="flex items-center gap-1.5">
+                          <User className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <span className="text-slate-400 text-[11px]">Patient:</span>
+                          <span className="font-semibold text-slate-800">
+                            {b.beneficiaryName} {b.beneficiaryRelation ? `(${b.beneficiaryRelation})` : '(Self)'}
+                          </span>
                         </div>
 
-                        {/* Col 2: Patient */}
-                        <div className="flex items-start gap-2.5 min-w-0">
-                          <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#F0FAF5] text-[#065F46] shrink-0 border border-[#D9ECE7]">
-                            <User className="h-3.5 w-3.5 stroke-[2.2]" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                              Patient
-                            </p>
-                            <p className="font-bold text-xs sm:text-[13px] text-[#102723] mt-0.5 truncate">
-                              {b.beneficiaryName} {b.beneficiaryRelation ? `(${b.beneficiaryRelation})` : '(Self)'}
-                            </p>
-                          </div>
+                        <span className="text-slate-200 hidden sm:inline">•</span>
+
+                        <div className="flex items-center gap-1.5">
+                          <Stethoscope className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <span className="text-slate-400 text-[11px]">Clinician:</span>
+                          <span className="font-semibold text-[#065F46]">
+                            {b.providerName || 'Coordinator Dispatch'}
+                          </span>
                         </div>
 
-                        {/* Col 3: Assigned Clinician */}
-                        <div className="flex items-start gap-2.5 min-w-0">
-                          <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#F0FAF5] text-[#065F46] shrink-0 border border-[#D9ECE7]">
-                            <Stethoscope className="h-3.5 w-3.5 stroke-[2.2]" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                              Clinician
-                            </p>
-                            <p className="font-bold text-xs sm:text-[13px] text-[#065F46] mt-0.5 truncate">
-                              {b.providerName || 'Coordinator Dispatch'}
-                            </p>
-                          </div>
-                        </div>
+                        <span className="text-slate-200 hidden sm:inline">•</span>
 
-                        {/* Col 4: Location */}
-                        <div className="flex items-start gap-2.5 min-w-0">
-                          <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg bg-[#F0FAF5] text-[#065F46] shrink-0 border border-[#D9ECE7]">
-                            <MapPin className="h-3.5 w-3.5 stroke-[2.2]" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                              Location
-                            </p>
-                            <p className="text-xs text-slate-600 mt-0.5 leading-snug line-clamp-2">
-                              {b.addressText}
-                            </p>
-                          </div>
+                        <div className="flex items-center gap-1.5">
+                          <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <span className="text-slate-400 text-[11px]">Location:</span>
+                          <span className="text-slate-600 truncate max-w-[200px] sm:max-w-xs">
+                            {b.addressText}
+                          </span>
                         </div>
                       </div>
 
-                      {/* Right Action Buttons */}
-                      <div className="flex flex-wrap items-center gap-2.5 shrink-0 self-start xl:self-center pt-3 xl:pt-0 border-t xl:border-t-0 border-[#F2F8F5]">
+                      {/* Action Buttons */}
+                      <div className="flex flex-wrap items-center gap-2.5 shrink-0">
                         <Link
                           href={`/patient/bookings/${b.id}`}
                           className="inline-flex items-center gap-1.5 rounded-xl bg-[#064E3B] hover:bg-[#065F46] px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-colors whitespace-nowrap"
