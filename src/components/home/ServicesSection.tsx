@@ -91,6 +91,16 @@ export const ServicesSection: React.FC = () => {
       className="relative bg-white pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20 lg:pb-24 shadow-[0_10px_35px_rgba(0,0,0,0.02)]"
       aria-labelledby="servicesTitle"
     >
+      {/* Soft atmospheric ambient glow shadow effect in background */}
+      <div
+        className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-[720px] h-[340px] rounded-full bg-gradient-to-b from-[#E8F8F2]/60 via-[#ECFDF5]/30 to-transparent blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute bottom-0 right-0 w-[500px] h-[300px] rounded-full bg-[#EBF7F2]/40 blur-3xl"
+        aria-hidden="true"
+      />
+
       {/* Main Container - Aligns pixel-for-pixel with "Meet Our Medical Specialists" */}
       <div className="container relative">
         {/* Section Heading Row */}
@@ -125,11 +135,11 @@ export const ServicesSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop with minimal gap */}
+        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop with tighter gap */}
         <div
           ref={scrollContainerRef}
           onScroll={handleMobileScroll}
-          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-2 lg:gap-2.5 snap-x snap-mandatory scroll-smooth pt-2 md:pt-3.5 pb-3 md:pb-1 md:overflow-visible no-scrollbar w-full"
+          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible pt-3 md:pt-4 pb-3 md:pb-4 gap-4 md:gap-2.5 lg:gap-2.5 snap-x snap-mandatory scroll-smooth no-scrollbar w-full"
           aria-label="Core home healthcare services"
         >
           {SERVICES_DATA.map((service, index) => {
@@ -144,7 +154,7 @@ export const ServicesSection: React.FC = () => {
               <Link
                 key={service.id}
                 href={service.href}
-                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-auto h-[315px] sm:h-[335px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.08)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
+                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-auto h-[315px] sm:h-[335px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.08)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.22)] hover:border-white/35 transition-all duration-300 hover:-translate-y-2 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
                   isVisible
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-8 scale-[0.98]'
@@ -188,7 +198,7 @@ export const ServicesSection: React.FC = () => {
                   {/* Bottom Content Block */}
                   <div>
                     {/* Service Title */}
-                    <h3 className="font-heading font-bold text-white text-[18px] sm:text-[19px] lg:text-[20px] leading-[1.2] mb-1.5 group-hover:text-[#A7F3D0] transition-colors">
+                    <h3 className="font-heading font-bold text-white text-[18px] sm:text-[19px] lg:text-[20px] leading-[1.2] mb-1.5 transition-colors">
                       <span className="md:hidden">{mobileDetails.title}</span>
                       <span className="hidden md:inline">{service.title}</span>
                     </h3>

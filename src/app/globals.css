@@ -545,7 +545,7 @@ h1, h2 {
 
 .hero-copy {
   position: absolute;
-  top: clamp(0px, 0.4vh, 6px);
+  top: clamp(18px, 2.6vh, 36px);
   left: 0;
   max-width: 580px;
 }
@@ -596,7 +596,7 @@ h1, h2 {
   gap: 8px;
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   background: rgba(18, 48, 33, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -647,7 +647,7 @@ h1, h2 {
   font-size: clamp(44px, 4.3vw, 66px);
   letter-spacing: -0.045em;
   line-height: 1.05;
-  margin: 0 0 16px;
+  margin: 0 0 26px;
   color: #ffffff;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
 }
@@ -1891,7 +1891,7 @@ h1, h2 {
     height: calc(100% - 82px);
   }
   .hero-copy {
-    top: 10px;
+    top: 35px;
   }
   .hero-stats {
     display: none;
@@ -2014,7 +2014,7 @@ h1, h2 {
   }
   .hero-copy {
     position: absolute;
-    top: clamp(210px, 28vh, 235px);
+    top: clamp(88px, 11.5vh, 110px);
     left: 0;
     right: 0;
     max-width: none;
