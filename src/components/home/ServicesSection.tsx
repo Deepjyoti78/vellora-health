@@ -2,7 +2,6 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { SERVICES_DATA } from '@/data/site-content';
 import { SliderArrows } from '@/components/common/SliderArrows';
 
@@ -136,11 +135,11 @@ export const ServicesSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop */}
+        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop with tighter gap */}
         <div
           ref={scrollContainerRef}
           onScroll={handleMobileScroll}
-          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 snap-x snap-mandatory scroll-smooth pb-3 md:pb-0 no-scrollbar w-full"
+          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-3 lg:gap-3.5 snap-x snap-mandatory scroll-smooth pb-3 md:pb-0 no-scrollbar w-full"
           aria-label="Core home healthcare services"
         >
           {SERVICES_DATA.map((service, index) => {
@@ -176,21 +175,21 @@ export const ServicesSection: React.FC = () => {
                     className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
                   />
 
-                  {/* Gradient Overlay: 65-70% bright photography, dark base for text readability */}
+                  {/* Gradient Overlay: Clean neutral dark base without greenish tint for text readability */}
                   <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
                       background:
-                        'linear-gradient(to bottom, rgba(0, 25, 22, 0) 0%, rgba(0, 25, 22, 0.02) 35%, rgba(0, 25, 22, 0.25) 55%, rgba(0, 22, 20, 0.78) 78%, rgba(0, 19, 17, 0.98) 100%)',
+                        'linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.02) 30%, rgba(0, 0, 0, 0.28) 52%, rgba(0, 0, 0, 0.76) 74%, rgba(0, 0, 0, 0.94) 100%)',
                     }}
                     aria-hidden="true"
                   />
                 </div>
 
-                {/* Card Content: Top pill badge on mobile + Bottom title & actions */}
-                <div className="relative z-10 h-full p-4 sm:p-5 lg:p-6 flex flex-col justify-between md:justify-end">
-                  {/* Category Eyebrow Tag: Mint Pill Badge pinned to TOP on mobile */}
-                  <div className="md:hidden">
+                {/* Card Content: Top pill badge on both mobile & desktop + Bottom title & desc */}
+                <div className="relative z-10 h-full p-4 sm:p-5 lg:p-6 flex flex-col justify-between">
+                  {/* Category Eyebrow Tag: Mint Pill Badge pinned to TOP on both mobile & desktop */}
+                  <div>
                     <span className="inline-block rounded-full bg-[#A7F3D0] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#064E3B] shadow-xs">
                       {mobileDetails.tag}
                     </span>
@@ -198,33 +197,17 @@ export const ServicesSection: React.FC = () => {
 
                   {/* Bottom Content Block */}
                   <div>
-                    {/* Desktop Category Text */}
-                    <span className="hidden md:inline-block text-[#6EE7B7] font-bold text-[11px] uppercase tracking-[0.14em] mb-1 drop-shadow-xs">
-                      {categoryTagDesktop}
-                    </span>
-
                     {/* Service Title */}
                     <h3 className="font-heading font-bold text-white text-[18px] sm:text-[19px] lg:text-[20px] leading-[1.2] mb-1.5 group-hover:text-[#A7F3D0] transition-colors">
                       <span className="md:hidden">{mobileDetails.title}</span>
                       <span className="hidden md:inline">{service.title}</span>
                     </h3>
 
-                    {/* Description + Circular Action Arrow Button Row */}
-                    <div className="flex items-end justify-between gap-3 pt-0.5">
-                      {/* Description Text */}
-                      <p className="text-slate-200/95 text-[11.5px] sm:text-[12.5px] leading-relaxed max-w-[190px] line-clamp-2">
-                        <span className="md:hidden">{mobileDetails.desc}</span>
-                        <span className="hidden md:inline">{service.description}</span>
-                      </p>
-
-                      {/* Circular White Action Button */}
-                      <div
-                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#075239] flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.18)] group-hover:bg-[#E6F7F0] group-hover:scale-110 active:scale-95 transition-all duration-300"
-                        aria-hidden="true"
-                      >
-                        <ArrowRight className="h-4.5 w-4.5 stroke-[2.4] text-[#075239] group-hover:translate-x-0.5 transition-transform duration-200" />
-                      </div>
-                    </div>
+                    {/* Description Text */}
+                    <p className="text-slate-200/95 text-[11.5px] sm:text-[12.5px] leading-relaxed line-clamp-2 pt-0.5">
+                      <span className="md:hidden">{mobileDetails.desc}</span>
+                      <span className="hidden md:inline">{service.description}</span>
+                    </p>
                   </div>
                 </div>
               </Link>
