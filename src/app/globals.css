@@ -2090,7 +2090,19 @@ h1, h2 {
     gap: 5px;
   }
   .hero-detail {
-    display: none !important;
+    display: block !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(14px, 2.5vh, 22px);
+    max-width: 360px;
+    z-index: 2;
+  }
+  .hero-detail-text {
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: rgba(235, 243, 244, 0.8);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
   }
   .section {
     padding-block: 70px;
