@@ -224,9 +224,9 @@ export default function PatientDashboardPage() {
           </section>
 
           {/* ================= 2. UPCOMING & ACTIVE APPOINTMENTS SECTION ================= */}
-          <section className="rounded-[26px] border border-[#E5EAE9] bg-white p-6 sm:p-8 shadow-[0_2px_16px_rgba(0,0,0,0.02)]">
+          <section className="rounded-[22px] sm:rounded-[26px] border border-[#E5EAE9] bg-white p-3.5 sm:p-8 -mx-1 sm:mx-0 shadow-[0_2px_16px_rgba(0,0,0,0.02)]">
             {/* Section Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#F2F8F5]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 border-b border-[#F2F8F5]">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] shadow-2xs">
                   <Calendar className="h-5 w-5 stroke-[2]" />
@@ -267,7 +267,7 @@ export default function PatientDashboardPage() {
                   return (
                     <div
                       key={booking.id}
-                      className="group rounded-[20px] border border-[#E5EAE9] bg-[#FAFCFB] p-5 transition-all duration-200 hover:border-[#A7F3D0] hover:bg-white hover:shadow-xs"
+                      className="group rounded-[18px] sm:rounded-[20px] border border-[#E5EAE9] bg-[#FAFCFB] p-3.5 sm:p-5 transition-all duration-200 hover:border-[#A7F3D0] hover:bg-white hover:shadow-xs"
                     >
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                         {/* Column 1: Service Icon, Title & Reference */}
