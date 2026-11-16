@@ -261,27 +261,25 @@ export default function BookingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* ============================================================ */}
-        {/* 1. TOP BRAND HEADER: LOGO + "MY BOOKINGS" TITLE              */}
+        {/* 1. TOP BRAND LOGO (Centered, No Back Button)                */}
         {/* ============================================================ */}
         <View style={styles.topHeaderBar}>
-          <View style={styles.brandTitleContainer}>
-            <Image
-              source={require('../../../assets/images/logo-dark.png')}
-              style={styles.brandLogo}
-              resizeMode="contain"
-            />
-            <View style={styles.brandTitleDivider} />
-            <Text style={styles.pageHeadingInline}>My Bookings</Text>
-          </View>
-
-          <View style={styles.activeBadgeContainer}>
-            <View style={styles.activeDot} />
-            <Text style={styles.activeBadgeText}>{upcomingList.length} Active</Text>
-          </View>
+          <Image
+            source={require('../../../assets/images/logo-dark.png')}
+            style={styles.brandLogo}
+            resizeMode="contain"
+          />
         </View>
 
         {/* ============================================================ */}
-        {/* 2. SEGMENTED FILTER TABS: Upcoming | Completed | Cancelled   */}
+        {/* 2. "MY BOOKINGS" TITLE (Centered, Matching Image 2)          */}
+        {/* ============================================================ */}
+        <View style={styles.headingSection}>
+          <Text style={styles.pageHeading}>My Bookings</Text>
+        </View>
+
+        {/* ============================================================ */}
+        {/* 3. SEGMENTED FILTER TABS: Upcoming | Completed | Cancelled   */}
         {/* ============================================================ */}
         <View style={styles.segmentedContainer}>
           <TouchableOpacity
@@ -699,59 +697,33 @@ const styles = StyleSheet.create({
     paddingBottom: 110,
   },
 
-  /* 1. Top Header Bar: Logo + "My Bookings" Title */
+  /* 1. Top Header Bar: Logo (Centered, No Back Button) */
   topHeaderBar: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingTop: 8,
-    paddingBottom: 14,
-    marginBottom: 4,
-  },
-  brandTitleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    paddingBottom: 4,
+    marginBottom: 2,
   },
   brandLogo: {
-    width: 114,
-    height: 32,
+    width: 128,
+    height: 34,
   },
-  brandTitleDivider: {
-    width: 1.5,
-    height: 18,
-    backgroundColor: '#DCE9E1',
-    marginHorizontal: 10,
-    borderRadius: 1,
+
+  /* 2. Heading Section: "My Bookings" Title (Matching Image 2) */
+  headingSection: {
+    marginTop: 8,
+    marginBottom: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  pageHeadingInline: {
+  pageHeading: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 17,
+    fontSize: 24,
     fontWeight: '700',
     color: Palette.primary,
-    letterSpacing: -0.2,
-  },
-  activeBadgeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Palette.primaryLight,
-    paddingHorizontal: 8.5,
-    paddingVertical: 4.5,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#D2E6DA',
-  },
-  activeDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#059669',
-    marginRight: 5,
-  },
-  activeBadgeText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '600',
-    color: Palette.primary,
+    textAlign: 'center',
+    letterSpacing: -0.3,
   },
 
   /* 3. Segmented Filter Tabs */
