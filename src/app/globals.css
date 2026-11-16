@@ -591,34 +591,52 @@ h1, h2 {
 }
 
 .trust-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   font-size: 12px;
   font-weight: 500;
   margin-bottom: 20px;
-  color: #f1f4f3;
+  background: rgba(18, 48, 33, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(75, 130, 100, 0.65);
+  border-radius: 9999px;
+  padding: 3px 14px 3px 4px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  color: #ffffff;
 }
 
 .trust-row strong {
-  font-weight: 700;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .trust-avatars {
   display: flex;
-  padding-left: 2px;
+  align-items: center;
+  padding-left: 0;
 }
 
 .trust-avatars img {
   width: 26px;
   height: 26px;
-  border: 1.5px solid white;
-  border-radius: 50%;
+  border: 1.5px solid #163626;
+  border-radius: 9999px;
   object-fit: cover;
   object-position: center center;
-  margin-left: -5px;
-  background: #dde3e4;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  margin-right: -6px;
+  margin-left: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.trust-avatars img:last-child {
+  margin-right: 0;
+}
+
+.hero-title-highlight {
+  color: #2ee683;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8), 0 0 24px rgba(46, 230, 131, 0.45);
 }
 
 /* Scaled-down, balanced headline */
@@ -1983,10 +2001,10 @@ h1, h2 {
     border-radius: 9999px;
   }
   .hero {
-    height: 740px;
-    min-height: 700px;
+    height: 620px;
+    min-height: 580px;
     background-image: 
-      linear-gradient(180deg, rgba(7, 21, 23, 0.35) 0%, transparent 22%, rgba(7, 21, 23, 0.7) 100%),
+      linear-gradient(180deg, rgba(7, 21, 23, 0.35) 0%, transparent 22%, rgba(7, 21, 23, 0.5) 100%),
       url("/assets/warm-home-visit-healthcare-mobile.png");
     background-size: cover;
     background-position: center top;
@@ -1996,7 +2014,7 @@ h1, h2 {
   }
   .hero-copy {
     position: absolute;
-    top: clamp(285px, 39vh, 320px);
+    top: clamp(210px, 28vh, 235px);
     left: 0;
     right: 0;
     max-width: none;
