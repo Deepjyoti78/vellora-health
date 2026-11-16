@@ -97,7 +97,7 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
         <img
           src={theme === 'dark' ? '/assets/logo-white.png' : '/assets/logo-dark.png'}
           alt="Velora Healthcare"
-          className="h-7 sm:h-8 md:h-9 w-auto object-contain select-none"
+          className="h-[34px] sm:h-8 md:h-9 w-auto object-contain select-none"
         />
       </Link>
 
@@ -238,17 +238,17 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
               onClick={() => setIsProfileOpen((prev) => !prev)}
               aria-expanded={isProfileOpen}
               aria-haspopup="true"
-              className="group flex items-center gap-2 rounded-full border border-slate-300/80 bg-white/95 py-1.5 pl-1.5 pr-3 text-xs font-bold text-[#102820] hover:border-[#064E3B] hover:bg-white shadow-2xs transition-all active:scale-98"
+              className="group flex items-center justify-center gap-2 rounded-full border border-slate-300/80 bg-white/95 h-10 w-10 p-0 sm:h-auto sm:w-auto sm:py-1.5 sm:pl-1.5 sm:pr-3 text-xs font-bold text-[#102820] hover:border-[#064E3B] hover:bg-white shadow-2xs transition-all active:scale-98"
               aria-label="User profile and navigation menu"
             >
               {currentUser.avatar ? (
                 <img
                   src={currentUser.avatar}
                   alt={currentUser.name}
-                  className="h-6 w-6 rounded-full object-cover border border-[#064E3B]/20"
+                  className="h-7 w-7 sm:h-6 sm:w-6 rounded-full object-cover border border-[#064E3B]/20"
                 />
               ) : (
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#064E3B] text-white text-[10px] font-black">
+                <span className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-[#064E3B] text-white text-[10px] font-black">
                   {getInitials(currentUser.name)}
                 </span>
               )}
@@ -256,7 +256,7 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
                 {currentUser.name.split(' ')[0]}
               </span>
               <ChevronDown
-                className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-200 ${
+                className={`hidden sm:inline-block h-3.5 w-3.5 text-slate-400 transition-transform duration-200 ${
                   isProfileOpen ? 'rotate-180 text-[#064E3B]' : 'group-hover:text-slate-600'
                 }`}
               />
@@ -421,10 +421,10 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
               closeMenu();
               setIsAuthOpen(true);
             }}
-            className="header-signin-btn inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-slate-300/80 bg-white/95 px-2.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-[#102820] hover:bg-white hover:border-[#064E3B] hover:text-[#064E3B] transition-all shadow-2xs hover:shadow-xs active:scale-98"
+            className="header-signin-btn inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-slate-300/80 bg-white/95 h-10 w-10 p-0 sm:h-auto sm:w-auto sm:px-4 sm:py-2 text-xs font-bold text-[#102820] hover:bg-white hover:border-[#064E3B] hover:text-[#064E3B] transition-all shadow-2xs hover:shadow-xs active:scale-98"
             aria-label="Log in or create account"
           >
-            <User className="h-3.5 w-3.5 text-[#065F46]" />
+            <User className="h-4 w-4 text-[#065F46]" />
             <span className="hidden sm:inline">Sign In</span>
           </button>
         )}

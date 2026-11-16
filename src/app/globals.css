@@ -457,11 +457,11 @@ h1, h2 {
 .mobile-menu-button {
   display: none;
   border: 1px solid #ffffff6d;
-  border-radius: 12px;
+  border-radius: 9999px;
   color: white;
   background: #ffffff17;
-  height: 44px;
-  width: 46px;
+  height: 40px;
+  width: 40px;
   align-items: center;
   justify-content: center;
 }
@@ -534,6 +534,7 @@ h1, h2 {
   border: 1px solid #d4dede;
   color: #11191b;
   background: #f2f6f6;
+  border-radius: 9999px;
 }
 
 .hero-main {
@@ -1940,22 +1941,27 @@ h1, h2 {
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 640px) {
   .container {
     width: calc(100% - 32px);
   }
   .site-header {
     width: calc(100% - 32px);
-    gap: 8px;
+    gap: 12px;
     height: 66px;
     grid-template-columns: 1fr auto auto;
   }
   .brand {
-    font-size: 17px;
+    font-size: 18px;
   }
   .brand-icon {
-    transform: scale(0.78);
-    margin-right: -3px;
+    transform: scale(0.85);
+    margin-right: -2px;
+  }
+  .header-signin-btn {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
   }
   .header-book {
     display: inline-flex;
@@ -1974,24 +1980,25 @@ h1, h2 {
   .mobile-menu-button {
     width: 40px;
     height: 40px;
+    border-radius: 9999px;
   }
   .hero {
-    height: 760px;
-    min-height: 690px;
-    background-position: 72% center;
+    height: 820px;
+    min-height: 760px;
+    background-position: 42% center;
   }
   .hero-main {
     height: calc(100% - 71px);
   }
   .hero-copy {
-    top: 45px;
+    top: 24px;
     left: 0;
     right: 0;
     max-width: none;
   }
   .trust-row {
     font-size: 11px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
   }
   .trust-avatars img {
     width: 25px;
@@ -1999,9 +2006,10 @@ h1, h2 {
   }
   .hero h1,
   .hero-title {
-    font-size: clamp(34px, 8.5vw, 44px);
+    font-size: clamp(32px, 8.2vw, 42px);
     line-height: 1.06;
-    margin-bottom: 18px;
+    margin-top: clamp(190px, 27vh, 230px);
+    margin-bottom: 16px;
   }
   .hero-title-thumb {
     width: 42px;
