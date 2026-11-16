@@ -1,12 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { Menu } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 
 export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const isDashboard = pathname === '/admin/dashboard' || pathname === '/admin';
 
   return (
     <div className="min-h-screen bg-[#F5F9F7] flex font-sans text-[#102820]">
@@ -20,8 +24,28 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
 
       {/* Main App Container */}
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-        {/* Top Header */}
-        <AdminHeader onOpenMobileMenu={() => setMobileOpen(true)} />
+        {/* Top Header - Displayed on Dashboard Only */}
+        {isDashboard ? (
+          <AdminHeader onOpenMobileMenu={() => setMobileOpen(true)} />
+        ) : (
+          /* Slim mobile-only bar for non-dashboard pages so mobile users can still access the navigation drawer */
+          <div className="flex md:hidden h-14 shrink-0 items-center justify-between border-b border-[#E2EBE7]/60 bg-[#F5F9F7] px-4">
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#E2EBE7] text-slate-600 hover:bg-[#F2F8F5] transition-colors"
+              aria-label="Open mobile menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            <img
+              src="/assets/logo-dark.png"
+              alt="Velora Healthcare"
+              className="h-6 w-auto object-contain"
+            />
+            <div className="w-9" />
+          </div>
+        )}
 
         {/* Page Canvas */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
