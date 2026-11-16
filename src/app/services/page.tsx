@@ -226,8 +226,8 @@ export default function ServicesPage() {
                 </button>
               </div>
 
-              {/* Popular Quick-Filter Chips */}
-              <div className="mt-3.5 flex flex-wrap items-center gap-2 sm:gap-2.5 animate-fade-in-up animate-delay-4">
+              {/* Popular Quick-Filter Chips - Hidden on mobile view per user request */}
+              <div className="hidden md:flex mt-3.5 flex-wrap items-center gap-2 sm:gap-2.5 animate-fade-in-up animate-delay-4">
                 <span className="text-xs font-semibold text-slate-500 mr-1 select-none">
                   Popular:
                 </span>
@@ -259,8 +259,8 @@ export default function ServicesPage() {
               </div>
             </div>
 
-            {/* Right Column (col-span-5): Unboxed Healthcare Illustration */}
-            <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
+            {/* Right Column (col-span-5): Unboxed Healthcare Illustration - Hidden on mobile view per user request */}
+            <div className="hidden md:flex lg:col-span-5 items-center justify-center lg:justify-end">
               <div className="relative w-full max-w-[500px] flex items-center justify-center">
                 {/* Multi-layered ambient mint glow in background */}
                 <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-[#ECFDF5] via-[#D1FAE5]/50 to-transparent blur-3xl opacity-80 pointer-events-none" />
@@ -396,18 +396,18 @@ export default function ServicesPage() {
               </div>
             </div>
 
-            {/* 3-Column Category Card Grid Matching Reference Image with Staggered Cascading Animation */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* 2-Column on Mobile, 3-Column on Desktop Category Card Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
               {CATEGORIES_DATA.map((cat, idx) => {
                 const CategoryIcon = cat.icon;
                 return (
                   <div
                     key={cat.id}
                     style={{ animationDelay: `${idx * 90 + 120}ms` }}
-                    className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E2EBE7] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)] transition-all duration-300 animate-card-slide-up card-hover-lift"
+                    className="group flex flex-col justify-between overflow-hidden rounded-[16px] sm:rounded-[20px] border border-[#E2EBE7] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)] transition-all duration-300 animate-card-slide-up card-hover-lift"
                   >
-                    {/* Top Image with Badge (185-200px height) */}
-                    <Link href={cat.href} className="relative h-[185px] sm:h-[195px] lg:h-[200px] w-full overflow-hidden bg-slate-100 block">
+                    {/* Top Image with Badge */}
+                    <Link href={cat.href} className="relative h-[115px] sm:h-[185px] lg:h-[200px] w-full overflow-hidden bg-slate-100 block">
                       <img
                         src={cat.image}
                         alt={cat.title}
@@ -415,26 +415,26 @@ export default function ServicesPage() {
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
                       />
                       {/* Floating Service Count Badge */}
-                      <div className="absolute top-3.5 right-3.5 rounded-full bg-white/95 backdrop-blur-xs px-3 py-1 text-[11.5px] font-bold text-slate-800 shadow-2xs border border-slate-100">
+                      <div className="absolute top-2 right-2 sm:top-3.5 sm:right-3.5 rounded-full bg-white/95 backdrop-blur-xs px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-[11.5px] font-bold text-slate-800 shadow-2xs border border-slate-100">
                         {cat.servicesCount}
                       </div>
                     </Link>
 
                     {/* Lower Bar with Mint Icon Square, Title/Description & Emerald Pill Button */}
-                    <div className="p-4 sm:p-4.5 flex items-center justify-between gap-3 bg-white min-h-[96px]">
-                      <div className="flex items-center gap-3 min-w-0">
+                    <div className="p-2.5 sm:p-4.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 bg-white min-h-0 sm:min-h-[96px]">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                         {/* Mint Icon Box */}
-                        <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-[#E6F4EE] flex items-center justify-center text-[#065F46] shrink-0 border border-[#D1EADC]">
-                          <CategoryIcon className="h-5 w-5" />
+                        <div className="h-7 w-7 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-[#E6F4EE] flex items-center justify-center text-[#065F46] shrink-0 border border-[#D1EADC]">
+                          <CategoryIcon className="h-3.5 w-3.5 sm:h-5 sm:w-5" />
                         </div>
                         {/* Text Content */}
                         <div className="min-w-0">
                           <Link href={cat.href}>
-                            <h3 className="font-bold text-[16px] sm:text-[17px] text-[#102820] leading-snug group-hover:text-[#065F46] transition-colors truncate">
+                            <h3 className="font-bold text-[13px] sm:text-[16px] lg:text-[17px] text-[#102820] leading-snug group-hover:text-[#065F46] transition-colors truncate">
                               {cat.title}
                             </h3>
                           </Link>
-                          <p className="text-[11.5px] sm:text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
+                          <p className="hidden sm:block text-[11.5px] sm:text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
                             {cat.description}
                           </p>
                         </div>
@@ -443,7 +443,7 @@ export default function ServicesPage() {
                       {/* Action Pill Button */}
                       <Link
                         href={cat.href}
-                        className="inline-flex items-center gap-1 rounded-full bg-[#064E3B] hover:bg-[#043328] text-white px-3.5 py-2 text-xs font-bold whitespace-nowrap shadow-2xs group-hover:bg-[#059669] transition-all shrink-0"
+                        className="inline-flex items-center justify-center gap-1 rounded-full bg-[#064E3B] hover:bg-[#043328] text-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold whitespace-nowrap shadow-2xs group-hover:bg-[#059669] transition-all w-full sm:w-auto shrink-0 mt-0.5 sm:mt-0"
                       >
                         <span>{cat.buttonLabel}</span>
                       </Link>

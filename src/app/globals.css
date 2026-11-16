@@ -545,7 +545,7 @@ h1, h2 {
 
 .hero-copy {
   position: absolute;
-  top: clamp(18px, 2.6vh, 36px);
+  top: clamp(0px, 0.4vh, 6px);
   left: 0;
   max-width: 580px;
 }
@@ -596,7 +596,7 @@ h1, h2 {
   gap: 8px;
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   background: rgba(18, 48, 33, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -647,7 +647,7 @@ h1, h2 {
   font-size: clamp(44px, 4.3vw, 66px);
   letter-spacing: -0.045em;
   line-height: 1.05;
-  margin: 0 0 26px;
+  margin: 0 0 16px;
   color: #ffffff;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
 }
@@ -1891,7 +1891,7 @@ h1, h2 {
     height: calc(100% - 82px);
   }
   .hero-copy {
-    top: 35px;
+    top: 10px;
   }
   .hero-stats {
     display: none;

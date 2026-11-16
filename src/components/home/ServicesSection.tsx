@@ -88,19 +88,9 @@ export const ServicesSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="services"
-      className="relative overflow-hidden bg-white pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20 lg:pb-24 shadow-[0_10px_35px_rgba(0,0,0,0.02)]"
+      className="relative bg-white pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20 lg:pb-24 shadow-[0_10px_35px_rgba(0,0,0,0.02)]"
       aria-labelledby="servicesTitle"
     >
-      {/* Soft atmospheric ambient glow shadow effect in background */}
-      <div
-        className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-[720px] h-[340px] rounded-full bg-gradient-to-b from-[#E8F8F2]/60 via-[#ECFDF5]/30 to-transparent blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute bottom-0 right-0 w-[500px] h-[300px] rounded-full bg-[#EBF7F2]/40 blur-3xl"
-        aria-hidden="true"
-      />
-
       {/* Main Container - Aligns pixel-for-pixel with "Meet Our Medical Specialists" */}
       <div className="container relative">
         {/* Section Heading Row */}
@@ -135,11 +125,11 @@ export const ServicesSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop with tighter gap */}
+        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop with minimal gap */}
         <div
           ref={scrollContainerRef}
           onScroll={handleMobileScroll}
-          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-3 lg:gap-3.5 snap-x snap-mandatory scroll-smooth pb-3 md:pb-0 no-scrollbar w-full"
+          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-2 lg:gap-2.5 snap-x snap-mandatory scroll-smooth pt-2 md:pt-3.5 pb-3 md:pb-1 md:overflow-visible no-scrollbar w-full"
           aria-label="Core home healthcare services"
         >
           {SERVICES_DATA.map((service, index) => {
@@ -154,7 +144,7 @@ export const ServicesSection: React.FC = () => {
               <Link
                 key={service.id}
                 href={service.href}
-                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-auto h-[315px] sm:h-[335px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.12)] hover:shadow-[0_22px_48px_rgba(6,78,59,0.22)] transition-all duration-500 hover:-translate-y-2.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
+                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-auto h-[315px] sm:h-[335px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.08)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1.5 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
                   isVisible
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-8 scale-[0.98]'
