@@ -91,13 +91,13 @@ export const ServicesSection: React.FC = () => {
       className="relative bg-white pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20 lg:pb-24 shadow-[0_10px_35px_rgba(0,0,0,0.02)]"
       aria-labelledby="servicesTitle"
     >
-      {/* Soft atmospheric ambient glow shadow effect in background */}
+      {/* Soft atmospheric ambient glow shadow effect in background - Hidden on mobile to prevent whitish bleed */}
       <div
-        className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-[720px] h-[340px] rounded-full bg-gradient-to-b from-[#E8F8F2]/60 via-[#ECFDF5]/30 to-transparent blur-3xl"
+        className="hidden md:block pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-[720px] h-[340px] rounded-full bg-gradient-to-b from-[#E8F8F2]/60 via-[#ECFDF5]/30 to-transparent blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute bottom-0 right-0 w-[500px] h-[300px] rounded-full bg-[#EBF7F2]/40 blur-3xl"
+        className="hidden md:block pointer-events-none absolute bottom-0 right-0 w-[500px] h-[300px] rounded-full bg-[#EBF7F2]/40 blur-3xl"
         aria-hidden="true"
       />
 
