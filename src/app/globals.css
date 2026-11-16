@@ -1995,24 +1995,28 @@ h1, h2 {
     height: calc(100% - 71px);
   }
   .hero-copy {
-    top: 24px;
+    position: absolute;
+    top: clamp(285px, 39vh, 320px);
     left: 0;
     right: 0;
     max-width: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
   .trust-row {
     font-size: 12px;
-    margin-bottom: 0;
+    margin-bottom: 12px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(22, 54, 38, 0.82);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(75, 130, 100, 0.55);
+    background: rgba(18, 48, 33, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(75, 130, 100, 0.65);
     border-radius: 9999px;
     padding: 3px 14px 3px 4px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
   }
   .trust-avatars {
     display: flex;
@@ -2042,8 +2046,12 @@ h1, h2 {
   .hero-title {
     font-size: clamp(30px, 8vw, 38px);
     line-height: 1.06;
-    margin-top: clamp(260px, 36vh, 300px);
+    margin-top: 0;
     margin-bottom: 16px;
+  }
+  .hero-title-highlight {
+    color: #2ee683;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8), 0 0 24px rgba(46, 230, 131, 0.45);
   }
   .hero-title-thumb {
     width: 42px;

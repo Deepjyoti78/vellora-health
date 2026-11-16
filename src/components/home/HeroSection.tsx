@@ -78,7 +78,7 @@ export const HeroSection: React.FC = () => {
               <span className="hero-title-thumb" aria-hidden="true">
                 <img src="/assets/hero-heading-smile.jpg" alt="Smiling Doctor" />
               </span>
-              HEALTHCARE
+              <span className="hero-title-highlight">HEALTHCARE</span>
             </span><br />
             ALWAYS
           </h1>
