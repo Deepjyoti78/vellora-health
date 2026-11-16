@@ -1977,9 +1977,9 @@ h1, h2 {
     margin-right: -2px;
   }
   .header-signin-btn {
-    width: 40px !important;
-    height: 40px !important;
-    padding: 0 !important;
+    width: auto !important;
+    height: 38px !important;
+    padding: 0 12px !important;
   }
   .header-book {
     display: inline-flex;
