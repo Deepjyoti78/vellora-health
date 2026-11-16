@@ -2014,7 +2014,7 @@ h1, h2 {
   }
   .hero-copy {
     position: absolute;
-    top: clamp(290px, 40vh, 325px);
+    top: clamp(240px, 34vh, 270px);
     bottom: auto;
     left: 0;
     right: 0;
@@ -2025,7 +2025,7 @@ h1, h2 {
   }
   .trust-row {
     position: absolute;
-    top: -145px;
+    top: calc(14px - clamp(240px, 34vh, 270px));
     left: 0;
     font-size: 12px;
     margin-bottom: 0;
