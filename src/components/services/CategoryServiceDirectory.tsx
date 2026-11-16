@@ -56,21 +56,26 @@ export const CategoryServiceDirectory: React.FC<CategoryServiceDirectoryProps> =
           }}
         >
           {/* Back Arrow Button + Title */}
-          <div className="flex items-center gap-3 sm:gap-3.5">
+          <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
             <Link
               href="/services"
               aria-label="Back to all services"
-              className="inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-[#D1E2DB] bg-white text-[#065F46] hover:bg-[#E8F5EE] hover:text-[#064E3B] hover:border-[#065F46]/40 shadow-2xs hover:shadow-xs transition-all duration-200 group shrink-0 cursor-pointer"
+              className="hidden sm:inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-[#D1E2DB] bg-white text-[#065F46] hover:bg-[#E8F5EE] hover:text-[#064E3B] hover:border-[#065F46]/40 shadow-2xs hover:shadow-xs transition-all duration-200 group shrink-0 cursor-pointer"
               title="Back to All Service Categories"
             >
               <ArrowLeft className="h-4 w-4 sm:h-4.5 sm:w-4.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
             </Link>
-            <div>
-              <h1 className="font-heading text-xl sm:text-2xl font-bold text-[#102820] tracking-tight">
+            <div className="min-w-0">
+              <h1 className="font-heading text-[17px] xs:text-lg sm:text-2xl font-bold text-[#102820] tracking-tight whitespace-nowrap truncate">
                 Available In-Home Procedures &amp; Shifts
               </h1>
-              <p className="text-xs sm:text-[13px] text-slate-500 mt-0.5">
-                Showing {filteredServices.length} specialized service(s) available for doorstep booking
+              <p className="text-xs sm:text-[13px] text-slate-500 mt-0.5 whitespace-nowrap truncate">
+                <span className="sm:hidden">
+                  Showing {filteredServices.length} services for doorstep booking
+                </span>
+                <span className="hidden sm:inline">
+                  Showing {filteredServices.length} specialized service(s) available for doorstep booking
+                </span>
               </p>
             </div>
           </div>
@@ -181,7 +186,7 @@ export const CategoryServiceDirectory: React.FC<CategoryServiceDirectoryProps> =
                     href={`/book/service/${service.slug}`}
                     className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-all duration-200 hover:shadow-sm"
                   >
-                    <span>{service.category === 'DOCTOR_VISIT' ? 'Book Home Doctor Visit' : 'Book Service'}</span>
+                    <span>Book Service</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
