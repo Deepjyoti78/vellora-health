@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { EXPERIENCE_ITEMS } from '@/data/site-content';
-import { Icon, IconName } from '@/components/common/Icon';
 
 export const ExperienceSection: React.FC = () => {
   const safetyCards = [
@@ -61,7 +59,7 @@ export const ExperienceSection: React.FC = () => {
         </div>
 
         {/* 6 Cards Grid - Matching Image 2 (3 columns x 2 rows) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-container mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-container">
           {safetyCards.map((card) => (
             <div
               key={card.num}
@@ -93,15 +91,6 @@ export const ExperienceSection: React.FC = () => {
                   {card.desc}
                 </p>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Quick Convenience Pill Row */}
-        <div className="experience-grid stagger-container">
-          {EXPERIENCE_ITEMS.map((item, idx) => (
-            <div key={idx} className="experience-pill scroll-reveal-card">
-              <Icon name={item.icon as IconName} /> {item.label}
             </div>
           ))}
         </div>
