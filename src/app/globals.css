@@ -2014,8 +2014,8 @@ h1, h2 {
   }
   .hero-copy {
     position: absolute;
-    top: auto;
-    bottom: clamp(65px, 9vh, 90px);
+    top: clamp(290px, 40vh, 325px);
+    bottom: auto;
     left: 0;
     right: 0;
     max-width: none;
@@ -2024,8 +2024,11 @@ h1, h2 {
     align-items: flex-start;
   }
   .trust-row {
+    position: absolute;
+    top: -145px;
+    left: 0;
     font-size: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 0;
     display: inline-flex;
     align-items: center;
     gap: 8px;
