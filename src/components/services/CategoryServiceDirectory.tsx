@@ -181,7 +181,7 @@ export const CategoryServiceDirectory: React.FC<CategoryServiceDirectoryProps> =
                     href={`/book/service/${service.slug}`}
                     className="inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-all duration-200 hover:shadow-sm"
                   >
-                    <span>Book Service</span>
+                    <span>{service.category === 'DOCTOR_VISIT' ? 'Book Home Doctor Visit' : 'Book Service'}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>

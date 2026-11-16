@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,160 +6,294 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors, Typography, Spacing, BorderRadius, Shadows, TouchTargets } from '../../constants/theme';
-import { RECENT_BOOKINGS, DOCTOR_MAYA } from '../../data/mockData';
-import { Badge } from '../../components/common/Badge';
-import { Header } from '../../components/common/Header';
-import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import Svg, { Path } from 'react-native-svg';
+import { Typography, Shadows } from '../../constants/theme';
+import { RECENT_BOOKINGS } from '../../data/mockData';
+
+const Palette = {
+  primary: '#0F5B43',        // Primary forest green
+  mint: '#EAF5EE',           // Soft mint accent
+  bgWarm: '#FBFAF7',         // Warm ivory page background
+  surface: '#FFFFFF',        // Card white
+  textDark: '#1B2A24',       // Primary text
+  textMuted: '#7A8B84',      // Secondary text
+  border: '#DCE9E1',         // Clean border
+  confirmedBg: '#EAF6ED',    // Green status badge background
+  confirmedText: '#059669',  // Green status badge text
+  scheduledBg: '#FEF3C7',    // Amber status badge background
+  scheduledText: '#D97706',  // Amber status badge text
+  cancelledBg: '#FEE2E2',    // Red status badge background
+  cancelledText: '#DC2626',  // Red status badge text
+};
+
+type FilterTab = 'UPCOMING' | 'COMPLETED' | 'CANCELLED';
+
+interface BookingItemDisplay {
+  id: string;
+  serviceTitle: string;
+  providerName: string;
+  date: string;
+  time: string;
+  status: 'Confirmed' | 'Scheduled' | 'Completed' | 'Cancelled';
+  avatar: any;
+  routeId?: string;
+}
+
+const UPCOMING_BOOKINGS: BookingItemDisplay[] = [
+  {
+    id: 'bkg-1',
+    serviceTitle: 'Home Visit Consultation',
+    providerName: 'Dr. Arjun Mehta',
+    date: 'Wed, 14 May 2025',
+    time: '11:00 AM',
+    status: 'Confirmed',
+    avatar: require('../../../assets/images/doctor-rohan.png'),
+    routeId: 'bkg-8492',
+  },
+  {
+    id: 'bkg-2',
+    serviceTitle: 'Home Nursing Care',
+    providerName: 'Nurse Priya Sharma',
+    date: 'Fri, 16 May 2025',
+    time: '02:00 PM',
+    status: 'Scheduled',
+    avatar: require('../../../assets/images/doctor-maya-patel.jpg'),
+    routeId: 'bkg-8890',
+  },
+];
+
+const COMPLETED_BOOKINGS: BookingItemDisplay[] = [
+  {
+    id: 'bkg-3',
+    serviceTitle: 'Home Lab Investigation',
+    providerName: 'Phlebotomist Rajesh Kumar',
+    date: '10 May 2025',
+    time: '08:30 AM',
+    status: 'Completed',
+    avatar: require('../../../assets/images/avatar-indian-4.jpg'),
+    routeId: 'bkg-8104',
+  },
+  {
+    id: 'bkg-4',
+    serviceTitle: 'Physiotherapy & Mobility Care',
+    providerName: 'Dr. Ananya Roy',
+    date: '02 May 2025',
+    time: '04:00 PM',
+    status: 'Completed',
+    avatar: require('../../../assets/images/avatar-indian-3.jpg'),
+  },
+];
+
+const CANCELLED_BOOKINGS: BookingItemDisplay[] = [
+  {
+    id: 'bkg-5',
+    serviceTitle: 'General Consultation',
+    providerName: 'Dr. Daniel Reed',
+    date: '28 Apr 2025',
+    time: '10:00 AM',
+    status: 'Cancelled',
+    avatar: require('../../../assets/images/doctor-daniel-reed.jpg'),
+  },
+];
 
 export default function BookingsScreen() {
-  const activeBooking = RECENT_BOOKINGS[0];
-  const pastBookings = RECENT_BOOKINGS.slice(1);
+  const [activeTab, setActiveTab] = useState<FilterTab>('UPCOMING');
 
-  const trackerStages = [
-    { label: 'Requested', done: true },
-    { label: 'Confirmed', done: true },
-    { label: 'Dispatched', done: true },
-    { label: 'In Transit', current: true },
-    { label: 'Arrived', pending: true },
-    { label: 'In Progress', pending: true },
-    { label: 'Completed', pending: true },
-  ];
+  const getBookingsList = () => {
+    switch (activeTab) {
+      case 'UPCOMING':
+        return UPCOMING_BOOKINGS;
+      case 'COMPLETED':
+        return COMPLETED_BOOKINGS;
+      case 'CANCELLED':
+        return CANCELLED_BOOKINGS;
+    }
+  };
+
+  const handleBookingPress = (booking: BookingItemDisplay) => {
+    router.push({
+      pathname: '/booking/doctor-visit' as any,
+      params: { step: 'details_view' },
+    });
+  };
+
+  const bookings = getBookingsList();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <Header title="Your Appointments" subtitle="Live Care Tracking & History" showBack={false} />
+      <StatusBar style="dark" />
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Active In-Transit Detailed Tracker */}
-        <View style={styles.trackerSection}>
-          <View style={styles.trackerCard}>
-            <View style={styles.cardHeader}>
-              <View>
-                <Badge label="IN TRANSIT • ARRIVING SOON" variant="amber" size="sm" iconName="navigate" />
-                <Text style={styles.serviceName}>{activeBooking.serviceTitle}</Text>
-                <Text style={styles.bookingId}>Booking #{activeBooking.id}</Text>
-              </View>
-              <View style={styles.etaBox}>
-                <Text style={styles.etaNum}>12</Text>
-                <Text style={styles.etaLabel}>MINS ETA</Text>
-              </View>
-            </View>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ============================================================ */}
+        {/* 1. TOP HEADER WITH BACK ARROW & CENTERED BRAND LOGO          */}
+        {/* ============================================================ */}
+        <View style={styles.topHeaderBar}>
+          <TouchableOpacity
+            style={styles.backButton}
+            activeOpacity={0.7}
+            onPress={() => router.back()}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons name="arrow-back" size={24} color={Palette.textDark} />
+          </TouchableOpacity>
 
-            {/* Clinician Card */}
-            <View style={styles.clinicianBlock}>
-              <Image source={DOCTOR_MAYA.avatar} style={styles.doctorImg} />
-              <View style={styles.doctorInfo}>
-                <Text style={styles.docName}>{DOCTOR_MAYA.name}</Text>
-                <Text style={styles.docTitle}>{DOCTOR_MAYA.title}</Text>
-                <Text style={styles.hospital}>{DOCTOR_MAYA.hospitalAffiliation}</Text>
-              </View>
-              <TouchableOpacity activeOpacity={0.8} style={styles.phoneCircle}>
-                <Ionicons name="call" size={18} color={Colors.forest} />
-              </TouchableOpacity>
-            </View>
+          <View style={styles.brandCenterContainer}>
+            <Image
+              source={require('../../../assets/images/logo-dark.png')}
+              style={styles.brandLogo}
+              resizeMode="contain"
+            />
+          </View>
 
-            {/* Security Verification PIN Card */}
-            <View style={styles.pinCard}>
-              <View style={styles.pinTextGroup}>
-                <Ionicons name="shield-checkmark" size={24} color={Colors.forest} />
-                <View>
-                  <Text style={styles.pinTitle}>Bedside Verification PIN</Text>
-                  <Text style={styles.pinDesc}>
-                    Tell clinician this code upon arrival to begin care
-                  </Text>
+          {/* Balanced right spacer */}
+          <View style={styles.headerRightSpacer} />
+        </View>
+
+        {/* ============================================================ */}
+        {/* 2. PAGE HEADING: "My Bookings"                               */}
+        {/* ============================================================ */}
+        <Text style={styles.pageHeading}>My Bookings</Text>
+
+        {/* ============================================================ */}
+        {/* 3. SEGMENTED FILTER TABS: Upcoming | Completed | Cancelled   */}
+        {/* ============================================================ */}
+        <View style={styles.segmentedContainer}>
+          <TouchableOpacity
+            style={[
+              styles.segmentPill,
+              activeTab === 'UPCOMING' && styles.segmentPillActive,
+            ]}
+            activeOpacity={0.8}
+            onPress={() => setActiveTab('UPCOMING')}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+                activeTab === 'UPCOMING' && styles.segmentTextActive,
+              ]}
+            >
+              Upcoming
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.segmentPill,
+              activeTab === 'COMPLETED' && styles.segmentPillActive,
+            ]}
+            activeOpacity={0.8}
+            onPress={() => setActiveTab('COMPLETED')}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+                activeTab === 'COMPLETED' && styles.segmentTextActive,
+              ]}
+            >
+              Completed
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.segmentPill,
+              activeTab === 'CANCELLED' && styles.segmentPillActive,
+            ]}
+            activeOpacity={0.8}
+            onPress={() => setActiveTab('CANCELLED')}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+                activeTab === 'CANCELLED' && styles.segmentTextActive,
+              ]}
+            >
+              Cancelled
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* ============================================================ */}
+        {/* 4. BOOKINGS LIST CARDS                                       */}
+        {/* ============================================================ */}
+        <View style={styles.bookingsList}>
+          {bookings.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.bookingCard}
+              activeOpacity={0.88}
+              onPress={() => handleBookingPress(item)}
+            >
+              {/* Doctor / Clinician Avatar */}
+              <View style={styles.avatarContainer}>
+                <Image
+                  source={item.avatar}
+                  style={styles.clinicianAvatar}
+                  resizeMode="cover"
+                />
+              </View>
+
+              {/* Service Details */}
+              <View style={styles.cardDetailsCol}>
+                <Text style={styles.serviceTitleText}>{item.serviceTitle}</Text>
+                <Text style={styles.providerNameText}>{item.providerName}</Text>
+
+                <View style={styles.dateTimeRow}>
+                  <Ionicons name="calendar-outline" size={13.5} color={Palette.textDark} style={{ marginRight: 5 }} />
+                  <Text style={styles.dateTimeText}>{item.date} • {item.time}</Text>
                 </View>
               </View>
-              <View style={styles.pinBox}>
-                <Text style={styles.pinNumber}>{activeBooking.securityPin}</Text>
-              </View>
-            </View>
 
-            {/* 7-Stage Visual Progress Stepper */}
-            <Text style={styles.stepperHeader}>7-Stage Care Delivery Status</Text>
-            <View style={styles.stepperContainer}>
-              {trackerStages.map((st, idx) => (
-                <View key={idx} style={styles.stepItem}>
-                  <View
-                    style={[
-                      styles.stepCircle,
-                      st.done && styles.stepCircleDone,
-                      st.current && styles.stepCircleCurrent,
-                      st.pending && styles.stepCirclePending,
-                    ]}
-                  >
-                    {st.done ? (
-                      <Ionicons name="checkmark" size={12} color={Colors.white} />
-                    ) : st.current ? (
-                      <View style={styles.innerDot} />
-                    ) : (
-                      <Text style={styles.pendingText}>{idx + 1}</Text>
-                    )}
-                  </View>
+              {/* Right: Status Badge & Chevron */}
+              <View style={styles.cardRightCol}>
+                <View
+                  style={[
+                    styles.statusBadge,
+                    item.status === 'Confirmed' && styles.statusBadgeConfirmed,
+                    item.status === 'Scheduled' && styles.statusBadgeScheduled,
+                    item.status === 'Completed' && styles.statusBadgeConfirmed,
+                    item.status === 'Cancelled' && styles.statusBadgeCancelled,
+                  ]}
+                >
                   <Text
                     style={[
-                      styles.stepLabel,
-                      (st.done || st.current) && styles.stepLabelActive,
+                      styles.statusBadgeText,
+                      item.status === 'Confirmed' && styles.statusTextConfirmed,
+                      item.status === 'Scheduled' && styles.statusTextScheduled,
+                      item.status === 'Completed' && styles.statusTextConfirmed,
+                      item.status === 'Cancelled' && styles.statusTextCancelled,
                     ]}
-                    numberOfLines={1}
                   >
-                    {st.label}
+                    {item.status}
                   </Text>
                 </View>
-              ))}
-            </View>
 
-            {/* Visit Details */}
-            <View style={styles.detailsBox}>
-              <View style={styles.detailRow}>
-                <Ionicons name="time-outline" size={16} color={Colors.muted} />
-                <Text style={styles.detailText}>{activeBooking.scheduledDate} ({activeBooking.scheduledTimeSlot})</Text>
+                <Ionicons name="chevron-forward" size={16} color={Palette.textDark} style={{ marginTop: 12 }} />
               </View>
-              <View style={styles.detailRow}>
-                <Ionicons name="location-outline" size={16} color={Colors.muted} />
-                <Text style={styles.detailText}>{activeBooking.address}</Text>
-              </View>
-              <View style={styles.detailRow}>
-                <Ionicons name="medical-outline" size={16} color={Colors.muted} />
-                <Text style={styles.detailText}>Symptoms: {activeBooking.symptoms}</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* Past Completed Bookings */}
-        <View style={styles.historySection}>
-          <Text style={styles.historyTitle}>Past Completed Care</Text>
-
-          {pastBookings.map((bk) => (
-            <View key={bk.id} style={styles.historyCard}>
-              <View style={styles.historyHeader}>
-                <View style={styles.historyLeft}>
-                  <Text style={styles.histServiceTitle}>{bk.serviceTitle}</Text>
-                  <Text style={styles.histDate}>
-                    {bk.scheduledDate} • Booking #{bk.id}
-                  </Text>
-                </View>
-                <Badge label="COMPLETED" variant="emerald" size="sm" />
-              </View>
-
-              <View style={styles.histFooter}>
-                <Text style={styles.histFee}>Total: ${bk.totalPrice}</Text>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => router.push('/(tabs)/records')}
-                  style={styles.viewRecordBtn}
-                >
-                  <Text style={styles.viewRecordText}>View EMR Report</Text>
-                  <Ionicons name="arrow-forward" size={12} color={Colors.forest} />
-                </TouchableOpacity>
-              </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
+
+        {/* ============================================================ */}
+        {/* 5. "+ Book a New Service" PRIMARY CTA BUTTON                */}
+        {/* ============================================================ */}
+        <TouchableOpacity
+          style={styles.bookNewServiceBtn}
+          activeOpacity={0.88}
+          onPress={() => router.push('/(tabs)/services')}
+        >
+          <Ionicons name="add" size={22} color="#FFFFFF" style={{ marginRight: 6 }} />
+          <Text style={styles.bookNewServiceText}>Book a New Service</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -168,287 +302,192 @@ export default function BookingsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Palette.bgWarm,
   },
   scrollContent: {
-    paddingHorizontal: Spacing.screenPadding,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.xxxl,
-    backgroundColor: Colors.mist,
+    paddingHorizontal: 20,
+    paddingTop: Platform.OS === 'android' ? 14 : 8,
+    paddingBottom: 110,
   },
-  trackerSection: {
-    marginBottom: Spacing.xl,
-  },
-  trackerCard: {
-    backgroundColor: Colors.white,
-    borderRadius: BorderRadius.card,
-    borderWidth: 1,
-    borderColor: Colors.line,
-    padding: Spacing.lg,
-    ...Shadows.card,
-  },
-  cardHeader: {
+
+  /* 1. Top Header Bar */
+  topHeaderBar: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    paddingVertical: 6,
+    marginBottom: 8,
+  },
+  backButton: {
+    width: 36,
+    height: 36,
     alignItems: 'flex-start',
-    marginBottom: Spacing.md,
+    justifyContent: 'center',
   },
-  serviceName: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.lg,
-    color: Colors.ink,
-    marginTop: 4,
-  },
-  bookingId: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.muted,
-  },
-  etaBox: {
-    backgroundColor: Colors.amberLight,
-    borderWidth: 1,
-    borderColor: Colors.amberBorder,
-    borderRadius: BorderRadius.md,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 6,
-    alignItems: 'center',
-  },
-  etaNum: {
-    fontFamily: Typography.fontFamily.heavy,
-    fontWeight: Typography.fontWeight.heavy,
-    fontSize: Typography.fontSize.xl,
-    color: Colors.amber,
-  },
-  etaLabel: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: 9,
-    color: Colors.amber,
-  },
-  clinicianBlock: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.surfaceSubtle,
-    borderRadius: BorderRadius.md,
-    padding: Spacing.md,
-    marginBottom: Spacing.md,
-  },
-  doctorImg: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: Colors.mist,
-  },
-  doctorInfo: {
-    flex: 1,
-    marginLeft: Spacing.sm,
-  },
-  docName: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.base,
-    color: Colors.ink,
-  },
-  docTitle: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.teal,
-  },
-  hospital: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.muted,
-  },
-  phoneCircle: {
-    width: TouchTargets.minWidth,
-    height: TouchTargets.minHeight,
-    borderRadius: 24,
-    backgroundColor: Colors.tealLight,
+  brandCenterContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pinCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#ecfdf5',
-    borderWidth: 1.5,
-    borderColor: '#a7f3d0',
-    borderRadius: BorderRadius.md,
-    padding: Spacing.md,
-    marginBottom: Spacing.lg,
+  brandLogo: {
+    width: 124,
+    height: 34,
   },
-  pinTextGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    gap: Spacing.sm,
+  headerRightSpacer: {
+    width: 36,
   },
-  pinTitle: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.sm,
-    color: Colors.forest,
-  },
-  pinDesc: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: 10,
-    color: Colors.inkSoft,
-    maxWidth: 160,
-  },
-  pinBox: {
-    backgroundColor: Colors.forest,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: 6,
-    borderRadius: BorderRadius.sm,
-  },
-  pinNumber: {
-    fontFamily: Typography.fontFamily.heavy,
-    fontWeight: Typography.fontWeight.heavy,
-    fontSize: Typography.fontSize.lg,
-    color: Colors.white,
-    letterSpacing: 3,
-  },
-  stepperHeader: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.muted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
-    marginBottom: Spacing.sm,
-  },
-  stepperContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: Spacing.lg,
-    paddingHorizontal: 2,
-  },
-  stepItem: {
-    alignItems: 'center',
-    width: 42,
-  },
-  stepCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
-  },
-  stepCircleDone: {
-    backgroundColor: Colors.emerald,
-  },
-  stepCircleCurrent: {
-    backgroundColor: Colors.amber,
-  },
-  stepCirclePending: {
-    backgroundColor: Colors.line,
-  },
-  innerDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: Colors.white,
-  },
-  pendingText: {
-    fontSize: 9,
-    color: Colors.muted,
-    fontWeight: 'bold',
-  },
-  stepLabel: {
-    fontSize: 9,
-    fontFamily: Typography.fontFamily.regular,
-    color: Colors.mutedLight,
+
+  /* 2. Page Heading */
+  pageHeading: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 24,
+    fontWeight: '800',
+    color: Palette.primary,
     textAlign: 'center',
+    marginVertical: 14,
+    letterSpacing: -0.4,
   },
-  stepLabelActive: {
-    fontFamily: Typography.fontFamily.semibold,
-    fontWeight: Typography.fontWeight.semibold,
-    color: Colors.forest,
-  },
-  detailsBox: {
-    backgroundColor: Colors.surfaceSubtle,
-    borderRadius: BorderRadius.md,
-    padding: Spacing.md,
-    gap: Spacing.xs,
-  },
-  detailRow: {
+
+  /* 3. Segmented Filter Tabs */
+  segmentedContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-  },
-  detailText: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.inkSoft,
-    flex: 1,
-  },
-  historySection: {
-    marginTop: Spacing.md,
-  },
-  historyTitle: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.lg,
-    color: Colors.ink,
-    marginBottom: Spacing.md,
-  },
-  historyCard: {
-    backgroundColor: Colors.white,
-    borderRadius: BorderRadius.md,
-    borderWidth: 1,
-    borderColor: Colors.line,
-    padding: Spacing.md,
-    marginBottom: Spacing.sm,
+    backgroundColor: Palette.surface,
+    borderRadius: 25,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    padding: 3,
+    marginBottom: 20,
     ...Shadows.subtle,
   },
-  historyHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: Spacing.sm,
-  },
-  historyLeft: {
+  segmentPill: {
     flex: 1,
-    marginRight: Spacing.sm,
+    paddingVertical: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 22,
   },
-  histServiceTitle: {
-    fontFamily: Typography.fontFamily.bold,
-    fontWeight: Typography.fontWeight.bold,
-    fontSize: Typography.fontSize.sm,
-    color: Colors.ink,
+  segmentPillActive: {
+    backgroundColor: Palette.primary,
   },
-  histDate: {
-    fontFamily: Typography.fontFamily.regular,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.muted,
-    marginTop: 2,
+  segmentText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13,
+    fontWeight: '500',
+    color: Palette.textDark,
   },
-  histFooter: {
+  segmentTextActive: {
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+
+  /* 4. Bookings List Cards */
+  bookingsList: {
+    gap: 14,
+    marginBottom: 26,
+  },
+  bookingCard: {
+    backgroundColor: Palette.surface,
+    borderRadius: 22,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    padding: 14,
     flexDirection: 'row',
+    alignItems: 'center',
+    ...Shadows.subtle,
+  },
+  avatarContainer: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: '#F3FAF5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+    overflow: 'hidden',
+  },
+  clinicianAvatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+  },
+  cardDetailsCol: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  serviceTitleText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 14.5,
+    fontWeight: '700',
+    color: Palette.textDark,
+    letterSpacing: -0.15,
+    marginBottom: 2,
+  },
+  providerNameText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '400',
+    color: Palette.textMuted,
+    marginBottom: 6,
+  },
+  dateTimeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dateTimeText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '500',
+    color: Palette.textDark,
+  },
+  cardRightCol: {
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: Spacing.xs,
-    borderTopWidth: 1,
-    borderTopColor: Colors.line,
+    height: 52,
   },
-  histFee: {
-    fontFamily: Typography.fontFamily.semibold,
-    fontWeight: Typography.fontWeight.semibold,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.inkSoft,
+  statusBadge: {
+    paddingVertical: 3.5,
+    paddingHorizontal: 9,
+    borderRadius: 12,
   },
-  viewRecordBtn: {
+  statusBadgeConfirmed: {
+    backgroundColor: Palette.confirmedBg,
+  },
+  statusBadgeScheduled: {
+    backgroundColor: Palette.scheduledBg,
+  },
+  statusBadgeCancelled: {
+    backgroundColor: Palette.cancelledBg,
+  },
+  statusBadgeText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  statusTextConfirmed: {
+    color: Palette.confirmedText,
+  },
+  statusTextScheduled: {
+    color: Palette.scheduledText,
+  },
+  statusTextCancelled: {
+    color: Palette.cancelledText,
+  },
+
+  /* 5. Book a New Service Button */
+  bookNewServiceBtn: {
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: Palette.primary,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    justifyContent: 'center',
+    marginBottom: 10,
+    ...Shadows.subtle,
   },
-  viewRecordText: {
-    fontFamily: Typography.fontFamily.semibold,
-    fontWeight: Typography.fontWeight.semibold,
-    fontSize: Typography.fontSize.xs,
-    color: Colors.forest,
+  bookNewServiceText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    letterSpacing: -0.2,
   },
 });
