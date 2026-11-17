@@ -135,11 +135,11 @@ export const ServicesSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop with tighter gap */}
+        {/* Cards Row: Swipable peek carousel on mobile, 4-column responsive grid on desktop with wider cards and reduced inter-card space */}
         <div
           ref={scrollContainerRef}
           onScroll={handleMobileScroll}
-          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible pt-3 md:pt-4 pb-3 md:pb-4 gap-4 md:gap-0 lg:gap-0 snap-x snap-mandatory scroll-smooth no-scrollbar w-full"
+          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible pt-3 md:pt-4 pb-3 md:pb-4 gap-4 md:gap-3.5 lg:gap-4 snap-x snap-mandatory scroll-smooth no-scrollbar w-full"
           aria-label="Core home healthcare services"
         >
           {SERVICES_DATA.map((service, index) => {
@@ -154,7 +154,7 @@ export const ServicesSection: React.FC = () => {
               <Link
                 key={service.id}
                 href={service.href}
-                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-auto h-[315px] sm:h-[335px] lg:h-[365px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.08)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.22)] hover:border-white/35 transition-all duration-300 hover:-translate-y-2 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
+                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-full md:max-w-none h-[315px] sm:h-[335px] lg:h-[375px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.08)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.22)] hover:border-white/35 transition-all duration-300 hover:-translate-y-2 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
                   isVisible
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-8 scale-[0.98]'
