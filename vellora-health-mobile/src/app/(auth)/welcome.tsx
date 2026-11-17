@@ -247,7 +247,7 @@ export default function WelcomeScreen() {
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Hero Photo Section: Positioned below header so all 4 characters' faces are fully visible */}
+      {/* Hero Photo Section: Extends to the top of the screen without any green bar */}
       <View style={styles.heroPhotoWrapper}>
         <Image
           source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
@@ -255,16 +255,16 @@ export default function WelcomeScreen() {
           resizeMode="cover"
         />
 
-        {/* Clean, subtle bottom transition (only at the very bottom edge of photo) */}
+        {/* Clean, subtle bottom transition (only at the bottom edge of photo) */}
         <LinearGradient
-          colors={['transparent', 'rgba(8, 34, 24, 0.75)', '#082218']}
+          colors={['transparent', 'rgba(8, 34, 24, 0.65)', '#082218']}
           locations={[0, 0.65, 1]}
           style={styles.heroPhotoBottomGradient}
           pointerEvents="none"
         />
       </View>
 
-      {/* Top SafeArea and Centered Brand Logo in clean dark space */}
+      {/* Top SafeArea and Centered Brand Logo (Transparent background directly over photo) */}
       <SafeAreaView edges={['top']} style={styles.topSafeArea}>
         <View style={styles.topHeader}>
           <Image
@@ -708,17 +708,20 @@ const styles = StyleSheet.create({
   },
   heroPhotoWrapper: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 76 : 70,
+    top: 0,
     left: 0,
     right: 0,
-    height: Math.min(SCREEN_HEIGHT * 0.46, 395),
+    height: Math.min(SCREEN_HEIGHT * 0.58, 500),
     width: '100%',
     overflow: 'hidden',
-    backgroundColor: '#082218',
+    backgroundColor: 'transparent',
   },
   heroPhotoImage: {
     width: '100%',
     height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
     ...Platform.select({
       web: {
         objectPosition: 'top center',
@@ -730,11 +733,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: -1,
-    height: 60,
+    height: 90,
   },
   topSafeArea: {
     zIndex: 20,
-    backgroundColor: '#082218',
+    backgroundColor: 'transparent',
   },
   topHeader: {
     height: 52,
@@ -742,6 +745,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: Spacing.lg,
     marginTop: Platform.OS === 'android' ? 6 : 4,
+    backgroundColor: 'transparent',
   },
   topLogoWhite: {
     width: 150,
