@@ -88,7 +88,7 @@ export const ServicesSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="services"
-      className="relative bg-white pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20 lg:pb-24 shadow-[0_10px_35px_rgba(0,0,0,0.02)]"
+      className="relative bg-white pt-10 sm:pt-14 lg:pt-16 pb-10 sm:pb-14 lg:pb-16 shadow-[0_10px_35px_rgba(0,0,0,0.02)]"
       aria-labelledby="servicesTitle"
     >
       {/* Soft atmospheric ambient glow shadow effect in background - Hidden on mobile to prevent whitish bleed */}
@@ -105,7 +105,7 @@ export const ServicesSection: React.FC = () => {
       <div className="container relative">
         {/* Section Heading Row */}
         <div
-          className={`section-heading-row transition-all duration-700 ease-out ${
+          className={`section-heading-row [&.section-heading-row]:mb-5 md:[&.section-heading-row]:mb-6 transition-all duration-700 ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
@@ -139,7 +139,7 @@ export const ServicesSection: React.FC = () => {
         <div
           ref={scrollContainerRef}
           onScroll={handleMobileScroll}
-          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible pt-3 md:pt-4 pb-3 md:pb-4 gap-4 md:gap-2.5 lg:gap-2.5 snap-x snap-mandatory scroll-smooth no-scrollbar w-full"
+          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible pt-3 md:pt-4 pb-3 md:pb-4 gap-4 md:gap-0 lg:gap-0 snap-x snap-mandatory scroll-smooth no-scrollbar w-full"
           aria-label="Core home healthcare services"
         >
           {SERVICES_DATA.map((service, index) => {
