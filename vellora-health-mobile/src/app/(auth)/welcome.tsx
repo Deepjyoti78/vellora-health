@@ -247,12 +247,20 @@ export default function WelcomeScreen() {
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Hero Photo Section: Extends to the top of the screen without any green bar */}
+      {/* Hero Photo Section: Shifted downward so characters' faces are comfortably below logo */}
       <View style={styles.heroPhotoWrapper}>
         <Image
           source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
           style={styles.heroPhotoImage}
           resizeMode="cover"
+        />
+
+        {/* Seamless feathered top vignette: provides contrast for logo without any harsh bar */}
+        <LinearGradient
+          colors={['#082218', 'rgba(8, 34, 24, 0.72)', 'rgba(8, 34, 24, 0.12)', 'transparent']}
+          locations={[0, 0.45, 0.82, 1]}
+          style={styles.heroPhotoTopGradient}
+          pointerEvents="none"
         />
 
         {/* Clean, subtle bottom transition (only at the bottom edge of photo) */}
@@ -264,7 +272,7 @@ export default function WelcomeScreen() {
         />
       </View>
 
-      {/* Top SafeArea and Centered Brand Logo (Transparent background directly over photo) */}
+      {/* Top SafeArea and Centered Brand Logo */}
       <SafeAreaView edges={['top']} style={styles.topSafeArea}>
         <View style={styles.topHeader}>
           <Image
@@ -714,13 +722,13 @@ const styles = StyleSheet.create({
     height: Math.min(SCREEN_HEIGHT * 0.58, 500),
     width: '100%',
     overflow: 'hidden',
-    backgroundColor: 'transparent',
+    backgroundColor: '#082218',
   },
   heroPhotoImage: {
     width: '100%',
     height: '100%',
     position: 'absolute',
-    top: 0,
+    top: Platform.OS === 'ios' ? 56 : 52,
     left: 0,
     ...Platform.select({
       web: {
@@ -728,12 +736,19 @@ const styles = StyleSheet.create({
       } as any,
     }),
   },
+  heroPhotoTopGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 96,
+  },
   heroPhotoBottomGradient: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: -1,
-    height: 90,
+    height: 85,
   },
   topSafeArea: {
     zIndex: 20,
