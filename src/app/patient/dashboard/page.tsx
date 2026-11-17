@@ -421,26 +421,26 @@ export default function PatientDashboardPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* Card 1: My Bookings */}
               <Link
                 href="/patient/bookings"
-                className="group flex flex-col justify-between rounded-[20px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
+                className="group flex flex-col justify-between rounded-[18px] sm:rounded-[20px] border border-[#E5EAE9] bg-white p-3.5 sm:p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
               >
                 <div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 shadow-2xs group-hover:scale-105 transition-transform">
-                    <Calendar className="h-5 w-5 stroke-[2]" />
+                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-2.5 sm:mb-3 shadow-2xs group-hover:scale-105 transition-transform">
+                    <Calendar className="h-4.5 w-4.5 sm:h-5 sm:w-5 stroke-[2]" />
                   </div>
-                  <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                  <h3 className="font-heading text-[13.5px] sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors leading-snug">
                     My Bookings
                   </h3>
-                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed line-clamp-2">
+                  <p className="mt-1 text-[11px] sm:text-xs text-[#64748B] leading-snug sm:leading-relaxed line-clamp-2">
                     View and manage all your appointments.
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-[#F4FAF7] flex justify-end">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
-                    <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-[#F4FAF7] flex justify-end">
+                  <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                    <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   </div>
                 </div>
               </Link>
@@ -448,22 +448,22 @@ export default function PatientDashboardPage() {
               {/* Card 2: Medical Records */}
               <Link
                 href="/patient/records"
-                className="group flex flex-col justify-between rounded-[20px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
+                className="group flex flex-col justify-between rounded-[18px] sm:rounded-[20px] border border-[#E5EAE9] bg-white p-3.5 sm:p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
               >
                 <div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 shadow-2xs group-hover:scale-105 transition-transform">
-                    <FileText className="h-5 w-5 stroke-[2]" />
+                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-2.5 sm:mb-3 shadow-2xs group-hover:scale-105 transition-transform">
+                    <FileText className="h-4.5 w-4.5 sm:h-5 sm:w-5 stroke-[2]" />
                   </div>
-                  <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                  <h3 className="font-heading text-[13.5px] sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors leading-snug">
                     Medical Records
                   </h3>
-                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed line-clamp-2">
+                  <p className="mt-1 text-[11px] sm:text-xs text-[#64748B] leading-snug sm:leading-relaxed line-clamp-2">
                     Access prescriptions, lab results, and health reports.
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-[#F4FAF7] flex justify-end">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
-                    <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-[#F4FAF7] flex justify-end">
+                  <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                    <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   </div>
                 </div>
               </Link>
@@ -471,22 +471,22 @@ export default function PatientDashboardPage() {
               {/* Card 3: Family Members */}
               <Link
                 href="/patient/family"
-                className="group flex flex-col justify-between rounded-[20px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
+                className="group flex flex-col justify-between rounded-[18px] sm:rounded-[20px] border border-[#E5EAE9] bg-white p-3.5 sm:p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
               >
                 <div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 shadow-2xs group-hover:scale-105 transition-transform">
-                    <Users className="h-5 w-5 stroke-[2]" />
+                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-2.5 sm:mb-3 shadow-2xs group-hover:scale-105 transition-transform">
+                    <Users className="h-4.5 w-4.5 sm:h-5 sm:w-5 stroke-[2]" />
                   </div>
-                  <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                  <h3 className="font-heading text-[13.5px] sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors leading-snug">
                     Family Members
                   </h3>
-                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed line-clamp-2">
+                  <p className="mt-1 text-[11px] sm:text-xs text-[#64748B] leading-snug sm:leading-relaxed line-clamp-2">
                     Manage family profiles and their healthcare.
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-[#F4FAF7] flex justify-end">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
-                    <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-[#F4FAF7] flex justify-end">
+                  <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                    <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   </div>
                 </div>
               </Link>
@@ -494,22 +494,22 @@ export default function PatientDashboardPage() {
               {/* Card 4: My Profile & Vitals */}
               <Link
                 href="/patient/account"
-                className="group flex flex-col justify-between rounded-[20px] border border-[#E5EAE9] bg-white p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
+                className="group flex flex-col justify-between rounded-[18px] sm:rounded-[20px] border border-[#E5EAE9] bg-white p-3.5 sm:p-5 shadow-2xs hover:border-[#A7F3D0] hover:shadow-xs transition-all duration-200"
               >
                 <div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-3 shadow-2xs group-hover:scale-105 transition-transform">
-                    <User className="h-5 w-5 stroke-[2]" />
+                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] mb-2.5 sm:mb-3 shadow-2xs group-hover:scale-105 transition-transform">
+                    <User className="h-4.5 w-4.5 sm:h-5 sm:w-5 stroke-[2]" />
                   </div>
-                  <h3 className="font-heading text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors">
+                  <h3 className="font-heading text-[13.5px] sm:text-base font-bold text-[#15212B] group-hover:text-[#065F46] transition-colors leading-snug">
                     My Profile &amp; Vitals
                   </h3>
-                  <p className="mt-1 text-xs text-[#64748B] leading-relaxed line-clamp-2">
+                  <p className="mt-1 text-[11px] sm:text-xs text-[#64748B] leading-snug sm:leading-relaxed line-clamp-2">
                     Update personal details and track your vital stats.
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-[#F4FAF7] flex justify-end">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
-                    <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-[#F4FAF7] flex justify-end">
+                  <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-[#ECFDF5] text-[#065F46] group-hover:bg-[#064E3B] group-hover:text-white transition-all shadow-2xs">
+                    <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   </div>
                 </div>
               </Link>
@@ -598,8 +598,8 @@ export default function PatientDashboardPage() {
               <CareCoordinationIllustration />
             </div>
 
-            {/* Right Card: Emergency Medical Guidance */}
-            <div className="relative overflow-hidden rounded-[24px] border border-[#FEE2E2] bg-[#FFF8F8] p-6 sm:p-7 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            {/* Right Card: Emergency Medical Guidance - Hidden on mobile view */}
+            <div className="hidden md:flex relative overflow-hidden rounded-[24px] border border-[#FEE2E2] bg-[#FFF8F8] p-6 sm:p-7 shadow-2xs flex-col sm:flex-row sm:items-center justify-between gap-5">
               <div>
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-100 text-red-700">
