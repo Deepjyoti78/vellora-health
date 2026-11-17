@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Pressable,
+  PanResponder,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,6 +24,172 @@ import { Colors, Typography, Spacing, BorderRadius } from '../../constants/theme
 import { useAuth } from '../../context/AuthContext';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+const SLIDE_BUTTON_HEIGHT = 56;
+const SLIDE_KNOB_PADDING = 5;
+const SLIDE_KNOB_SIZE = SLIDE_BUTTON_HEIGHT - SLIDE_KNOB_PADDING * 2; // 46px
+
+interface SlideToGetStartedProps {
+  onComplete: () => void;
+  text?: string;
+}
+
+/**
+ * Slide to Get Started Button (Image 2 Style)
+ * Drag the arrow knob from left to right to trigger account creation / sign in popup.
+ */
+function SlideToGetStartedButton({ onComplete, text = 'Get Started' }: SlideToGetStartedProps) {
+  const [trackWidth, setTrackWidth] = useState(0);
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const isCompletedRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+
+  const maxDistance = Math.max(0, trackWidth - SLIDE_KNOB_SIZE - SLIDE_KNOB_PADDING * 2);
+
+  const resetSlider = () => {
+    Animated.spring(slideAnim, {
+      toValue: 0,
+      friction: 7,
+      tension: 45,
+      useNativeDriver: false,
+    }).start(() => {
+      isCompletedRef.current = false;
+    });
+  };
+
+  const completeSlide = () => {
+    if (isCompletedRef.current) return;
+    isCompletedRef.current = true;
+    Animated.timing(slideAnim, {
+      toValue: maxDistance > 0 ? maxDistance : 250,
+      duration: 180,
+      useNativeDriver: false,
+    }).start(() => {
+      onComplete();
+      // Auto-reset when sheet opens
+      setTimeout(() => {
+        resetSlider();
+      }, 700);
+    });
+  };
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dx) > 3,
+        onPanResponderGrant: () => {
+          isCompletedRef.current = false;
+        },
+        onPanResponderMove: (_, gestureState) => {
+          if (isCompletedRef.current) return;
+          const clampedX = Math.max(0, Math.min(gestureState.dx, maxDistance));
+          slideAnim.setValue(clampedX);
+        },
+        onPanResponderRelease: (_, gestureState) => {
+          if (isCompletedRef.current) return;
+          if (maxDistance > 0 && gestureState.dx >= maxDistance * 0.45) {
+            completeSlide();
+          } else if (Math.abs(gestureState.dx) < 6) {
+            // Tapping also triggers smooth slide to end and completes
+            completeSlide();
+          } else {
+            resetSlider();
+          }
+        },
+        onPanResponderTerminate: () => {
+          if (!isCompletedRef.current) {
+            resetSlider();
+          }
+        },
+      }),
+    [maxDistance]
+  );
+
+  // Web desktop drag & click fallback
+  const handleMouseDown = (e: any) => {
+    if (Platform.OS !== 'web' || typeof window === 'undefined') return;
+    isDraggingRef.current = true;
+    startXRef.current = e.clientX || 0;
+
+    const onMouseMove = (moveEvt: MouseEvent) => {
+      if (!isDraggingRef.current || isCompletedRef.current) return;
+      const deltaX = moveEvt.clientX - startXRef.current;
+      const clamped = Math.max(0, Math.min(deltaX, maxDistance));
+      slideAnim.setValue(clamped);
+      if (maxDistance > 0 && clamped >= maxDistance * 0.6) {
+        isDraggingRef.current = false;
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+        completeSlide();
+      }
+    };
+
+    const onMouseUp = (upEvt: MouseEvent) => {
+      if (!isDraggingRef.current) return;
+      isDraggingRef.current = false;
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+      const deltaX = upEvt.clientX - startXRef.current;
+      if (deltaX >= maxDistance * 0.45 || Math.abs(deltaX) < 6) {
+        completeSlide();
+      } else {
+        resetSlider();
+      }
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.96}
+      onPress={() => completeSlide()}
+      style={styles.slideTrackContainer}
+      onLayout={(e) => setTrackWidth(e.nativeEvent.layout.width)}
+    >
+      {/* Centered Track Text: Fades slightly as the knob glides across */}
+      <Animated.View
+        style={[
+          styles.slideTrackTextWrapper,
+          {
+            opacity:
+              maxDistance > 0
+                ? slideAnim.interpolate({
+                    inputRange: [0, maxDistance * 0.5],
+                    outputRange: [1, 0.25],
+                    extrapolate: 'clamp',
+                  })
+                : 1,
+          },
+        ]}
+        pointerEvents="none"
+      >
+        <Text style={styles.slideTrackText}>{text}</Text>
+      </Animated.View>
+
+      {/* Draggable Knob */}
+      <Animated.View
+        {...panResponder.panHandlers}
+        {...(Platform.OS === 'web' ? ({ onMouseDown: handleMouseDown } as any) : {})}
+        style={[
+          styles.slideKnob,
+          {
+            transform: [{ translateX: slideAnim }],
+          },
+        ]}
+      >
+        {/* Double Arrow (>>) matching Image 2 */}
+        <View style={styles.doubleArrowRow}>
+          <Ionicons name="chevron-forward" size={17} color="#092419" style={{ marginRight: -7 }} />
+          <Ionicons name="chevron-forward" size={17} color="#092419" />
+        </View>
+      </Animated.View>
+    </TouchableOpacity>
+  );
+}
 
 export default function WelcomeScreen() {
   const { loginPhone, verifyOtp, simulatedOtp } = useAuth();
@@ -309,15 +476,8 @@ export default function WelcomeScreen() {
 
           {/* Action Buttons Section */}
           <View style={styles.actionsBlock}>
-            {/* Primary Action Button: Warm Ivory Pill "Get Started →" */}
-            <TouchableOpacity
-              activeOpacity={0.88}
-              onPress={() => openSheet('signup')}
-              style={styles.primaryActionButton}
-            >
-              <Text style={styles.primaryActionButtonText}>Get Started</Text>
-              <Ionicons name="arrow-forward" size={17} color="#092419" />
-            </TouchableOpacity>
+            {/* Slide to Get Started Button (Image 2 style: Drag arrow left-to-right) */}
+            <SlideToGetStartedButton onComplete={() => openSheet('signup')} />
 
             {/* Already have an account row */}
             <View style={styles.alreadyAccountRow}>
@@ -817,6 +977,57 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     gap: 12,
+  },
+  /* Slide to Get Started Button (Image 2 style) */
+  slideTrackContainer: {
+    width: '100%',
+    height: 56,
+    backgroundColor: '#F5EFE6', // Exact warm ivory cream color requested
+    borderRadius: 28,
+    borderWidth: 1.2,
+    borderColor: '#E8DDD0',
+    padding: 5,
+    justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  slideTrackTextWrapper: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  slideTrackText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#092419',
+    letterSpacing: 0.2,
+  },
+  slideKnob: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.16,
+    shadowRadius: 4,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#EFE6DA',
+  },
+  doubleArrowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 2,
   },
   primaryActionButton: {
     width: '100%',
