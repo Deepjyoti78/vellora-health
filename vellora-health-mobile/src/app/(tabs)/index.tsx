@@ -71,6 +71,55 @@ const CALENDAR_EVENTS: Record<string, 'confirmed' | 'scheduled'> = {
   '2025-4-28': 'scheduled',
 };
 
+interface RecentVisitDoctor {
+  id: string;
+  name: string;
+  specialty: string;
+  rating: string;
+  day: string;
+  time: string;
+  image: any;
+}
+
+const RECENT_VISIT_DOCTORS: RecentVisitDoctor[] = [
+  {
+    id: 'doc-1',
+    name: 'Dr. Webster Carter',
+    specialty: 'Dental Surgeon & Care',
+    rating: '4.8',
+    day: 'Monday',
+    time: '7:00pm',
+    image: require('../../../assets/images/doctor-daniel-reed.jpg'),
+  },
+  {
+    id: 'doc-2',
+    name: 'Dr. Alabert Cooper',
+    specialty: 'Neurologist & Consultant',
+    rating: '4.9',
+    day: 'Monday',
+    time: '4:30pm',
+    image: require('../../../assets/images/doctor-ethan-park.jpg'),
+  },
+  {
+    id: 'doc-3',
+    name: 'Dr. Rohan Mehta',
+    specialty: 'Consultant Physician, MD',
+    rating: '4.9',
+    day: 'Wednesday',
+    time: '11:00am',
+    image: require('../../../assets/images/doctor-rohan.png'),
+  },
+  {
+    id: 'doc-4',
+    name: 'Dr. Maya Patel',
+    specialty: 'Geriatric & Family Medicine',
+    rating: '4.8',
+    day: 'Friday',
+    time: '2:15pm',
+    image: require('../../../assets/images/doctor-maya-patel.jpg'),
+  },
+];
+
 /**
  * Illustrated Doctor Character with Botanical Leaves
  * Recreated accurately from Reference Image 2 (Upcoming Appointment Card)
@@ -447,182 +496,99 @@ export default function HomeScreen() {
         </View>
 
         {/* ============================================================ */}
-        {/* 5. MY RECENT RECORDS SECTION (2x2 Grid Matching Design)      */}
+        {/* 5. MY RECENT VISIT SECTION                                   */}
         {/* ============================================================ */}
         <View style={styles.sectionBlock}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionHeading}>My Recent Records</Text>
+            <Text style={styles.sectionHeading}>My Recent Visit</Text>
             <TouchableOpacity
-              onPress={() => router.push('/(tabs)/records')}
+              onPress={() => router.push('/(tabs)/bookings')}
               hitSlop={{ top: 8, bottom: 8, left: 10, right: 10 }}
             >
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
           </View>
 
-          <View style={styles.recentRecordsGrid}>
-            {/* Top Row: Diagnostic Test Cards */}
-            <View style={styles.recordsTwoColRow}>
-              {/* Card 1: ECG Test (Green Pulse Wave) */}
-              <TouchableOpacity
-                style={styles.recordCard}
-                activeOpacity={0.88}
-                onPress={() => router.push('/(tabs)/records')}
-              >
-                <Text style={styles.recordCardTitle}>ECG Test</Text>
-                <Text style={styles.recordCardStatusNormal}>Normal</Text>
-                <Text style={styles.recordCardDate}>14 May 2026</Text>
-
-                <View style={styles.cardBottomPulseRow}>
-                  <View style={styles.recordIconCircleMint}>
-                    <Ionicons name="heart-outline" size={15} color="#059669" />
-                  </View>
-                  <View style={styles.pulseWaveWrapper}>
-                    <Svg width="100%" height={24} viewBox="0 0 76 24" fill="none">
-                      <Path
-                        d="M0 12 H8 L12 16 L16 3 L21 21 L24 8 L27 12 H38 L42 16 L46 3 L51 21 L54 8 L57 12 H76"
-                        stroke="#059669"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </Svg>
-                  </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.recentVisitsScrollContainer}
+          >
+            {RECENT_VISIT_DOCTORS.map((doc) => (
+              <View key={doc.id} style={styles.recentVisitCard}>
+                {/* Top Doctor Image */}
+                <View style={styles.recentDocImageWrap}>
+                  <Image source={doc.image} style={styles.recentDocImage} resizeMode="cover" />
                 </View>
-              </TouchableOpacity>
 
-              {/* Card 2: ECG Test (Red Pulse Wave) */}
-              <TouchableOpacity
-                style={styles.recordCard}
-                activeOpacity={0.88}
-                onPress={() => router.push('/(tabs)/records')}
-              >
-                <Text style={styles.recordCardTitle}>ECG Test</Text>
-                <Text style={styles.recordCardStatusNormal}>Normal</Text>
-                <Text style={styles.recordCardDate}>14 May 2026</Text>
-
-                <View style={styles.cardBottomPulseRow}>
-                  <View style={styles.recordIconCircleRed}>
-                    <Ionicons name="time-outline" size={15} color="#DC2626" />
-                  </View>
-                  <View style={styles.pulseWaveWrapper}>
-                    <Svg width="100%" height={24} viewBox="0 0 76 24" fill="none">
-                      <Path
-                        d="M0 12 H8 L12 16 L16 3 L21 21 L24 8 L27 12 H38 L42 16 L46 3 L51 21 L54 8 L57 12 H76"
-                        stroke="#DC2626"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </Svg>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            {/* Bottom Row: Doctor Clinician Cards */}
-            <View style={[styles.recordsTwoColRow, { marginTop: 12 }]}>
-              {/* Card 3: Dr. Emily (Warm Cream Pastel) */}
-              <TouchableOpacity
-                style={[styles.recordDoctorCard, styles.doctorCardCream]}
-                activeOpacity={0.88}
-                onPress={() => router.push('/services/doctor-visit' as any)}
-              >
-                <View style={styles.doctorHeaderRow}>
-                  <Image
-                    source={require('../../../assets/images/doctor-maya-patel.jpg')}
-                    style={styles.doctorAvatarRound}
-                    resizeMode="cover"
-                  />
-                  <Text style={styles.doctorNameText} numberOfLines={1}>
-                    Dr. Emily
+                {/* Doctor Name & Rating */}
+                <View style={styles.recentDocNameRow}>
+                  <Text style={styles.recentDocName} numberOfLines={1}>
+                    {doc.name}
                   </Text>
-                </View>
-
-                <View style={styles.doctorSpecialtyRow}>
-                  <Ionicons name="briefcase-outline" size={13} color="#6B7E75" />
-                  <Text style={styles.doctorSpecialtyText}>Orthopedist</Text>
-                </View>
-
-                <View style={styles.doctorFooterRow}>
-                  <View style={styles.onlineBadgePillWhite}>
-                    <View style={styles.statusDotBlue} />
-                    <Text style={styles.onlinePillText}>Online</Text>
-                  </View>
-
-                  <View style={styles.doctorActionBtnGroup}>
-                    <TouchableOpacity
-                      style={styles.doctorCircleBtn}
-                      activeOpacity={0.7}
-                      onPress={() => router.push('/services/doctor-visit' as any)}
-                      hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-                    >
-                      <Ionicons name="information-circle-outline" size={15} color="#4B5E55" />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.doctorCircleBtn}
-                      activeOpacity={0.7}
-                      onPress={() => handleCallDoctor('Dr. Emily')}
-                      hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-                    >
-                      <Ionicons name="ellipsis-horizontal" size={13} color="#4B5E55" />
-                    </TouchableOpacity>
+                  <View style={styles.recentDocRatingWrap}>
+                    <Ionicons name="star" size={13} color="#F59E0B" style={{ marginRight: 3 }} />
+                    <Text style={styles.recentDocRating}>{doc.rating}</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
 
-              {/* Card 4: Dr. Andrew (Soft Mint) */}
-              <TouchableOpacity
-                style={[styles.recordDoctorCard, styles.doctorCardMint]}
-                activeOpacity={0.88}
-                onPress={() => router.push('/services/doctor-visit' as any)}
-              >
-                <View style={styles.doctorHeaderRow}>
-                  <Image
-                    source={require('../../../assets/images/doctor-rohan.png')}
-                    style={styles.doctorAvatarRound}
-                    resizeMode="cover"
-                  />
-                  <Text style={styles.doctorNameText} numberOfLines={1}>
-                    Dr. Andrew
-                  </Text>
-                </View>
+                {/* Doctor Specialty */}
+                <Text style={styles.recentDocSpecialty} numberOfLines={1}>
+                  {doc.specialty}
+                </Text>
 
-                <View style={styles.doctorSpecialtyRow}>
-                  <Ionicons name="briefcase-outline" size={13} color="#6B7E75" />
-                  <Text style={styles.doctorSpecialtyText}>Neurology</Text>
-                </View>
-
-                <View style={styles.doctorFooterRow}>
-                  <View style={styles.onlineBadgePillWhite}>
-                    <View style={styles.statusDotBlue} />
-                    <Text style={styles.onlinePillText}>Online</Text>
+                {/* Schedule Timing (Day & Time) */}
+                <View style={styles.recentDocTimingRow}>
+                  <View style={styles.timingItem}>
+                    <Ionicons name="calendar-outline" size={13} color="#64748B" style={{ marginRight: 4 }} />
+                    <Text style={styles.timingText}>{doc.day}</Text>
                   </View>
 
-                  <View style={styles.doctorActionBtnGroup}>
-                    <TouchableOpacity
-                      style={styles.doctorCircleBtn}
-                      activeOpacity={0.7}
-                      onPress={() => router.push('/services/doctor-visit' as any)}
-                      hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-                    >
-                      <Ionicons name="information-circle-outline" size={15} color="#4B5E55" />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.doctorCircleBtn}
-                      activeOpacity={0.7}
-                      onPress={() => handleCallDoctor('Dr. Andrew')}
-                      hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-                    >
-                      <Ionicons name="ellipsis-horizontal" size={13} color="#4B5E55" />
-                    </TouchableOpacity>
+                  <View style={styles.timingItem}>
+                    <Ionicons name="time-outline" size={13} color="#64748B" style={{ marginRight: 4 }} />
+                    <Text style={styles.timingText}>{doc.time}</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
-            </View>
-          </View>
+
+                {/* Action Buttons: Message & Video Call */}
+                <View style={styles.recentDocActionsRow}>
+                  <TouchableOpacity
+                    style={styles.recentMessageBtn}
+                    activeOpacity={0.8}
+                    onPress={() =>
+                      Alert.alert(
+                        `Message ${doc.name}`,
+                        `Start a secure message consultation with ${doc.name}?`,
+                        [
+                          { text: 'Cancel', style: 'cancel' },
+                          { text: 'Start Message', onPress: () => router.push('/(tabs)/records') },
+                        ]
+                      )
+                    }
+                  >
+                    <Text style={styles.recentMessageBtnText}>Message</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.recentVideoCallBtn}
+                    activeOpacity={0.8}
+                    onPress={() =>
+                      Alert.alert(
+                        `Video Call with ${doc.name}`,
+                        `Connect to a secure HD telemedicine call with ${doc.name}?`,
+                        [
+                          { text: 'Cancel', style: 'cancel' },
+                          { text: 'Start Video Call', onPress: () => router.push('/services/doctor-visit' as any) },
+                        ]
+                      )
+                    }
+                  >
+                    <Text style={styles.recentVideoCallBtnText}>Video Call</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
         </View>
 
         {/* ============================================================ */}
@@ -997,164 +963,113 @@ const styles = StyleSheet.create({
     color: Palette.textDark,
   },
 
-  /* 5. My Recent Records (2x2 Grid Matching Design) */
-  recentRecordsGrid: {
-    gap: 12,
+  /* 5. My Recent Visit (Horizontal Doctor Carousel) */
+  recentVisitsScrollContainer: {
+    paddingRight: 20,
+    gap: 14,
+    paddingVertical: 2,
   },
-  recordsTwoColRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
-  },
-  recordCard: {
-    flex: 1,
+  recentVisitCard: {
+    width: 250,
     backgroundColor: Palette.surface,
-    borderRadius: 20,
+    borderRadius: 22,
     borderWidth: 1.2,
-    borderColor: '#E6EFEA',
-    padding: 14,
-    ...Shadows.subtle,
-  },
-  recordCardTitle: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 14.5,
-    fontWeight: '700',
-    color: Palette.textDark,
-    letterSpacing: -0.15,
-    marginBottom: 2,
-  },
-  recordCardStatusNormal: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#059669',
-    marginBottom: 2,
-  },
-  recordCardDate: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '400',
-    color: Palette.textMuted,
-    marginBottom: 10,
-  },
-  cardBottomPulseRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  recordIconCircleMint: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#EAF5EE',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  recordIconCircleRed: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#FDE8E8',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pulseWaveWrapper: {
-    flex: 1,
-    height: 24,
-    marginLeft: 6,
-    justifyContent: 'center',
-  },
-
-  /* Doctor Clinician Cards in Grid */
-  recordDoctorCard: {
-    flex: 1,
-    borderRadius: 20,
-    borderWidth: 1.2,
+    borderColor: '#E2E8F0',
     padding: 13,
     ...Shadows.subtle,
   },
-  doctorCardCream: {
-    backgroundColor: '#FAF3E8',
-    borderColor: '#EFE2CC',
+  recentDocImageWrap: {
+    width: '100%',
+    height: 146,
+    borderRadius: 16,
+    backgroundColor: '#EEF2F6',
+    overflow: 'hidden',
+    marginBottom: 10,
   },
-  doctorCardMint: {
-    backgroundColor: '#EAF5EE',
-    borderColor: '#CFE7DA',
+  recentDocImage: {
+    width: '100%',
+    height: '100%',
   },
-  doctorHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  doctorAvatarRound: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-  },
-  doctorNameText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 13.5,
-    fontWeight: '700',
-    color: Palette.textDark,
-    marginLeft: 8,
-    flex: 1,
-  },
-  doctorSpecialtyRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  doctorSpecialtyText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11.5,
-    fontWeight: '400',
-    color: '#4B5E55',
-    marginLeft: 5,
-  },
-  doctorFooterRow: {
+  recentDocNameRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 2,
   },
-  onlineBadgePillWhite: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 3.5,
-    paddingHorizontal: 8,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E2ECE6',
-  },
-  statusDotBlue: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#0284C7',
-    marginRight: 4,
-  },
-  onlinePillText: {
+  recentDocName: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
-    fontWeight: '600',
-    color: Palette.textDark,
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0F172A',
+    flex: 1,
+    marginRight: 6,
   },
-  doctorActionBtnGroup: {
+  recentDocRatingWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
   },
-  doctorCircleBtn: {
-    width: 25,
-    height: 25,
-    borderRadius: 12.5,
-    backgroundColor: '#FFFFFF',
+  recentDocRating: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  recentDocSpecialty: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#64748B',
+    marginBottom: 10,
+  },
+  recentDocTimingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 12,
+  },
+  timingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  timingText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '500',
+    color: '#64748B',
+  },
+  recentDocActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  recentMessageBtn: {
+    flex: 1,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#EEF2F6',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#E2ECE6',
+  },
+  recentMessageBtnText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: '#334155',
+  },
+  recentVideoCallBtn: {
+    flex: 1.25,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#2563EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Shadows.subtle,
+  },
+  recentVideoCallBtnText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 
   /* 7. Schedule Section */
