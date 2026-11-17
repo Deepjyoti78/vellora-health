@@ -247,32 +247,28 @@ export default function WelcomeScreen() {
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Hero Photo Section: Shifted downward so characters' faces are comfortably below logo */}
-      <View style={styles.heroPhotoWrapper}>
-        <Image
-          source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
-          style={styles.heroPhotoImage}
-          resizeMode="cover"
-        />
+      {/* Full-screen Background Photo: Goes edge-to-edge from the very top with ZERO green bar */}
+      <Image
+        source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      />
 
-        {/* Seamless feathered top vignette: provides contrast for logo without any harsh bar */}
-        <LinearGradient
-          colors={['#082218', 'rgba(8, 34, 24, 0.72)', 'rgba(8, 34, 24, 0.12)', 'transparent']}
-          locations={[0, 0.45, 0.82, 1]}
-          style={styles.heroPhotoTopGradient}
-          pointerEvents="none"
-        />
+      {/* Smooth bottom fade into deep green to ensure 100% text readability */}
+      <LinearGradient
+        colors={[
+          'transparent',
+          'rgba(8, 34, 24, 0.25)',
+          'rgba(8, 34, 24, 0.75)',
+          'rgba(8, 34, 24, 0.96)',
+          '#082218',
+        ]}
+        locations={[0, 0.25, 0.55, 0.8, 1]}
+        style={styles.bottomGradient}
+        pointerEvents="none"
+      />
 
-        {/* Clean, subtle bottom transition (only at the bottom edge of photo) */}
-        <LinearGradient
-          colors={['transparent', 'rgba(8, 34, 24, 0.65)', '#082218']}
-          locations={[0, 0.65, 1]}
-          style={styles.heroPhotoBottomGradient}
-          pointerEvents="none"
-        />
-      </View>
-
-      {/* Top SafeArea and Centered Brand Logo */}
+      {/* Top SafeArea and Centered Brand Logo (floating transparently over the photo) */}
       <SafeAreaView edges={['top']} style={styles.topSafeArea}>
         <View style={styles.topHeader}>
           <Image
@@ -714,57 +710,43 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
-  heroPhotoWrapper: {
+  backgroundImage: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: Math.min(SCREEN_HEIGHT * 0.58, 500),
-    width: '100%',
-    overflow: 'hidden',
-    backgroundColor: '#082218',
-  },
-  heroPhotoImage: {
+    bottom: 0,
     width: '100%',
     height: '100%',
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 56 : 52,
-    left: 0,
     ...Platform.select({
       web: {
-        objectPosition: 'top center',
+        objectFit: 'cover',
+        objectPosition: 'center top',
       } as any,
     }),
   },
-  heroPhotoTopGradient: {
+  bottomGradient: {
     position: 'absolute',
     left: 0,
     right: 0,
-    top: 0,
-    height: 96,
-  },
-  heroPhotoBottomGradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: -1,
-    height: 85,
+    bottom: 0,
+    height: Math.max(SCREEN_HEIGHT * 0.52, 440),
   },
   topSafeArea: {
     zIndex: 20,
     backgroundColor: 'transparent',
   },
   topHeader: {
-    height: 52,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Spacing.lg,
-    marginTop: Platform.OS === 'android' ? 6 : 4,
+    marginTop: Platform.OS === 'web' ? 14 : Platform.OS === 'android' ? 10 : 4,
     backgroundColor: 'transparent',
   },
   topLogoWhite: {
-    width: 150,
-    height: 38,
+    width: 145,
+    height: 36,
   },
   bottomContentSafeArea: {
     flex: 1,
