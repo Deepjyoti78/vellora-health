@@ -120,104 +120,6 @@ const RECENT_VISIT_DOCTORS: RecentVisitDoctor[] = [
   },
 ];
 
-/**
- * Illustrated Doctor Character with Botanical Leaves
- * Recreated accurately from Reference Image 2 (Upcoming Appointment Card)
- */
-function DoctorIllustration({ width = 105, height = 115 }: { width?: number; height?: number }) {
-  return (
-    <Svg width={width} height={height} viewBox="0 0 110 120" fill="none">
-      {/* Background Decorative Botanical Leaves */}
-      <Path
-        d="M65 95C60 60 75 35 105 28C105 58 90 85 65 95Z"
-        fill="#C3DFCF"
-        opacity={0.8}
-      />
-      <Path
-        d="M48 90C45 65 58 45 80 40C82 62 70 82 48 90Z"
-        fill="#A6D3BA"
-        opacity={0.65}
-      />
-      <Path
-        d="M72 105C80 80 96 68 110 65C108 85 95 102 72 105Z"
-        fill="#B8DCC7"
-        opacity={0.7}
-      />
-
-      {/* Hair (Back Bun / Ponytail) */}
-      <Circle cx="82" cy="46" r="14" fill="#4B3224" />
-      <Path
-        d="M80 50C85 58 87 68 83 75C80 72 78 62 78 54Z"
-        fill="#3F2A1E"
-      />
-
-      {/* Body / Torso (White Lab Coat) */}
-      <Path
-        d="M32 120C32 98 42 90 55 90C68 90 78 98 78 120H32Z"
-        fill="#FFFFFF"
-      />
-      {/* Inner Shirt (Teal Green) */}
-      <Path
-        d="M48 90H62L58 108H52L48 90Z"
-        fill="#2A7A5E"
-      />
-      {/* Lab Coat Lapels */}
-      <Path
-        d="M38 92L52 108L48 120H33L38 92Z"
-        fill="#F3F7F5"
-      />
-      <Path
-        d="M72 92L58 108L62 120H77L72 92Z"
-        fill="#EDF3F0"
-      />
-
-      {/* Neck */}
-      <Rect x="50" y="78" width="10" height="15" rx="3" fill="#F4C6A4" />
-
-      {/* Head & Face */}
-      <Circle cx="55" cy="58" r="16" fill="#F8CFAF" />
-
-      {/* Hair (Front & Bangs) */}
-      <Path
-        d="M39 56C39 44 46 36 56 36C66 36 72 43 72 52C68 47 62 45 55 45C47 45 42 50 39 56Z"
-        fill="#4B3224"
-      />
-      <Path
-        d="M40 52C42 58 44 65 44 70C42 66 41 60 40 52Z"
-        fill="#3F2A1E"
-      />
-      <Path
-        d="M70 52C68 58 66 65 66 70C68 66 69 60 70 52Z"
-        fill="#3F2A1E"
-      />
-
-      {/* Facial Features */}
-      {/* Left Eye */}
-      <Circle cx="49" cy="58" r="1.6" fill="#2E1F16" />
-      {/* Right Eye */}
-      <Circle cx="61" cy="58" r="1.6" fill="#2E1F16" />
-      {/* Eyebrows */}
-      <Path d="M47 54C48.5 53 51 53 52 54" stroke="#3F2A1E" strokeWidth="1" strokeLinecap="round" />
-      <Path d="M58 54C59.5 53 62 53 63 54" stroke="#3F2A1E" strokeWidth="1" strokeLinecap="round" />
-      {/* Smiling Lips */}
-      <Path d="M52 65C53.5 67 56.5 67 58 65" stroke="#C86A58" strokeWidth="1.4" strokeLinecap="round" />
-      {/* Cheerful Blush */}
-      <Circle cx="46" cy="62" r="2.2" fill="#F6A89B" opacity={0.5} />
-      <Circle cx="64" cy="62" r="2.2" fill="#F6A89B" opacity={0.5} />
-
-      {/* Stethoscope */}
-      <Path
-        d="M45 92C44 100 48 108 55 108C62 108 66 100 65 92"
-        stroke="#314B42"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      {/* Chest Piece (Metallic Stethoscope Bell) */}
-      <Circle cx="55" cy="110" r="3.2" fill="#99B8AC" stroke="#234036" strokeWidth="1" />
-    </Svg>
-  );
-}
-
 export default function HomeScreen() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
@@ -416,7 +318,13 @@ export default function HomeScreen() {
         {/* ============================================================ */}
         <View style={styles.sectionBlock}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionHeading}>Upcoming Appointment</Text>
+            <View style={styles.appointmentTitleRow}>
+              <Text style={styles.sectionHeading}>Upcoming Appointment</Text>
+              <View style={styles.liveIndicatorBadge}>
+                <View style={styles.liveIndicatorDot} />
+                <Text style={styles.liveIndicatorText}>Today</Text>
+              </View>
+            </View>
             <TouchableOpacity
               onPress={() => router.push('/(tabs)/bookings')}
               hitSlop={{ top: 8, bottom: 8, left: 10, right: 10 }}
@@ -426,7 +334,7 @@ export default function HomeScreen() {
           </View>
 
           <TouchableOpacity
-            style={styles.appointmentCard}
+            style={styles.appointmentHeroCard}
             activeOpacity={0.92}
             onPress={() =>
               router.push({
@@ -438,58 +346,72 @@ export default function HomeScreen() {
                   date: 'Wed, 14 May 2025',
                   time: '11:30 AM - 11:50 AM',
                   status: 'Confirmed',
-                  address: 'A-402, Green Valley Apartments, Bangalore - 560068',
+                  address: '#502, Orchid Residency, Koramangala, Bengaluru - 560034',
                 },
               } as any)
             }
           >
-            {/* Top row inside Card: Icon Box + Details + Doctor Illustration */}
-            <View style={styles.appointmentCardContentRow}>
-              {/* White rounded box for clinical heart-pulse icon */}
-              <View style={styles.clinicalHeartBadge}>
-                <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
-                  {/* Heart Outline */}
-                  <Path
-                    d="M19.5 12.572L12 20L4.5 12.572A5 5 0 1 1 12 6.006A5 5 0 1 1 19.5 12.572Z"
-                    stroke={Palette.primary}
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  {/* ECG Pulse Wave Inside Heart */}
-                  <Path
-                    d="M3.5 12.5H7.5L9.5 9.5L12 15.5L14.5 11L16.5 12.5H20.5"
-                    stroke={Palette.primary}
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </Svg>
+            {/* Top Status & Verification Row */}
+            <View style={styles.appointmentTopRow}>
+              <View style={styles.statusPill}>
+                <View style={styles.statusPulseDot} />
+                <Text style={styles.statusPillText}>Confirmed Doorstep Visit</Text>
               </View>
 
-              {/* Consultation Title & Doctor Details */}
-              <View style={styles.appointmentTextCol}>
-                <Text style={styles.consultationTitle} numberOfLines={1}>Cardiology Consultation</Text>
-                <Text style={styles.appointmentDoctorName} numberOfLines={1}>Dr. Priya Nair</Text>
-                <Text style={styles.appointmentDoctorRole} numberOfLines={1}>Consultant Cardiologist</Text>
-              </View>
-
-              {/* Right: Friendly Doctor Graphic */}
-              <View style={styles.doctorIllustrationContainer}>
-                <DoctorIllustration width={88} height={92} />
+              <View style={styles.doorstepPinPill}>
+                <Ionicons name="key-outline" size={11.5} color="#A7F3D0" style={{ marginRight: 4 }} />
+                <Text style={styles.doorstepPinLabel}>PIN: </Text>
+                <Text style={styles.doorstepPinCode}>4829</Text>
               </View>
             </View>
 
-            {/* Bottom Row: White Info Pills (Date & Time) */}
-            <View style={styles.appointmentPillsRow}>
-              <View style={styles.whitePill}>
-                <Ionicons name="calendar-outline" size={13.5} color={Palette.textDark} style={{ marginRight: 6 }} />
-                <Text style={styles.whitePillText}>Wed, 14 May 2025</Text>
+            {/* Clinician Profile Row */}
+            <View style={styles.clinicianProfileRow}>
+              <View style={styles.clinicianAvatarWrap}>
+                <Image
+                  source={require('../../../assets/images/doctor-maya-patel.jpg')}
+                  style={styles.clinicianAvatarImg}
+                  resizeMode="cover"
+                />
+                <View style={styles.clinicianVerifiedBadge}>
+                  <Ionicons name="checkmark" size={9} color="#FFFFFF" />
+                </View>
               </View>
 
-              <View style={styles.whitePill}>
-                <Ionicons name="time-outline" size={13.5} color={Palette.textDark} style={{ marginRight: 6 }} />
-                <Text style={styles.whitePillText}>11:30 AM – 11:50 AM</Text>
+              <View style={styles.clinicianInfoCol}>
+                <Text style={styles.appointmentServiceTitle}>Cardiology Consultation</Text>
+                <Text style={styles.clinicianNameText}>Dr. Priya Nair</Text>
+                <Text style={styles.clinicianRoleText}>MD, DM • Senior Consultant Cardiologist</Text>
+              </View>
+            </View>
+
+            {/* Schedule Timing & Address Strip */}
+            <View style={styles.appointmentScheduleBox}>
+              <View style={styles.scheduleItemWrap}>
+                <Ionicons name="calendar" size={13} color="#A7F3D0" style={{ marginRight: 5 }} />
+                <Text style={styles.scheduleBoxText}>Wed, 14 May 2025</Text>
+              </View>
+
+              <View style={styles.scheduleBoxDivider} />
+
+              <View style={styles.scheduleItemWrap}>
+                <Ionicons name="time" size={13} color="#A7F3D0" style={{ marginRight: 5 }} />
+                <Text style={styles.scheduleBoxText}>11:30 AM – 11:50 AM</Text>
+              </View>
+            </View>
+
+            {/* Location & Action CTA Footer */}
+            <View style={styles.appointmentFooterRow}>
+              <View style={styles.locationSnippetWrap}>
+                <Ionicons name="location-outline" size={12} color="#D1E7DD" style={{ marginRight: 4 }} />
+                <Text style={styles.locationSnippetText} numberOfLines={1}>
+                  Orchid Residency, Koramangala
+                </Text>
+              </View>
+
+              <View style={styles.viewDetailsCtaBtn}>
+                <Text style={styles.viewDetailsCtaText}>View Details</Text>
+                <Ionicons name="arrow-forward" size={12} color={Palette.primary} style={{ marginLeft: 4 }} />
               </View>
             </View>
           </TouchableOpacity>
@@ -879,88 +801,215 @@ const styles = StyleSheet.create({
     color: Palette.primary,
   },
 
-  /* 4. Upcoming Appointment Card */
-  appointmentCard: {
-    borderRadius: 24,
-    backgroundColor: Palette.mintCard,
-    borderWidth: 1.2,
-    borderColor: '#D4E7DC',
-    paddingHorizontal: 13,
-    paddingTop: 13,
-    paddingBottom: 13,
-    overflow: 'hidden',
-    ...Shadows.subtle,
-  },
-  appointmentCardContentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  clinicalHeartBadge: {
-    width: 48,
-    height: 48,
-    borderRadius: 15,
-    backgroundColor: Palette.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#D2E6DA',
-    marginRight: 10,
-    ...Shadows.subtle,
-  },
-  appointmentTextCol: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  consultationTitle: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 13.5,
-    fontWeight: '700',
-    color: Palette.textDark,
-    letterSpacing: -0.15,
-    marginBottom: 2,
-  },
-  appointmentDoctorName: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#344C42',
-    marginBottom: 1,
-  },
-  appointmentDoctorRole: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '400',
-    color: Palette.textMuted,
-  },
-  doctorIllustrationContainer: {
-    width: 82,
-    height: 86,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-  },
-  appointmentPillsRow: {
+  /* 4. Upcoming Appointment Hero Card */
+  appointmentTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  whitePill: {
+  liveIndicatorBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DCFCE7',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
+  },
+  liveIndicatorDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#16A34A',
+    marginRight: 4,
+  },
+  liveIndicatorText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#15803D',
+  },
+  appointmentHeroCard: {
+    borderRadius: 22,
+    backgroundColor: Palette.primary,
+    padding: 15,
+    overflow: 'hidden',
+    ...Shadows.card,
+  },
+  appointmentTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  statusPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    paddingHorizontal: 9,
+    paddingVertical: 3.5,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.22)',
+  },
+  statusPulseDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#34D399',
+    marginRight: 5,
+  },
+  statusPillText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    letterSpacing: 0.1,
+  },
+  doorstepPinPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    paddingHorizontal: 8,
+    paddingVertical: 3.5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.18)',
+  },
+  doorstepPinLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10.5,
+    fontWeight: '400',
+    color: '#D1E7DD',
+  },
+  doorstepPinCode: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 1,
+  },
+  clinicianProfileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 13,
+  },
+  clinicianAvatarWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 2,
+    borderColor: '#A7F3D0',
+    position: 'relative',
+    backgroundColor: '#174F3D',
+  },
+  clinicianAvatarImg: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
+  clinicianVerifiedBadge: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#059669',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: Palette.primary,
+  },
+  clinicianInfoCol: {
+    flex: 1,
+  },
+  appointmentServiceTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 15.5,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: -0.2,
+    lineHeight: 20,
+    marginBottom: 2,
+  },
+  clinicianNameText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#A7F3D0',
+    marginBottom: 1,
+  },
+  clinicianRoleText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '400',
+    color: '#D1E7DD',
+  },
+  appointmentScheduleBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.16)',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+  },
+  scheduleItemWrap: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFFEE',
-    borderRadius: 18,
-    paddingVertical: 7,
-    paddingHorizontal: 8,
-    borderWidth: 1,
-    borderColor: '#D2E5DA',
   },
-  whitePillText: {
+  scheduleBoxText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  scheduleBoxDivider: {
+    width: 1,
+    height: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    marginHorizontal: 8,
+  },
+  appointmentFooterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.15)',
+  },
+  locationSnippetWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
+  },
+  locationSnippetText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 11,
-    fontWeight: '500',
-    color: Palette.textDark,
+    fontWeight: '400',
+    color: '#D1E7DD',
+  },
+  viewDetailsCtaBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 13,
+    paddingVertical: 6,
+    borderRadius: 14,
+    ...Shadows.subtle,
+  },
+  viewDetailsCtaText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '700',
+    color: Palette.primary,
   },
 
   /* 5. My Recent Visit (Horizontal Doctor Carousel) */
