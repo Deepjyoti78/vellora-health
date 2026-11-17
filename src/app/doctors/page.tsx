@@ -257,10 +257,13 @@ export default function DoctorsPage() {
     <div className="min-h-screen bg-white text-[#15212B]">
       <Header theme="light" />
 
-      {/* Main Container - Expanded to 1400px to eliminate side empty spaces */}
-      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ================= HERO SECTION ================= */}
-        <section className="pt-6 pb-6 sm:pt-10 sm:pb-8 animate-fade-in-up">
+      {/* ================= HERO SECTION WITH LIGHT SUBTLE GRADIENT (MATCHING ABOUT PAGE) ================= */}
+      <section className="relative w-full overflow-hidden border-b border-[#E8F0EC]/80 bg-gradient-to-b from-[#F2F8F5] via-[#F8FBFA] to-white">
+        {/* Subtle background ambient mint glow */}
+        <div className="absolute left-1/2 top-0 -translate-x-1/2 h-96 w-[800px] rounded-full bg-[#ECFDF5] blur-3xl opacity-75 pointer-events-none" />
+        <div className="absolute -right-8 -top-8 h-80 w-80 rounded-full bg-[#E6F7F0] blur-3xl opacity-60 pointer-events-none" />
+
+        <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pt-7 pb-8 sm:pt-10 sm:pb-10 lg:pt-12 lg:pb-12 animate-fade-in-up">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
             {/* Left Column: Eyebrow, Heading, Description, Indicators */}
             <div className="lg:col-span-7">
@@ -309,8 +312,6 @@ export default function DoctorsPage() {
 
             {/* Right Column: Hero Asset with Organic Soft Mint Wave & Cross */}
             <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end overflow-hidden py-2">
-              {/* Organic Soft Mint Wave & Plus Sign */}
-              <div className="absolute -right-8 -top-8 h-64 w-64 rounded-full bg-[#ECFDF5] blur-3xl opacity-80 pointer-events-none" />
               <div className="absolute right-4 top-4 text-[#A7F3D0]/60 pointer-events-none font-light text-5xl select-none">
                 +
               </div>
@@ -325,7 +326,11 @@ export default function DoctorsPage() {
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
+
+      {/* Main Container - Filter and Doctor Cards */}
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-20">
 
         {/* ================= SPECIALTY FILTERS SECTION ================= */}
         <section className="pt-2 sm:pt-4">

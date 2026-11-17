@@ -150,10 +150,11 @@ export default function ServicesPage() {
       {/* Top Header with active Services pill */}
       <Header theme="light" />
 
-      {/* 2-COLUMN HERO SECTION WITH REDUCED HEIGHT & HEALTHCARE ILLUSTRATION */}
-      <section className="relative w-full overflow-hidden border-b border-[#E8F0EC] bg-white">
-        {/* Soft background ambient glow */}
-        <div className="absolute top-0 right-1/4 h-80 w-80 rounded-full bg-[#ECFDF5] blur-3xl opacity-60 pointer-events-none" />
+      {/* 2-COLUMN HERO SECTION WITH LIGHT SUBTLE GRADIENT (MATCHING ABOUT PAGE) */}
+      <section className="relative w-full overflow-hidden border-b border-[#E8F0EC]/80 bg-gradient-to-b from-[#F2F8F5] via-[#F8FBFA] to-white">
+        {/* Soft background ambient mint glow */}
+        <div className="absolute left-1/2 top-0 -translate-x-1/2 h-96 w-[800px] rounded-full bg-[#ECFDF5] blur-3xl opacity-75 pointer-events-none" />
+        <div className="absolute top-0 right-1/4 h-80 w-80 rounded-full bg-[#E6F7F0] blur-3xl opacity-60 pointer-events-none" />
 
         <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pt-6 sm:pt-7 lg:pt-8 pb-7 sm:pb-8 lg:pb-9">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">

@@ -43,6 +43,7 @@ const Palette = {
   completedText: '#0284C7',  // Blue status badge text
   cancelledBg: '#FEE2E2',    // Red status badge background
   cancelledText: '#DC2626',  // Red status badge text
+  badgeDot: '#E53E3E',       // Red notification dot
 };
 
 type FilterTab = 'UPCOMING' | 'COMPLETED' | 'CANCELLED';
@@ -309,21 +310,61 @@ export default function BookingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* ============================================================ */}
-        {/* 1. TOP BRAND LOGO (Centered, No Back Button)                */}
+        {/* 1. TOP BRAND BAR (Logo + Notifications + Add Visit)          */}
         {/* ============================================================ */}
-        <View style={styles.topHeaderBar}>
-          <Image
-            source={require('../../../assets/images/logo-dark.png')}
-            style={styles.brandLogo}
-            resizeMode="contain"
-          />
+        <View style={styles.topBrandBar}>
+          <TouchableOpacity
+            style={styles.brandContainer}
+            activeOpacity={0.8}
+            onPress={() => router.push('/(tabs)')}
+          >
+            <Image
+              source={require('../../../assets/images/logo-dark.png')}
+              style={styles.brandLogo}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+
+          <View style={styles.topActionButtons}>
+            <TouchableOpacity
+              style={styles.bellBtn}
+              activeOpacity={0.75}
+              onPress={() => Alert.alert('Notifications', 'All your upcoming home visit reminders are active.')}
+              accessibilityLabel="View notifications"
+            >
+              <Ionicons name="notifications-outline" size={20} color={Palette.textDark} />
+              <View style={styles.bellBadgeDot} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.plusBtn}
+              activeOpacity={0.75}
+              onPress={() => router.push('/(tabs)/services')}
+              accessibilityLabel="Book new visit"
+            >
+              <Ionicons name="add" size={22} color={Palette.primary} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* ============================================================ */}
-        {/* 2. "MY BOOKINGS" TITLE (Centered, Matching Image 2)          */}
+        {/* 2. HERO SECTION: "My Bookings" + HOUSE/GARDEN ILLUSTRATION   */}
         {/* ============================================================ */}
-        <View style={styles.headingSection}>
-          <Text style={styles.pageHeading}>My Bookings</Text>
+        <View style={styles.heroSection}>
+          <View style={styles.heroTextCol}>
+            <Text style={styles.heroTitle}>My Bookings</Text>
+            <Text style={styles.heroSubtitle}>
+              Track your doctor visits, nursing,{'\n'}and bedside clinical care.
+            </Text>
+          </View>
+
+          <View style={styles.heroImageContainer}>
+            <Image
+              source={require('../../../assets/images/home-garden.png')}
+              style={styles.heroHouseImage}
+              resizeMode="contain"
+            />
+          </View>
         </View>
 
         {/* ============================================================ */}
@@ -522,15 +563,15 @@ export default function BookingsScreen() {
                   </View>
                 </View>
 
-                {/* --- Bottom Card Action: Single "View Details →" (No Reschedule Button) --- */}
+                {/* --- Bottom Card Action: Single "View Details →" (Refined Mint Secondary CTA) --- */}
                 <View style={styles.cardActionsRow}>
                   <TouchableOpacity
                     style={styles.actionBtnPrimary}
-                    activeOpacity={0.8}
+                    activeOpacity={0.75}
                     onPress={() => openDetailsModal(item)}
                   >
                     <Text style={styles.actionBtnPrimaryText}>View Details</Text>
-                    <Ionicons name="arrow-forward" size={14} color="#FFFFFF" style={{ marginLeft: 6 }} />
+                    <Ionicons name="arrow-forward" size={14} color={Palette.primary} style={{ marginLeft: 6 }} />
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
@@ -587,52 +628,6 @@ export default function BookingsScreen() {
               <Ionicons name="chatbubbles-outline" size={15} color={Palette.primary} style={{ marginRight: 6 }} />
               <Text style={styles.supportFaqBtnText}>Help Center</Text>
             </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* ============================================================ */}
-        {/* 8. VISIT PREPARATION & SAFETY CHECKLIST                     */}
-        {/* ============================================================ */}
-        <View style={styles.guidelinesCard}>
-          <View style={styles.guidelinesTitleRow}>
-            <Ionicons name="shield-checkmark" size={18} color={Palette.primary} style={{ marginRight: 7 }} />
-            <Text style={styles.guidelinesTitle}>What to expect during home visits</Text>
-          </View>
-
-          <View style={styles.checklistStep}>
-            <View style={styles.stepNumberBadge}>
-              <Text style={styles.stepNumberText}>1</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.stepTitle}>Prior Call Notification</Text>
-              <Text style={styles.stepDesc}>
-                Your doctor or nurse will call 15 minutes before arrival to confirm the address and parking details.
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.checklistStep}>
-            <View style={styles.stepNumberBadge}>
-              <Text style={styles.stepNumberText}>2</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.stepTitle}>Sterile & Safe Equipment</Text>
-              <Text style={styles.stepDesc}>
-                All medical kits, diagnostics, and sterile dressings are opened right at your bedside.
-              </Text>
-            </View>
-          </View>
-
-          <View style={[styles.checklistStep, { marginBottom: 0 }]}>
-            <View style={styles.stepNumberBadge}>
-              <Text style={styles.stepNumberText}>3</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.stepTitle}>Doorstep PIN Authentication</Text>
-              <Text style={styles.stepDesc}>
-                Verify your clinician's badge and share your 4-digit Bedside PIN to initiate the clinical consultation.
-              </Text>
-            </View>
           </View>
         </View>
       </ScrollView>
@@ -971,33 +966,94 @@ const styles = StyleSheet.create({
     paddingBottom: 110,
   },
 
-  /* 1. Top Header Bar: Logo (Centered, No Back Button) */
-  topHeaderBar: {
+  /* 1. Top Brand Header (Matching Services Page) */
+  topBrandBar: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 6,
+    marginBottom: 8,
+  },
+  brandContainer: {
     justifyContent: 'center',
-    paddingTop: 8,
-    paddingBottom: 4,
-    marginBottom: 2,
   },
   brandLogo: {
-    width: 128,
+    width: 124,
     height: 34,
   },
+  topActionButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  bellBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Palette.surface,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    ...Shadows.subtle,
+  },
+  bellBadgeDot: {
+    position: 'absolute',
+    top: 9,
+    right: 10,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: Palette.badgeDot,
+  },
+  plusBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Palette.primaryLight,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Shadows.subtle,
+  },
 
-  /* 2. Heading Section: "My Bookings" Title (Matching Image 2) */
-  headingSection: {
-    marginTop: 8,
+  /* 2. Hero Section: "My Bookings" + Home & Garden Illustration (Matching Services Page) */
+  heroSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 16,
+  },
+  heroTextCol: {
+    flex: 1,
+    paddingRight: 8,
+  },
+  heroTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 24,
+    fontWeight: '600',
+    color: Palette.primary,
+    letterSpacing: -0.3,
+    marginBottom: 4,
+  },
+  heroSubtitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '400',
+    color: Palette.textMuted,
+    lineHeight: 17,
+  },
+  heroImageContainer: {
+    width: 135,
+    height: 96,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pageHeading: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 24,
-    fontWeight: '700',
-    color: Palette.primary,
-    textAlign: 'center',
-    letterSpacing: -0.3,
+  heroHouseImage: {
+    width: 130,
+    height: 92,
   },
 
   /* 3. Segmented Filter Tabs */
@@ -1305,17 +1361,18 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Palette.primary,
+    backgroundColor: Palette.primaryLight,
+    borderWidth: 1.2,
+    borderColor: '#C4E2D2',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    ...Shadows.subtle,
   },
   actionBtnPrimaryText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: Palette.primary,
     letterSpacing: 0.1,
   },
 
@@ -1468,63 +1525,6 @@ const styles = StyleSheet.create({
     fontSize: 12.5,
     fontWeight: '600',
     color: Palette.primary,
-  },
-
-  /* 8. Guidelines Checklist Card */
-  guidelinesCard: {
-    backgroundColor: Palette.surface,
-    borderRadius: 20,
-    borderWidth: 1.2,
-    borderColor: Palette.border,
-    padding: 16,
-    ...Shadows.subtle,
-  },
-  guidelinesTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 14,
-  },
-  guidelinesTitle: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 14,
-    fontWeight: '600',
-    color: Palette.primary,
-    letterSpacing: -0.2,
-  },
-  checklistStep: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 12,
-  },
-  stepNumberBadge: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: Palette.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-    marginTop: 1,
-  },
-  stepNumberText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '600',
-    color: Palette.primary,
-  },
-  stepTitle: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
-    fontWeight: '600',
-    color: Palette.textDark,
-    marginBottom: 2,
-  },
-  stepDesc: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11.5,
-    fontWeight: '400',
-    color: Palette.textMuted,
-    lineHeight: 16,
   },
 
   /* ========================================================
