@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -39,70 +39,37 @@ const Palette = {
   pulseRed: '#E11D48',       // Blood pressure pulse
 };
 
-interface ScheduleDayItem {
-  day: string;
-  date: string;
-  fullDate: string;
-  isToday?: boolean;
-  hasEvent?: boolean;
-  eventType?: 'confirmed' | 'scheduled';
-  booking?: {
-    id: string;
-    routeId: string;
-    serviceTitle: string;
-    providerName: string;
-    providerRole: string;
-    time: string;
-    status: 'Confirmed' | 'Scheduled';
-    avatar: any;
-    pin?: string;
-  };
+interface CalendarGridCell {
+  day: number;
+  month: number;
+  year: number;
+  isCurrentMonth: boolean;
 }
 
-const SCHEDULE_DAYS: ScheduleDayItem[] = [
-  { day: 'Mon', date: '12', fullDate: '12 May 2025' },
-  { day: 'Tue', date: '13', fullDate: '13 May 2025' },
-  {
-    day: 'Wed',
-    date: '14',
-    fullDate: '14 May 2025',
-    isToday: true,
-    hasEvent: true,
-    eventType: 'confirmed',
-    booking: {
-      id: 'bkg-1',
-      routeId: 'bkg-8492',
-      serviceTitle: 'Home Visit Consultation',
-      providerName: 'Dr. Arjun Mehta',
-      providerRole: 'MD, General Physician',
-      time: '11:00 AM – 11:30 AM',
-      status: 'Confirmed',
-      avatar: require('../../../assets/images/doctor-rohan.png'),
-      pin: '4829',
-    },
-  },
-  { day: 'Thu', date: '15', fullDate: '15 May 2025' },
-  {
-    day: 'Fri',
-    date: '16',
-    fullDate: '16 May 2025',
-    hasEvent: true,
-    eventType: 'scheduled',
-    booking: {
-      id: 'bkg-2',
-      routeId: 'bkg-8890',
-      serviceTitle: 'Home Nursing Care',
-      providerName: 'Nurse Priya Sharma',
-      providerRole: 'B.Sc Nursing • Critical & Elderly Care',
-      time: '02:00 PM – 02:45 PM',
-      status: 'Scheduled',
-      avatar: require('../../../assets/images/doctor-maya-patel.jpg'),
-      pin: '7392',
-    },
-  },
-  { day: 'Sat', date: '17', fullDate: '17 May 2025' },
-  { day: 'Sun', date: '18', fullDate: '18 May 2025' },
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
+
+const WEEKDAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+// Scheduled care visits marked on calendar (year-monthIndex-day)
+const CALENDAR_EVENTS: Record<string, 'confirmed' | 'scheduled'> = {
+  '2025-4-14': 'confirmed',
+  '2025-4-16': 'scheduled',
+  '2025-4-22': 'confirmed',
+  '2025-4-28': 'scheduled',
+};
 
 /**
  * Illustrated Doctor Character with Botanical Leaves
@@ -205,7 +172,77 @@ function DoctorIllustration({ width = 105, height = 115 }: { width?: number; hei
 export default function HomeScreen() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDay, setSelectedDay] = useState('14'); // Active: Wed 14
+  const [calendarMonth, setCalendarMonth] = useState<number>(4); // 4 = May (0-indexed)
+  const [calendarYear, setCalendarYear] = useState<number>(2025);
+  const [selectedDate, setSelectedDate] = useState<number>(14);
+
+  const handlePrevMonth = () => {
+    if (calendarMonth === 0) {
+      setCalendarMonth(11);
+      setCalendarYear((y) => y - 1);
+    } else {
+      setCalendarMonth((m) => m - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (calendarMonth === 11) {
+      setCalendarMonth(0);
+      setCalendarYear((y) => y + 1);
+    } else {
+      setCalendarMonth((m) => m + 1);
+    }
+  };
+
+  const calendarGrid = useMemo<CalendarGridCell[]>(() => {
+    const daysInCurrentMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+    const firstDayOfWeek = new Date(calendarYear, calendarMonth, 1).getDay();
+    // Monday as index 0: Sun (0) -> 6, Mon (1) -> 0, etc.
+    const leadingDaysCount = (firstDayOfWeek + 6) % 7;
+
+    const daysInPrevMonth = new Date(calendarYear, calendarMonth, 0).getDate();
+    const prevMonth = calendarMonth === 0 ? 11 : calendarMonth - 1;
+    const prevYear = calendarMonth === 0 ? calendarYear - 1 : calendarYear;
+
+    const nextMonth = calendarMonth === 11 ? 0 : calendarMonth + 1;
+    const nextYear = calendarMonth === 11 ? calendarYear + 1 : calendarYear;
+
+    const cells: CalendarGridCell[] = [];
+
+    // Leading days from previous month
+    for (let i = leadingDaysCount - 1; i >= 0; i--) {
+      cells.push({
+        day: daysInPrevMonth - i,
+        month: prevMonth,
+        year: prevYear,
+        isCurrentMonth: false,
+      });
+    }
+
+    // Days in current month
+    for (let d = 1; d <= daysInCurrentMonth; d++) {
+      cells.push({
+        day: d,
+        month: calendarMonth,
+        year: calendarYear,
+        isCurrentMonth: true,
+      });
+    }
+
+    // Trailing days to complete full grid rows (multiple of 7)
+    const totalCellsNeeded = Math.ceil(cells.length / 7) * 7;
+    const trailingDaysCount = totalCellsNeeded - cells.length;
+    for (let t = 1; t <= trailingDaysCount; t++) {
+      cells.push({
+        day: t,
+        month: nextMonth,
+        year: nextYear,
+        isCurrentMonth: false,
+      });
+    }
+
+    return cells;
+  }, [calendarMonth, calendarYear]);
 
   const patientFirstName = user?.name ? user.name.split(' ')[0] : 'Emma';
 
@@ -589,16 +626,13 @@ export default function HomeScreen() {
         </View>
 
         {/* ============================================================ */}
-        {/* 7. SCHEDULE SECTION: HORIZONTAL CALENDAR DATE STRIP          */}
+        {/* 7. SCHEDULE SECTION: FULL MONTHLY CALENDAR                   */}
         {/* ============================================================ */}
         <View style={styles.sectionBlock}>
           {/* Header Row */}
           <View style={styles.scheduleHeaderRow}>
             <View style={styles.scheduleTitleWrap}>
               <Text style={styles.scheduleHeading}>Schedule</Text>
-              <View style={styles.scheduleMonthPill}>
-                <Text style={styles.scheduleMonthText}>May 2025</Text>
-              </View>
             </View>
 
             <TouchableOpacity
@@ -613,156 +647,110 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* 7-Day Horizontal Strip */}
-          <View style={styles.scheduleRowContainer}>
-            {SCHEDULE_DAYS.map((item) => {
-              const isSelected = selectedDay === item.date;
-              return (
-                <TouchableOpacity
-                  key={item.date}
-                  activeOpacity={0.82}
-                  onPress={() => setSelectedDay(item.date)}
-                  style={[
-                    styles.scheduleDayCard,
-                    isSelected ? styles.scheduleDayActive : styles.scheduleDayInactive,
-                  ]}
-                >
-                  <Text
+          {/* Full Monthly Calendar Card */}
+          <View style={styles.calendarCard}>
+            {/* Calendar Month Navigation Header */}
+            <View style={styles.calendarMonthNav}>
+              <TouchableOpacity
+                onPress={handlePrevMonth}
+                style={styles.calendarNavArrow}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                accessibilityLabel="Previous month"
+              >
+                <Ionicons name="chevron-back" size={16} color={Palette.primary} />
+              </TouchableOpacity>
+
+              <View style={styles.calendarCurrentMonthWrap}>
+                <Ionicons name="calendar" size={14} color={Palette.primary} style={{ marginRight: 6 }} />
+                <Text style={styles.calendarCurrentMonthText}>
+                  {MONTH_NAMES[calendarMonth]} {calendarYear}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={handleNextMonth}
+                style={styles.calendarNavArrow}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                accessibilityLabel="Next month"
+              >
+                <Ionicons name="chevron-forward" size={16} color={Palette.primary} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Weekday Names Header Row (Mon, Tue, Wed, Thu, Fri, Sat, Sun) */}
+            <View style={styles.calendarWeekdaysRow}>
+              {WEEKDAY_NAMES.map((w) => (
+                <View key={w} style={styles.calendarWeekdayCell}>
+                  <Text style={styles.calendarWeekdayText}>{w}</Text>
+                </View>
+              ))}
+            </View>
+
+            {/* Calendar Days Grid */}
+            <View style={styles.calendarGrid}>
+              {calendarGrid.map((cell, idx) => {
+                const isCurrentMonth = cell.isCurrentMonth;
+                const isSelected = isCurrentMonth && selectedDate === cell.day;
+                const eventKey = `${cell.year}-${cell.month}-${cell.day}`;
+                const eventType = isCurrentMonth ? CALENDAR_EVENTS[eventKey] : undefined;
+
+                return (
+                  <TouchableOpacity
+                    key={`cal-${idx}-${cell.day}`}
+                    activeOpacity={isCurrentMonth ? 0.75 : 1}
+                    disabled={!isCurrentMonth}
+                    onPress={() => isCurrentMonth && setSelectedDate(cell.day)}
                     style={[
-                      styles.scheduleDayLabel,
-                      isSelected ? styles.scheduleDayLabelActive : styles.scheduleDayLabelInactive,
+                      styles.calendarDayCell,
+                      isSelected && styles.calendarDayCellSelected,
                     ]}
                   >
-                    {item.day}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.scheduleDateNumber,
-                      isSelected ? styles.scheduleDateNumberActive : styles.scheduleDateNumberInactive,
-                    ]}
-                  >
-                    {item.date}
-                  </Text>
-
-                  {/* Event indicator dot */}
-                  {item.hasEvent && (
-                    <View
+                    <Text
                       style={[
-                        styles.scheduleEventDot,
-                        isSelected
-                          ? styles.scheduleEventDotActive
-                          : item.eventType === 'scheduled'
-                          ? styles.scheduleEventDotScheduled
-                          : styles.scheduleEventDotConfirmed,
-                      ]}
-                    />
-                  )}
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          {/* Interactive Selected Day Agenda Card */}
-          {(() => {
-            const currentItem = SCHEDULE_DAYS.find((d) => d.date === selectedDay) || SCHEDULE_DAYS[2];
-            if (currentItem.booking) {
-              const b = currentItem.booking;
-              return (
-                <View style={styles.agendaCard}>
-                  {/* Top Status & Timing Row */}
-                  <View style={styles.agendaTopRow}>
-                    <View
-                      style={[
-                        styles.agendaStatusBadge,
-                        b.status === 'Confirmed' ? styles.agendaStatusConfirmed : styles.agendaStatusScheduled,
+                        styles.calendarDayNumber,
+                        !isCurrentMonth && styles.calendarDayNumberMuted,
+                        isSelected && styles.calendarDayNumberSelected,
                       ]}
                     >
+                      {cell.day}
+                    </Text>
+
+                    {/* Event Dot */}
+                    {eventType ? (
                       <View
                         style={[
-                          styles.agendaStatusDot,
-                          { backgroundColor: b.status === 'Confirmed' ? '#059669' : '#D97706' },
+                          styles.calendarEventDot,
+                          isSelected
+                            ? styles.calendarEventDotSelected
+                            : eventType === 'confirmed'
+                            ? styles.calendarEventDotConfirmed
+                            : styles.calendarEventDotScheduled,
                         ]}
                       />
-                      <Text
-                        style={[
-                          styles.agendaStatusText,
-                          { color: b.status === 'Confirmed' ? '#059669' : '#D97706' },
-                        ]}
-                      >
-                        {b.status} Visit
-                      </Text>
-                    </View>
-
-                    <View style={styles.agendaTimeBadge}>
-                      <Ionicons name="time-outline" size={12} color={Palette.primary} style={{ marginRight: 4 }} />
-                      <Text style={styles.agendaTimeText}>{b.time}</Text>
-                    </View>
-                  </View>
-
-                  {/* Clinician & Service Info */}
-                  <View style={styles.agendaContentRow}>
-                    <Image source={b.avatar} style={styles.agendaAvatar} resizeMode="cover" />
-                    <View style={styles.agendaInfoCol}>
-                      <Text style={styles.agendaServiceTitle}>{b.serviceTitle}</Text>
-                      <Text style={styles.agendaDoctorName}>{b.providerName}</Text>
-                      <Text style={styles.agendaDoctorRole}>{b.providerRole}</Text>
-                    </View>
-                  </View>
-
-                  {/* Bedside PIN + Quick Action Row */}
-                  <View style={styles.agendaFooterRow}>
-                    {b.pin ? (
-                      <View style={styles.agendaPinBadge}>
-                        <Ionicons name="key-outline" size={11} color={Palette.primary} style={{ marginRight: 4 }} />
-                        <Text style={styles.agendaPinLabel}>Doorstep PIN: </Text>
-                        <Text style={styles.agendaPinCode}>{b.pin}</Text>
-                      </View>
                     ) : (
-                      <View />
+                      <View style={styles.calendarEventDotPlaceholder} />
                     )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
 
-                    <TouchableOpacity
-                      style={styles.agendaViewBtn}
-                      activeOpacity={0.8}
-                      onPress={() =>
-                        router.push({
-                          pathname: `/booking/${b.routeId}`,
-                          params: { step: 'details_view' },
-                        } as any)
-                      }
-                    >
-                      <Text style={styles.agendaViewBtnText}>View Details</Text>
-                      <Ionicons name="arrow-forward" size={12} color="#FFFFFF" style={{ marginLeft: 4 }} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              );
-            }
-
-            return (
-              <View style={styles.agendaEmptyCard}>
-                <View style={styles.agendaEmptyIconWrap}>
-                  <Ionicons name="calendar-outline" size={18} color={Palette.primary} />
-                </View>
-                <View style={styles.agendaEmptyTextCol}>
-                  <Text style={styles.agendaEmptyTitle}>
-                    {currentItem.day}, {currentItem.fullDate}
-                  </Text>
-                  <Text style={styles.agendaEmptySubtitle}>
-                    No home visits booked. Clinicians are available for doorstep care.
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  style={styles.agendaEmptyBookBtn}
-                  activeOpacity={0.8}
-                  onPress={() => router.push('/services/doctor-visit' as any)}
-                >
-                  <Text style={styles.agendaEmptyBookText}>Book Care</Text>
-                  <Ionicons name="add" size={13} color={Palette.primary} />
-                </TouchableOpacity>
+            {/* Calendar Footer / Legend */}
+            <View style={styles.calendarLegendRow}>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: '#059669' }]} />
+                <Text style={styles.legendText}>Confirmed Visit</Text>
               </View>
-            );
-          })()}
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: '#D97706' }]} />
+                <Text style={styles.legendText}>Scheduled</Text>
+              </View>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: Palette.primary }]} />
+                <Text style={styles.legendText}>Selected</Text>
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -1220,256 +1208,144 @@ const styles = StyleSheet.create({
     color: Palette.primary,
     marginRight: 2,
   },
-  scheduleRowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 12,
+  /* Full Monthly Calendar Styles */
+  calendarCard: {
+    backgroundColor: Palette.surface,
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    paddingHorizontal: 14,
+    paddingVertical: 16,
+    ...Shadows.subtle,
   },
-  scheduleDayCard: {
-    flex: 1,
-    maxWidth: 44,
-    height: 64,
+  calendarMonthNav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+    paddingHorizontal: 4,
+  },
+  calendarNavArrow: {
+    width: 32,
+    height: 32,
     borderRadius: 16,
+    backgroundColor: Palette.mint,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1.2,
-    position: 'relative',
-    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: '#D4E7DC',
   },
-  scheduleDayActive: {
-    backgroundColor: Palette.primary,
-    borderColor: Palette.primary,
-    ...Shadows.subtle,
-  },
-  scheduleDayInactive: {
-    backgroundColor: Palette.surface,
-    borderColor: Palette.border,
-  },
-  scheduleDayLabel: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
-    fontWeight: '500',
-    marginBottom: 2,
-  },
-  scheduleDayLabelActive: {
-    color: '#DCEEE2',
-  },
-  scheduleDayLabelInactive: {
-    color: Palette.textMuted,
-  },
-  scheduleDateNumber: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 14.5,
-    fontWeight: '600',
-  },
-  scheduleDateNumberActive: {
-    color: '#FFFFFF',
-  },
-  scheduleDateNumberInactive: {
-    color: Palette.textDark,
-  },
-  scheduleEventDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    marginTop: 3,
-  },
-  scheduleEventDotActive: {
-    backgroundColor: '#FFFFFF',
-  },
-  scheduleEventDotConfirmed: {
-    backgroundColor: '#059669',
-  },
-  scheduleEventDotScheduled: {
-    backgroundColor: '#D97706',
-  },
-
-  /* Agenda Card */
-  agendaCard: {
-    backgroundColor: Palette.surface,
-    borderRadius: 18,
-    borderWidth: 1.2,
-    borderColor: Palette.border,
-    padding: 13,
-    ...Shadows.subtle,
-  },
-  agendaTopRow: {
+  calendarCurrentMonthWrap: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: Palette.mint,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#D4E7DC',
+  },
+  calendarCurrentMonthText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: Palette.primary,
+    letterSpacing: 0.2,
+  },
+  calendarWeekdaysRow: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
-    paddingBottom: 8,
+    marginBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#F0F4F2',
+    paddingBottom: 8,
   },
-  agendaStatusBadge: {
-    flexDirection: 'row',
+  calendarWeekdayCell: {
+    flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
   },
-  agendaStatusConfirmed: {
-    backgroundColor: '#EAF6ED',
-  },
-  agendaStatusScheduled: {
-    backgroundColor: '#FEF3C7',
-  },
-  agendaStatusDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginRight: 5,
-  },
-  agendaStatusText: {
+  calendarWeekdayText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 11,
     fontWeight: '600',
+    color: Palette.textMuted,
+    textTransform: 'uppercase',
   },
-  agendaTimeBadge: {
+  calendarGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  calendarDayCell: {
+    width: '14.28%',
+    height: 42,
     alignItems: 'center',
-    backgroundColor: Palette.mint,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
+    justifyContent: 'center',
+    borderRadius: 12,
+    marginVertical: 2,
   },
-  agendaTimeText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '500',
-    color: Palette.primary,
+  calendarDayCellSelected: {
+    backgroundColor: Palette.primary,
+    ...Shadows.subtle,
   },
-  agendaContentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 10,
-  },
-  agendaAvatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Palette.mint,
-  },
-  agendaInfoCol: {
-    flex: 1,
-  },
-  agendaServiceTitle: {
+  calendarDayNumber: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13.5,
     fontWeight: '600',
     color: Palette.textDark,
-    marginBottom: 1,
   },
-  agendaDoctorName: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12,
-    fontWeight: '500',
-    color: Palette.primary,
-  },
-  agendaDoctorRole: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
+  calendarDayNumberMuted: {
+    color: '#CBD5E1',
     fontWeight: '400',
-    color: Palette.textMuted,
   },
-  agendaFooterRow: {
+  calendarDayNumberSelected: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  calendarEventDot: {
+    width: 4.5,
+    height: 4.5,
+    borderRadius: 2.25,
+    marginTop: 2,
+  },
+  calendarEventDotPlaceholder: {
+    width: 4.5,
+    height: 4.5,
+    marginTop: 2,
+  },
+  calendarEventDotSelected: {
+    backgroundColor: '#FFFFFF',
+  },
+  calendarEventDotConfirmed: {
+    backgroundColor: '#059669',
+  },
+  calendarEventDotScheduled: {
+    backgroundColor: '#D97706',
+  },
+  calendarLegendRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 6,
+    justifyContent: 'center',
+    gap: 16,
+    marginTop: 14,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: '#F0F4F2',
   },
-  agendaPinBadge: {
+  legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Palette.mint,
-    paddingHorizontal: 7,
-    paddingVertical: 2.5,
-    borderRadius: 6,
+    gap: 5,
   },
-  agendaPinLabel: {
+  legendDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+  },
+  legendText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
-    fontWeight: '400',
+    fontSize: 11,
+    fontWeight: '500',
     color: Palette.textMuted,
-  },
-  agendaPinCode: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '600',
-    color: Palette.primary,
-    letterSpacing: 1,
-  },
-  agendaViewBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Palette.primary,
-    paddingHorizontal: 11,
-    paddingVertical: 6,
-    borderRadius: 14,
-  },
-  agendaViewBtnText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11.5,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-
-  /* Empty Day Agenda Card */
-  agendaEmptyCard: {
-    backgroundColor: Palette.surface,
-    borderRadius: 16,
-    borderWidth: 1.2,
-    borderColor: Palette.border,
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    ...Shadows.subtle,
-  },
-  agendaEmptyIconWrap: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: Palette.mint,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  agendaEmptyTextCol: {
-    flex: 1,
-  },
-  agendaEmptyTitle: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
-    fontWeight: '600',
-    color: Palette.textDark,
-  },
-  agendaEmptySubtitle: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '400',
-    color: Palette.textMuted,
-    marginTop: 1,
-    lineHeight: 14,
-  },
-  agendaEmptyBookBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Palette.mint,
-    paddingHorizontal: 9,
-    paddingVertical: 6,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#D4E7DC',
-  },
-  agendaEmptyBookText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '600',
-    color: Palette.primary,
-    marginRight: 2,
   },
 });
