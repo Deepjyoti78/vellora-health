@@ -18,6 +18,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Typography, Spacing, BorderRadius } from '../../constants/theme';
 import { useAuth } from '../../context/AuthContext';
 
@@ -26,10 +27,10 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 export default function WelcomeScreen() {
   const { loginPhone, verifyOtp, simulatedOtp } = useAuth();
 
-  // Entrance animations for the welcome hero
+  // Entrance animations for the content
   const contentFade = useRef(new Animated.Value(0)).current;
-  const contentSlide = useRef(new Animated.Value(20)).current;
-  const heroOpacity = useRef(new Animated.Value(0.2)).current;
+  const contentSlide = useRef(new Animated.Value(24)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
 
   // Bottom Sheet State
   const [sheetVisible, setSheetVisible] = useState(false);
@@ -56,20 +57,15 @@ export default function WelcomeScreen() {
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(heroOpacity, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }),
       Animated.timing(contentFade, {
         toValue: 1,
-        duration: 450,
+        duration: 600,
         useNativeDriver: true,
       }),
       Animated.spring(contentSlide, {
         toValue: 0,
-        friction: 7,
-        tension: 50,
+        friction: 8,
+        tension: 45,
         useNativeDriver: true,
       }),
     ]).start();
@@ -235,92 +231,104 @@ export default function WelcomeScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
 
-      {/* Top SafeArea and Primary Vellora Health Brand Header */}
-      <SafeAreaView edges={['top']} style={styles.topHeaderArea}>
+      {/* Full-Screen Warm Home Healthcare Background Photograph */}
+      <Image
+        source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
+        style={StyleSheet.absoluteFill}
+        resizeMode="cover"
+      />
+
+      {/* Subtle Bottom Vignette Gradient to Guarantee Crisp Text Contrast */}
+      <LinearGradient
+        colors={[
+          'rgba(6, 27, 19, 0)',
+          'rgba(6, 27, 19, 0.45)',
+          'rgba(6, 27, 19, 0.88)',
+          'rgba(5, 22, 15, 0.98)',
+        ]}
+        locations={[0, 0.35, 0.68, 1]}
+        style={styles.bottomGradientOverlay}
+        pointerEvents="none"
+      />
+
+      {/* Top SafeArea and Centered Wellora Healthcare Brand Header */}
+      <SafeAreaView edges={['top']} style={styles.topSafeArea}>
         <View style={styles.brandHeader}>
           <Image
-            source={require('../../../assets/images/logo-dark.png')}
-            style={styles.topLogo}
+            source={require('../../../assets/images/logo-white.png')}
+            style={styles.topLogoWhite}
             resizeMode="contain"
           />
         </View>
       </SafeAreaView>
 
-      {/* Full-Width Hero Photograph Section */}
-      <Animated.View style={[styles.heroWrapper, { opacity: heroOpacity }]}>
-        <Image
-          source={require('../../../assets/images/nurse-elder-care.png')}
-          style={styles.heroImage}
-          resizeMode="cover"
-        />
-
-        {/* Floating Trust Pill over Hero Image */}
-        <View style={styles.heroTrustPill}>
-          <View style={styles.heroTrustDot} />
-          <Ionicons name="shield-checkmark" size={13} color="#0F5B43" />
-          <Text style={styles.heroTrustPillText}>Verified Doorstep Clinical Care</Text>
-        </View>
-
-        {/* Organic Curved Wave Transition to Ivory Content */}
-        <View style={styles.waveOverlay} />
-      </Animated.View>
-
-      {/* Bottom Content Area with Ivory Background */}
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.contentSafeArea}>
+      {/* Bottom Content Area with Pill Badge, Headline, Subtitle, and Action Buttons */}
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.bottomContentSafeArea}>
         <Animated.View
           style={[
-            styles.contentCard,
+            styles.contentContainer,
             {
               opacity: contentFade,
               transform: [{ translateY: contentSlide }],
             },
           ]}
         >
-          {/* Editorial Headline & Subtitle */}
-          <View style={styles.textSection}>
-            <View style={styles.ratingBadge}>
-              <Ionicons name="star" size={12} color="#D97706" />
-              <Text style={styles.ratingBadgeText}>4.9/5 · Trusted by 50,000+ Indian Families</Text>
-            </View>
-            <Text style={styles.headline}>Care, closer to home.</Text>
-            <Text style={styles.subtitle}>
-              Specialist doctors, verified nurses, and diagnostic lab tests at your doorstep.
-            </Text>
+          {/* Category Pill Tag: Home Healthcare */}
+          <View style={styles.categoryPill}>
+            <Ionicons name="home-outline" size={15} color="#86EFAC" style={styles.pillIcon} />
+            <Text style={styles.categoryPillText}>Home Healthcare</Text>
           </View>
 
-          {/* 3-Dot Carousel Indicator */}
-          <View style={styles.dotsRow}>
-            <View style={styles.activePillDot} />
-            <View style={styles.inactiveDot} />
-            <View style={styles.inactiveDot} />
-          </View>
+          {/* Main Hero Headline */}
+          <Text style={styles.headline}>
+            Hospital-grade care,{'\n'}
+            <Text style={styles.headlineHighlight}>right at home</Text>
+          </Text>
 
-          {/* Bottom Actions */}
+          {/* Subtitle Description */}
+          <Text style={styles.subtitle}>
+            Doctor visits, nursing, and everyday care for you and your loved ones at home.
+          </Text>
+
+          {/* Action Buttons Section */}
           <View style={styles.actionsBlock}>
+            {/* Primary Action Button: Warm Ivory Pill "Get Started →" */}
             <TouchableOpacity
               activeOpacity={0.88}
               onPress={() => openSheet('signup')}
               style={styles.primaryActionButton}
             >
               <Text style={styles.primaryActionButtonText}>Get Started</Text>
-              <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+              <Ionicons name="arrow-forward" size={18} color="#0B2B20" />
             </TouchableOpacity>
 
+            {/* Already have an account row */}
+            <View style={styles.alreadyAccountRow}>
+              <Text style={styles.alreadyAccountText}>Already have an account? </Text>
+              <TouchableOpacity
+                onPress={() => openSheet('signin')}
+                activeOpacity={0.7}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              >
+                <Text style={styles.signInLinkText}>Sign in</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Secondary Action Button: Outlined Pill "Explore Services" */}
             <TouchableOpacity
-              onPress={() => openSheet('signin')}
-              activeOpacity={0.7}
-              style={styles.secondaryLinkTouch}
-              hitSlop={{ top: 8, bottom: 8, left: 16, right: 16 }}
+              activeOpacity={0.85}
+              onPress={() => router.replace('/(tabs)')}
+              style={styles.exploreServicesButton}
             >
-              <Text style={styles.secondaryLinkText}>I already have an account</Text>
+              <Text style={styles.exploreServicesButtonText}>Explore Services</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
       </SafeAreaView>
 
-      {/* Bottom Sheet Modal (Image 2 style) */}
+      {/* Bottom Sheet Modal for Mobile Auth & OTP */}
       <Modal
         visible={sheetVisible}
         transparent
@@ -339,7 +347,7 @@ export default function WelcomeScreen() {
                 {
                   opacity: backdropAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [0, 0.6],
+                    outputRange: [0, 0.65],
                   }),
                 },
               ]}
@@ -505,7 +513,7 @@ export default function WelcomeScreen() {
                       <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
                     </TouchableOpacity>
 
-                    {/* Social Divider (Like Image 2) */}
+                    {/* Social Divider */}
                     <View style={styles.dividerRow}>
                       <View style={styles.dividerLine} />
                       <Text style={styles.dividerText}>or continue with</Text>
@@ -690,174 +698,151 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FBFAF7',
+    backgroundColor: '#071F15',
   },
-  topHeaderArea: {
-    backgroundColor: '#FBFAF7',
+  bottomGradientOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: Math.min(SCREEN_HEIGHT * 0.65, 560),
+  },
+  topSafeArea: {
     zIndex: 10,
   },
   brandHeader: {
-    height: 48,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Spacing.lg,
   },
-  topLogo: {
-    width: 140,
-    height: 38,
+  topLogoWhite: {
+    width: 155,
+    height: 42,
   },
-  heroWrapper: {
-    width: '100%',
-    height: Math.min(SCREEN_HEIGHT * 0.44, 380),
-    position: 'relative',
-    backgroundColor: '#E7ECE5',
-    overflow: 'hidden',
+  bottomContentSafeArea: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    zIndex: 10,
   },
-  heroImage: {
-    width: '100%',
-    height: '100%',
+  contentContainer: {
+    paddingHorizontal: 26,
+    paddingBottom: Platform.OS === 'ios' ? 12 : 24,
+    alignItems: 'center',
   },
-  heroTrustPill: {
-    position: 'absolute',
-    top: 14,
-    left: 18,
+  categoryPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.92)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
+    gap: 7,
+    borderWidth: 1.2,
+    borderColor: 'rgba(134, 239, 172, 0.4)',
+    backgroundColor: 'rgba(16, 47, 36, 0.72)',
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    borderRadius: 22,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.15,
     shadowRadius: 6,
-    elevation: 2,
   },
-  heroTrustDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#10B981',
+  pillIcon: {
+    marginRight: -2,
   },
-  heroTrustPillText: {
+  categoryPillText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '600',
-    color: '#0F5B43',
-  },
-  waveOverlay: {
-    position: 'absolute',
-    bottom: -1,
-    left: 0,
-    right: 0,
-    height: 32,
-    backgroundColor: '#FBFAF7',
-    borderTopLeftRadius: 36,
-    borderTopRightRadius: 36,
-  },
-  contentSafeArea: {
-    flex: 1,
-    backgroundColor: '#FBFAF7',
-  },
-  contentCard: {
-    flex: 1,
-    paddingHorizontal: Spacing.xl,
-    paddingTop: Spacing.xs,
-    paddingBottom: Spacing.md,
-    justifyContent: 'space-between',
-  },
-  textSection: {
-    marginTop: Spacing.xs,
-  },
-  ratingBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#FEF3C7',
-    alignSelf: 'flex-start',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginBottom: Spacing.sm,
-  },
-  ratingBadgeText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#92400E',
+    color: '#E8F5EE',
+    letterSpacing: 0.2,
   },
   headline: {
     fontFamily: Typography.fontFamily.serif,
     fontSize: 32,
-    lineHeight: 38,
-    fontWeight: '700',
-    color: '#1B2A24',
+    lineHeight: 39,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    letterSpacing: -0.4,
+    marginBottom: 10,
+  },
+  headlineHighlight: {
+    color: '#86EFAC',
+    fontWeight: '800',
   },
   subtitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: Typography.fontSize.base,
+    fontSize: 14.5,
     lineHeight: 22,
-    color: '#55655D',
-    marginTop: Spacing.sm,
-  },
-  dotsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginVertical: Spacing.md,
-  },
-  activePillDot: {
-    width: 24,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#0F5B43',
-  },
-  inactiveDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#DFE5DC',
+    color: '#D1E0D7',
+    textAlign: 'center',
+    paddingHorizontal: 14,
+    marginBottom: 24,
   },
   actionsBlock: {
     width: '100%',
-    gap: Spacing.xs,
+    alignItems: 'center',
+    gap: 12,
   },
   primaryActionButton: {
     width: '100%',
     height: 52,
-    backgroundColor: '#0F5B43',
+    backgroundColor: '#F5EFE6',
     borderRadius: 26,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    shadowColor: '#0F5B43',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOpacity: 0.28,
+    shadowRadius: 10,
+    elevation: 4,
   },
   primaryActionButtonText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: Typography.fontSize.base,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0B2B20',
   },
-  secondaryLinkTouch: {
+  alreadyAccountRow: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: Spacing.sm,
+    paddingVertical: 4,
   },
-  secondaryLinkText: {
+  alreadyAccountText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: Typography.fontSize.base,
+    fontSize: 13.5,
     fontWeight: '500',
-    color: '#1B2A24',
+    color: '#D1E0D8',
+  },
+  signInLinkText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#86EFAC',
+    textDecorationLine: 'underline',
+  },
+  exploreServicesButton: {
+    width: '100%',
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1.4,
+    borderColor: 'rgba(134, 239, 172, 0.45)',
+    backgroundColor: 'rgba(12, 45, 34, 0.55)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  exploreServicesButtonText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 14.5,
+    fontWeight: '600',
+    color: '#E8F5EE',
   },
 
   /* ========================================================
-     BOTTOM SHEET STYLES (Image 2 style)
+     BOTTOM SHEET STYLES
      ======================================================== */
   modalKeyboardContainer: {
     flex: 1,
@@ -869,7 +854,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#0A1813',
+    backgroundColor: '#040F0A',
   },
   bottomSheetCard: {
     width: '100%',
@@ -879,9 +864,9 @@ const styles = StyleSheet.create({
     maxHeight: SCREEN_HEIGHT * 0.88,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 10,
+    shadowOpacity: 0.2,
+    shadowRadius: 18,
+    elevation: 12,
   },
   sheetHandleContainer: {
     alignItems: 'center',
