@@ -247,7 +247,7 @@ export default function WelcomeScreen() {
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Hero Photo Section: Moved slightly below the header so people's faces aren't blocked */}
+      {/* Hero Photo Section: Positioned below header so all 4 characters' faces are fully visible */}
       <View style={styles.heroPhotoWrapper}>
         <Image
           source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
@@ -255,34 +255,16 @@ export default function WelcomeScreen() {
           resizeMode="cover"
         />
 
-        {/* Soft top gradient blending photo into the top header area */}
+        {/* Clean, subtle bottom transition (only at the very bottom edge of photo) */}
         <LinearGradient
-          colors={['#082218', 'rgba(8, 34, 24, 0.45)', 'rgba(8, 34, 24, 0.1)', 'transparent']}
-          locations={[0, 0.25, 0.5, 1]}
-          style={styles.heroPhotoTopGradient}
-          pointerEvents="none"
-        />
-
-        {/* Smooth organic bottom gradient melting photo into solid deep green */}
-        <LinearGradient
-          colors={[
-            'rgba(8, 34, 24, 0)',
-            'rgba(8, 34, 24, 0.12)',
-            'rgba(8, 34, 24, 0.65)',
-            'rgba(8, 34, 24, 0.95)',
-            '#082218',
-          ]}
-          locations={[0, 0.38, 0.7, 0.9, 1]}
+          colors={['transparent', 'rgba(8, 34, 24, 0.75)', '#082218']}
+          locations={[0, 0.65, 1]}
           style={styles.heroPhotoBottomGradient}
           pointerEvents="none"
         />
       </View>
 
-      {/* Subtle organic curved layers at the bottom */}
-      <View style={styles.bottomWaveOne} pointerEvents="none" />
-      <View style={styles.bottomWaveTwo} pointerEvents="none" />
-
-      {/* Top SafeArea and Centered Brand Logo */}
+      {/* Top SafeArea and Centered Brand Logo in clean dark space */}
       <SafeAreaView edges={['top']} style={styles.topSafeArea}>
         <View style={styles.topHeader}>
           <Image
@@ -293,7 +275,7 @@ export default function WelcomeScreen() {
         </View>
       </SafeAreaView>
 
-      {/* Bottom Content Area: Sitting below the photo on deep green */}
+      {/* Bottom Content Area: Sitting cleanly below the photo on solid deep green */}
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.bottomContentSafeArea}>
         <Animated.View
           style={[
@@ -310,7 +292,7 @@ export default function WelcomeScreen() {
             <Text style={styles.categoryPillText}>Home Healthcare</Text>
           </View>
 
-          {/* Main Hero Headline: Refined thinner editorial typography */}
+          {/* Main Hero Headline: Clean, thinner, professional typography */}
           <Text style={styles.headline}>
             Hospital-grade care,{'\n'}
             <Text style={styles.headlineHighlight}>right at home</Text>
@@ -726,10 +708,10 @@ const styles = StyleSheet.create({
   },
   heroPhotoWrapper: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 44 : 36,
+    top: Platform.OS === 'ios' ? 76 : 70,
     left: 0,
     right: 0,
-    height: SCREEN_HEIGHT * 0.50,
+    height: Math.min(SCREEN_HEIGHT * 0.46, 395),
     width: '100%',
     overflow: 'hidden',
     backgroundColor: '#082218',
@@ -737,48 +719,29 @@ const styles = StyleSheet.create({
   heroPhotoImage: {
     width: '100%',
     height: '100%',
-  },
-  heroPhotoTopGradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 70,
+    ...Platform.select({
+      web: {
+        objectPosition: 'top center',
+      } as any,
+    }),
   },
   heroPhotoBottomGradient: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: -1,
-    height: '52%',
-  },
-  bottomWaveOne: {
-    position: 'absolute',
-    bottom: -25,
-    left: -40,
-    right: -40,
-    height: 90,
-    borderRadius: 180,
-    backgroundColor: 'rgba(12, 45, 33, 0.4)',
-  },
-  bottomWaveTwo: {
-    position: 'absolute',
-    bottom: -45,
-    left: -20,
-    right: -20,
-    height: 80,
-    borderRadius: 160,
-    backgroundColor: 'rgba(5, 22, 15, 0.7)',
+    height: 60,
   },
   topSafeArea: {
     zIndex: 20,
+    backgroundColor: '#082218',
   },
   topHeader: {
-    height: 48,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Spacing.lg,
-    marginTop: Platform.OS === 'android' ? 6 : 2,
+    marginTop: Platform.OS === 'android' ? 6 : 4,
   },
   topLogoWhite: {
     width: 150,
@@ -791,7 +754,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 28,
-    paddingBottom: Platform.OS === 'ios' ? 26 : 36,
+    paddingBottom: Platform.OS === 'ios' ? 26 : 34,
     alignItems: 'center',
     width: '100%',
     maxWidth: 420,
