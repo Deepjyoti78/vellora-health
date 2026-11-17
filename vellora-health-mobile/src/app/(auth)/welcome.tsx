@@ -44,7 +44,7 @@ export default function WelcomeScreen() {
 
   // Entrance animations for the content
   const contentFade = useRef(new Animated.Value(0)).current;
-  const contentSlide = useRef(new Animated.Value(20)).current;
+  const contentSlide = useRef(new Animated.Value(18)).current;
 
   // Bottom Sheet State
   const [sheetVisible, setSheetVisible] = useState(false);
@@ -247,7 +247,7 @@ export default function WelcomeScreen() {
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Hero Photo Section: Doctor & Family in the Upper ~54% of Screen */}
+      {/* Hero Photo Section: Moved slightly below the header so people's faces aren't blocked */}
       <View style={styles.heroPhotoWrapper}>
         <Image
           source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
@@ -255,17 +255,25 @@ export default function WelcomeScreen() {
           resizeMode="cover"
         />
 
-        {/* Smooth organic gradient melting photo into solid deep green */}
+        {/* Soft top gradient blending photo into the top header area */}
+        <LinearGradient
+          colors={['#082218', 'rgba(8, 34, 24, 0.45)', 'rgba(8, 34, 24, 0.1)', 'transparent']}
+          locations={[0, 0.25, 0.5, 1]}
+          style={styles.heroPhotoTopGradient}
+          pointerEvents="none"
+        />
+
+        {/* Smooth organic bottom gradient melting photo into solid deep green */}
         <LinearGradient
           colors={[
             'rgba(8, 34, 24, 0)',
-            'rgba(8, 34, 24, 0.15)',
+            'rgba(8, 34, 24, 0.12)',
             'rgba(8, 34, 24, 0.65)',
-            'rgba(8, 34, 24, 0.96)',
+            'rgba(8, 34, 24, 0.95)',
             '#082218',
           ]}
-          locations={[0, 0.4, 0.72, 0.92, 1]}
-          style={styles.heroPhotoGradient}
+          locations={[0, 0.38, 0.7, 0.9, 1]}
+          style={styles.heroPhotoBottomGradient}
           pointerEvents="none"
         />
       </View>
@@ -285,7 +293,7 @@ export default function WelcomeScreen() {
         </View>
       </SafeAreaView>
 
-      {/* Bottom Content Area: Sitting perfectly below the photo on deep green */}
+      {/* Bottom Content Area: Sitting below the photo on deep green */}
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.bottomContentSafeArea}>
         <Animated.View
           style={[
@@ -298,11 +306,11 @@ export default function WelcomeScreen() {
         >
           {/* Category Pill Tag: Home Healthcare */}
           <View style={styles.categoryPill}>
-            <Ionicons name="home-outline" size={15} color="#86EFAC" style={styles.pillIcon} />
+            <Ionicons name="home-outline" size={14} color="#86EFAC" style={styles.pillIcon} />
             <Text style={styles.categoryPillText}>Home Healthcare</Text>
           </View>
 
-          {/* Main Hero Headline */}
+          {/* Main Hero Headline: Refined thinner editorial typography */}
           <Text style={styles.headline}>
             Hospital-grade care,{'\n'}
             <Text style={styles.headlineHighlight}>right at home</Text>
@@ -322,7 +330,7 @@ export default function WelcomeScreen() {
               style={styles.primaryActionButton}
             >
               <Text style={styles.primaryActionButtonText}>Get Started</Text>
-              <Ionicons name="arrow-forward" size={18} color="#092419" />
+              <Ionicons name="arrow-forward" size={17} color="#092419" />
             </TouchableOpacity>
 
             {/* Already have an account row */}
@@ -336,15 +344,6 @@ export default function WelcomeScreen() {
                 <Text style={styles.signInLinkText}>Sign in</Text>
               </TouchableOpacity>
             </View>
-
-            {/* Secondary Action Button: Outlined Pill "Explore Services" */}
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => router.replace('/(tabs)')}
-              style={styles.exploreServicesButton}
-            >
-              <Text style={styles.exploreServicesButtonText}>Explore Services</Text>
-            </TouchableOpacity>
           </View>
         </Animated.View>
       </SafeAreaView>
@@ -727,10 +726,10 @@ const styles = StyleSheet.create({
   },
   heroPhotoWrapper: {
     position: 'absolute',
-    top: 0,
+    top: Platform.OS === 'ios' ? 44 : 36,
     left: 0,
     right: 0,
-    height: SCREEN_HEIGHT * 0.54,
+    height: SCREEN_HEIGHT * 0.50,
     width: '100%',
     overflow: 'hidden',
     backgroundColor: '#082218',
@@ -739,12 +738,19 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  heroPhotoGradient: {
+  heroPhotoTopGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 70,
+  },
+  heroPhotoBottomGradient: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: -1,
-    height: '45%',
+    height: '52%',
   },
   bottomWaveOne: {
     position: 'absolute',
@@ -753,7 +759,7 @@ const styles = StyleSheet.create({
     right: -40,
     height: 90,
     borderRadius: 180,
-    backgroundColor: 'rgba(12, 45, 33, 0.45)',
+    backgroundColor: 'rgba(12, 45, 33, 0.4)',
   },
   bottomWaveTwo: {
     position: 'absolute',
@@ -762,21 +768,21 @@ const styles = StyleSheet.create({
     right: -20,
     height: 80,
     borderRadius: 160,
-    backgroundColor: 'rgba(5, 22, 15, 0.75)',
+    backgroundColor: 'rgba(5, 22, 15, 0.7)',
   },
   topSafeArea: {
     zIndex: 20,
   },
   topHeader: {
-    height: 50,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Spacing.lg,
-    marginTop: Platform.OS === 'android' ? 8 : 4,
+    marginTop: Platform.OS === 'android' ? 6 : 2,
   },
   topLogoWhite: {
-    width: 155,
-    height: 40,
+    width: 150,
+    height: 38,
   },
   bottomContentSafeArea: {
     flex: 1,
@@ -784,8 +790,8 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   contentContainer: {
-    paddingHorizontal: 26,
-    paddingBottom: Platform.OS === 'ios' ? 16 : 28,
+    paddingHorizontal: 28,
+    paddingBottom: Platform.OS === 'ios' ? 26 : 36,
     alignItems: 'center',
     width: '100%',
     maxWidth: 420,
@@ -794,57 +800,59 @@ const styles = StyleSheet.create({
   categoryPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 7,
-    borderWidth: 1.2,
-    borderColor: 'rgba(134, 239, 172, 0.4)',
-    backgroundColor: 'rgba(16, 50, 36, 0.78)',
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-    borderRadius: 22,
-    marginBottom: 14,
+    gap: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(134, 239, 172, 0.35)',
+    backgroundColor: 'rgba(12, 45, 32, 0.72)',
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
   },
   pillIcon: {
-    marginRight: -2,
+    marginRight: -1,
   },
   categoryPillText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#E8F5EE',
-    letterSpacing: 0.2,
+    fontSize: 12.5,
+    fontWeight: '500',
+    color: '#E0EFE6',
+    letterSpacing: 0.25,
   },
   headline: {
-    fontFamily: Typography.fontFamily.serif,
-    fontSize: 31,
-    lineHeight: 38,
-    fontWeight: '800',
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 29,
+    lineHeight: 37,
+    fontWeight: '600',
     color: '#FFFFFF',
     textAlign: 'center',
-    letterSpacing: -0.4,
+    letterSpacing: -0.3,
     marginBottom: 10,
   },
   headlineHighlight: {
     color: '#86EFAC',
-    fontWeight: '800',
+    fontWeight: '600',
   },
   subtitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14,
+    fontSize: 13.5,
     lineHeight: 21,
-    color: '#C5D8CE',
+    fontWeight: '400',
+    color: '#B5CCC0',
     textAlign: 'center',
     paddingHorizontal: 16,
-    marginBottom: 22,
-    maxWidth: 320,
+    marginBottom: 26,
+    maxWidth: 310,
+    letterSpacing: 0.1,
   },
   actionsBlock: {
     width: '100%',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
   },
   primaryActionButton: {
     width: '100%',
@@ -854,53 +862,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    gap: 9,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.28,
-    shadowRadius: 10,
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
     elevation: 4,
   },
   primaryActionButtonText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 15.5,
+    fontWeight: '600',
     color: '#092419',
+    letterSpacing: 0.2,
   },
   alreadyAccountRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 3,
+    paddingVertical: 4,
   },
   alreadyAccountText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13.5,
-    fontWeight: '500',
-    color: '#BFD2C8',
+    fontWeight: '400',
+    color: '#B5CCC0',
   },
   signInLinkText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13.5,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#86EFAC',
     textDecorationLine: 'underline',
-  },
-  exploreServicesButton: {
-    width: '100%',
-    height: 46,
-    borderRadius: 23,
-    borderWidth: 1.3,
-    borderColor: 'rgba(134, 239, 172, 0.4)',
-    backgroundColor: 'rgba(14, 44, 32, 0.55)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  exploreServicesButtonText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#E0EFE6',
   },
 
   /* ========================================================
