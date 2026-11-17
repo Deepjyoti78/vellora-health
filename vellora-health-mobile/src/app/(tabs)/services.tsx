@@ -8,16 +8,12 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
-  Alert,
-  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import Svg, { Path, Circle, Rect } from 'react-native-svg';
 import { Typography, Shadows } from '../../constants/theme';
-import { REGIONAL_CONFIG } from '../../data/mockData';
 
 const Palette = {
   primary: '#0F5B43',        // Primary forest green
@@ -32,157 +28,127 @@ const Palette = {
   border: '#DCE9E1',         // Clean border
   badgeDot: '#E53E3E',       // Red notification dot
   amberBadge: '#FEF3C7',     // Amber pill background
-  amberText: '#D97706',      // Amber text
+  amberText: '#B45309',      // Amber text
+  greenBadge: '#ECFDF5',     // Light emerald pill
+  greenText: '#047857',      // Emerald text
 };
 
-/**
- * Welcoming Doctor Illustration for Bottom Assistance Card
- * Exactly reproduced from Reference Image (holding clipboard, gesturing right)
- */
-function AssistanceDoctorIllustration({ width = 90, height = 90 }: { width?: number; height?: number }) {
-  return (
-    <Svg width={width} height={height} viewBox="0 0 100 100" fill="none">
-      {/* Background Soft Botanical Leaves */}
-      <Path
-        d="M20 75C12 50 25 25 50 18C52 44 40 68 20 75Z"
-        fill="#A3D4B6"
-        opacity={0.7}
-      />
-      <Path
-        d="M10 65C6 45 18 28 38 24C40 45 30 62 10 65Z"
-        fill="#C3DFCF"
-        opacity={0.8}
-      />
+export type ServiceCategoryFilter = 'ALL' | 'DOCTOR' | 'NURSING' | 'CARE' | 'LAB';
 
-      {/* Hair Bun / Ponytail */}
-      <Circle cx="70" cy="38" r="11" fill="#4B3224" />
-      <Path d="M68 40C72 48 74 55 70 60C68 58 66 50 66 45Z" fill="#3F2A1E" />
-
-      {/* Body / Torso (White Lab Coat) */}
-      <Path d="M30 100C30 82 40 76 52 76C64 76 72 82 72 100H30Z" fill="#FFFFFF" />
-      <Path d="M46 76H58L54 90H50L46 76Z" fill="#2A7A5E" />
-      <Path d="M36 78L48 90L44 100H31L36 78Z" fill="#F3F7F5" />
-      <Path d="M68 78L56 90L60 100H73L68 78Z" fill="#EDF3F0" />
-
-      {/* Green Clipboard in Right Hand */}
-      <Rect
-        x="24"
-        y="75"
-        width="18"
-        height="24"
-        rx="3"
-        fill="#26413A"
-        transform="rotate(-10 24 75)"
-      />
-      <Rect
-        x="26"
-        y="77"
-        width="14"
-        height="20"
-        rx="2"
-        fill="#2A7A5E"
-        transform="rotate(-10 26 77)"
-      />
-      {/* Hand holding clipboard */}
-      <Circle cx="35" cy="88" r="3.5" fill="#F8CFAF" />
-
-      {/* Left Arm Gesturing Outward */}
-      <Path
-        d="M66 82C74 80 82 75 90 70C92 73 90 77 82 82C76 86 70 86 66 84"
-        fill="#FFFFFF"
-      />
-      {/* Left Hand open in friendly presentation */}
-      <Path
-        d="M89 69C93 66 96 68 98 71C96 73 93 75 89 73Z"
-        fill="#F8CFAF"
-      />
-
-      {/* Neck */}
-      <Rect x="48" y="66" width="8" height="12" rx="2" fill="#F4C6A4" />
-
-      {/* Head & Face */}
-      <Circle cx="52" cy="50" r="13" fill="#F8CFAF" />
-
-      {/* Hair Front */}
-      <Path
-        d="M39 48C39 39 45 32 53 32C61 32 66 37 66 45C62 41 57 39 52 39C46 39 42 42 39 48Z"
-        fill="#4B3224"
-      />
-      {/* Face details */}
-      <Circle cx="47" cy="50" r="1.3" fill="#2E1F16" />
-      <Circle cx="56" cy="50" r="1.3" fill="#2E1F16" />
-      <Path d="M45.5 47C47 46 48.5 46 49.5 47" stroke="#3F2A1E" strokeWidth="0.8" strokeLinecap="round" />
-      <Path d="M53.5 47C54.5 46 56 46 57.5 47" stroke="#3F2A1E" strokeWidth="0.8" strokeLinecap="round" />
-      <Path d="M50 56C51 57.5 53 57.5 54 56" stroke="#C86A58" strokeWidth="1.1" strokeLinecap="round" />
-      <Circle cx="44" cy="53" r="1.6" fill="#F6A89B" opacity={0.5} />
-      <Circle cx="59" cy="53" r="1.6" fill="#F6A89B" opacity={0.5} />
-
-      {/* Stethoscope */}
-      <Path
-        d="M44 76C43 82 46 88 52 88C58 88 61 82 60 76"
-        stroke="#314B42"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <Circle cx="52" cy="89" r="2.5" fill="#99B8AC" stroke="#234036" strokeWidth="0.8" />
-    </Svg>
-  );
+export interface ServiceDetailItem {
+  id: string;
+  category: ServiceCategoryFilter;
+  title: string;
+  shortTitle: string;
+  tag: string;
+  rating: string;
+  ratingCount: string;
+  price: string;
+  pricePeriod?: string;
+  description: string;
+  route: string;
+  image: any;
+  badgeIcon: keyof typeof Ionicons.glyphMap;
+  highlights: string[];
+  clinicianType: string;
 }
 
-type ServiceCategoryFilter = 'ALL' | 'DOCTOR' | 'NURSING' | 'CARE' | 'LAB';
-
-const CORE_SERVICES = [
+export const FOUR_CORE_SERVICES: ServiceDetailItem[] = [
   {
     id: 'doctor-consultation',
     category: 'DOCTOR',
-    title: 'Home Visit\nDoctor Consultation',
-    tag: '⚡ 45m Dispatch',
-    rating: '4.9 (1.2k)',
-    price: 'From ₹850',
-    subtitle: 'Bedside diagnosis & e-Rx',
+    title: 'Doctor Home Visit Consultation',
+    shortTitle: 'Doctor Visit',
+    tag: '⚡ 45m Doorstep Dispatch',
+    rating: '4.9',
+    ratingCount: '1.2k+ reviews',
+    price: '₹850',
+    pricePeriod: 'per consultation',
+    description:
+      'Expert general physicians and specialists arrive at your doorstep equipped with complete diagnostic kits for bedside clinical care.',
     route: '/services/doctor-visit',
     image: require('../../../assets/images/service-doctor.png'),
     badgeIcon: 'flash',
+    clinicianType: 'MD / MBBS General Physician',
+    highlights: [
+      'Physical checkup, vitals, bedside ECG & blood sugar',
+      'Instant digital prescription with medicine schedule',
+      'Doorstep medical kit & sterile diagnostics included',
+      'Free 3-day digital chat follow-up with your doctor',
+    ],
   },
   {
     id: 'nursing-care',
     category: 'NURSING',
-    title: 'Home Nursing Care',
-    tag: 'Registered RN',
-    rating: '4.8 (890)',
-    price: 'From ₹1,200',
-    subtitle: 'Post-op, IV & vitals care',
+    title: 'Specialized Home Nursing Care',
+    shortTitle: 'Nursing Care',
+    tag: 'Verified Registered RN',
+    rating: '4.8',
+    ratingCount: '890+ reviews',
+    price: '₹1,200',
+    pricePeriod: 'per visit',
+    description:
+      'Certified, experienced registered nurses for skilled bedside clinical procedures, surgical post-operative care, and continuous recovery.',
     route: '/services/nursing-care',
     image: require('../../../assets/images/service-nurse.png'),
     badgeIcon: 'heart',
+    clinicianType: 'Registered B.Sc / GNM Nurse',
+    highlights: [
+      'IV infusion, IV/IM injections & cannula care',
+      'Sterile post-op wound dressing & stitch removal',
+      'Urinary catheterization & Ryle’s tube management',
+      'Continuous vitals charting & clinical recovery monitoring',
+    ],
   },
   {
     id: 'caretakers',
     category: 'CARE',
-    title: 'Patient Care,\nCaregiver & Medical Maid',
-    tag: '12h / 24h Shifts',
-    rating: '4.9 (640)',
-    price: 'From ₹800',
-    subtitle: 'Elderly mobility & daily care',
+    title: 'Patient Caregiver & Attendant',
+    shortTitle: 'Attendant Care',
+    tag: '12h / 24h Dedicated Shifts',
+    rating: '4.9',
+    ratingCount: '640+ reviews',
+    price: '₹800',
+    pricePeriod: 'per 12h shift',
+    description:
+      'Compassionate, background-verified male and female care attendants for elderly support, bedridden patient assistance, and daily mobility.',
     route: '/services/caretakers',
     image: require('../../../assets/images/service-caretaker.png'),
     badgeIcon: 'people',
+    clinicianType: 'Trained & Police-Verified Attendant',
+    highlights: [
+      'Mobility, walking support, wheelchair & bed transfers',
+      'Bathing, personal sponge hygiene & diaper changing',
+      'Timely medication administration & feeding support',
+      '24/7 bedside companionship and emergency vigilance',
+    ],
   },
   {
     id: 'lab-investigation',
     category: 'LAB',
-    title: 'Home Lab\nInvestigation',
-    tag: 'Results in 12h',
-    rating: '5.0 (2.1k)',
-    price: 'From ₹650',
-    subtitle: 'Sterile doorstep blood draw',
+    title: 'Home Lab & Diagnostic Tests',
+    shortTitle: 'Lab Tests',
+    tag: 'Digital Report in 6–12h',
+    rating: '5.0',
+    ratingCount: '2.1k+ reviews',
+    price: '₹650',
+    pricePeriod: 'starting package',
+    description:
+      'Certified phlebotomists collect blood and pathology samples at home using 100% sterile vacuum tubes with cold-chain transport to NABL labs.',
     route: '/services/home-lab',
     image: require('../../../assets/images/service-lab.png'),
     badgeIcon: 'flask',
+    clinicianType: 'Certified Phlebotomist & NABL Lab',
+    highlights: [
+      '100% painless vacuum-sealed sterile blood draw',
+      'CBC, Diabetes, Lipid, Thyroid & 60+ health parameters',
+      'Temperature-controlled cold-chain sample logistics',
+      'WhatsApp & App smart report + free doctor review',
+    ],
   },
 ];
 
-const CATEGORY_CHIPS: { id: ServiceCategoryFilter; label: string; icon: any }[] = [
+const CATEGORY_CHIPS: { id: ServiceCategoryFilter; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
   { id: 'ALL', label: 'All Services', icon: 'grid-outline' },
   { id: 'DOCTOR', label: 'Doctor Visit', icon: 'medkit-outline' },
   { id: 'NURSING', label: 'Nursing Care', icon: 'heart-outline' },
@@ -195,7 +161,7 @@ export default function ServicesScreen() {
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategoryFilter>('ALL');
 
   const filteredServices = useMemo(() => {
-    return CORE_SERVICES.filter((svc) => {
+    return FOUR_CORE_SERVICES.filter((svc) => {
       // Category filter
       if (selectedCategory !== 'ALL' && svc.category !== selectedCategory) {
         return false;
@@ -205,13 +171,15 @@ export default function ServicesScreen() {
       const q = searchQuery.toLowerCase();
       return (
         svc.title.toLowerCase().includes(q) ||
-        svc.subtitle.toLowerCase().includes(q) ||
-        svc.tag.toLowerCase().includes(q)
+        svc.description.toLowerCase().includes(q) ||
+        svc.clinicianType.toLowerCase().includes(q) ||
+        svc.tag.toLowerCase().includes(q) ||
+        svc.highlights.some((h) => h.toLowerCase().includes(q))
       );
     });
   }, [searchQuery, selectedCategory]);
 
-  const handleServiceSelect = (svc: typeof CORE_SERVICES[0]) => {
+  const handleServiceSelect = (svc: ServiceDetailItem) => {
     if (svc.id === 'lab-investigation') {
       router.push('/services/home-lab' as any);
     } else if (svc.id === 'nursing-care') {
@@ -221,20 +189,6 @@ export default function ServicesScreen() {
     } else {
       router.push('/services/doctor-visit' as any);
     }
-  };
-
-  const handleGetAssistance = () => {
-    Alert.alert(
-      'Vellora Care Team Concierge',
-      'Need help choosing the right home healthcare service for yourself or a family member?\n\nOur medical care coordinator is on call 24/7.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Call Coordinator (+91 80 4910 8800)',
-          onPress: () => Linking.openURL(`tel:${REGIONAL_CONFIG.supportPhone}`),
-        },
-      ]
-    );
   };
 
   return (
@@ -337,6 +291,7 @@ export default function ServicesScreen() {
               setSelectedCategory(order[nextIndex]);
             }}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            accessibilityLabel="Filter categories"
           >
             <Ionicons name="options-outline" size={18} color={Palette.primary} />
           </TouchableOpacity>
@@ -382,9 +337,9 @@ export default function ServicesScreen() {
         </ScrollView>
 
         {/* ============================================================ */}
-        {/* 5. 2x2 GRID OF 4 CORE AT-HOME SERVICES                       */}
+        {/* 5. 4 COMPREHENSIVE SERVICE CARDS WITH FULL DETAILS           */}
         {/* ============================================================ */}
-        <View style={styles.servicesGrid}>
+        <View style={styles.servicesListContainer}>
           {filteredServices.length === 0 ? (
             <View style={styles.noResultsCard}>
               <Ionicons name="search-outline" size={32} color={Palette.primary} style={{ marginBottom: 8 }} />
@@ -406,115 +361,80 @@ export default function ServicesScreen() {
             filteredServices.map((svc) => (
               <TouchableOpacity
                 key={svc.id}
-                style={styles.serviceGridCard}
-                activeOpacity={0.88}
+                style={styles.serviceDetailCard}
+                activeOpacity={0.92}
                 onPress={() => handleServiceSelect(svc)}
               >
-                {/* Top Badge: Rating / Quick Tag */}
-                <View style={styles.cardTopBadgeRow}>
-                  <View style={styles.cardTagPill}>
-                    <Text style={styles.cardTagPillText}>{svc.tag}</Text>
+                {/* Header Row: Avatar + Title + Badges */}
+                <View style={styles.cardHeaderRow}>
+                  <View style={styles.cardAvatarWrapper}>
+                    <Image source={svc.image} style={styles.cardAvatarImage} resizeMode="cover" />
+                    <View style={styles.cardBadgeDot} />
                   </View>
-                  <View style={styles.cardRatingPill}>
-                    <Ionicons name="star" size={10} color="#D97706" style={{ marginRight: 2 }} />
-                    <Text style={styles.cardRatingText}>{svc.rating.split(' ')[0]}</Text>
+
+                  <View style={styles.cardHeaderInfoCol}>
+                    {/* Badges Row */}
+                    <View style={styles.cardBadgesRow}>
+                      <View style={styles.cardTagPill}>
+                        <Text style={styles.cardTagPillText}>{svc.tag}</Text>
+                      </View>
+                      <View style={styles.cardRatingPill}>
+                        <Ionicons name="star" size={10} color="#D97706" style={{ marginRight: 3 }} />
+                        <Text style={styles.cardRatingText}>{svc.rating}</Text>
+                        <Text style={styles.cardRatingCount}>({svc.ratingCount})</Text>
+                      </View>
+                    </View>
+
+                    <Text style={styles.cardTitleText}>{svc.title}</Text>
+                    <View style={styles.cardClinicianTypeRow}>
+                      <Ionicons name="shield-checkmark" size={12} color={Palette.primary} style={{ marginRight: 4 }} />
+                      <Text style={styles.cardClinicianTypeText}>{svc.clinicianType}</Text>
+                    </View>
                   </View>
                 </View>
 
-                {/* Centered Medical Character Illustration with Soft Vignette */}
-                <View style={styles.illustrationCircle}>
-                  <View style={styles.avatarVignette}>
-                    <Image
-                      source={svc.image}
-                      style={styles.serviceCardImage}
-                      resizeMode="cover"
-                    />
+                {/* Summary Description */}
+                <Text style={styles.cardDescriptionText}>{svc.description}</Text>
+
+                {/* What's Included Box */}
+                <View style={styles.cardHighlightsBox}>
+                  <Text style={styles.cardHighlightsTitle}>WHAT’S INCLUDED</Text>
+                  <View style={styles.cardHighlightsList}>
+                    {svc.highlights.map((h, i) => (
+                      <View key={i} style={styles.highlightRow}>
+                        <View style={styles.checkIconCircle}>
+                          <Ionicons name="checkmark" size={11} color={Palette.primary} />
+                        </View>
+                        <Text style={styles.highlightText}>{h}</Text>
+                      </View>
+                    ))}
                   </View>
                 </View>
 
-                {/* Service Title */}
-                <Text style={styles.serviceCardTitle} numberOfLines={2}>
-                  {svc.title}
-                </Text>
-
-                {/* 1-Line Key Feature */}
-                <Text style={styles.serviceCardSubtitle} numberOfLines={1}>
-                  {svc.subtitle}
-                </Text>
-
-                {/* Bottom Row: Transparent Price on Left + Green Chevron on Right */}
-                <View style={styles.serviceBottomRow}>
-                  <View style={styles.priceContainer}>
-                    <Text style={styles.pricePrefixText}>Starting</Text>
-                    <Text style={styles.priceValueText}>{svc.price.replace('From ', '')}</Text>
+                {/* Footer Row: Price + Book Visit CTA Button */}
+                <View style={styles.cardFooterRow}>
+                  <View style={styles.cardPriceCol}>
+                    <Text style={styles.cardPriceLabel}>Starting at</Text>
+                    <View style={styles.cardPriceValueRow}>
+                      <Text style={styles.cardPriceValue}>{svc.price}</Text>
+                      {svc.pricePeriod && (
+                        <Text style={styles.cardPricePeriod}> {svc.pricePeriod}</Text>
+                      )}
+                    </View>
                   </View>
 
-                  <View style={styles.chevronCircleBtn}>
-                    <Ionicons name="chevron-forward" size={14} color={Palette.primary} />
-                  </View>
+                  <TouchableOpacity
+                    style={styles.cardBookBtn}
+                    activeOpacity={0.85}
+                    onPress={() => handleServiceSelect(svc)}
+                  >
+                    <Text style={styles.cardBookBtnText}>Book Visit</Text>
+                    <Ionicons name="arrow-forward" size={13} color="#FFFFFF" style={{ marginLeft: 5 }} />
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             ))
           )}
-        </View>
-
-        {/* ============================================================ */}
-        {/* 6. NEED HELP CHOOSING A SERVICE? ASSISTANCE BANNER           */}
-        {/* ============================================================ */}
-        <View style={styles.assistanceBanner}>
-          {/* Left Doctor Illustration */}
-          <View style={styles.assistanceDoctorBox}>
-            <AssistanceDoctorIllustration width={88} height={88} />
-          </View>
-
-          {/* Right Content */}
-          <View style={styles.assistanceTextCol}>
-            <Text style={styles.assistanceHeading}>Need help choosing a service?</Text>
-            <Text style={styles.assistanceSubtitle}>
-              Talk to our care team and get{'\n'}a personalized recommendation.
-            </Text>
-
-            <TouchableOpacity
-              style={styles.getAssistanceBtn}
-              activeOpacity={0.88}
-              onPress={handleGetAssistance}
-            >
-              <Text style={styles.getAssistanceText}>Get Assistance →</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* ============================================================ */}
-        {/* 7. WHY VELLORA HOME CARE? TRUST GUARANTEE BANNER             */}
-        {/* ============================================================ */}
-        <View style={styles.trustBannerCard}>
-          <Text style={styles.trustBannerTitle}>Why Patients Trust Vellora</Text>
-          <View style={styles.trustFeaturesRow}>
-            <View style={styles.trustFeatureItem}>
-              <View style={styles.trustIconCircle}>
-                <Ionicons name="shield-checkmark" size={16} color={Palette.primary} />
-              </View>
-              <Text style={styles.trustFeatureText}>Verified Doctors</Text>
-            </View>
-
-            <View style={styles.trustFeatureDivider} />
-
-            <View style={styles.trustFeatureItem}>
-              <View style={styles.trustIconCircle}>
-                <Ionicons name="flash" size={16} color={Palette.primary} />
-              </View>
-              <Text style={styles.trustFeatureText}>45-Min Dispatch</Text>
-            </View>
-
-            <View style={styles.trustFeatureDivider} />
-
-            <View style={styles.trustFeatureItem}>
-              <View style={styles.trustIconCircle}>
-                <Ionicons name="key" size={16} color={Palette.primary} />
-              </View>
-              <Text style={styles.trustFeatureText}>Bedside PIN Safe</Text>
-            </View>
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -687,125 +607,218 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  /* 5. 2x2 Services Grid */
-  servicesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 12,
+  /* 5. 4 Full-Width Detailed Service Cards */
+  servicesListContainer: {
+    gap: 14,
     marginBottom: 16,
   },
-  serviceGridCard: {
-    width: '48.2%',
+  serviceDetailCard: {
     backgroundColor: Palette.surface,
-    borderRadius: 22,
+    borderRadius: 20,
     borderWidth: 1.2,
     borderColor: Palette.border,
-    padding: 12,
-    justifyContent: 'space-between',
+    padding: 16,
     ...Shadows.subtle,
   },
-  cardTopBadgeRow: {
+  cardHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    marginBottom: 10,
+  },
+  cardAvatarWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: Palette.mint,
+    borderWidth: 1.5,
+    borderColor: '#CDE5D7',
+    overflow: 'hidden',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardAvatarImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  cardBadgeDot: {
+    position: 'absolute',
+    bottom: 2,
+    right: 3,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#10B981',
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
+  },
+  cardHeaderInfoCol: {
+    flex: 1,
+  },
+  cardBadgesRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 5,
   },
   cardTagPill: {
-    backgroundColor: Palette.primaryLight,
-    paddingHorizontal: 6,
+    backgroundColor: Palette.mint,
+    paddingHorizontal: 7,
     paddingVertical: 2.5,
     borderRadius: 6,
+    borderWidth: 0.8,
+    borderColor: '#D4E7DC',
   },
   cardTagPillText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 9.5,
+    fontSize: 10,
     fontWeight: '600',
     color: Palette.primary,
   },
   cardRatingPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF3C7',
-    paddingHorizontal: 5,
-    paddingVertical: 2,
+    backgroundColor: Palette.amberBadge,
+    paddingHorizontal: 6,
+    paddingVertical: 2.5,
     borderRadius: 6,
   },
   cardRatingText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 10,
-    fontWeight: '600',
-    color: '#D97706',
+    fontWeight: '700',
+    color: Palette.amberText,
   },
-  illustrationCircle: {
-    width: '100%',
-    height: 84,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
-  },
-  avatarVignette: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#EAF5EE',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#D8ECE0',
-  },
-  serviceCardImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-  },
-  serviceCardTitle: {
+  cardRatingCount: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 9.5,
+    fontWeight: '400',
+    color: '#92400E',
+    marginLeft: 2,
+  },
+  cardTitleText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 15.5,
+    fontWeight: '700',
     color: Palette.textDark,
-    letterSpacing: -0.15,
-    lineHeight: 17,
+    lineHeight: 20,
     marginBottom: 2,
   },
-  serviceCardSubtitle: {
+  cardClinicianTypeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cardClinicianTypeText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
+    fontSize: 11,
+    fontWeight: '500',
+    color: Palette.primary,
+  },
+  cardDescriptionText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
     fontWeight: '400',
+    color: '#4A5B53',
+    lineHeight: 18,
+    marginBottom: 12,
+  },
+
+  /* What's Included Box */
+  cardHighlightsBox: {
+    backgroundColor: '#F8FAF9',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E6EFEA',
+    padding: 12,
+    marginBottom: 14,
+  },
+  cardHighlightsTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10,
+    fontWeight: '700',
     color: Palette.textMuted,
+    letterSpacing: 0.8,
     marginBottom: 8,
   },
-  serviceBottomRow: {
+  cardHighlightsList: {
+    gap: 6,
+  },
+  highlightRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  checkIconCircle: {
+    width: 17,
+    height: 17,
+    borderRadius: 8.5,
+    backgroundColor: Palette.mint,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#D0E7D9',
+  },
+  highlightText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    fontWeight: '400',
+    color: Palette.textDark,
+    flex: 1,
+    lineHeight: 16,
+  },
+
+  /* Footer: Pricing + Book CTA */
+  cardFooterRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 6,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: '#F0F4F2',
   },
-  priceContainer: {
+  cardPriceCol: {
     justifyContent: 'center',
   },
-  pricePrefixText: {
+  cardPriceLabel: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 9.5,
-    color: Palette.textMuted,
+    fontSize: 10,
     fontWeight: '400',
+    color: Palette.textMuted,
+    marginBottom: 1,
   },
-  priceValueText: {
+  cardPriceValueRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  cardPriceValue: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 18,
+    fontWeight: '700',
+    color: Palette.primary,
+  },
+  cardPricePeriod: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '400',
+    color: Palette.textMuted,
+  },
+  cardBookBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Palette.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: 16,
+    ...Shadows.subtle,
+  },
+  cardBookBtnText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 12.5,
     fontWeight: '600',
-    color: Palette.primary,
-  },
-  chevronCircleBtn: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: Palette.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
+    color: '#FFFFFF',
   },
 
   /* Empty State */
@@ -845,111 +858,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: Palette.primary,
-  },
-
-  /* 6. Assistance Banner */
-  assistanceBanner: {
-    borderRadius: 22,
-    backgroundColor: Palette.mintCard,
-    borderWidth: 1.2,
-    borderColor: '#D4E7DC',
-    padding: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    overflow: 'hidden',
-    marginBottom: 14,
-    ...Shadows.subtle,
-  },
-  assistanceDoctorBox: {
-    width: 84,
-    height: 84,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 8,
-  },
-  assistanceTextCol: {
-    flex: 1,
-  },
-  assistanceHeading: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 13.5,
-    fontWeight: '600',
-    color: Palette.primary,
-    letterSpacing: -0.15,
-    marginBottom: 2,
-  },
-  assistanceSubtitle: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '400',
-    color: '#4B6358',
-    lineHeight: 15,
-    marginBottom: 8,
-  },
-  getAssistanceBtn: {
-    alignSelf: 'flex-start',
-    backgroundColor: Palette.primary,
-    height: 34,
-    borderRadius: 17,
-    paddingHorizontal: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Shadows.subtle,
-  },
-  getAssistanceText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    letterSpacing: -0.1,
-  },
-
-  /* 7. Trust Banner */
-  trustBannerCard: {
-    backgroundColor: Palette.surface,
-    borderRadius: 18,
-    borderWidth: 1.2,
-    borderColor: Palette.border,
-    padding: 14,
-    ...Shadows.subtle,
-  },
-  trustBannerTitle: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12,
-    fontWeight: '600',
-    color: Palette.primary,
-    textAlign: 'center',
-    marginBottom: 10,
-    letterSpacing: -0.1,
-  },
-  trustFeaturesRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  trustFeatureItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  trustIconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: Palette.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
-  },
-  trustFeatureText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
-    fontWeight: '600',
-    color: Palette.textDark,
-    textAlign: 'center',
-  },
-  trustFeatureDivider: {
-    width: 1,
-    height: 24,
-    backgroundColor: Palette.border,
   },
 });
