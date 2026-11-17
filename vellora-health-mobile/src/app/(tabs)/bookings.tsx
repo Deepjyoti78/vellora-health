@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,10 @@ import {
   Platform,
   Linking,
   Alert,
+  Modal,
+  Pressable,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -17,6 +21,8 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Typography, Shadows } from '../../constants/theme';
 import { RECENT_BOOKINGS, REGIONAL_CONFIG } from '../../data/mockData';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Palette = {
   primary: '#0F5B43',        // Primary forest green
@@ -161,6 +167,48 @@ const CANCELLED_BOOKINGS: BookingItemDisplay[] = [
 export default function BookingsScreen() {
   const [activeTab, setActiveTab] = useState<FilterTab>('UPCOMING');
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Details Modal Popup State
+  const [detailsModalVisible, setDetailsModalVisible] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<BookingItemDisplay | null>(null);
+  const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const backdropAnim = useRef(new Animated.Value(0)).current;
+
+  const openDetailsModal = (booking: BookingItemDisplay) => {
+    setSelectedBooking(booking);
+    setDetailsModalVisible(true);
+    Animated.parallel([
+      Animated.timing(backdropAnim, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.spring(sheetAnim, {
+        toValue: 0,
+        friction: 8,
+        tension: 65,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const closeDetailsModal = () => {
+    Animated.parallel([
+      Animated.timing(backdropAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(sheetAnim, {
+        toValue: SCREEN_HEIGHT,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setDetailsModalVisible(false);
+      setSelectedBooking(null);
+    });
+  };
 
   const upcomingList = useMemo(() => {
     const dynamicBookings: BookingItemDisplay[] = RECENT_BOOKINGS.filter(
@@ -370,7 +418,7 @@ export default function BookingsScreen() {
                 key={item.id}
                 style={styles.bookingCard}
                 activeOpacity={0.92}
-                onPress={() => handleBookingPress(item)}
+                onPress={() => openDetailsModal(item)}
               >
                 {/* --- Top Card Header: Ref & Status Badge --- */}
                 <View style={styles.cardHeaderRow}>
@@ -461,123 +509,29 @@ export default function BookingsScreen() {
                   <Ionicons name="chevron-forward" size={18} color="#9DB0A7" style={{ marginLeft: 6 }} />
                 </View>
 
-                {/* --- Schedule & Location Info Box --- */}
-                <View style={styles.infoBox}>
-                  <View style={styles.infoRow}>
-                    <View style={styles.infoIconWrap}>
-                      <Ionicons name="calendar-outline" size={14} color={Palette.primary} />
-                    </View>
-                    <Text style={styles.infoRowText}>
-                      <Text style={styles.infoRowLabel}>Date: </Text>
-                      {item.date}
-                    </Text>
+                {/* --- Essential Schedule Pill (Compact & Clean) --- */}
+                <View style={styles.compactScheduleRow}>
+                  <View style={styles.compactScheduleItem}>
+                    <Ionicons name="calendar-outline" size={13.5} color={Palette.primary} style={{ marginRight: 5 }} />
+                    <Text style={styles.compactScheduleText}>{item.date}</Text>
                   </View>
-
-                  <View style={styles.infoRow}>
-                    <View style={styles.infoIconWrap}>
-                      <Ionicons name="time-outline" size={14} color={Palette.primary} />
-                    </View>
-                    <Text style={styles.infoRowText}>
-                      <Text style={styles.infoRowLabel}>Slot: </Text>
-                      {item.time}
-                    </Text>
+                  <View style={styles.compactScheduleDot} />
+                  <View style={styles.compactScheduleItem}>
+                    <Ionicons name="time-outline" size={13.5} color={Palette.primary} style={{ marginRight: 5 }} />
+                    <Text style={styles.compactScheduleText}>{item.time}</Text>
                   </View>
-
-                  {item.address ? (
-                    <View style={styles.infoRow}>
-                      <View style={styles.infoIconWrap}>
-                        <Ionicons name="location-outline" size={14} color={Palette.primary} />
-                      </View>
-                      <Text style={styles.infoRowText} numberOfLines={1}>
-                        <Text style={styles.infoRowLabel}>At: </Text>
-                        {item.address}
-                      </Text>
-                    </View>
-                  ) : null}
-
-                  {/* Bedside verification PIN indicator for active/confirmed visits */}
-                  {item.securityPin && item.status === 'Confirmed' && (
-                    <View style={styles.securityPinRow}>
-                      <View style={styles.pinTagWrap}>
-                        <Ionicons name="key-outline" size={13} color={Palette.primary} style={{ marginRight: 5 }} />
-                        <Text style={styles.pinTagLabel}>Doorstep Verification PIN:</Text>
-                        <Text style={styles.pinTagCode}>{item.securityPin}</Text>
-                      </View>
-                      <Text style={styles.pinTagHint}>Share with clinician</Text>
-                    </View>
-                  )}
-
-                  {/* Cancellation notice */}
-                  {item.cancellationReason && (
-                    <View style={styles.cancellationNoticeRow}>
-                      <Ionicons name="information-circle" size={14} color={Palette.cancelledText} style={{ marginRight: 5 }} />
-                      <Text style={styles.cancellationNoticeText}>{item.cancellationReason}</Text>
-                    </View>
-                  )}
                 </View>
 
-                {/* --- Bottom Card Action Bar --- */}
+                {/* --- Bottom Card Action: Single "View Details →" (No Reschedule Button) --- */}
                 <View style={styles.cardActionsRow}>
-                  {activeTab === 'UPCOMING' ? (
-                    <>
-                      <TouchableOpacity
-                        style={styles.actionBtnOutline}
-                        activeOpacity={0.7}
-                        onPress={() => handleBookingPress(item)}
-                      >
-                        <Ionicons name="calendar-outline" size={14} color={Palette.textDark} style={{ marginRight: 5 }} />
-                        <Text style={styles.actionBtnOutlineText}>Reschedule</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={styles.actionBtnPrimary}
-                        activeOpacity={0.75}
-                        onPress={() => handleBookingPress(item)}
-                      >
-                        <Text style={styles.actionBtnPrimaryText}>View Details</Text>
-                        <Ionicons name="arrow-forward" size={14} color="#FFFFFF" style={{ marginLeft: 5 }} />
-                      </TouchableOpacity>
-                    </>
-                  ) : activeTab === 'COMPLETED' ? (
-                    <>
-                      <TouchableOpacity
-                        style={styles.actionBtnOutline}
-                        activeOpacity={0.7}
-                        onPress={() => handleDownloadPrescription(item.bookingRef)}
-                      >
-                        <Ionicons name="document-text-outline" size={14} color={Palette.textDark} style={{ marginRight: 5 }} />
-                        <Text style={styles.actionBtnOutlineText}>Prescription</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={styles.actionBtnPrimary}
-                        activeOpacity={0.75}
-                        onPress={() => router.push('/(tabs)/services')}
-                      >
-                        <Ionicons name="refresh-outline" size={14} color="#FFFFFF" style={{ marginRight: 5 }} />
-                        <Text style={styles.actionBtnPrimaryText}>Book Again</Text>
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <>
-                      <TouchableOpacity
-                        style={styles.actionBtnOutline}
-                        activeOpacity={0.7}
-                        onPress={handleCallSupport}
-                      >
-                        <Ionicons name="help-buoy-outline" size={14} color={Palette.textDark} style={{ marginRight: 5 }} />
-                        <Text style={styles.actionBtnOutlineText}>Refund Support</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={styles.actionBtnPrimary}
-                        activeOpacity={0.75}
-                        onPress={() => router.push('/(tabs)/services')}
-                      >
-                        <Text style={styles.actionBtnPrimaryText}>Rebook Service</Text>
-                      </TouchableOpacity>
-                    </>
-                  )}
+                  <TouchableOpacity
+                    style={styles.actionBtnPrimary}
+                    activeOpacity={0.8}
+                    onPress={() => openDetailsModal(item)}
+                  >
+                    <Text style={styles.actionBtnPrimaryText}>View Details</Text>
+                    <Ionicons name="arrow-forward" size={14} color="#FFFFFF" style={{ marginLeft: 6 }} />
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             ))
@@ -682,6 +636,326 @@ export default function BookingsScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* ============================================================ */}
+      {/* 9. BOOKING DETAILS BOTTOM SHEET / POPUP MODAL               */}
+      {/* ============================================================ */}
+      <Modal
+        visible={detailsModalVisible}
+        transparent
+        animationType="none"
+        onRequestClose={closeDetailsModal}
+      >
+        <View style={styles.modalBackdropContainer}>
+          {/* Dimmed backdrop */}
+          <Pressable style={StyleSheet.absoluteFill} onPress={closeDetailsModal}>
+            <Animated.View
+              style={[
+                styles.modalDimmedBackdrop,
+                {
+                  opacity: backdropAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 0.6],
+                  }),
+                },
+              ]}
+            />
+          </Pressable>
+
+          {/* Slide-Up Bottom Sheet Card */}
+          <Animated.View
+            style={[
+              styles.modalSheetCard,
+              {
+                transform: [{ translateY: sheetAnim }],
+              },
+            ]}
+          >
+            {/* Drag handle */}
+            <View style={styles.modalHandleWrap}>
+              <View style={styles.modalHandleBar} />
+            </View>
+
+            {/* Modal Header */}
+            <View style={styles.modalHeaderRow}>
+              <View style={{ flex: 1, marginRight: 12 }}>
+                <Text style={styles.modalHeaderTitle}>Booking Details</Text>
+                <Text style={styles.modalHeaderSubtitle} numberOfLines={1}>
+                  {selectedBooking?.serviceCategory} • {selectedBooking?.bookingRef}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={closeDetailsModal}
+                style={styles.modalCloseCircle}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close" size={20} color={Palette.textDark} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              style={styles.modalScrollArea}
+              contentContainerStyle={styles.modalScrollContent}
+              showsVerticalScrollIndicator={false}
+            >
+              {selectedBooking && (
+                <>
+                  {/* Status & Service Banner */}
+                  <View style={styles.modalStatusBanner}>
+                    <View style={styles.modalStatusLeft}>
+                      <View
+                        style={[
+                          styles.statusBadge,
+                          selectedBooking.status === 'Confirmed' && styles.statusBadgeConfirmed,
+                          selectedBooking.status === 'Scheduled' && styles.statusBadgeScheduled,
+                          selectedBooking.status === 'Completed' && styles.statusBadgeCompleted,
+                          selectedBooking.status === 'Cancelled' && styles.statusBadgeCancelled,
+                        ]}
+                      >
+                        <Ionicons
+                          name={
+                            selectedBooking.status === 'Confirmed'
+                              ? 'checkmark-circle'
+                              : selectedBooking.status === 'Scheduled'
+                              ? 'time'
+                              : selectedBooking.status === 'Completed'
+                              ? 'checkmark-done-circle'
+                              : 'close-circle'
+                          }
+                          size={13}
+                          color={
+                            selectedBooking.status === 'Confirmed'
+                              ? Palette.confirmedText
+                              : selectedBooking.status === 'Scheduled'
+                              ? Palette.scheduledText
+                              : selectedBooking.status === 'Completed'
+                              ? Palette.completedText
+                              : Palette.cancelledText
+                          }
+                          style={{ marginRight: 4 }}
+                        />
+                        <Text
+                          style={[
+                            styles.statusBadgeText,
+                            selectedBooking.status === 'Confirmed' && styles.statusTextConfirmed,
+                            selectedBooking.status === 'Scheduled' && styles.statusTextScheduled,
+                            selectedBooking.status === 'Completed' && styles.statusTextCompleted,
+                            selectedBooking.status === 'Cancelled' && styles.statusTextCancelled,
+                          ]}
+                        >
+                          {selectedBooking.status}
+                        </Text>
+                      </View>
+                      <Text style={styles.modalRefText}>Ref: {selectedBooking.bookingRef}</Text>
+                    </View>
+                    <Text style={styles.modalAmountText}>{selectedBooking.amount}</Text>
+                  </View>
+
+                  {/* Clinician Card */}
+                  <View style={styles.modalClinicianCard}>
+                    <Image
+                      source={selectedBooking.avatar}
+                      style={styles.modalClinicianAvatar}
+                      resizeMode="cover"
+                    />
+                    <View style={styles.modalClinicianInfo}>
+                      <Text style={styles.modalServiceTitle}>{selectedBooking.serviceTitle}</Text>
+                      <Text style={styles.modalDoctorName}>{selectedBooking.providerName}</Text>
+                      <Text style={styles.modalDoctorSpecialty}>{selectedBooking.providerSpecialty}</Text>
+                      <View style={styles.modalRatingRow}>
+                        <Ionicons name="star" size={13} color="#F59E0B" style={{ marginRight: 4 }} />
+                        <Text style={styles.modalRatingText}>{selectedBooking.providerRating}</Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Doorstep Verification PIN Box (for confirmed active visits) */}
+                  {selectedBooking.securityPin && selectedBooking.status === 'Confirmed' && (
+                    <View style={styles.modalPinCard}>
+                      <View style={styles.modalPinTopRow}>
+                        <View style={styles.modalPinIconCircle}>
+                          <Ionicons name="key" size={16} color={Palette.primary} />
+                        </View>
+                        <View style={{ flex: 1, marginLeft: 10 }}>
+                          <Text style={styles.modalPinTitle}>Doorstep Verification PIN</Text>
+                          <Text style={styles.modalPinSubtitle}>Share with visiting clinician to start visit</Text>
+                        </View>
+                      </View>
+
+                      <View style={styles.modalPinDigitsRow}>
+                        {selectedBooking.securityPin.split('').map((digit, i) => (
+                          <View key={i} style={styles.modalPinBox}>
+                            <Text style={styles.modalPinDigit}>{digit}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    </View>
+                  )}
+
+                  {/* Date & Time Slot Section */}
+                  <View style={styles.modalSectionCard}>
+                    <Text style={styles.modalSectionHeading}>Schedule & Timing</Text>
+                    <View style={styles.modalInfoRow}>
+                      <View style={styles.modalInfoIconCircle}>
+                        <Ionicons name="calendar" size={15} color={Palette.primary} />
+                      </View>
+                      <View style={styles.modalInfoTextCol}>
+                        <Text style={styles.modalInfoLabel}>Scheduled Date</Text>
+                        <Text style={styles.modalInfoValue}>{selectedBooking.date}</Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.modalInfoRow}>
+                      <View style={styles.modalInfoIconCircle}>
+                        <Ionicons name="time" size={15} color={Palette.primary} />
+                      </View>
+                      <View style={styles.modalInfoTextCol}>
+                        <Text style={styles.modalInfoLabel}>Visit Time Slot</Text>
+                        <Text style={styles.modalInfoValue}>{selectedBooking.time}</Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Patient Doorstep Address */}
+                  {selectedBooking.address && (
+                    <View style={styles.modalSectionCard}>
+                      <Text style={styles.modalSectionHeading}>Patient Location</Text>
+                      <View style={styles.modalInfoRow}>
+                        <View style={styles.modalInfoIconCircle}>
+                          <Ionicons name="location" size={15} color={Palette.primary} />
+                        </View>
+                        <View style={styles.modalInfoTextCol}>
+                          <Text style={styles.modalInfoLabel}>Home Visit Address</Text>
+                          <Text style={styles.modalInfoValue}>{selectedBooking.address}</Text>
+                        </View>
+                      </View>
+                    </View>
+                  )}
+
+                  {/* Payment & Invoice Summary */}
+                  <View style={styles.modalSectionCard}>
+                    <Text style={styles.modalSectionHeading}>Payment Details</Text>
+                    <View style={styles.modalPaymentRow}>
+                      <Text style={styles.modalPaymentLabel}>Consultation & Kit Fee</Text>
+                      <Text style={styles.modalPaymentValue}>{selectedBooking.amount}</Text>
+                    </View>
+                    <View style={styles.modalPaymentRow}>
+                      <Text style={styles.modalPaymentLabel}>Doorstep Convenience</Text>
+                      <Text style={[styles.modalPaymentValue, { color: '#059669' }]}>FREE</Text>
+                    </View>
+                    <View style={[styles.modalPaymentRow, styles.modalPaymentTotalRow]}>
+                      <Text style={styles.modalPaymentTotalLabel}>Total Paid</Text>
+                      <Text style={styles.modalPaymentTotalValue}>{selectedBooking.amount}</Text>
+                    </View>
+                    <View style={styles.modalPaymentStatusTag}>
+                      <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 5 }} />
+                      <Text style={styles.modalPaymentStatusText}>{selectedBooking.paymentStatus}</Text>
+                    </View>
+                  </View>
+
+                  {/* Cancellation Reason if cancelled */}
+                  {selectedBooking.cancellationReason && (
+                    <View style={styles.modalCancellationCard}>
+                      <Ionicons name="information-circle" size={18} color={Palette.cancelledText} style={{ marginRight: 8 }} />
+                      <Text style={styles.modalCancellationText}>{selectedBooking.cancellationReason}</Text>
+                    </View>
+                  )}
+
+                  {/* Action Buttons inside the Popup */}
+                  <View style={styles.modalActionsContainer}>
+                    {activeTab === 'UPCOMING' ? (
+                      <>
+                        <TouchableOpacity
+                          style={styles.modalRescheduleBtn}
+                          activeOpacity={0.8}
+                          onPress={() => {
+                            closeDetailsModal();
+                            router.push({
+                              pathname: `/booking/${selectedBooking.routeId || selectedBooking.id}`,
+                              params: {
+                                step: 'details_view',
+                                serviceTitle: selectedBooking.serviceTitle,
+                                providerName: selectedBooking.providerName,
+                                date: selectedBooking.date,
+                                time: selectedBooking.time,
+                                status: selectedBooking.status,
+                                address: selectedBooking.address,
+                              },
+                            } as any);
+                          }}
+                        >
+                          <Ionicons name="calendar-outline" size={16} color={Palette.primary} style={{ marginRight: 6 }} />
+                          <Text style={styles.modalRescheduleBtnText}>Reschedule Visit</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={styles.modalSupportBtn}
+                          activeOpacity={0.8}
+                          onPress={handleCallSupport}
+                        >
+                          <Ionicons name="call" size={16} color="#FFFFFF" style={{ marginRight: 6 }} />
+                          <Text style={styles.modalSupportBtnText}>Call Care Coordinator</Text>
+                        </TouchableOpacity>
+                      </>
+                    ) : activeTab === 'COMPLETED' ? (
+                      <>
+                        <TouchableOpacity
+                          style={styles.modalRescheduleBtn}
+                          activeOpacity={0.8}
+                          onPress={() => {
+                            closeDetailsModal();
+                            handleDownloadPrescription(selectedBooking.bookingRef);
+                          }}
+                        >
+                          <Ionicons name="document-text-outline" size={16} color={Palette.primary} style={{ marginRight: 6 }} />
+                          <Text style={styles.modalRescheduleBtnText}>Download Prescription</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={styles.modalSupportBtn}
+                          activeOpacity={0.8}
+                          onPress={() => {
+                            closeDetailsModal();
+                            router.push('/(tabs)/services');
+                          }}
+                        >
+                          <Ionicons name="refresh" size={16} color="#FFFFFF" style={{ marginRight: 6 }} />
+                          <Text style={styles.modalSupportBtnText}>Book Again</Text>
+                        </TouchableOpacity>
+                      </>
+                    ) : (
+                      <>
+                        <TouchableOpacity
+                          style={styles.modalRescheduleBtn}
+                          activeOpacity={0.8}
+                          onPress={handleCallSupport}
+                        >
+                          <Ionicons name="help-buoy-outline" size={16} color={Palette.primary} style={{ marginRight: 6 }} />
+                          <Text style={styles.modalRescheduleBtnText}>Refund Support</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={styles.modalSupportBtn}
+                          activeOpacity={0.8}
+                          onPress={() => {
+                            closeDetailsModal();
+                            router.push('/(tabs)/services');
+                          }}
+                        >
+                          <Ionicons name="refresh" size={16} color="#FFFFFF" style={{ marginRight: 6 }} />
+                          <Text style={styles.modalSupportBtnText}>Rebook Service</Text>
+                        </TouchableOpacity>
+                      </>
+                    )}
+                  </View>
+                </>
+              )}
+            </ScrollView>
+          </Animated.View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -980,7 +1254,35 @@ const styles = StyleSheet.create({
   cardActionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    marginTop: 4,
+  },
+  compactScheduleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Palette.boxBg,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E3EFE8',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+  },
+  compactScheduleItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  compactScheduleText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    fontWeight: '500',
+    color: Palette.textDark,
+  },
+  compactScheduleDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#9DB0A7',
+    marginHorizontal: 10,
   },
   actionBtnOutline: {
     flex: 1,
@@ -1000,19 +1302,21 @@ const styles = StyleSheet.create({
     color: Palette.textDark,
   },
   actionBtnPrimary: {
-    flex: 1.2,
-    height: 38,
-    borderRadius: 19,
+    flex: 1,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Palette.primary,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    ...Shadows.subtle,
   },
   actionBtnPrimaryText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
+    fontSize: 13,
     fontWeight: '600',
     color: '#FFFFFF',
+    letterSpacing: 0.1,
   },
 
   /* Empty State */
@@ -1221,5 +1525,357 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: Palette.textMuted,
     lineHeight: 16,
+  },
+
+  /* ========================================================
+     BOOKING DETAILS POPUP MODAL STYLES
+     ======================================================== */
+  modalBackdropContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
+  },
+  modalDimmedBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#040F0A',
+  },
+  modalSheetCard: {
+    width: '100%',
+    maxHeight: '88%',
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingTop: 10,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 20,
+    ...Shadows.modal,
+  },
+  modalHandleWrap: {
+    alignItems: 'center',
+    paddingVertical: 6,
+  },
+  modalHandleBar: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#D1DDD6',
+  },
+  modalHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: Palette.borderLight,
+  },
+  modalHeaderTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 18,
+    fontWeight: '700',
+    color: Palette.textDark,
+  },
+  modalHeaderSubtitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    fontWeight: '500',
+    color: Palette.textMuted,
+    marginTop: 2,
+  },
+  modalCloseCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F0F4F2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalScrollArea: {
+    maxHeight: 520,
+  },
+  modalScrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 24,
+    gap: 14,
+  },
+  modalStatusBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Palette.boxBg,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E3EFE8',
+    padding: 12,
+  },
+  modalStatusLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  modalRefText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    fontWeight: '500',
+    color: Palette.textMuted,
+  },
+  modalAmountText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 16,
+    fontWeight: '700',
+    color: Palette.primary,
+  },
+  modalClinicianCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    padding: 14,
+    ...Shadows.subtle,
+  },
+  modalClinicianAvatar: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    marginRight: 14,
+  },
+  modalClinicianInfo: {
+    flex: 1,
+  },
+  modalServiceTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 15,
+    fontWeight: '700',
+    color: Palette.textDark,
+    marginBottom: 2,
+  },
+  modalDoctorName: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '600',
+    color: Palette.primary,
+    marginBottom: 2,
+  },
+  modalDoctorSpecialty: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    color: Palette.textMuted,
+    marginBottom: 4,
+  },
+  modalRatingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modalRatingText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: Palette.textDark,
+  },
+  modalPinCard: {
+    backgroundColor: '#F3FAF6',
+    borderRadius: 16,
+    borderWidth: 1.2,
+    borderColor: '#BFE3D1',
+    padding: 14,
+    alignItems: 'center',
+  },
+  modalPinTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    width: '100%',
+  },
+  modalPinIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#D9EFE4',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalPinTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: Palette.primaryDark,
+  },
+  modalPinSubtitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    color: Palette.textMuted,
+    marginTop: 1,
+  },
+  modalPinDigitsRow: {
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+  },
+  modalPinBox: {
+    width: 44,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: Palette.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Shadows.subtle,
+  },
+  modalPinDigit: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 22,
+    fontWeight: '700',
+    color: Palette.primaryDark,
+  },
+  modalSectionCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1.2,
+    borderColor: Palette.border,
+    padding: 14,
+    gap: 10,
+    ...Shadows.subtle,
+  },
+  modalSectionHeading: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: Palette.textDark,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  modalInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  modalInfoIconCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: Palette.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+    marginTop: 2,
+  },
+  modalInfoTextCol: {
+    flex: 1,
+  },
+  modalInfoLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    color: Palette.textMuted,
+  },
+  modalInfoValue: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13,
+    fontWeight: '600',
+    color: Palette.textDark,
+    marginTop: 1,
+  },
+  modalPaymentRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modalPaymentLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    color: Palette.textMuted,
+  },
+  modalPaymentValue: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13,
+    fontWeight: '500',
+    color: Palette.textDark,
+  },
+  modalPaymentTotalRow: {
+    borderTopWidth: 1,
+    borderTopColor: Palette.borderLight,
+    paddingTop: 8,
+    marginTop: 4,
+  },
+  modalPaymentTotalLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: Palette.textDark,
+  },
+  modalPaymentTotalValue: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 15,
+    fontWeight: '700',
+    color: Palette.primary,
+  },
+  modalPaymentStatusTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EAF6ED',
+    borderRadius: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    alignSelf: 'flex-start',
+    marginTop: 4,
+  },
+  modalPaymentStatusText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: '#059669',
+  },
+  modalCancellationCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Palette.cancelledBg,
+    borderRadius: 12,
+    padding: 12,
+  },
+  modalCancellationText: {
+    flex: 1,
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    fontWeight: '500',
+    color: Palette.cancelledText,
+  },
+  modalActionsContainer: {
+    gap: 10,
+    marginTop: 4,
+  },
+  modalRescheduleBtn: {
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1.4,
+    borderColor: Palette.primary,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalRescheduleBtnText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '600',
+    color: Palette.primary,
+  },
+  modalSupportBtn: {
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Palette.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalSupportBtnText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });
