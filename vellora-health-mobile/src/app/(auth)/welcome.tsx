@@ -27,10 +27,24 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 export default function WelcomeScreen() {
   const { loginPhone, verifyOtp, simulatedOtp } = useAuth();
 
+  // Web background enforcement to prevent white bands/scrolling artifacts
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      document.documentElement.style.backgroundColor = '#082218';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.backgroundColor = '#082218';
+      document.body.style.overflow = 'hidden';
+      const root = document.getElementById('root');
+      if (root) {
+        root.style.backgroundColor = '#082218';
+        root.style.overflow = 'hidden';
+      }
+    }
+  }, []);
+
   // Entrance animations for the content
   const contentFade = useRef(new Animated.Value(0)).current;
-  const contentSlide = useRef(new Animated.Value(24)).current;
-  const buttonScale = useRef(new Animated.Value(1)).current;
+  const contentSlide = useRef(new Animated.Value(20)).current;
 
   // Bottom Sheet State
   const [sheetVisible, setSheetVisible] = useState(false);
@@ -59,13 +73,13 @@ export default function WelcomeScreen() {
     Animated.parallel([
       Animated.timing(contentFade, {
         toValue: 1,
-        duration: 600,
+        duration: 500,
         useNativeDriver: true,
       }),
       Animated.spring(contentSlide, {
         toValue: 0,
         friction: 8,
-        tension: 45,
+        tension: 50,
         useNativeDriver: true,
       }),
     ]).start();
@@ -233,29 +247,36 @@ export default function WelcomeScreen() {
     <View style={styles.container}>
       <StatusBar style="light" />
 
-      {/* Full-Screen Warm Home Healthcare Background Photograph */}
-      <Image
-        source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
-        style={StyleSheet.absoluteFill}
-        resizeMode="cover"
-      />
+      {/* Hero Photo Section: Doctor & Family in the Upper ~54% of Screen */}
+      <View style={styles.heroPhotoWrapper}>
+        <Image
+          source={require('../../../assets/images/Warm Home Healthcare Visit.png')}
+          style={styles.heroPhotoImage}
+          resizeMode="cover"
+        />
 
-      {/* Subtle Bottom Vignette Gradient to Guarantee Crisp Text Contrast */}
-      <LinearGradient
-        colors={[
-          'rgba(6, 27, 19, 0)',
-          'rgba(6, 27, 19, 0.45)',
-          'rgba(6, 27, 19, 0.88)',
-          'rgba(5, 22, 15, 0.98)',
-        ]}
-        locations={[0, 0.35, 0.68, 1]}
-        style={styles.bottomGradientOverlay}
-        pointerEvents="none"
-      />
+        {/* Smooth organic gradient melting photo into solid deep green */}
+        <LinearGradient
+          colors={[
+            'rgba(8, 34, 24, 0)',
+            'rgba(8, 34, 24, 0.15)',
+            'rgba(8, 34, 24, 0.65)',
+            'rgba(8, 34, 24, 0.96)',
+            '#082218',
+          ]}
+          locations={[0, 0.4, 0.72, 0.92, 1]}
+          style={styles.heroPhotoGradient}
+          pointerEvents="none"
+        />
+      </View>
 
-      {/* Top SafeArea and Centered Wellora Healthcare Brand Header */}
+      {/* Subtle organic curved layers at the bottom */}
+      <View style={styles.bottomWaveOne} pointerEvents="none" />
+      <View style={styles.bottomWaveTwo} pointerEvents="none" />
+
+      {/* Top SafeArea and Centered Brand Logo */}
       <SafeAreaView edges={['top']} style={styles.topSafeArea}>
-        <View style={styles.brandHeader}>
+        <View style={styles.topHeader}>
           <Image
             source={require('../../../assets/images/logo-white.png')}
             style={styles.topLogoWhite}
@@ -264,7 +285,7 @@ export default function WelcomeScreen() {
         </View>
       </SafeAreaView>
 
-      {/* Bottom Content Area with Pill Badge, Headline, Subtitle, and Action Buttons */}
+      {/* Bottom Content Area: Sitting perfectly below the photo on deep green */}
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.bottomContentSafeArea}>
         <Animated.View
           style={[
@@ -301,7 +322,7 @@ export default function WelcomeScreen() {
               style={styles.primaryActionButton}
             >
               <Text style={styles.primaryActionButtonText}>Get Started</Text>
-              <Ionicons name="arrow-forward" size={18} color="#0B2B20" />
+              <Ionicons name="arrow-forward" size={18} color="#092419" />
             </TouchableOpacity>
 
             {/* Already have an account row */}
@@ -347,7 +368,7 @@ export default function WelcomeScreen() {
                 {
                   opacity: backdropAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [0, 0.65],
+                    outputRange: [0, 0.7],
                   }),
                 },
               ]}
@@ -698,37 +719,77 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#071F15',
+    backgroundColor: '#082218',
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    position: 'relative',
   },
-  bottomGradientOverlay: {
+  heroPhotoWrapper: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
-    height: Math.min(SCREEN_HEIGHT * 0.65, 560),
+    height: SCREEN_HEIGHT * 0.54,
+    width: '100%',
+    overflow: 'hidden',
+    backgroundColor: '#082218',
+  },
+  heroPhotoImage: {
+    width: '100%',
+    height: '100%',
+  },
+  heroPhotoGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -1,
+    height: '45%',
+  },
+  bottomWaveOne: {
+    position: 'absolute',
+    bottom: -25,
+    left: -40,
+    right: -40,
+    height: 90,
+    borderRadius: 180,
+    backgroundColor: 'rgba(12, 45, 33, 0.45)',
+  },
+  bottomWaveTwo: {
+    position: 'absolute',
+    bottom: -45,
+    left: -20,
+    right: -20,
+    height: 80,
+    borderRadius: 160,
+    backgroundColor: 'rgba(5, 22, 15, 0.75)',
   },
   topSafeArea: {
-    zIndex: 10,
+    zIndex: 20,
   },
-  brandHeader: {
-    height: 52,
+  topHeader: {
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Spacing.lg,
+    marginTop: Platform.OS === 'android' ? 8 : 4,
   },
   topLogoWhite: {
     width: 155,
-    height: 42,
+    height: 40,
   },
   bottomContentSafeArea: {
     flex: 1,
     justifyContent: 'flex-end',
-    zIndex: 10,
+    zIndex: 20,
   },
   contentContainer: {
     paddingHorizontal: 26,
-    paddingBottom: Platform.OS === 'ios' ? 12 : 24,
+    paddingBottom: Platform.OS === 'ios' ? 16 : 28,
     alignItems: 'center',
+    width: '100%',
+    maxWidth: 420,
+    alignSelf: 'center',
   },
   categoryPill: {
     flexDirection: 'row',
@@ -736,11 +797,11 @@ const styles = StyleSheet.create({
     gap: 7,
     borderWidth: 1.2,
     borderColor: 'rgba(134, 239, 172, 0.4)',
-    backgroundColor: 'rgba(16, 47, 36, 0.72)',
+    backgroundColor: 'rgba(16, 50, 36, 0.78)',
     paddingHorizontal: 16,
     paddingVertical: 7,
     borderRadius: 22,
-    marginBottom: 16,
+    marginBottom: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
@@ -758,8 +819,8 @@ const styles = StyleSheet.create({
   },
   headline: {
     fontFamily: Typography.fontFamily.serif,
-    fontSize: 32,
-    lineHeight: 39,
+    fontSize: 31,
+    lineHeight: 38,
     fontWeight: '800',
     color: '#FFFFFF',
     textAlign: 'center',
@@ -772,17 +833,18 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14.5,
-    lineHeight: 22,
-    color: '#D1E0D7',
+    fontSize: 14,
+    lineHeight: 21,
+    color: '#C5D8CE',
     textAlign: 'center',
-    paddingHorizontal: 14,
-    marginBottom: 24,
+    paddingHorizontal: 16,
+    marginBottom: 22,
+    maxWidth: 320,
   },
   actionsBlock: {
     width: '100%',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
   },
   primaryActionButton: {
     width: '100%',
@@ -803,19 +865,19 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontFamily.sans,
     fontSize: 16,
     fontWeight: '700',
-    color: '#0B2B20',
+    color: '#092419',
   },
   alreadyAccountRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
+    paddingVertical: 3,
   },
   alreadyAccountText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13.5,
     fontWeight: '500',
-    color: '#D1E0D8',
+    color: '#BFD2C8',
   },
   signInLinkText: {
     fontFamily: Typography.fontFamily.sans,
@@ -826,19 +888,19 @@ const styles = StyleSheet.create({
   },
   exploreServicesButton: {
     width: '100%',
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 1.4,
-    borderColor: 'rgba(134, 239, 172, 0.45)',
-    backgroundColor: 'rgba(12, 45, 34, 0.55)',
+    height: 46,
+    borderRadius: 23,
+    borderWidth: 1.3,
+    borderColor: 'rgba(134, 239, 172, 0.4)',
+    backgroundColor: 'rgba(14, 44, 32, 0.55)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   exploreServicesButtonText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14.5,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#E8F5EE',
+    color: '#E0EFE6',
   },
 
   /* ========================================================
@@ -847,6 +909,7 @@ const styles = StyleSheet.create({
   modalKeyboardContainer: {
     flex: 1,
     justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
   },
   sheetBackdrop: {
     position: 'absolute',
@@ -864,7 +927,7 @@ const styles = StyleSheet.create({
     maxHeight: SCREEN_HEIGHT * 0.88,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.25,
     shadowRadius: 18,
     elevation: 12,
   },
