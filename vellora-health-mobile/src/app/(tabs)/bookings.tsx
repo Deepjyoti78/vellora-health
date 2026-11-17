@@ -789,42 +789,93 @@ export default function BookingsScreen() {
                     </View>
                   )}
 
-                  {/* Date & Time Slot Section */}
-                  <View style={styles.modalSectionCard}>
-                    <Text style={styles.modalSectionHeading}>Schedule & Timing</Text>
-                    <View style={styles.modalInfoRow}>
-                      <View style={styles.modalInfoIconCircle}>
-                        <Ionicons name="calendar" size={15} color={Palette.primary} />
+                  {/* ======================================================== */}
+                  {/* SCHEDULE & TIMING HERO CARD (EMPHASIZED DATE & TIME)     */}
+                  {/* ======================================================== */}
+                  <View style={styles.scheduleHeroCard}>
+                    <View style={styles.scheduleCardHeader}>
+                      <View style={styles.scheduleHeaderLeft}>
+                        <View style={styles.scheduleIconBadge}>
+                          <Ionicons name="calendar-clear" size={15} color={Palette.primary} />
+                        </View>
+                        <Text style={styles.scheduleHeaderTitle}>SCHEDULE & TIMING</Text>
                       </View>
-                      <View style={styles.modalInfoTextCol}>
-                        <Text style={styles.modalInfoLabel}>Scheduled Date</Text>
-                        <Text style={styles.modalInfoValue}>{selectedBooking.date}</Text>
+                      <View style={styles.confirmedSlotPill}>
+                        <Ionicons name="checkmark-circle" size={12} color="#059669" style={{ marginRight: 3 }} />
+                        <Text style={styles.confirmedSlotText}>Confirmed Slot</Text>
                       </View>
                     </View>
 
-                    <View style={styles.modalInfoRow}>
-                      <View style={styles.modalInfoIconCircle}>
-                        <Ionicons name="time" size={15} color={Palette.primary} />
+                    <View style={styles.scheduleHighlightGrid}>
+                      {/* Emphasized Date Tile */}
+                      <View style={styles.scheduleTile}>
+                        <View style={styles.tileHeaderRow}>
+                          <Ionicons name="calendar-outline" size={13} color={Palette.primary} style={{ marginRight: 5 }} />
+                          <Text style={styles.tileCategoryLabel}>SCHEDULED DATE</Text>
+                        </View>
+                        <Text style={styles.tileDateEmphasized}>{selectedBooking.date}</Text>
+                        <View style={styles.tilePillTag}>
+                          <Ionicons name="shield-checkmark" size={11} color="#059669" style={{ marginRight: 3 }} />
+                          <Text style={styles.tilePillTagText}>Doctor arriving at doorstep</Text>
+                        </View>
                       </View>
-                      <View style={styles.modalInfoTextCol}>
-                        <Text style={styles.modalInfoLabel}>Visit Time Slot</Text>
-                        <Text style={styles.modalInfoValue}>{selectedBooking.time}</Text>
+
+                      {/* Emphasized Time Slot Tile */}
+                      <View style={styles.scheduleTile}>
+                        <View style={styles.tileHeaderRow}>
+                          <Ionicons name="time-outline" size={13} color={Palette.primary} style={{ marginRight: 5 }} />
+                          <Text style={styles.tileCategoryLabel}>VISIT TIME SLOT</Text>
+                        </View>
+                        <Text style={styles.tileTimeEmphasized}>{selectedBooking.time}</Text>
+                        <View style={styles.tilePillTag}>
+                          <Ionicons name="hourglass-outline" size={11} color={Palette.primary} style={{ marginRight: 3 }} />
+                          <Text style={styles.tilePillTagText}>30-minute consultation</Text>
+                        </View>
                       </View>
                     </View>
                   </View>
 
-                  {/* Patient Doorstep Address */}
+                  {/* ======================================================== */}
+                  {/* PATIENT LOCATION CARD (UPGRADED UI/UX)                  */}
+                  {/* ======================================================== */}
                   {selectedBooking.address && (
-                    <View style={styles.modalSectionCard}>
-                      <Text style={styles.modalSectionHeading}>Patient Location</Text>
-                      <View style={styles.modalInfoRow}>
-                        <View style={styles.modalInfoIconCircle}>
-                          <Ionicons name="location" size={15} color={Palette.primary} />
+                    <View style={styles.locationHeroCard}>
+                      <View style={styles.locationHeaderRow}>
+                        <View style={styles.locationIconWrap}>
+                          <Ionicons name="location" size={16} color={Palette.primary} />
                         </View>
-                        <View style={styles.modalInfoTextCol}>
-                          <Text style={styles.modalInfoLabel}>Home Visit Address</Text>
-                          <Text style={styles.modalInfoValue}>{selectedBooking.address}</Text>
+                        <View style={{ flex: 1, marginLeft: 10 }}>
+                          <Text style={styles.locationHeaderTitle}>PATIENT LOCATION</Text>
+                          <Text style={styles.locationSubheading}>Confirmed Doorstep Address</Text>
                         </View>
+                        <View style={styles.homeVisitBadge}>
+                          <Ionicons name="home" size={11} color={Palette.primary} style={{ marginRight: 4 }} />
+                          <Text style={styles.homeVisitBadgeText}>Home Visit</Text>
+                        </View>
+                      </View>
+
+                      {/* Prominent Address Block */}
+                      <View style={styles.addressDisplayBox}>
+                        <View style={styles.addressPinIndicator}>
+                          <View style={styles.addressPinDot} />
+                          <View style={styles.addressPinLine} />
+                        </View>
+                        <View style={styles.addressTextContent}>
+                          <Text style={styles.addressPrimaryLine}>
+                            {selectedBooking.address.split(',').slice(0, 2).join(',').trim()}
+                          </Text>
+                          <Text style={styles.addressSecondaryLine}>
+                            {selectedBooking.address.split(',').slice(2).join(',').trim() || selectedBooking.address}
+                          </Text>
+                        </View>
+                      </View>
+
+                      {/* Route & GPS Note */}
+                      <View style={styles.locationFooterNote}>
+                        <Ionicons name="navigate-circle-outline" size={16} color={Palette.primary} style={{ marginRight: 6 }} />
+                        <Text style={styles.locationFooterNoteText}>
+                          Clinician routes directly via GPS • Pre-arrival call 15 mins prior
+                        </Text>
                       </View>
                     </View>
                   )}
@@ -1750,6 +1801,223 @@ const styles = StyleSheet.create({
     color: Palette.textDark,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+  },
+
+  /* Schedule Hero Card: Emphasized Date & Time */
+  scheduleHeroCard: {
+    backgroundColor: '#F3FAF6',
+    borderRadius: 18,
+    borderWidth: 1.4,
+    borderColor: '#C3E4D4',
+    padding: 15,
+    ...Shadows.subtle,
+  },
+  scheduleCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  scheduleHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  scheduleIconBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#D7EFE2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+  },
+  scheduleHeaderTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    fontWeight: '700',
+    color: Palette.primaryDark,
+    letterSpacing: 0.6,
+  },
+  confirmedSlotPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E6F7EE',
+    paddingVertical: 3.5,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#BDE3CE',
+  },
+  confirmedSlotText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#059669',
+  },
+  scheduleHighlightGrid: {
+    gap: 10,
+  },
+  scheduleTile: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1.2,
+    borderColor: '#DBECE2',
+    ...Shadows.subtle,
+  },
+  tileHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  tileCategoryLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#557566',
+    letterSpacing: 0.5,
+  },
+  tileDateEmphasized: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 18,
+    fontWeight: '700',
+    color: Palette.primaryDark,
+    letterSpacing: -0.3,
+    marginBottom: 6,
+  },
+  tileTimeEmphasized: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 18,
+    fontWeight: '700',
+    color: Palette.primary,
+    letterSpacing: -0.3,
+    marginBottom: 6,
+  },
+  tilePillTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F3FAF6',
+    alignSelf: 'flex-start',
+    paddingVertical: 3,
+    paddingHorizontal: 7,
+    borderRadius: 6,
+  },
+  tilePillTagText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#2A634C',
+  },
+
+  /* Patient Location Hero Card */
+  locationHeroCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.4,
+    borderColor: Palette.border,
+    padding: 15,
+    ...Shadows.subtle,
+  },
+  locationHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  locationIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Palette.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  locationHeaderTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    fontWeight: '700',
+    color: Palette.textDark,
+    letterSpacing: 0.5,
+  },
+  locationSubheading: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    color: Palette.textMuted,
+    marginTop: 1,
+  },
+  homeVisitBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Palette.primaryLight,
+    paddingVertical: 3.5,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+  },
+  homeVisitBadgeText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '600',
+    color: Palette.primary,
+  },
+  addressDisplayBox: {
+    flexDirection: 'row',
+    backgroundColor: '#F7FAF8',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#E1EFE7',
+    marginBottom: 10,
+  },
+  addressPinIndicator: {
+    alignItems: 'center',
+    marginRight: 10,
+    paddingTop: 3,
+  },
+  addressPinDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Palette.primary,
+  },
+  addressPinLine: {
+    width: 2,
+    flex: 1,
+    backgroundColor: '#C5DFD1',
+    marginTop: 3,
+    minHeight: 20,
+  },
+  addressTextContent: {
+    flex: 1,
+  },
+  addressPrimaryLine: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 15.5,
+    fontWeight: '700',
+    color: Palette.textDark,
+    lineHeight: 21,
+    marginBottom: 3,
+  },
+  addressSecondaryLine: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '500',
+    color: '#4B6156',
+    lineHeight: 18,
+  },
+  locationFooterNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F3FAF6',
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+  },
+  locationFooterNoteText: {
+    flex: 1,
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#2A634C',
+    lineHeight: 15,
   },
   modalInfoRow: {
     flexDirection: 'row',
