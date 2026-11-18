@@ -376,7 +376,7 @@ export default function ServiceDetailScreen() {
       case 'doctor-visit':
       default:
         return {
-          title: 'Doctors List',
+          title: 'Doctor List',
           subtitle: 'Verified specialist doctors available for home visits',
           categories: ['All', 'General', 'Pediatrics', 'Cardiology', 'Orthopedics', 'Neurology'],
           data: DOCTORS_DATA,
@@ -430,43 +430,15 @@ export default function ServiceDetailScreen() {
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <StatusBar style="dark" />
 
-      {/* Top Header Bar with Clean Centered Logo & Right Support Action */}
+      {/* Top Header Bar with Vellora Healthcare Logo on Left (No Back Arrow, No Question Mark) */}
       <View style={styles.header}>
-        <TouchableOpacity accessibilityRole="button"
-          accessibilityLabel="Go back" onPress={handleBack}
-          activeOpacity={0.7}
-          style={styles.backButton}
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-        >
-          <Ionicons name="arrow-back" size={24} color={Palette.textDark} />
-        </TouchableOpacity>
-
-        {/* Clean Centered Brand Logo */}
-        <View style={styles.headerBrandCenter}>
+        <View style={styles.headerBrandLeft}>
           <Image
             source={require('../../../assets/images/logo-dark.png')}
             style={styles.brandLogo}
             resizeMode="contain"
           />
         </View>
-
-        <TouchableOpacity accessibilityRole="button"
-          style={styles.headerHelpBtn}
-          activeOpacity={0.7}
-          onPress={() => {
-            Alert.alert(
-              'Vellora Care Support',
-              'Need assistance selecting the right specialist or tests? Call our 24/7 care desk (+91 80 4910 8800).',
-              [
-                { text: 'Cancel', style: 'cancel' },
-                { text: 'Call Now', onPress: () => Linking.openURL('tel:+918049108800') },
-              ]
-            );
-          }}
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-        >
-          <Ionicons name="help-circle-outline" size={24} color={Palette.primary} />
-        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -740,57 +712,40 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingTop: 8,
+    paddingBottom: 4,
     backgroundColor: Palette.bgWarm,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Palette.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: Palette.border,
-    ...Shadows.subtle,
-  },
-  headerBrandCenter: {
-    alignItems: 'center',
+  headerBrandLeft: {
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   brandLogo: {
-    width: 124,
-    height: 34,
-  },
-  headerHelpBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Palette.mint,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#CDE5D7',
+    width: 128,
+    height: 36,
   },
   scrollContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
     paddingBottom: 40,
   },
 
-  /* Title Section */
+  /* Title Section - Centered "Doctor List" */
   titleSection: {
-    marginTop: 4,
-    marginBottom: 16,
+    marginTop: 6,
+    marginBottom: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   mainTitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: '700',
     color: '#111827',
-    letterSpacing: -0.5,
-    marginBottom: 4,
+    letterSpacing: -0.4,
+    textAlign: 'center',
+    marginBottom: 2,
   },
   mainSubtitle: {
     fontFamily: Typography.fontFamily.sans,
@@ -798,6 +753,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#6B7280',
     lineHeight: 18,
+    textAlign: 'center',
   },
 
   /* Search Bar with Filter Button */
@@ -805,13 +761,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginBottom: 18,
+    marginBottom: 16,
   },
   searchBarContainer: {
     flex: 1,
-    height: 48,
+    height: 46,
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    borderRadius: 23,
     borderWidth: 1,
     borderColor: '#E5E7EB',
     flexDirection: 'row',
@@ -820,7 +776,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
-    shadowRadius: 6,
+    shadowRadius: 5,
     elevation: 2,
   },
   searchIcon: {
@@ -829,15 +785,15 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14,
+    fontSize: 13.5,
     color: '#111827',
     height: '100%',
     ...(Platform.OS === 'web' ? ({ outlineStyle: 'none', borderWidth: 0 } as any) : {}),
   },
   filterButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -846,7 +802,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
-    shadowRadius: 6,
+    shadowRadius: 5,
     elevation: 2,
   },
 
@@ -886,24 +842,24 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  /* 2-Column Cards Grid - Exact Design from Reference */
+  /* 2-Column Cards Grid - Reduced empty spaces & slightly reduced height */
   itemsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    rowGap: 14,
+    rowGap: 10,
     marginBottom: 20,
   },
   itemCard: {
-    width: '48.2%',
-    height: 224,
-    borderRadius: 22,
+    width: '48.8%',
+    height: 198,
+    borderRadius: 20,
     overflow: 'hidden',
     position: 'relative',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
     elevation: 3,
   },
   itemCardImage: {
@@ -912,46 +868,46 @@ const styles = StyleSheet.create({
   },
   itemBadgeOverlay: {
     position: 'absolute',
-    bottom: 8,
-    left: 8,
-    right: 8,
+    bottom: 7,
+    left: 7,
+    right: 7,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    paddingVertical: 9,
-    paddingHorizontal: 11,
+    borderRadius: 14,
+    paddingVertical: 7,
+    paddingHorizontal: 9,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
-    shadowRadius: 6,
+    shadowRadius: 5,
     elevation: 4,
   },
   itemBadgeTextCol: {
     flex: 1,
-    paddingRight: 6,
+    paddingRight: 4,
     justifyContent: 'center',
   },
   itemBadgeName: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13.5,
+    fontSize: 12.5,
     fontWeight: '700',
     color: '#111827',
     letterSpacing: -0.2,
-    marginBottom: 2,
+    marginBottom: 1,
   },
   itemBadgeSpecialty: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: '400',
     color: '#6B7280',
-    lineHeight: 14,
+    lineHeight: 13,
   },
   circleArrowBtn: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     backgroundColor: '#F3F4F6',
     alignItems: 'center',
     justifyContent: 'center',
