@@ -642,90 +642,99 @@ export default function BookingScreen() {
             <View style={styles.formSectionContainer}>
               <Text style={styles.formSectionHeading}>Patient & Contact Details</Text>
 
-              {/* Input Card 1: Full Name */}
-              <View style={styles.inputCard}>
-                <View style={styles.inputIconCircle}>
-                  <Ionicons name="person-outline" size={18} color="#0F5B43" />
-                </View>
-                <View style={styles.inputCol}>
-                  <Text style={styles.inputLabel}>Full Name</Text>
-                  <TextInput
-                    value={fullName}
-                    onChangeText={setFullName}
-                    style={styles.inputTextValue}
-                    placeholder="Enter full name"
-                    placeholderTextColor="#94A3B8"
-                  />
-                </View>
-              </View>
-
-              {/* Input Card 2: Phone Number */}
-              <View style={styles.inputCard}>
-                <View style={styles.inputIconCircle}>
-                  <Ionicons name="call-outline" size={18} color="#0F5B43" />
-                </View>
-                <View style={styles.inputCol}>
-                  <Text style={styles.inputLabel}>Phone Number</Text>
-                  <TextInput
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                    keyboardType="phone-pad"
-                    style={styles.inputTextValue}
-                    placeholder="+91 00000 00000"
-                    placeholderTextColor="#94A3B8"
-                  />
-                </View>
-                <View style={styles.inputVerifiedPill}>
-                  <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 3 }} />
-                  <Text style={styles.inputVerifiedText}>Demo</Text>
-                </View>
-              </View>
-
-              {/* Input Card 3: Email Address */}
-              <View style={styles.inputCard}>
-                <View style={styles.inputIconCircle}>
-                  <Ionicons name="mail-outline" size={18} color="#0F5B43" />
-                </View>
-                <View style={styles.inputCol}>
-                  <Text style={styles.inputLabel}>Email Address</Text>
-                  <TextInput
-                    value={emailAddress}
-                    onChangeText={setEmailAddress}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    style={styles.inputTextValue}
-                    placeholder="name@example.com"
-                    placeholderTextColor="#94A3B8"
-                  />
-                </View>
-                <View style={styles.inputVerifiedPill}>
-                  <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 3 }} />
-                  <Text style={styles.inputVerifiedText}>Demo</Text>
-                </View>
-              </View>
-
-              {/* Input Card 4: Service Address */}
-              <View style={styles.inputCard}>
-                <View style={styles.inputIconCircle}>
-                  <Ionicons name="location-outline" size={18} color="#0F5B43" />
-                </View>
-                <View style={styles.inputCol}>
-                  <View style={styles.addressLabelRow}>
-                    <Text style={styles.inputLabel}>Service Address</Text>
-                    <View style={styles.defaultAddressTag}>
-                      <Text style={styles.defaultAddressTagText}>Home</Text>
-                    </View>
+              {/* Unified Single Card for Patient & Contact Details */}
+              <View style={styles.unifiedFormCard}>
+                {/* Row 1: Full Name */}
+                <View style={styles.formRowItem}>
+                  <View style={styles.inputIconCircle}>
+                    <Ionicons name="person-outline" size={18} color="#0F5B43" />
                   </View>
-                  <TextInput
-                    value={serviceAddress}
-                    onChangeText={setServiceAddress}
-                    multiline
-                    style={styles.inputTextValue}
-                    placeholder="Enter street, apartment, city, pincode"
-                    placeholderTextColor="#94A3B8"
-                  />
+                  <View style={styles.inputCol}>
+                    <Text style={styles.inputLabel}>Full Name</Text>
+                    <TextInput
+                      value={fullName}
+                      onChangeText={setFullName}
+                      style={styles.inputTextValue}
+                      placeholder="Enter full name"
+                      placeholderTextColor="#94A3B8"
+                    />
+                  </View>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color="#6B7E75" />
+
+                <View style={styles.formRowDivider} />
+
+                {/* Row 2: Phone Number */}
+                <View style={styles.formRowItem}>
+                  <View style={styles.inputIconCircle}>
+                    <Ionicons name="call-outline" size={18} color="#0F5B43" />
+                  </View>
+                  <View style={styles.inputCol}>
+                    <Text style={styles.inputLabel}>Phone Number</Text>
+                    <TextInput
+                      value={phoneNumber}
+                      onChangeText={setPhoneNumber}
+                      keyboardType="phone-pad"
+                      style={styles.inputTextValue}
+                      placeholder="+91 00000 00000"
+                      placeholderTextColor="#94A3B8"
+                    />
+                  </View>
+                  <View style={styles.inputVerifiedPill}>
+                    <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 3 }} />
+                    <Text style={styles.inputVerifiedText}>Demo</Text>
+                  </View>
+                </View>
+
+                <View style={styles.formRowDivider} />
+
+                {/* Row 3: Email Address */}
+                <View style={styles.formRowItem}>
+                  <View style={styles.inputIconCircle}>
+                    <Ionicons name="mail-outline" size={18} color="#0F5B43" />
+                  </View>
+                  <View style={styles.inputCol}>
+                    <Text style={styles.inputLabel}>Email Address</Text>
+                    <TextInput
+                      value={emailAddress}
+                      onChangeText={setEmailAddress}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      style={styles.inputTextValue}
+                      placeholder="name@example.com"
+                      placeholderTextColor="#94A3B8"
+                    />
+                  </View>
+                  <View style={styles.inputVerifiedPill}>
+                    <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 3 }} />
+                    <Text style={styles.inputVerifiedText}>Demo</Text>
+                  </View>
+                </View>
+
+                <View style={styles.formRowDivider} />
+
+                {/* Row 4: Service Address */}
+                <View style={styles.formRowItem}>
+                  <View style={styles.inputIconCircle}>
+                    <Ionicons name="location-outline" size={18} color="#0F5B43" />
+                  </View>
+                  <View style={styles.inputCol}>
+                    <View style={styles.addressLabelRow}>
+                      <Text style={styles.inputLabel}>Service Address</Text>
+                      <View style={styles.defaultAddressTag}>
+                        <Text style={styles.defaultAddressTagText}>Home</Text>
+                      </View>
+                    </View>
+                    <TextInput
+                      value={serviceAddress}
+                      onChangeText={setServiceAddress}
+                      multiline
+                      style={styles.inputTextValue}
+                      placeholder="Enter street, apartment, city, pincode"
+                      placeholderTextColor="#94A3B8"
+                    />
+                  </View>
+                  <Ionicons name="chevron-forward" size={18} color="#6B7E75" />
+                </View>
               </View>
             </View>
 
@@ -2245,6 +2254,32 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
+  unifiedFormCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    overflow: 'hidden',
+    shadowColor: '#102820',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
+    marginBottom: 14,
+  },
+  formRowItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+  },
+  formRowDivider: {
+    height: 1,
+    backgroundColor: '#F1F5F3',
+    marginLeft: 58,
+    marginRight: 14,
+  },
+
   inputCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2439,11 +2474,12 @@ const styles = StyleSheet.create({
   timeSlotGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    justifyContent: 'space-between',
+    rowGap: 10,
     marginTop: 4,
   },
   timeSlotPill: {
-    width: (SCREEN_WIDTH - 64) / 3,
+    width: '31%',
     paddingVertical: 12,
     borderRadius: 14,
     alignItems: 'center',
@@ -3270,11 +3306,10 @@ const styles = StyleSheet.create({
   },
   calendarWeekdaysRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginBottom: 10,
   },
   calendarWeekdayLabel: {
-    width: (SCREEN_WIDTH - 74) / 7,
+    width: '14.28%',
     textAlign: 'center',
     fontSize: 11.5,
     fontWeight: '500',
@@ -3287,7 +3322,7 @@ const styles = StyleSheet.create({
     rowGap: 8,
   },
   calendarDayCell: {
-    width: (SCREEN_WIDTH - 74) / 7,
+    width: '14.28%',
     height: 38,
     alignItems: 'center',
     justifyContent: 'center',

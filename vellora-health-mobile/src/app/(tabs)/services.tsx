@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.65)',
     ...(Platform.OS === 'web'
       ? ({
-          background:
+          backgroundImage:
             'linear-gradient(to top, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.82) 42%, rgba(0, 0, 0, 0.42) 75%, rgba(0, 0, 0, 0) 100%)',
         } as any)
       : {}),
