@@ -25,9 +25,9 @@ export default function TabLayout() {
           bottom: bottomMargin,
           left: 18,
           right: 18,
-          height: 68, // Comfortable height with generous clearance so labels are never cropped
+          height: 56, // Sleek, compact navbar height
           backgroundColor: '#0F5B43', // Dark forest green
-          borderRadius: 34,
+          borderRadius: 28,
           borderWidth: 1.2,
           borderColor: 'rgba(255, 255, 255, 0.18)',
           elevation: 14,
@@ -36,22 +36,23 @@ export default function TabLayout() {
           shadowOffset: { width: 0, height: 6 },
           shadowOpacity: 0.32,
           shadowRadius: 16,
-          paddingTop: 6,
-          paddingBottom: 6,
+          paddingTop: 3,
+          paddingBottom: 3,
           paddingHorizontal: 8,
         },
         tabBarItemStyle: {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          paddingVertical: 2,
+          paddingVertical: 0,
         },
         tabBarLabelStyle: {
           fontFamily: Typography.fontFamily.sans,
-          fontSize: 10.5,
+          fontSize: 10,
           fontWeight: '600',
           marginTop: 1,
           marginBottom: 0,
+          lineHeight: 12,
           letterSpacing: 0.1,
         },
       }}
@@ -65,7 +66,7 @@ export default function TabLayout() {
             <View style={[styles.iconWrapper, focused && styles.activeIconPill]}>
               <Ionicons
                 name={focused ? 'home' : 'home-outline'}
-                size={21}
+                size={19}
                 color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
@@ -82,7 +83,7 @@ export default function TabLayout() {
             <View style={[styles.iconWrapper, focused && styles.activeIconPill]}>
               <Ionicons
                 name={focused ? 'calendar' : 'calendar-outline'}
-                size={21}
+                size={19}
                 color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
@@ -99,7 +100,7 @@ export default function TabLayout() {
             <View style={[styles.iconWrapper, focused && styles.activeIconPill]}>
               <Ionicons
                 name={focused ? 'grid' : 'grid-outline'}
-                size={21}
+                size={19}
                 color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
@@ -116,7 +117,7 @@ export default function TabLayout() {
             <View style={[styles.iconWrapper, focused && styles.activeIconPill]}>
               <Ionicons
                 name={focused ? 'person' : 'person-outline'}
-                size={21}
+                size={19}
                 color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
@@ -139,9 +140,9 @@ const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 36,
-    height: 24,
-    borderRadius: 12,
+    width: 34,
+    height: 22,
+    borderRadius: 11,
   },
   activeIconPill: {
     backgroundColor: 'rgba(255, 255, 255, 0.22)',

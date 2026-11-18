@@ -200,14 +200,15 @@ export default function ServicesScreen() {
                 resizeMode="cover"
               />
 
-              {/* Layer 2: Seamless Deep Scrim Gradient */}
-              <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
+              {/* Layer 2: Deep Black Gradient Scrim Overlay */}
+              <View style={styles.darkGradientOverlay} pointerEvents="none" />
+              <Svg height="100%" width="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
                 <Defs>
                   <LinearGradient id={`scrim-${svc.id}`} x1="0" y1="0" x2="0" y2="1">
-                    <Stop offset="0%" stopColor="#000000" stopOpacity="0.02" />
-                    <Stop offset="35%" stopColor="#0A2C21" stopOpacity="0.25" />
-                    <Stop offset="65%" stopColor="#072018" stopOpacity="0.80" />
-                    <Stop offset="100%" stopColor="#04140F" stopOpacity="0.96" />
+                    <Stop offset="0%" stopColor="#000000" stopOpacity="0.0" />
+                    <Stop offset="30%" stopColor="#000000" stopOpacity="0.25" />
+                    <Stop offset="60%" stopColor="#000000" stopOpacity="0.75" />
+                    <Stop offset="100%" stopColor="#000000" stopOpacity="0.96" />
                   </LinearGradient>
                 </Defs>
                 <Rect x="0" y="0" width="100%" height="100%" fill={`url(#scrim-${svc.id})`} />
@@ -429,11 +430,26 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  darkGradientOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '75%',
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    ...(Platform.OS === 'web'
+      ? ({
+          background:
+            'linear-gradient(to top, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.82) 42%, rgba(0, 0, 0, 0.42) 75%, rgba(0, 0, 0, 0) 100%)',
+        } as any)
+      : {}),
+  },
   gridCardContent: {
     position: 'relative',
     flex: 1,
     padding: 13,
     justifyContent: 'flex-end',
+    zIndex: 2,
   },
   gridCardBottomInfo: {
     paddingBottom: 2,
@@ -445,14 +461,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     letterSpacing: -0.3,
     marginBottom: 4,
+    textShadowColor: 'rgba(0, 0, 0, 0.95)',
+    textShadowOffset: { width: 0, height: 1.5 },
+    textShadowRadius: 4,
   },
   gridCardSubtitle: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 11.5,
-    fontWeight: '400',
-    color: '#E2E8F0',
+    fontWeight: '500',
+    color: '#F1F5F9',
     lineHeight: 16,
     marginBottom: 0,
+    textShadowColor: 'rgba(0, 0, 0, 0.9)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
 
   /* Bottom Help Banner */

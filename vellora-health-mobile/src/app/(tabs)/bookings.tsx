@@ -493,19 +493,13 @@ export default function BookingsScreen() {
                 <View style={styles.cardHeaderRow}>
                   <View style={styles.categoryBadge}>
                     <Ionicons
-                      name={
-                        item.serviceCategory.includes('Doctor')
-                          ? 'medkit-outline'
-                          : item.serviceCategory.includes('Nursing')
-                          ? 'heart-outline'
-                          : 'flask-outline'
-                      }
+                      name="receipt-outline"
                       size={12.5}
                       color={Palette.primary}
                       style={{ marginRight: 4 }}
                     />
-                    <Text style={styles.categoryBadgeText}>
-                      {item.serviceCategory} • {item.bookingRef}
+                    <Text style={styles.categoryBadgeText} numberOfLines={1}>
+                      {item.bookingRef.startsWith('#') ? item.bookingRef : `#${item.bookingRef}`}
                     </Text>
                   </View>
 
@@ -708,7 +702,9 @@ export default function BookingsScreen() {
               <View style={{ flex: 1, marginRight: 12 }}>
                 <Text style={styles.modalHeaderTitle}>Booking Details</Text>
                 <Text style={styles.modalHeaderSubtitle} numberOfLines={1}>
-                  {selectedBooking?.serviceCategory} • {selectedBooking?.bookingRef}
+                  {selectedBooking?.bookingRef.startsWith('#')
+                    ? selectedBooking?.bookingRef
+                    : `#${selectedBooking?.bookingRef}`}
                 </Text>
               </View>
 
@@ -1347,6 +1343,9 @@ const styles = StyleSheet.create({
     paddingVertical: 3.5,
     paddingHorizontal: 8.5,
     borderRadius: 8,
+    flexShrink: 1,
+    marginRight: 8,
+    maxWidth: '65%',
   },
   categoryBadgeText: {
     fontFamily: Typography.fontFamily.sans,
@@ -1360,6 +1359,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3.5,
     paddingHorizontal: 8.5,
     borderRadius: 12,
+    flexShrink: 0,
   },
   statusBadgeConfirmed: {
     backgroundColor: Palette.confirmedBg,

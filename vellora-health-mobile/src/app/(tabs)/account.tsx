@@ -193,36 +193,7 @@ export default function ProfileScreen() {
         </View>
 
         {/* ============================================================ */}
-        {/* 3. ILLUSTRATED CARE CONCIERGE BANNER                         */}
-        {/* ============================================================ */}
-        <View style={styles.careConciergeCard}>
-          <Image
-            source={require('../../../assets/images/home-garden.png')}
-            style={styles.conciergeIllustration}
-            resizeMode="contain"
-          />
-          <View style={styles.conciergeTextCol}>
-            <View style={styles.conciergeTag}>
-              <Ionicons name="shield-checkmark" size={11} color={Palette.primary} style={{ marginRight: 4 }} />
-              <Text style={styles.conciergeTagText}>Dedicated Care Team</Text>
-            </View>
-            <Text style={styles.conciergeTitle}>Need home health assistance?</Text>
-            <Text style={styles.conciergeSubtitle}>
-              Your assigned coordinator handles fast dispatch, medicine orders & reports.
-            </Text>
-            <TouchableOpacity
-              style={styles.conciergeCallBtn}
-              activeOpacity={0.8}
-              onPress={handleCallSupport}
-            >
-              <Ionicons name="call" size={12} color="#FFFFFF" style={{ marginRight: 5 }} />
-              <Text style={styles.conciergeCallBtnText}>Call Care Coordinator</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* ============================================================ */}
-        {/* 4. GROUPED CLINICAL & ACCOUNT MENUS                           */}
+        {/* 3. GROUPED CLINICAL & ACCOUNT MENUS                           */}
         {/* ============================================================ */}
 
         {/* Group A: Care & Medical Records */}
