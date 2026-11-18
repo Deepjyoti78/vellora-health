@@ -430,14 +430,39 @@ export default function ServiceDetailScreen() {
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <StatusBar style="dark" />
 
-      {/* Top Header Bar with Vellora Healthcare Logo on Left (No Back Arrow, No Question Mark) */}
+      {/* Top Header Bar with Vellora Healthcare Logo on Left & Action Buttons on Right */}
       <View style={styles.header}>
-        <View style={styles.headerBrandLeft}>
+        <TouchableOpacity
+          style={styles.headerBrandLeft}
+          activeOpacity={0.8}
+          onPress={() => router.push('/(tabs)')}
+        >
           <Image
             source={require('../../../assets/images/logo-dark.png')}
             style={styles.brandLogo}
             resizeMode="contain"
           />
+        </TouchableOpacity>
+
+        <View style={styles.topActionButtons}>
+          <TouchableOpacity
+            style={styles.bellBtn}
+            activeOpacity={0.75}
+            onPress={() => Alert.alert('Notifications', 'All your upcoming home visit reminders are active.')}
+            accessibilityLabel="View notifications"
+          >
+            <Ionicons name="notifications-outline" size={20} color={Palette.textDark} />
+            <View style={styles.bellBadgeDot} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.plusBtn}
+            activeOpacity={0.75}
+            onPress={() => router.push('/(tabs)/services')}
+            accessibilityLabel="Book new visit"
+          >
+            <Ionicons name="add" size={22} color={Palette.primary} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -448,7 +473,13 @@ export default function ServiceDetailScreen() {
         {/* Screen Header Title */}
         <View style={styles.titleSection}>
           <Text style={styles.mainTitle}>{config.title}</Text>
-          {config.subtitle && serviceKey !== 'doctor-visit' ? (
+          {serviceKey === 'doctor-visit' ? (
+            <View style={styles.subtitleDashRow}>
+              <View style={styles.dashLine} />
+              <Text style={styles.subtitleDashText}>Find and connect with our trusted doctors</Text>
+              <View style={styles.dashLine} />
+            </View>
+          ) : config.subtitle ? (
             <Text style={styles.mainSubtitle}>{config.subtitle}</Text>
           ) : null}
         </View>
@@ -554,29 +585,6 @@ export default function ServiceDetailScreen() {
               </View>
             </TouchableOpacity>
           ))}
-        </View>
-
-        {/* Direct Booking Primary CTA Button */}
-        <TouchableOpacity accessibilityRole="button"
-          style={styles.directBookBtn}
-          activeOpacity={0.88}
-          onPress={() => {
-            router.push(`/booking/${config.serviceId}` as any);
-          }}
-        >
-          <Ionicons name="calendar-outline" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
-          <Text style={styles.directBookBtnText}>{config.bookLabel}</Text>
-        </TouchableOpacity>
-
-        {/* Quality & Safety Trust Card */}
-        <View style={styles.trustCard}>
-          <View style={styles.trustHeader}>
-            <Ionicons name="shield-checkmark" size={18} color={Palette.primary} style={{ marginRight: 6 }} />
-            <Text style={styles.trustTitle}>Vellora Clinical Standards</Text>
-          </View>
-          <Text style={styles.trustSubtitle}>
-            All clinicians undergo rigorous background verification, license validation, and carry hospital-grade sterile kits.
-          </Text>
         </View>
 
         {filteredItems.length === 0 && (
@@ -700,6 +708,61 @@ export default function ServiceDetailScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Floating Bottom Navigation Bar matching (tabs) layout */}
+      <View style={styles.floatingNavBar}>
+        <TouchableOpacity
+          style={styles.navBarItem}
+          onPress={() => router.push('/(tabs)')}
+          activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel="Home"
+        >
+          <View style={styles.navBarIconWrapper}>
+            <Ionicons name="home-outline" size={21} color="#C2E5D9" />
+          </View>
+          <Text style={[styles.navBarLabel, styles.navBarLabelInactive]}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navBarItem}
+          onPress={() => router.push('/(tabs)/bookings')}
+          activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel="Booking"
+        >
+          <View style={styles.navBarIconWrapper}>
+            <Ionicons name="calendar-outline" size={21} color="#C2E5D9" />
+          </View>
+          <Text style={[styles.navBarLabel, styles.navBarLabelInactive]}>Booking</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navBarItem}
+          onPress={() => router.push('/(tabs)/services')}
+          activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel="Services"
+        >
+          <View style={[styles.navBarIconWrapper, styles.navBarActiveIconPill]}>
+            <Ionicons name="grid" size={21} color="#FFFFFF" />
+          </View>
+          <Text style={[styles.navBarLabel, styles.navBarLabelActive]}>Services</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navBarItem}
+          onPress={() => router.push('/(tabs)/account')}
+          activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel="Profile"
+        >
+          <View style={styles.navBarIconWrapper}>
+            <Ionicons name="person-outline" size={21} color="#C2E5D9" />
+          </View>
+          <Text style={[styles.navBarLabel, styles.navBarLabelInactive]}>Profile</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -712,23 +775,59 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 8,
     paddingBottom: 4,
     backgroundColor: Palette.bgWarm,
   },
   headerBrandLeft: {
-    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   brandLogo: {
-    width: 128,
-    height: 36,
+    width: 124,
+    height: 34,
+  },
+  topActionButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  bellBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Palette.surface,
+    borderWidth: 1.2,
+    borderColor: '#E2E8F0',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    ...Shadows.subtle,
+  },
+  bellBadgeDot: {
+    position: 'absolute',
+    top: 9,
+    right: 10,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#E53E3E',
+  },
+  plusBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Palette.mint,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Shadows.subtle,
   },
   scrollContent: {
     paddingHorizontal: 18,
-    paddingBottom: 40,
+    paddingBottom: 90,
   },
 
   /* Title Section - Centered "Doctor List" */
@@ -737,6 +836,25 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  subtitleDashRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 6,
+  },
+  dashLine: {
+    width: 22,
+    height: 1.5,
+    backgroundColor: '#10B981',
+    borderRadius: 1,
+  },
+  subtitleDashText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12,
+    color: '#4B5563',
+    fontWeight: '500',
   },
   mainTitle: {
     fontFamily: Typography.fontFamily.sans,
@@ -1038,22 +1156,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
-    padding: 14,
+    padding: 8,
     borderWidth: 1.2,
     borderColor: '#E2E8F0',
     marginBottom: 16,
-    gap: 14,
+    gap: 12,
     ...Shadows.subtle,
   },
   modalDoctorAvatar: {
-    width: 95,
-    height: 105,
-    borderRadius: 18,
+    width: 110,
+    height: 120,
+    borderRadius: 14,
     backgroundColor: '#F1F5F9',
   },
   modalDoctorInfo: {
     flex: 1,
     justifyContent: 'center',
+    paddingRight: 4,
   },
   modalDoctorName: {
     fontFamily: Typography.fontFamily.sans,
@@ -1189,5 +1308,60 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     color: '#64748B',
+  },
+
+  /* Floating Bottom Navigation Bar */
+  floatingNavBar: {
+    position: 'absolute',
+    bottom: Platform.select({ ios: 20, android: 16, default: 16 }),
+    left: 18,
+    right: 18,
+    height: 56,
+    backgroundColor: '#0F5B43',
+    borderRadius: 28,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.18)',
+    elevation: 14,
+    zIndex: 999,
+    shadowColor: '#08251C',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.32,
+    shadowRadius: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingHorizontal: 8,
+  },
+  navBarItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 2,
+  },
+  navBarIconWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 24,
+    marginBottom: 2,
+  },
+  navBarActiveIconPill: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    height: 26,
+  },
+  navBarLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    letterSpacing: -0.1,
+  },
+  navBarLabelActive: {
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  navBarLabelInactive: {
+    fontWeight: '500',
+    color: '#C2E5D9',
   },
 });

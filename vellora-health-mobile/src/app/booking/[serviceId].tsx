@@ -954,52 +954,67 @@ export default function BookingScreen() {
               <View style={styles.reviewDoctorInfo}>
                 <View style={styles.reviewVerifiedBadge}>
                   <Ionicons name="shield-checkmark" size={13} color="#059669" />
-                  <Text style={styles.reviewVerifiedText}>Demo care selection</Text>
+                  <Text style={styles.reviewVerifiedText}>Verified Care Provider</Text>
                 </View>
                 <Text style={styles.reviewServiceName}>{serviceTitle}</Text>
                 <Text style={styles.reviewDoctorName}>{providerName}</Text>
-                <Text style={styles.reviewDoctorMeta}>{params.specialty || service?.category || 'Demo package'}</Text>
+                <Text style={styles.reviewDoctorMeta}>{params.specialty || service?.category || 'Specialist Consultation'}</Text>
               </View>
             </View>
 
-            {/* 2. Schedule & Location Card */}
-            <View style={styles.reviewSectionCard}>
-              <View style={styles.reviewCardHeader}>
-                <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
-                <Text style={styles.reviewCardHeaderText}>Appointment Schedule</Text>
-              </View>
-
-              <View style={styles.reviewItemRow}>
-                <View style={styles.reviewItemIconWrap}>
-                  <Ionicons name="calendar" size={16} color="#102820" />
+            {/* 2. Emphasized Schedule & Location Card */}
+            <View style={styles.reviewScheduleCard}>
+              <View style={styles.reviewScheduleHeader}>
+                <View style={styles.reviewScheduleIconBadge}>
+                  <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
                 </View>
-                <View style={styles.reviewItemTextCol}>
-                  <Text style={styles.reviewItemLabel}>Date</Text>
-                  <Text style={styles.reviewItemValue}>{bookingConfirmedDate}</Text>
+                <View>
+                  <Text style={styles.reviewScheduleHeaderText}>Appointment Schedule</Text>
+                  <Text style={styles.reviewScheduleSubheader}>Confirmed home consultation visit</Text>
                 </View>
               </View>
 
-              <View style={styles.reviewInnerDivider} />
-
-              <View style={styles.reviewItemRow}>
-                <View style={styles.reviewItemIconWrap}>
-                  <Ionicons name="time" size={16} color="#102820" />
+              <View style={styles.reviewScheduleRow}>
+                <View style={styles.reviewScheduleIconBox}>
+                  <Ionicons name="calendar" size={18} color="#0F5B43" />
                 </View>
-                <View style={styles.reviewItemTextCol}>
-                  <Text style={styles.reviewItemLabel}>Time Slot</Text>
-                  <Text style={styles.reviewItemValue}>{bookingConfirmedTime} (30 mins visit)</Text>
+                <View style={styles.reviewScheduleTextCol}>
+                  <Text style={styles.reviewScheduleLabel}>APPOINTMENT DATE</Text>
+                  <Text style={styles.reviewScheduleValue}>{bookingConfirmedDate}</Text>
                 </View>
               </View>
 
-              <View style={styles.reviewInnerDivider} />
+              <View style={styles.reviewScheduleDivider} />
 
-              <View style={styles.reviewItemRow}>
-                <View style={styles.reviewItemIconWrap}>
-                  <Ionicons name="location" size={16} color="#102820" />
+              <View style={styles.reviewScheduleRow}>
+                <View style={styles.reviewScheduleIconBox}>
+                  <Ionicons name="time" size={18} color="#0F5B43" />
                 </View>
-                <View style={styles.reviewItemTextCol}>
-                  <Text style={styles.reviewItemLabel}>Service Address</Text>
-                  <Text style={styles.reviewItemValue}>{serviceAddress}</Text>
+                <View style={styles.reviewScheduleTextCol}>
+                  <Text style={styles.reviewScheduleLabel}>TIME SLOT</Text>
+                  <View style={styles.reviewTimeBadgeRow}>
+                    <Text style={styles.reviewScheduleValue}>{bookingConfirmedTime}</Text>
+                    <View style={styles.reviewDurationTag}>
+                      <Text style={styles.reviewDurationTagText}>30 mins visit</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.reviewScheduleDivider} />
+
+              <View style={styles.reviewScheduleRow}>
+                <View style={styles.reviewScheduleIconBox}>
+                  <Ionicons name="location" size={18} color="#0F5B43" />
+                </View>
+                <View style={styles.reviewScheduleTextCol}>
+                  <View style={styles.reviewAddressLabelRow}>
+                    <Text style={styles.reviewScheduleLabel}>SERVICE ADDRESS</Text>
+                    <View style={styles.homePill}>
+                      <Text style={styles.homePillText}>Home</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.reviewAddressValue}>{serviceAddress}</Text>
                 </View>
               </View>
             </View>
@@ -1062,19 +1077,8 @@ export default function BookingScreen() {
               <View style={styles.reviewInnerDivider} />
 
               <View style={[styles.billRow, { marginTop: 4 }]}>
-                <Text style={styles.billTotalLabel}>Estimated Demo Amount</Text>
+                <Text style={styles.billTotalLabel}>Total Amount</Text>
                 <Text style={styles.billTotalValue}>{priceLabel}</Text>
-              </View>
-            </View>
-
-            {/* 5. Trust & Cancellation Policy Banner */}
-            <View style={styles.trustBanner}>
-              <Ionicons name="shield-checkmark-outline" size={20} color="#0F5B43" />
-              <View style={styles.trustBannerTextCol}>
-                <Text style={styles.trustBannerTitle}>Free Cancellation & Rescheduling</Text>
-                <Text style={styles.trustBannerSub}>
-                  Cancel or change your slot up to 2 hours before the visit in this demo. No payment is collected.
-                </Text>
               </View>
             </View>
           </ScrollView>
@@ -1082,7 +1086,7 @@ export default function BookingScreen() {
           {/* Sticky Bottom Action Bar with Total on Left */}
           <View style={styles.reviewBottomBar}>
             <View style={styles.reviewBottomPriceCol}>
-              <Text style={styles.reviewBottomPriceLabel}>Demo Estimate</Text>
+              <Text style={styles.reviewBottomPriceLabel}>Total Amount</Text>
               <Text style={styles.reviewBottomPriceValue}>{priceLabel}</Text>
             </View>
 
@@ -1091,7 +1095,7 @@ export default function BookingScreen() {
               onPress={handleStep3ProceedToPayment}
               activeOpacity={0.88}
             >
-              <Text style={styles.primaryActionButtonText}>Review Demo Request →</Text>
+              <Text style={styles.primaryActionButtonText}>Proceed to Payment →</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -3714,33 +3718,167 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontFamily.sans,
     lineHeight: 16,
   },
+
+  /* Emphasized Schedule Card (Step 3) */
+  reviewScheduleCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: '#C2E5D4',
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#0F5B43',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.07,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  reviewScheduleHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 14,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EDF5F0',
+  },
+  reviewScheduleIconBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#EAF5EE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  reviewScheduleHeaderText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewScheduleSubheader: {
+    fontSize: 11.5,
+    color: '#6B7E75',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 1,
+  },
+  reviewScheduleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
+  reviewScheduleIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: '#F3F9F5',
+    borderWidth: 1,
+    borderColor: '#E2F0E8',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  reviewScheduleTextCol: {
+    flex: 1,
+  },
+  reviewScheduleLabel: {
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#657A70',
+    fontFamily: Typography.fontFamily.sans,
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  reviewScheduleValue: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0B2B20',
+    fontFamily: Typography.fontFamily.sans,
+    letterSpacing: -0.2,
+  },
+  reviewScheduleDivider: {
+    height: 1,
+    backgroundColor: '#F1F6F3',
+    marginVertical: 8,
+  },
+  reviewTimeBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  reviewDurationTag: {
+    backgroundColor: '#EAF6ED',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+    marginLeft: 8,
+  },
+  reviewDurationTagText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#059669',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewAddressLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2,
+  },
+  homePill: {
+    backgroundColor: '#EAF5EE',
+    paddingHorizontal: 6,
+    paddingVertical: 1.5,
+    borderRadius: 6,
+    marginLeft: 6,
+  },
+  homePillText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  reviewAddressValue: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1B2A24',
+    fontFamily: Typography.fontFamily.sans,
+    lineHeight: 19,
+  },
+
+  /* Sticky Bottom Action Bar with Total on Left */
   reviewBottomBar: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#FBFAF7',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
     paddingVertical: 14,
-    borderTopWidth: 1,
-    borderTopColor: '#F1F5F3',
+    borderTopWidth: 1.2,
+    borderTopColor: '#E2E8F0',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 16,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 8,
   },
   reviewBottomPriceCol: {
     justifyContent: 'center',
+    minWidth: 95,
   },
   reviewBottomPriceLabel: {
-    fontSize: 11,
+    fontSize: 11.5,
     color: '#64748B',
+    fontWeight: '500',
     fontFamily: Typography.fontFamily.sans,
     marginBottom: 2,
   },
   reviewBottomPriceValue: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
   },
@@ -3748,14 +3886,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0F5B43',
     borderRadius: 28,
-    paddingVertical: 14,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#0F5B43',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.25,
     shadowRadius: 8,
-    elevation: 3,
+    elevation: 4,
   },
 
   // -------------------------------------------------------------
