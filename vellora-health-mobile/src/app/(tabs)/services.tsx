@@ -204,36 +204,22 @@ export default function ServicesScreen() {
               <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
                 <Defs>
                   <LinearGradient id={`scrim-${svc.id}`} x1="0" y1="0" x2="0" y2="1">
-                    <Stop offset="0%" stopColor="#000000" stopOpacity="0.04" />
-                    <Stop offset="38%" stopColor="#0B2B20" stopOpacity="0.32" />
-                    <Stop offset="68%" stopColor="#072018" stopOpacity="0.82" />
+                    <Stop offset="0%" stopColor="#000000" stopOpacity="0.02" />
+                    <Stop offset="35%" stopColor="#0A2C21" stopOpacity="0.25" />
+                    <Stop offset="65%" stopColor="#072018" stopOpacity="0.80" />
                     <Stop offset="100%" stopColor="#04140F" stopOpacity="0.96" />
                   </LinearGradient>
                 </Defs>
                 <Rect x="0" y="0" width="100%" height="100%" fill={`url(#scrim-${svc.id})`} />
               </Svg>
 
-              {/* Layer 3: Minimal, Clean Elements Above Image */}
+              {/* Layer 3: Minimal, Clean Elements Above Image (Title & 1-Liner Only) */}
               <View style={styles.gridCardContent}>
-                {/* Top-Left Doorstep Care Floating Pill */}
-                <View style={styles.gridTagBadge}>
-                  <Ionicons name={svc.badgeIcon} size={13} color="#0F5B43" style={{ marginRight: 4 }} />
-                  <Text style={styles.gridTagText}>Doorstep Care</Text>
-                </View>
-
-                {/* Bottom Title, Subtitle & Explore Circle Button */}
                 <View style={styles.gridCardBottomInfo}>
                   <Text style={styles.gridCardHeading}>{svc.title}</Text>
                   <Text style={styles.gridCardSubtitle} numberOfLines={2}>
                     {svc.subtitle}
                   </Text>
-
-                  <View style={styles.gridCardActionRow}>
-                    <Text style={styles.gridCardActionText}>Explore</Text>
-                    <View style={styles.gridExploreCircle}>
-                      <Ionicons name="arrow-forward" size={14} color="#0F5B43" />
-                    </View>
-                  </View>
                 </View>
               </View>
             </TouchableOpacity>
@@ -413,26 +399,26 @@ const styles = StyleSheet.create({
     ...(Platform.OS === 'web' ? ({ outlineStyle: 'none', borderWidth: 0 } as any) : {}),
   },
 
-  /* 4. 2x2 Clean Minimal Services Grid - Exact Design from Reference */
+  /* 4. 2x2 Clean Minimal Services Grid - Compact & Clean */
   servicesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    rowGap: 14,
-    marginBottom: 20,
+    rowGap: 10,
+    marginBottom: 16,
   },
   gridCard: {
-    width: '48.2%',
-    height: 222,
-    borderRadius: 22,
+    width: '48.6%',
+    height: 195,
+    borderRadius: 20,
     overflow: 'hidden',
     backgroundColor: '#0F5B43',
     position: 'relative',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
   gridCardBgImage: {
     position: 'absolute',
@@ -447,27 +433,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     flex: 1,
     padding: 13,
-    justifyContent: 'space-between',
-  },
-  gridTagBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: '#E6F4EA',
-    paddingHorizontal: 9,
-    paddingVertical: 4.5,
-    borderRadius: 14,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  gridTagText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
-    fontWeight: '700',
-    color: '#0F5B43',
+    justifyContent: 'flex-end',
   },
   gridCardBottomInfo: {
     paddingBottom: 2,
@@ -478,34 +444,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FFFFFF',
     letterSpacing: -0.3,
-    marginBottom: 3,
+    marginBottom: 4,
   },
   gridCardSubtitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
+    fontSize: 11.5,
     fontWeight: '400',
     color: '#E2E8F0',
-    lineHeight: 15,
-    marginBottom: 10,
-  },
-  gridCardActionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  gridCardActionText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#C7EADB',
-  },
-  gridExploreCircle: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#C7EADB',
-    alignItems: 'center',
-    justifyContent: 'center',
+    lineHeight: 16,
+    marginBottom: 0,
   },
 
   /* Bottom Help Banner */

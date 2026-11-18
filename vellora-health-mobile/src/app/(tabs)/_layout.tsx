@@ -25,9 +25,9 @@ export default function TabLayout() {
           bottom: bottomMargin,
           left: 18,
           right: 18,
-          height: 64, // Balanced sleek height with ample clearance for text
+          height: 68, // Comfortable height with generous clearance so labels are never cropped
           backgroundColor: '#0F5B43', // Dark forest green
-          borderRadius: 32,
+          borderRadius: 34,
           borderWidth: 1.2,
           borderColor: 'rgba(255, 255, 255, 0.18)',
           elevation: 14,
@@ -37,20 +37,20 @@ export default function TabLayout() {
           shadowOpacity: 0.32,
           shadowRadius: 16,
           paddingTop: 6,
-          paddingBottom: 8,
+          paddingBottom: 6,
           paddingHorizontal: 8,
         },
         tabBarItemStyle: {
-          height: 50,
+          flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          paddingVertical: 1,
+          paddingVertical: 2,
         },
         tabBarLabelStyle: {
           fontFamily: Typography.fontFamily.sans,
-          fontSize: 11,
+          fontSize: 10.5,
           fontWeight: '600',
-          marginTop: 2,
+          marginTop: 1,
           marginBottom: 0,
           letterSpacing: 0.1,
         },
@@ -139,9 +139,9 @@ const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 38,
-    height: 25,
-    borderRadius: 12.5,
+    width: 36,
+    height: 24,
+    borderRadius: 12,
   },
   activeIconPill: {
     backgroundColor: 'rgba(255, 255, 255, 0.22)',
