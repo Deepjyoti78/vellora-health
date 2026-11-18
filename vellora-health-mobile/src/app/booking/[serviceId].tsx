@@ -1298,17 +1298,11 @@ export default function BookingScreen() {
             contentContainerStyle={[styles.scrollContent, { alignItems: 'center', paddingTop: 24, paddingBottom: 40 }]}
             showsVerticalScrollIndicator={false}
           >
-            {/* Celebration Icon with Confetti particles */}
+            {/* Celebration Icon with Clean Ring (No Confetti Glitches) */}
             <View style={styles.celebrationContainer}>
-              <View style={[styles.confettiDash, { top: 4, left: 16, backgroundColor: '#34D399', transform: [{ rotate: '-30deg' }] }]} />
-              <View style={[styles.confettiDash, { top: 0, right: 26, backgroundColor: '#FBBF24', transform: [{ rotate: '45deg' }] }]} />
-              <View style={[styles.confettiDash, { top: 22, right: 10, backgroundColor: '#F59E0B', transform: [{ rotate: '15deg' }] }]} />
-              <View style={[styles.confettiDash, { bottom: 18, left: 14, backgroundColor: '#FBBF24', transform: [{ rotate: '30deg' }] }]} />
-              <View style={[styles.confettiDash, { bottom: 16, right: 18, backgroundColor: '#34D399', transform: [{ rotate: '-45deg' }] }]} />
-
               <View style={styles.celebrationOuterGlow}>
                 <View style={styles.confirmedCheckCircle}>
-                  <Ionicons name="checkmark" size={38} color="#FFFFFF" />
+                  <Ionicons name="checkmark" size={30} color="#FFFFFF" />
                 </View>
               </View>
             </View>
@@ -1329,51 +1323,48 @@ export default function BookingScreen() {
               <Ionicons name="copy-outline" size={15} color="#0F5B43" />
             </TouchableOpacity>
 
-            {/* 1. Bedside Verification PIN Card (Crucial Healthcare Feature) */}
-            <View style={styles.bedsidePinCard}>
-              <View style={styles.bedsidePinHeader}>
-                <Ionicons name="key" size={18} color="#0F5B43" />
-                <Text style={styles.bedsidePinTitle}>Bedside Verification PIN</Text>
-              </View>
-              <View style={styles.pinDigitsRow}>
-                {['4', '8', '2', '9'].map((digit, idx) => (
-                  <View key={idx} style={styles.pinDigitBox}>
-                    <Text style={styles.pinDigitText}>{digit}</Text>
-                  </View>
-                ))}
-              </View>
-              <Text style={styles.bedsidePinHelp}>
-                Share this 4-digit code with {providerName} when they arrive at your home to verify identity.
-              </Text>
-            </View>
-
-            {/* 2. Confirmed Summary Card with Doctor Info */}
-            <TouchableOpacity accessibilityRole="button"
-              style={styles.confirmedSummaryCard}
-              activeOpacity={0.9}
-              onPress={handleViewMyBookings}
-            >
-              {/* Doctor Row */}
-              <View style={styles.confirmedDoctorRow}>
+            {/* Unified Confirmed Card: Image on Top, Details Below, Bedside PIN Inside (Single Card) */}
+            <View style={styles.unifiedConfirmedCard}>
+              {/* Doctor Profile: Image on Top, Details Below */}
+              <View style={styles.confirmedDoctorHero}>
                 <Image
                   source={getProviderAvatar()}
-                  style={styles.confirmedDoctorAvatar}
+                  style={styles.confirmedDoctorAvatarLarge}
                   resizeMode="cover"
                 />
-                <View style={styles.confirmedDoctorCol}>
-                  <Text style={styles.confirmedDoctorName}>{providerName}</Text>
-                  <Text style={styles.confirmedDoctorRole}>{serviceTitle}</Text>
-                  <View style={styles.confirmedBadgeSmall}>
-                    <Text style={styles.confirmedBadgeSmallText}>Assignment pending</Text>
-                  </View>
+                <Text style={styles.confirmedDoctorNameLarge}>{providerName}</Text>
+                <Text style={styles.confirmedDoctorRoleLarge}>{serviceTitle}</Text>
+                <View style={styles.confirmedBadgeSmall}>
+                  <Text style={styles.confirmedBadgeSmallText}>Assignment pending</Text>
                 </View>
+              </View>
+
+              {/* Embedded Bedside Verification PIN Section */}
+              <View style={styles.embeddedBedsidePinBox}>
+                <View style={styles.bedsidePinHeader}>
+                  <Ionicons name="key" size={16} color="#0F5B43" />
+                  <Text style={styles.bedsidePinTitle}>Bedside Verification PIN</Text>
+                </View>
+                <View style={styles.pinDigitsRow}>
+                  {['4', '8', '2', '9'].map((digit, idx) => (
+                    <View key={idx} style={styles.pinDigitBox}>
+                      <Text style={styles.pinDigitText}>{digit}</Text>
+                    </View>
+                  ))}
+                </View>
+                <Text style={styles.bedsidePinHelp}>
+                  Share this 4-digit code with {providerName} when they arrive at your home to verify identity.
+                </Text>
               </View>
 
               <View style={styles.confirmedDivider} />
 
+              {/* Schedule & Location Details */}
               <View style={styles.confirmedInfoRow}>
-                <Ionicons name="calendar-outline" size={19} color="#102820" style={{ marginRight: 12 }} />
-                <View>
+                <View style={styles.confirmedIconWrap}>
+                  <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
+                </View>
+                <View style={{ flex: 1 }}>
                   <Text style={styles.confirmedRowLabel}>Date</Text>
                   <Text style={styles.confirmedInfoValue}>{bookingConfirmedDate}</Text>
                 </View>
@@ -1382,8 +1373,10 @@ export default function BookingScreen() {
               <View style={styles.confirmedDivider} />
 
               <View style={styles.confirmedInfoRow}>
-                <Ionicons name="time-outline" size={19} color="#102820" style={{ marginRight: 12 }} />
-                <View>
+                <View style={styles.confirmedIconWrap}>
+                  <Ionicons name="time-outline" size={18} color="#0F5B43" />
+                </View>
+                <View style={{ flex: 1 }}>
                   <Text style={styles.confirmedRowLabel}>Time Slot</Text>
                   <Text style={styles.confirmedInfoValue}>{bookingConfirmedTime}</Text>
                 </View>
@@ -1392,13 +1385,15 @@ export default function BookingScreen() {
               <View style={styles.confirmedDivider} />
 
               <View style={styles.confirmedInfoRow}>
-                <Ionicons name="location-outline" size={19} color="#102820" style={{ marginRight: 12 }} />
+                <View style={styles.confirmedIconWrap}>
+                  <Ionicons name="location-outline" size={18} color="#0F5B43" />
+                </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.confirmedRowLabel}>Visit Address</Text>
-                  <Text style={[styles.confirmedInfoValue, { flex: 1 }]}>{serviceAddress}</Text>
+                  <Text style={styles.confirmedInfoValue}>{serviceAddress}</Text>
                 </View>
               </View>
-            </TouchableOpacity>
+            </View>
 
             {/* 3. Next Steps Timeline */}
             <View style={styles.nextStepsCard}>
@@ -2675,39 +2670,37 @@ const styles = StyleSheet.create({
   // Booking Confirmed (Step 5 - Image 7)
   // -------------------------------------------------------------
   celebrationContainer: {
-    width: 130,
-    height: 130,
+    width: 80,
+    height: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
-    position: 'relative',
+    marginBottom: 14,
   },
   confettiDash: {
-    position: 'absolute',
-    width: 10,
-    height: 3,
-    borderRadius: 1.5,
+    display: 'none',
   },
   celebrationOuterGlow: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#E4F4EB',
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    backgroundColor: '#E6F4ED',
+    borderWidth: 2,
+    borderColor: '#CEEAD9',
     alignItems: 'center',
     justifyContent: 'center',
   },
   confirmedCheckCircle: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: '#0F5B43',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#0F5B43',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
   },
   confirmedTitle: {
     fontSize: 22,
@@ -2723,9 +2716,73 @@ const styles = StyleSheet.create({
     color: '#64748B',
     textAlign: 'center',
     maxWidth: 290,
-    marginBottom: 24,
+    marginBottom: 20,
     lineHeight: 19,
     fontFamily: Typography.fontFamily.sans,
+  },
+  unifiedConfirmedCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  confirmedDoctorHero: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 4,
+    paddingBottom: 8,
+  },
+  confirmedDoctorAvatarLarge: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    backgroundColor: '#EAF5EE',
+    borderWidth: 3,
+    borderColor: '#EAF6EE',
+    marginBottom: 10,
+  },
+  confirmedDoctorNameLarge: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+    textAlign: 'center',
+  },
+  confirmedDoctorRoleLarge: {
+    fontSize: 13.5,
+    color: '#0F5B43',
+    fontWeight: '600',
+    fontFamily: Typography.fontFamily.sans,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  embeddedBedsidePinBox: {
+    width: '100%',
+    backgroundColor: '#F3F9F6',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#CCE8DA',
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    marginVertical: 12,
+    alignItems: 'center',
+  },
+  confirmedIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: '#EAF5EE',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
   },
   confirmedSummaryCard: {
     width: '100%',
