@@ -43,21 +43,12 @@ export default function ProfileScreen() {
   const patientEmail = user?.email || 'arjun.sharma@example.com';
 
   const handleLogout = () => {
-    Alert.alert(
-      'Sign Out Account',
-      'Are you sure you want to sign out of your Velora Health account? You can log back in anytime.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Sign Out',
-          style: 'destructive',
-          onPress: () => {
-            logout();
-            router.replace('/(auth)/login');
-          },
-        },
-      ]
-    );
+    try {
+      logout();
+    } catch (err) {
+      console.warn('Logout error', err);
+    }
+    router.replace('/(tabs)');
   };
 
   const handleCallSupport = () => {
@@ -351,21 +342,15 @@ export default function ProfileScreen() {
         </View>
 
         {/* ============================================================ */}
-        {/* 5. PREMIUM REDESIGNED LOGOUT BUTTON                           */}
+        {/* 5. SOLID RED PROPER LOGOUT BUTTON                           */}
         {/* ============================================================ */}
         <TouchableOpacity
-          style={styles.improvedLogoutCard}
-          activeOpacity={0.82}
+          style={styles.signOutButton}
+          activeOpacity={0.85}
           onPress={handleLogout}
         >
-          <View style={styles.logoutIconCircle}>
-            <Ionicons name="log-out-outline" size={20} color={Palette.logoutRed} />
-          </View>
-          <View style={styles.logoutTextCol}>
-            <Text style={styles.logoutMainTitle}>Sign Out Account</Text>
-            <Text style={styles.logoutSubtext}>Securely disconnect session from this device</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color="#FDA4AF" />
+          <Ionicons name="log-out-outline" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+          <Text style={styles.signOutButtonText}>Sign Out Account</Text>
         </TouchableOpacity>
 
         <Text style={styles.appVersionText}>Velora Health • Version 1.2.4 (Build 842)</Text>
@@ -725,44 +710,29 @@ const styles = StyleSheet.create({
     marginLeft: 48,
   },
 
-  /* 5. Improved Logout Card */
-  improvedLogoutCard: {
+  /* 5. Solid Red Logout Button */
+  signOutButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Palette.logoutBg,
-    borderRadius: 20,
-    borderWidth: 1.2,
-    borderColor: Palette.logoutBorder,
-    padding: 14,
-    marginTop: 6,
-    marginBottom: 14,
-    ...Shadows.subtle,
-  },
-  logoutIconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFE4E6',
-    alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    backgroundColor: '#DC2626',
+    borderRadius: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 16,
+    shadowColor: '#DC2626',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  logoutTextCol: {
-    flex: 1,
-  },
-  logoutMainTitle: {
+  signOutButtonText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
-    color: Palette.logoutRed,
-    marginBottom: 2,
-  },
-  logoutSubtext: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '400',
-    color: '#E11D48',
-    opacity: 0.8,
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
   appVersionText: {
     fontFamily: Typography.fontFamily.sans,

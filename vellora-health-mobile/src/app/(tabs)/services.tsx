@@ -200,15 +200,14 @@ export default function ServicesScreen() {
                 resizeMode="cover"
               />
 
-              {/* Layer 2: Deep Black Gradient Scrim Overlay */}
-              <View style={styles.darkGradientOverlay} pointerEvents="none" />
+              {/* Layer 2: Soft Gradient Scrim in the bottom text area only */}
               <Svg height="100%" width="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
                 <Defs>
                   <LinearGradient id={`scrim-${svc.id}`} x1="0" y1="0" x2="0" y2="1">
                     <Stop offset="0%" stopColor="#000000" stopOpacity="0.0" />
-                    <Stop offset="30%" stopColor="#000000" stopOpacity="0.25" />
-                    <Stop offset="60%" stopColor="#000000" stopOpacity="0.75" />
-                    <Stop offset="100%" stopColor="#000000" stopOpacity="0.96" />
+                    <Stop offset="52%" stopColor="#000000" stopOpacity="0.0" />
+                    <Stop offset="75%" stopColor="#000000" stopOpacity="0.55" />
+                    <Stop offset="100%" stopColor="#000000" stopOpacity="0.88" />
                   </LinearGradient>
                 </Defs>
                 <Rect x="0" y="0" width="100%" height="100%" fill={`url(#scrim-${svc.id})`} />
@@ -429,20 +428,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     height: '100%',
-  },
-  darkGradientOverlay: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: '75%',
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
-    ...(Platform.OS === 'web'
-      ? ({
-          backgroundImage:
-            'linear-gradient(to top, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.82) 42%, rgba(0, 0, 0, 0.42) 75%, rgba(0, 0, 0, 0) 100%)',
-        } as any)
-      : {}),
   },
   gridCardContent: {
     position: 'relative',
