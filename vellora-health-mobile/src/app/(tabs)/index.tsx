@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useSyncExternalStore, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path, Circle, Rect, G, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../../constants/theme';
 import { useAuth } from '../../context/AuthContext';
-import { getActiveBooking, ACTIVE_IN_TRANSIT_BOOKING } from '../../data/mockData';
+import { getActiveBooking, ACTIVE_IN_TRANSIT_BOOKING, subscribeBookings, getBookingRevision } from '../../data/mockData';
 
 // Vellora Green Redesign Palette (Reference Image 2)
 const Palette = {
@@ -122,10 +122,12 @@ const RECENT_VISIT_DOCTORS: RecentVisitDoctor[] = [
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  useSyncExternalStore(subscribeBookings, getBookingRevision, getBookingRevision);
+  const upcomingBooking = getActiveBooking();
   const [searchQuery, setSearchQuery] = useState('');
-  const [calendarMonth, setCalendarMonth] = useState<number>(4); // 4 = May (0-indexed)
-  const [calendarYear, setCalendarYear] = useState<number>(2025);
-  const [selectedDate, setSelectedDate] = useState<number>(14);
+  const [calendarMonth, setCalendarMonth] = useState<number>(new Date().getMonth()); // 4 = May (0-indexed)
+  const [calendarYear, setCalendarYear] = useState<number>(new Date().getFullYear());
+  const [selectedDate, setSelectedDate] = useState<number>(new Date().getDate());
 
   const handlePrevMonth = () => {
     if (calendarMonth === 0) {
@@ -223,6 +225,11 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <StatusBar style="dark" />
 
+      {/* Ambient Wellness Background Glow Effects */}
+      <View style={styles.ambientGlowTopRight} pointerEvents="none" />
+      <View style={styles.ambientGlowMidLeft} pointerEvents="none" />
+      <View style={styles.ambientGlowBottomRight} pointerEvents="none" />
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -232,7 +239,7 @@ export default function HomeScreen() {
         {/* ============================================================ */}
         <View style={styles.topBrandBar}>
           {/* Brand Logo */}
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.brandContainer}
             activeOpacity={0.8}
             onPress={() => router.push('/(tabs)')}
@@ -247,7 +254,7 @@ export default function HomeScreen() {
           {/* Action Buttons: Notification Bell + Plus Add */}
           <View style={styles.topActionButtons}>
             {/* Bell Notification with unread dot */}
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.bellBtn}
               activeOpacity={0.75}
               onPress={() => router.push('/(tabs)/bookings')}
@@ -257,7 +264,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
 
             {/* Plus Button */}
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.plusBtn}
               activeOpacity={0.75}
               onPress={() => router.push('/services' as any)}
@@ -300,11 +307,11 @@ export default function HomeScreen() {
             style={styles.searchInput}
           />
           {searchQuery.length > 0 ? (
-            <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <TouchableOpacity accessibilityRole="button" onPress={() => setSearchQuery('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
               <Ionicons name="close-circle" size={18} color={Palette.textMuted} />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               onPress={() => router.push('/services/doctor-visit' as any)}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
@@ -325,7 +332,7 @@ export default function HomeScreen() {
                 <Text style={styles.liveIndicatorText}>Today</Text>
               </View>
             </View>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               onPress={() => router.push('/(tabs)/bookings')}
               hitSlop={{ top: 8, bottom: 8, left: 10, right: 10 }}
             >
@@ -333,35 +340,34 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
+          {upcomingBooking && (<TouchableOpacity accessibilityRole="button"
             style={styles.appointmentHeroCard}
             activeOpacity={0.92}
             onPress={() =>
               router.push({
-                pathname: '/booking/bkg-8492',
+                pathname: `/booking/${upcomingBooking.id}`,
                 params: {
                   step: 'details_view',
-                  serviceTitle: 'Cardiology Consultation',
-                  providerName: 'Dr. Priya Nair',
-                  date: 'Wed, 14 May 2025',
-                  time: '11:30 AM - 11:50 AM',
+                  serviceTitle: upcomingBooking.serviceTitle,
+                  providerName: upcomingBooking.assignedClinician?.name || 'Assignment pending',
+                  date: upcomingBooking.scheduledDate,
+                  time: upcomingBooking.scheduledTimeSlot,
                   status: 'Confirmed',
                   address: '#502, Orchid Residency, Koramangala, Bengaluru - 560034',
                 },
               } as any)
             }
           >
-            {/* Top Status & Verification Row */}
+            {/* Top Status & Time Row */}
             <View style={styles.appointmentTopRow}>
               <View style={styles.statusPill}>
                 <View style={styles.statusPulseDot} />
-                <Text style={styles.statusPillText}>Confirmed Doorstep Visit</Text>
+                <Text style={styles.statusPillText}>{upcomingBooking.status}</Text>
               </View>
 
-              <View style={styles.doorstepPinPill}>
-                <Ionicons name="key-outline" size={11.5} color="#A7F3D0" style={{ marginRight: 4 }} />
-                <Text style={styles.doorstepPinLabel}>PIN: </Text>
-                <Text style={styles.doorstepPinCode}>4829</Text>
+              <View style={styles.appointmentTimePill}>
+                <Ionicons name="time" size={12} color="#A7F3D0" style={{ marginRight: 4 }} />
+                <Text style={styles.appointmentTimeText}>{upcomingBooking.scheduledDate} • {upcomingBooking.scheduledTimeSlot}</Text>
               </View>
             </View>
 
@@ -379,34 +385,17 @@ export default function HomeScreen() {
               </View>
 
               <View style={styles.clinicianInfoCol}>
-                <Text style={styles.appointmentServiceTitle}>Cardiology Consultation</Text>
-                <Text style={styles.clinicianNameText}>Dr. Priya Nair</Text>
-                <Text style={styles.clinicianRoleText}>MD, DM • Senior Consultant Cardiologist</Text>
+                <Text style={styles.appointmentServiceTitle}>{upcomingBooking.serviceTitle}</Text>
+                <Text style={styles.clinicianNameText}>Dr. Priya Nair • Senior Cardiologist</Text>
               </View>
             </View>
 
-            {/* Schedule Timing & Address Strip */}
-            <View style={styles.appointmentScheduleBox}>
-              <View style={styles.scheduleItemWrap}>
-                <Ionicons name="calendar" size={13} color="#A7F3D0" style={{ marginRight: 5 }} />
-                <Text style={styles.scheduleBoxText}>Wed, 14 May 2025</Text>
-              </View>
-
-              <View style={styles.scheduleBoxDivider} />
-
-              <View style={styles.scheduleItemWrap}>
-                <Ionicons name="time" size={13} color="#A7F3D0" style={{ marginRight: 5 }} />
-                <Text style={styles.scheduleBoxText}>11:30 AM – 11:50 AM</Text>
-              </View>
-            </View>
-
-            {/* Location & Action CTA Footer */}
+            {/* Clean Footer Row: PIN on left + View Details Button on right */}
             <View style={styles.appointmentFooterRow}>
-              <View style={styles.locationSnippetWrap}>
-                <Ionicons name="location-outline" size={12} color="#D1E7DD" style={{ marginRight: 4 }} />
-                <Text style={styles.locationSnippetText} numberOfLines={1}>
-                  Orchid Residency, Koramangala
-                </Text>
+              <View style={styles.doorstepPinPill}>
+                <Ionicons name="key-outline" size={12} color="#A7F3D0" style={{ marginRight: 5 }} />
+                <Text style={styles.doorstepPinLabel}>Doorstep PIN: </Text>
+                <Text style={styles.doorstepPinCode}>4829</Text>
               </View>
 
               <View style={styles.viewDetailsCtaBtn}>
@@ -414,7 +403,7 @@ export default function HomeScreen() {
                 <Ionicons name="arrow-forward" size={12} color={Palette.primary} style={{ marginLeft: 4 }} />
               </View>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity>)}
         </View>
 
         {/* ============================================================ */}
@@ -423,7 +412,7 @@ export default function HomeScreen() {
         <View style={styles.sectionBlock}>
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionHeading}>My Recent Visit</Text>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               onPress={() => router.push('/(tabs)/bookings')}
               hitSlop={{ top: 8, bottom: 8, left: 10, right: 10 }}
             >
@@ -438,43 +427,64 @@ export default function HomeScreen() {
           >
             {RECENT_VISIT_DOCTORS.map((doc) => (
               <View key={doc.id} style={styles.recentVisitCard}>
-                {/* Top Doctor Image */}
+                {/* Top Doctor Image with ambient overlay badges */}
                 <View style={styles.recentDocImageWrap}>
                   <Image source={doc.image} style={styles.recentDocImage} resizeMode="cover" />
-                </View>
 
-                {/* Doctor Name & Rating */}
-                <View style={styles.recentDocNameRow}>
-                  <Text style={styles.recentDocName} numberOfLines={1}>
-                    {doc.name}
-                  </Text>
-                  <View style={styles.recentDocRatingWrap}>
-                    <Ionicons name="star" size={13} color="#F59E0B" style={{ marginRight: 3 }} />
-                    <Text style={styles.recentDocRating}>{doc.rating}</Text>
+                  {/* Gradient Scrim */}
+                  <View style={styles.recentDocOverlay} />
+
+                  {/* Top Floating Badge: Doorstep Care + Online Status */}
+                  <View style={styles.recentDocBadgeRow}>
+                    <View style={styles.recentDoorstepTag}>
+                      <Ionicons name="medkit" size={10} color="#0F5B43" style={{ marginRight: 3 }} />
+                      <Text style={styles.recentDoorstepTagText}>Doorstep Care</Text>
+                    </View>
+
+                    <View style={styles.recentOnlinePill}>
+                      <View style={styles.recentOnlineDot} />
+                      <Text style={styles.recentOnlineText}>Online</Text>
+                    </View>
+                  </View>
+
+                  {/* Bottom Image Rating Pill */}
+                  <View style={styles.recentDocImageRatingPill}>
+                    <Ionicons name="star" size={11} color="#F59E0B" style={{ marginRight: 3 }} />
+                    <Text style={styles.recentDocImageRatingText}>{doc.rating}</Text>
                   </View>
                 </View>
 
-                {/* Doctor Specialty */}
-                <Text style={styles.recentDocSpecialty} numberOfLines={1}>
-                  {doc.specialty}
+                {/* Doctor Name */}
+                <Text style={styles.recentDocName} numberOfLines={1}>
+                  {doc.name}
                 </Text>
+
+                {/* Doctor Specialty with icon */}
+                <View style={styles.recentDocSpecialtyRow}>
+                  <Ionicons name="fitness-outline" size={12} color="#0F5B43" style={{ marginRight: 4 }} />
+                  <Text style={styles.recentDocSpecialty} numberOfLines={1}>
+                    {doc.specialty}
+                  </Text>
+                </View>
 
                 {/* Schedule Timing (Day & Time) */}
                 <View style={styles.recentDocTimingRow}>
                   <View style={styles.timingItem}>
-                    <Ionicons name="calendar-outline" size={13} color="#64748B" style={{ marginRight: 4 }} />
+                    <Ionicons name="calendar-outline" size={12} color="#64748B" style={{ marginRight: 4 }} />
                     <Text style={styles.timingText}>{doc.day}</Text>
                   </View>
 
+                  <View style={styles.timingDotSeparator} />
+
                   <View style={styles.timingItem}>
-                    <Ionicons name="time-outline" size={13} color="#64748B" style={{ marginRight: 4 }} />
+                    <Ionicons name="time-outline" size={12} color="#64748B" style={{ marginRight: 4 }} />
                     <Text style={styles.timingText}>{doc.time}</Text>
                   </View>
                 </View>
 
-                {/* Action Buttons: Message & Video Call */}
+                {/* Action Buttons: Message & Video Call with icons */}
                 <View style={styles.recentDocActionsRow}>
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     style={styles.recentMessageBtn}
                     activeOpacity={0.8}
                     onPress={() =>
@@ -488,10 +498,11 @@ export default function HomeScreen() {
                       )
                     }
                   >
+                    <Ionicons name="chatbubble-ellipses-outline" size={13} color="#334155" style={{ marginRight: 4 }} />
                     <Text style={styles.recentMessageBtnText}>Message</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     style={styles.recentVideoCallBtn}
                     activeOpacity={0.8}
                     onPress={() =>
@@ -505,6 +516,7 @@ export default function HomeScreen() {
                       )
                     }
                   >
+                    <Ionicons name="videocam" size={13} color="#FFFFFF" style={{ marginRight: 4 }} />
                     <Text style={styles.recentVideoCallBtnText}>Video Call</Text>
                   </TouchableOpacity>
                 </View>
@@ -523,7 +535,7 @@ export default function HomeScreen() {
               <Text style={styles.scheduleHeading}>Schedule</Text>
             </View>
 
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.scheduleMyVisitsBtn}
               activeOpacity={0.78}
               onPress={() => router.push('/(tabs)/bookings')}
@@ -539,7 +551,7 @@ export default function HomeScreen() {
           <View style={styles.calendarCard}>
             {/* Calendar Month Navigation Header */}
             <View style={styles.calendarMonthNav}>
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 onPress={handlePrevMonth}
                 style={styles.calendarNavArrow}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -555,7 +567,7 @@ export default function HomeScreen() {
                 </Text>
               </View>
 
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 onPress={handleNextMonth}
                 style={styles.calendarNavArrow}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -583,7 +595,7 @@ export default function HomeScreen() {
                 const eventType = isCurrentMonth ? CALENDAR_EVENTS[eventKey] : undefined;
 
                 return (
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     key={`cal-${idx}-${cell.day}`}
                     activeOpacity={isCurrentMonth ? 0.75 : 1}
                     disabled={!isCurrentMonth}
@@ -646,6 +658,35 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  /* Ambient Wellness Background Glows */
+  ambientGlowTopRight: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    backgroundColor: 'rgba(15, 91, 67, 0.08)',
+  },
+  ambientGlowMidLeft: {
+    position: 'absolute',
+    top: 340,
+    left: -80,
+    width: 250,
+    height: 250,
+    borderRadius: 125,
+    backgroundColor: 'rgba(52, 211, 153, 0.1)',
+  },
+  ambientGlowBottomRight: {
+    position: 'absolute',
+    bottom: 80,
+    right: -70,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(167, 243, 208, 0.16)',
+  },
+
   safeArea: {
     flex: 1,
     backgroundColor: Palette.bgWarm,
@@ -833,7 +874,9 @@ const styles = StyleSheet.create({
   appointmentHeroCard: {
     borderRadius: 22,
     backgroundColor: Palette.primary,
-    padding: 15,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    marginHorizontal: -4,
     overflow: 'hidden',
     ...Shadows.card,
   },
@@ -848,7 +891,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.16)',
     paddingHorizontal: 9,
-    paddingVertical: 3.5,
+    paddingVertical: 4,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.22)',
@@ -867,12 +910,28 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     letterSpacing: 0.1,
   },
+  appointmentTimePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.18)',
+  },
+  appointmentTimeText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
   doorstepPinPill: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 3.5,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.18)',
@@ -897,26 +956,26 @@ const styles = StyleSheet.create({
     marginBottom: 13,
   },
   clinicianAvatarWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     borderWidth: 2,
     borderColor: '#A7F3D0',
     position: 'relative',
     backgroundColor: '#174F3D',
   },
   clinicianAvatarImg: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
   },
   clinicianVerifiedBadge: {
     position: 'absolute',
     bottom: -1,
     right: -1,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: 15,
+    height: 15,
+    borderRadius: 7.5,
     backgroundColor: '#059669',
     alignItems: 'center',
     justifyContent: 'center',
@@ -928,73 +987,26 @@ const styles = StyleSheet.create({
   },
   appointmentServiceTitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 15.5,
+    fontSize: 15,
     fontWeight: '700',
     color: '#FFFFFF',
     letterSpacing: -0.2,
-    lineHeight: 20,
+    lineHeight: 19,
     marginBottom: 2,
   },
   clinicianNameText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 12.5,
+    fontWeight: '500',
     color: '#A7F3D0',
-    marginBottom: 1,
-  },
-  clinicianRoleText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '400',
-    color: '#D1E7DD',
-  },
-  appointmentScheduleBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.16)',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginBottom: 12,
-  },
-  scheduleItemWrap: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  scheduleBoxText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11.5,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  scheduleBoxDivider: {
-    width: 1,
-    height: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    marginHorizontal: 8,
   },
   appointmentFooterRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 8,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: 'rgba(255, 255, 255, 0.15)',
-  },
-  locationSnippetWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    marginRight: 10,
-  },
-  locationSnippetText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    fontWeight: '400',
-    color: '#D1E7DD',
   },
   viewDetailsCtaBtn: {
     flexDirection: 'row',
@@ -1019,13 +1031,13 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   recentVisitCard: {
-    width: 250,
+    width: 260,
     backgroundColor: Palette.surface,
     borderRadius: 22,
     borderWidth: 1.2,
     borderColor: '#E2E8F0',
     padding: 13,
-    ...Shadows.subtle,
+    ...Shadows.card,
   },
   recentDocImageWrap: {
     width: '100%',
@@ -1034,51 +1046,123 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEF2F6',
     overflow: 'hidden',
     marginBottom: 10,
+    position: 'relative',
   },
   recentDocImage: {
     width: '100%',
     height: '100%',
   },
-  recentDocNameRow: {
+  recentDocOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.06)',
+  },
+  recentDocBadgeRow: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    right: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 2,
+    zIndex: 2,
+  },
+  recentDoorstepTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#D1E7DD',
+  },
+  recentDoorstepTagText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10,
+    fontWeight: '700',
+    color: Palette.primary,
+  },
+  recentOnlinePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
+  },
+  recentOnlineDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#10B981',
+    marginRight: 4,
+  },
+  recentOnlineText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#065F46',
+  },
+  recentDocImageRatingPill: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    paddingHorizontal: 7,
+    paddingVertical: 2.5,
+    borderRadius: 10,
+    zIndex: 2,
+    borderWidth: 1,
+    borderColor: '#FEF3C7',
+  },
+  recentDocImageRatingText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#1E293B',
   },
   recentDocName: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 15,
     fontWeight: '700',
     color: '#0F172A',
-    flex: 1,
-    marginRight: 6,
+    marginBottom: 2,
   },
-  recentDocRatingWrap: {
+  recentDocSpecialtyRow: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  recentDocRating: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
-    fontWeight: '700',
-    color: '#0F172A',
+    marginBottom: 8,
   },
   recentDocSpecialty: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 12,
     fontWeight: '400',
     color: '#64748B',
-    marginBottom: 10,
+    flex: 1,
   },
   recentDocTimingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 8,
     marginBottom: 12,
   },
   timingItem: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  timingDotSeparator: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: '#94A3B8',
   },
   timingText: {
     fontFamily: Typography.fontFamily.sans,
@@ -1095,13 +1179,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#EEF2F6',
+    backgroundColor: '#F1F5F9',
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   recentMessageBtnText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
+    fontSize: 12,
     fontWeight: '600',
     color: '#334155',
   },
@@ -1112,11 +1197,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#2563EB',
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
     ...Shadows.subtle,
   },
   recentVideoCallBtnText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
+    fontSize: 12,
     fontWeight: '600',
     color: '#FFFFFF',
   },

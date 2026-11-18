@@ -18,24 +18,24 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: true,
-        tabBarActiveTintColor: '#0F5B43',
-        tabBarInactiveTintColor: '#7A8B84',
+        tabBarActiveTintColor: '#FFFFFF',
+        tabBarInactiveTintColor: '#A3C6B9',
         tabBarStyle: {
           position: 'absolute',
           bottom: bottomMargin,
           left: 16,
           right: 16,
           height: 66,
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#0F5B43', // Exact forest green from Upcoming Appointment card
           borderRadius: 33,
           borderWidth: 1.2,
-          borderColor: '#DCE9E1',
+          borderColor: 'rgba(255, 255, 255, 0.18)',
           elevation: 16,
           zIndex: 999,
-          shadowColor: '#0F5B43',
-          shadowOffset: { width: 0, height: 6 },
-          shadowOpacity: 0.12,
-          shadowRadius: 16,
+          shadowColor: '#08251C',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.35,
+          shadowRadius: 18,
           paddingTop: 5,
           paddingBottom: 6,
           paddingHorizontal: 10,
@@ -63,7 +63,7 @@ export default function TabLayout() {
               <Ionicons
                 name={focused ? 'home' : 'home-outline'}
                 size={21}
-                color={focused ? '#0F5B43' : '#7A8B84'}
+                color={focused ? '#FFFFFF' : '#A3C6B9'}
               />
             </View>
           ),
@@ -80,7 +80,7 @@ export default function TabLayout() {
               <Ionicons
                 name={focused ? 'calendar' : 'calendar-outline'}
                 size={21}
-                color={focused ? '#0F5B43' : '#7A8B84'}
+                color={focused ? '#FFFFFF' : '#A3C6B9'}
               />
             </View>
           ),
@@ -97,7 +97,7 @@ export default function TabLayout() {
               <Ionicons
                 name={focused ? 'grid' : 'grid-outline'}
                 size={21}
-                color={focused ? '#0F5B43' : '#7A8B84'}
+                color={focused ? '#FFFFFF' : '#A3C6B9'}
               />
             </View>
           ),
@@ -114,7 +114,7 @@ export default function TabLayout() {
               <Ionicons
                 name={focused ? 'person' : 'person-outline'}
                 size={21}
-                color={focused ? '#0F5B43' : '#7A8B84'}
+                color={focused ? '#FFFFFF' : '#A3C6B9'}
               />
             </View>
           ),
@@ -141,6 +141,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
   },
   activeIconPill: {
-    backgroundColor: '#EAF5EE',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
 });

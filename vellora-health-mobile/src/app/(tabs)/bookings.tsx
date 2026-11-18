@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useSyncExternalStore } from 'react';
 import {
   View,
   Text,
@@ -20,7 +20,7 @@ import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Typography, Shadows } from '../../constants/theme';
-import { RECENT_BOOKINGS, REGIONAL_CONFIG } from '../../data/mockData';
+import { RECENT_BOOKINGS, REGIONAL_CONFIG, subscribeBookings, getBookingRevision } from '../../data/mockData';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -76,7 +76,7 @@ const UPCOMING_BOOKINGS: BookingItemDisplay[] = [
     serviceTitle: 'Home Visit Consultation',
     providerName: 'Dr. Arjun Mehta',
     providerSpecialty: 'MD, General Physician • Vellora Care',
-    providerRating: '4.9 (128 visits)',
+    providerRating: 'Demo rating',
     date: 'Wed, 14 May 2025',
     time: '11:00 AM – 11:30 AM',
     status: 'Confirmed',
@@ -123,7 +123,7 @@ const COMPLETED_BOOKINGS: BookingItemDisplay[] = [
     routeId: 'bkg-8104',
     address: 'A-402, Green Valley Apartments, Bangalore - 560068',
     amount: '₹650',
-    paymentStatus: 'Paid Online',
+    paymentStatus: 'Demo history — payment unverified',
   },
   {
     id: 'bkg-4',
@@ -166,6 +166,7 @@ const CANCELLED_BOOKINGS: BookingItemDisplay[] = [
 ];
 
 export default function BookingsScreen() {
+  const revision = useSyncExternalStore(subscribeBookings, getBookingRevision, getBookingRevision);
   const [activeTab, setActiveTab] = useState<FilterTab>('UPCOMING');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -211,46 +212,40 @@ export default function BookingsScreen() {
     });
   };
 
-  const upcomingList = useMemo(() => {
-    const dynamicBookings: BookingItemDisplay[] = RECENT_BOOKINGS.filter(
-      (b) => b.status === 'CONFIRMED' || b.status === 'REQUESTED' || b.status === 'DISPATCHED' || b.status === 'IN_TRANSIT'
-    ).map((b) => ({
+  const bookingItems = useMemo(() => {
+    const dynamicBookings: BookingItemDisplay[] = RECENT_BOOKINGS.map((b) => ({
       id: b.id,
-      bookingRef: `#VEL-2025-${b.id.slice(-4).toUpperCase()}`,
+      bookingRef: b.id,
       serviceCategory: 'Home Visit Service',
       serviceTitle: b.serviceTitle,
-      providerName: b.assignedClinician?.name || 'Dr. Arjun Mehta',
-      providerSpecialty: b.assignedClinician?.title || 'MD, General Physician',
-      providerRating: '4.9 (128 visits)',
+      providerName: b.assignedClinician?.name || 'Assignment pending',
+      providerSpecialty: b.assignedClinician?.title || 'Demo service request',
+      providerRating: b.assignedClinician ? String(b.assignedClinician.rating) : 'Not assigned',
       date: b.scheduledDate,
       time: b.scheduledTimeSlot,
-      status: 'Confirmed',
+      status: b.status === 'CANCELLED' ? 'Cancelled' : b.status === 'COMPLETED' ? 'Completed' : b.status === 'REQUESTED' ? 'Scheduled' : 'Confirmed',
       avatar: b.assignedClinician?.avatar || require('../../../assets/images/doctor-rohan.png'),
       routeId: b.id,
       address: b.address,
       amount: `₹${b.totalPrice.toLocaleString('en-IN')}`,
-      paymentStatus: 'Paid Online',
+      paymentStatus: b.paymentMethod || 'Demo — payment unverified',
       securityPin: b.securityPin || '4829',
     }));
 
-    const existingIds = new Set(dynamicBookings.map((b) => b.id));
-    const defaults = UPCOMING_BOOKINGS.filter(
-      (b) => !existingIds.has(b.id) && !(b.routeId && existingIds.has(b.routeId))
-    );
-    return [...dynamicBookings, ...defaults];
-  }, []);
+    return dynamicBookings;
+  }, [revision]);
 
   const getBookingsList = () => {
     let list: BookingItemDisplay[] = [];
     switch (activeTab) {
       case 'UPCOMING':
-        list = upcomingList;
+        list = bookingItems.filter(b => b.status !== 'Cancelled' && b.status !== 'Completed');
         break;
       case 'COMPLETED':
-        list = COMPLETED_BOOKINGS;
+        list = [...bookingItems.filter(b => b.status === 'Completed')];
         break;
       case 'CANCELLED':
-        list = CANCELLED_BOOKINGS;
+        list = [...bookingItems.filter(b => b.status === 'Cancelled')];
         break;
     }
 
@@ -293,7 +288,7 @@ export default function BookingsScreen() {
   };
 
   const handleDownloadPrescription = (ref: string) => {
-    Alert.alert('Prescription Ready', `Digital e-Prescription for booking ${ref} has been saved to your health records.`, [
+    Alert.alert('Prescription Ready', `Demo record for ${ref}. Prescription export requires a live document service.`, [
       { text: 'View Records', onPress: () => router.push('/(tabs)/records') },
       { text: 'OK', style: 'default' },
     ]);
@@ -305,6 +300,10 @@ export default function BookingsScreen() {
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <StatusBar style="dark" />
 
+      {/* Ambient Background Glow Orbs */}
+      <View style={styles.ambientGlowTopRight} pointerEvents="none" />
+      <View style={styles.ambientGlowMidLeft} pointerEvents="none" />
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -313,7 +312,7 @@ export default function BookingsScreen() {
         {/* 1. TOP BRAND BAR (Logo + Notifications + Add Visit)          */}
         {/* ============================================================ */}
         <View style={styles.topBrandBar}>
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.brandContainer}
             activeOpacity={0.8}
             onPress={() => router.push('/(tabs)')}
@@ -326,7 +325,7 @@ export default function BookingsScreen() {
           </TouchableOpacity>
 
           <View style={styles.topActionButtons}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.bellBtn}
               activeOpacity={0.75}
               onPress={() => Alert.alert('Notifications', 'All your upcoming home visit reminders are active.')}
@@ -336,7 +335,7 @@ export default function BookingsScreen() {
               <View style={styles.bellBadgeDot} />
             </TouchableOpacity>
 
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.plusBtn}
               activeOpacity={0.75}
               onPress={() => router.push('/(tabs)/services')}
@@ -371,7 +370,7 @@ export default function BookingsScreen() {
         {/* 3. SEGMENTED FILTER TABS: Upcoming | Completed | Cancelled   */}
         {/* ============================================================ */}
         <View style={styles.segmentedContainer}>
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={[
               styles.segmentPill,
               activeTab === 'UPCOMING' && styles.segmentPillActive,
@@ -389,7 +388,7 @@ export default function BookingsScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={[
               styles.segmentPill,
               activeTab === 'COMPLETED' && styles.segmentPillActive,
@@ -407,7 +406,7 @@ export default function BookingsScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={[
               styles.segmentPill,
               activeTab === 'CANCELLED' && styles.segmentPillActive,
@@ -444,7 +443,7 @@ export default function BookingsScreen() {
                   : `No ${activeTab.toLowerCase()} bookings found in your history.`}
               </Text>
               {searchQuery ? (
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   style={styles.clearSearchBtn}
                   onPress={() => setSearchQuery('')}
                   activeOpacity={0.8}
@@ -455,11 +454,9 @@ export default function BookingsScreen() {
             </View>
           ) : (
             bookings.map((item) => (
-              <TouchableOpacity
+              <View
                 key={item.id}
                 style={styles.bookingCard}
-                activeOpacity={0.92}
-                onPress={() => openDetailsModal(item)}
               >
                 {/* --- Top Card Header: Ref & Status Badge --- */}
                 <View style={styles.cardHeaderRow}>
@@ -527,7 +524,11 @@ export default function BookingsScreen() {
                 </View>
 
                 {/* --- Clinician / Service Profile Row --- */}
-                <View style={styles.clinicianProfileRow}>
+                <TouchableOpacity
+                  style={styles.clinicianProfileRow}
+                  activeOpacity={0.8}
+                  onPress={() => openDetailsModal(item)}
+                >
                   <View style={styles.avatarContainer}>
                     <Image
                       source={item.avatar}
@@ -548,7 +549,7 @@ export default function BookingsScreen() {
                   </View>
 
                   <Ionicons name="chevron-forward" size={18} color="#9DB0A7" style={{ marginLeft: 6 }} />
-                </View>
+                </TouchableOpacity>
 
                 {/* --- Essential Schedule Pill (Compact & Clean) --- */}
                 <View style={styles.compactScheduleRow}>
@@ -563,7 +564,7 @@ export default function BookingsScreen() {
                   </View>
                 </View>
 
-                {/* --- Bottom Card Action: Single "View Details →" (Refined Mint Secondary CTA) --- */}
+                {/* --- Bottom Card Action: Single "View Details →" --- */}
                 <View style={styles.cardActionsRow}>
                   <TouchableOpacity
                     style={styles.actionBtnPrimary}
@@ -574,7 +575,7 @@ export default function BookingsScreen() {
                     <Ionicons name="arrow-forward" size={14} color={Palette.primary} style={{ marginLeft: 6 }} />
                   </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
+              </View>
             ))
           )}
         </View>
@@ -582,7 +583,7 @@ export default function BookingsScreen() {
         {/* ============================================================ */}
         {/* 6. "+ Book a New Service" PROMINENT CTA BUTTON               */}
         {/* ============================================================ */}
-        <TouchableOpacity
+        <TouchableOpacity accessibilityRole="button"
           style={styles.bookNewServiceBtn}
           activeOpacity={0.88}
           onPress={() => router.push('/(tabs)/services')}
@@ -611,7 +612,7 @@ export default function BookingsScreen() {
           </View>
 
           <View style={styles.supportActionsRow}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.supportCallBtn}
               activeOpacity={0.8}
               onPress={handleCallSupport}
@@ -620,7 +621,7 @@ export default function BookingsScreen() {
               <Text style={styles.supportCallBtnText}>Call Care Desk</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.supportFaqBtn}
               activeOpacity={0.8}
               onPress={() => router.push('/(tabs)/account')}
@@ -680,7 +681,7 @@ export default function BookingsScreen() {
                 </Text>
               </View>
 
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 onPress={closeDetailsModal}
                 style={styles.modalCloseCircle}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -913,7 +914,7 @@ export default function BookingsScreen() {
                   <View style={styles.modalActionsContainer}>
                     {activeTab === 'UPCOMING' ? (
                       <>
-                        <TouchableOpacity
+                        <TouchableOpacity accessibilityRole="button"
                           style={styles.modalRescheduleBtn}
                           activeOpacity={0.8}
                           onPress={() => {
@@ -936,7 +937,7 @@ export default function BookingsScreen() {
                           <Text style={styles.modalRescheduleBtnText}>Reschedule Visit</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
+                        <TouchableOpacity accessibilityRole="button"
                           style={styles.modalSupportBtn}
                           activeOpacity={0.8}
                           onPress={handleCallSupport}
@@ -947,7 +948,7 @@ export default function BookingsScreen() {
                       </>
                     ) : activeTab === 'COMPLETED' ? (
                       <>
-                        <TouchableOpacity
+                        <TouchableOpacity accessibilityRole="button"
                           style={styles.modalRescheduleBtn}
                           activeOpacity={0.8}
                           onPress={() => {
@@ -959,7 +960,7 @@ export default function BookingsScreen() {
                           <Text style={styles.modalRescheduleBtnText}>Download Prescription</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
+                        <TouchableOpacity accessibilityRole="button"
                           style={styles.modalSupportBtn}
                           activeOpacity={0.8}
                           onPress={() => {
@@ -973,7 +974,7 @@ export default function BookingsScreen() {
                       </>
                     ) : (
                       <>
-                        <TouchableOpacity
+                        <TouchableOpacity accessibilityRole="button"
                           style={styles.modalRescheduleBtn}
                           activeOpacity={0.8}
                           onPress={handleCallSupport}
@@ -982,7 +983,7 @@ export default function BookingsScreen() {
                           <Text style={styles.modalRescheduleBtnText}>Refund Support</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
+                        <TouchableOpacity accessibilityRole="button"
                           style={styles.modalSupportBtn}
                           activeOpacity={0.8}
                           onPress={() => {
@@ -1007,6 +1008,25 @@ export default function BookingsScreen() {
 }
 
 const styles = StyleSheet.create({
+  ambientGlowTopRight: {
+    position: 'absolute',
+    top: -40,
+    right: -50,
+    width: 260,
+    height: 260,
+    borderRadius: 130,
+    backgroundColor: 'rgba(15, 91, 67, 0.08)',
+  },
+  ambientGlowMidLeft: {
+    position: 'absolute',
+    top: 360,
+    left: -70,
+    width: 240,
+    height: 240,
+    borderRadius: 120,
+    backgroundColor: 'rgba(52, 211, 153, 0.1)',
+  },
+
   safeArea: {
     flex: 1,
     backgroundColor: Palette.bgWarm,
@@ -1145,12 +1165,16 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   bookingCard: {
-    backgroundColor: Palette.surface,
-    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
     borderWidth: 1.2,
-    borderColor: Palette.border,
+    borderColor: '#D8ECE0',
     padding: 16,
-    ...Shadows.subtle,
+    shadowColor: '#0F5B43',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 14,
+    elevation: 3,
   },
 
   /* Card Top Row */
@@ -1275,11 +1299,11 @@ const styles = StyleSheet.create({
 
   /* Info Box */
   infoBox: {
-    backgroundColor: Palette.boxBg,
-    borderRadius: 12,
+    backgroundColor: '#F3F9F6',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E3EFE8',
-    padding: 10,
+    borderColor: '#D8ECE0',
+    padding: 11,
     marginBottom: 14,
     gap: 6,
   },
