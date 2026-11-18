@@ -710,21 +710,21 @@ const styles = StyleSheet.create({
     marginLeft: 48,
   },
 
-  /* 5. Solid Red Logout Button */
+  /* 5. Darker Reddish Rounded Logout Button */
   signOutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#DC2626',
-    borderRadius: 16,
+    backgroundColor: '#991B1B',
+    borderRadius: 26,
     paddingVertical: 14,
-    paddingHorizontal: 20,
+    paddingHorizontal: 22,
     marginTop: 10,
     marginBottom: 16,
-    shadowColor: '#DC2626',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    shadowColor: '#450A0A',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
     elevation: 3,
   },
   signOutButtonText: {
