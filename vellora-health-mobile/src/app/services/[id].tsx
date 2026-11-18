@@ -641,8 +641,19 @@ export default function ServiceDetailScreen() {
             onPress={() => setSelectedItem(null)}
           />
           <View style={styles.modalSheet} onStartShouldSetResponder={() => true}>
-            {/* Modal Drag Handle */}
-            <View style={styles.modalDragHandle} />
+            {/* Modal Drag Handle & Top Close Button */}
+            <View style={styles.modalHeaderTopBar}>
+              <View style={styles.modalDragHandle} />
+              <TouchableOpacity
+                style={styles.modalCloseCircle}
+                onPress={() => setSelectedItem(null)}
+                activeOpacity={0.7}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                accessibilityLabel="Close dialog"
+              >
+                <Ionicons name="close" size={18} color="#64748B" />
+              </TouchableOpacity>
+            </View>
 
             {selectedItem && (
               <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.modalScrollContent}>
@@ -662,11 +673,6 @@ export default function ServiceDetailScreen() {
                       <Ionicons name="star" size={14} color="#F59E0B" />
                       <Text style={styles.modalRatingScore}>{selectedItem.rating.toFixed(1)}</Text>
                       <Text style={styles.modalReviewsCount}>({selectedItem.reviewsCount.toLocaleString()} reviews)</Text>
-                    </View>
-
-                    <View style={styles.modalAvailableBadge}>
-                      <Ionicons name="calendar-outline" size={12} color={Palette.emerald} style={{ marginRight: 4 }} />
-                      <Text style={styles.modalAvailableText}>Available Today</Text>
                     </View>
                   </View>
                 </View>
@@ -1041,34 +1047,53 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'ios' ? 34 : 20,
     ...Shadows.card,
   },
+  modalHeaderTopBar: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 12,
+    paddingBottom: 6,
+  },
   modalDragHandle: {
-    width: 40,
+    width: 42,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#D1D5DB',
+    backgroundColor: '#CBD5E1',
     alignSelf: 'center',
-    marginTop: 12,
-    marginBottom: 8,
+  },
+  modalCloseCircle: {
+    position: 'absolute',
+    right: 18,
+    top: 6,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#F1F5F9',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   modalScrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 20,
+    paddingTop: 6,
+    paddingBottom: 24,
   },
   modalHeaderCard: {
     flexDirection: 'row',
-    backgroundColor: Palette.bgWarm,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 14,
     borderWidth: 1.2,
-    borderColor: Palette.border,
+    borderColor: '#E2E8F0',
     marginBottom: 16,
     gap: 14,
+    ...Shadows.subtle,
   },
   modalDoctorAvatar: {
-    width: 70,
-    height: 70,
-    borderRadius: 20,
+    width: 95,
+    height: 105,
+    borderRadius: 18,
+    backgroundColor: '#F1F5F9',
   },
   modalDoctorInfo: {
     flex: 1,
@@ -1076,71 +1101,56 @@ const styles = StyleSheet.create({
   },
   modalDoctorName: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '700',
     color: Palette.textDark,
+    letterSpacing: -0.2,
   },
   modalDoctorSpecialty: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
+    fontSize: 13,
     color: Palette.primary,
-    fontWeight: '500',
-    marginTop: 1,
+    fontWeight: '600',
+    marginTop: 2,
   },
   modalDoctorExp: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
+    fontSize: 12,
     color: Palette.textMuted,
-    marginTop: 2,
+    marginTop: 3,
   },
   modalRatingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    marginTop: 4,
+    gap: 5,
+    marginTop: 6,
   },
   modalRatingScore: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '700',
     color: Palette.textDark,
   },
   modalReviewsCount: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
+    fontSize: 11.5,
     color: Palette.textMuted,
   },
-  modalAvailableBadge: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Palette.emeraldLight,
-    paddingVertical: 3,
-    paddingHorizontal: 8,
-    borderRadius: 10,
-    marginTop: 6,
-  },
-  modalAvailableText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
-    fontWeight: '600',
-    color: Palette.emerald,
-  },
   modalSection: {
-    marginBottom: 14,
+    marginBottom: 16,
   },
   modalSectionTitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 14.5,
+    fontWeight: '700',
     color: Palette.textDark,
     marginBottom: 6,
   },
   modalAboutText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
+    fontSize: 13,
     color: '#4A5B53',
-    lineHeight: 18,
+    lineHeight: 18.5,
   },
   modalTwoColRow: {
     flexDirection: 'row',
@@ -1149,22 +1159,23 @@ const styles = StyleSheet.create({
   },
   modalColBox: {
     flex: 1,
-    backgroundColor: Palette.bgWarm,
+    backgroundColor: '#F8FAF7',
     borderRadius: 16,
     borderWidth: 1.2,
-    borderColor: Palette.border,
+    borderColor: '#E8ECE6',
     padding: 12,
   },
   modalBoxTitle: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 11,
+    fontWeight: '600',
     color: Palette.textMuted,
     marginBottom: 2,
   },
   modalBoxValue: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12,
-    fontWeight: '500',
+    fontSize: 12.5,
+    fontWeight: '600',
     color: Palette.textDark,
     lineHeight: 16,
   },
@@ -1172,45 +1183,46 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: Palette.mint,
+    backgroundColor: '#EAF5EE',
     borderRadius: 16,
     borderWidth: 1.2,
-    borderColor: '#D4E7DC',
-    padding: 14,
+    borderColor: '#CDE5D7',
+    padding: 15,
     marginBottom: 18,
   },
   modalPricingLabel: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 13.5,
+    fontWeight: '700',
     color: Palette.textDark,
   },
   modalPricingSubtext: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 11,
-    color: Palette.textMuted,
+    color: '#556A61',
     marginTop: 2,
   },
   modalPriceText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     color: Palette.primary,
   },
   modalBookBtn: {
-    height: 50,
-    borderRadius: 25,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: Palette.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
     ...Shadows.subtle,
   },
   modalBookBtnText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14.5,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '700',
     color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
   modalCloseBtn: {
     paddingVertical: 10,
@@ -1219,7 +1231,7 @@ const styles = StyleSheet.create({
   modalCloseBtnText: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13,
-    fontWeight: '500',
-    color: Palette.textMuted,
+    fontWeight: '600',
+    color: '#64748B',
   },
 });
