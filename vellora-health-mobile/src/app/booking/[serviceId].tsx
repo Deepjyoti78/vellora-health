@@ -1290,157 +1290,120 @@ export default function BookingScreen() {
       )}
 
       {/* ========================================================================= */}
-      {/* 5. BOOKING CONFIRMED! SCREEN (Enhanced UI/UX)                             */}
+      {/* 5. BOOKING CONFIRMED! SCREEN (Single Unified Rounded Card)                */}
       {/* ========================================================================= */}
       {currentStep === 'confirmed' && (
         <View style={styles.screenContainer}>
           <ScrollView
-            contentContainerStyle={[styles.scrollContent, { alignItems: 'center', paddingTop: 24, paddingBottom: 40 }]}
+            contentContainerStyle={styles.confirmedScrollContent}
             showsVerticalScrollIndicator={false}
           >
-            {/* Celebration Icon with Clean Ring (No Confetti Glitches) */}
-            <View style={styles.celebrationContainer}>
-              <View style={styles.celebrationOuterGlow}>
-                <View style={styles.confirmedCheckCircle}>
-                  <Ionicons name="checkmark" size={30} color="#FFFFFF" />
-                </View>
-              </View>
-            </View>
-
-            <Text style={styles.confirmedTitle}>Demo Request Saved</Text>
-            <Text style={styles.confirmedSubtitle}>
-              Your demo request has been saved for this session. No payment was taken.
-            </Text>
-
-            {/* Booking Reference Pill */}
-            <TouchableOpacity accessibilityRole="button"
-              style={styles.bookingRefPill}
-              activeOpacity={0.85}
-              onPress={handleViewMyBookings}
-            >
-              <Text style={styles.bookingRefLabel}>Booking Reference:</Text>
-              <Text style={styles.bookingRefCode}>{bookingReference}</Text>
-              <Ionicons name="copy-outline" size={15} color="#0F5B43" />
-            </TouchableOpacity>
-
-            {/* Unified Confirmed Card: Image on Top, Details Below, Bedside PIN Inside (Single Card) */}
+            {/* Single Unified Card: Hero Image on Top, Details & Actions Below */}
             <View style={styles.unifiedConfirmedCard}>
-              {/* Doctor Profile: Image on Top, Details Below */}
-              <View style={styles.confirmedDoctorHero}>
+              {/* Doctor Photographic Hero Banner */}
+              <View style={styles.confirmedHeroImageWrapper}>
                 <Image
                   source={getProviderAvatar()}
-                  style={styles.confirmedDoctorAvatarLarge}
+                  style={styles.confirmedHeroImage}
                   resizeMode="cover"
                 />
+              </View>
+
+              {/* Card Body */}
+              <View style={styles.confirmedCardBody}>
+                {/* Doctor Name & Specialty */}
                 <Text style={styles.confirmedDoctorNameLarge}>{providerName}</Text>
                 <Text style={styles.confirmedDoctorRoleLarge}>{serviceTitle}</Text>
+
+                {/* Booking Reference Pill */}
+                <View style={styles.confirmedRefBadge}>
+                  <Text style={styles.confirmedRefLabel}>Booking Reference</Text>
+                  <View style={styles.confirmedRefVerticalDivider} />
+                  <Text style={styles.confirmedRefCode}>{bookingReference}</Text>
+                </View>
+
+                {/* Status Badge */}
                 <View style={styles.confirmedBadgeSmall}>
                   <Text style={styles.confirmedBadgeSmallText}>Assignment pending</Text>
                 </View>
-              </View>
 
-              {/* Embedded Bedside Verification PIN Section */}
-              <View style={styles.embeddedBedsidePinBox}>
-                <View style={styles.bedsidePinHeader}>
-                  <Ionicons name="key" size={16} color="#0F5B43" />
-                  <Text style={styles.bedsidePinTitle}>Bedside Verification PIN</Text>
+                {/* Embedded Bedside Verification PIN Section */}
+                <View style={styles.embeddedBedsidePinBox}>
+                  <View style={styles.bedsidePinHeader}>
+                    <Ionicons name="lock-closed-outline" size={18} color="#0F5B43" />
+                    <View style={styles.bedsidePinHeaderDivider} />
+                    <Text style={styles.bedsidePinTitle}>Bedside Verification PIN</Text>
+                  </View>
+                  <View style={styles.pinDigitsRow}>
+                    {['4', '8', '2', '9'].map((digit, idx) => (
+                      <View key={idx} style={styles.pinDigitBox}>
+                        <Text style={styles.pinDigitText}>{digit}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
-                <View style={styles.pinDigitsRow}>
-                  {['4', '8', '2', '9'].map((digit, idx) => (
-                    <View key={idx} style={styles.pinDigitBox}>
-                      <Text style={styles.pinDigitText}>{digit}</Text>
+
+                {/* Schedule & Location Details */}
+                <View style={styles.confirmedInfoSection}>
+                  {/* Date */}
+                  <View style={styles.confirmedInfoRow}>
+                    <View style={styles.confirmedIconWrap}>
+                      <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
                     </View>
-                  ))}
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.confirmedRowLabel}>Date</Text>
+                      <Text style={styles.confirmedInfoValue}>{bookingConfirmedDate}</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.confirmedDivider} />
+
+                  {/* Time Slot */}
+                  <View style={styles.confirmedInfoRow}>
+                    <View style={styles.confirmedIconWrap}>
+                      <Ionicons name="time-outline" size={18} color="#0F5B43" />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.confirmedRowLabel}>Time Slot</Text>
+                      <Text style={styles.confirmedInfoValue}>{bookingConfirmedTime}</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.confirmedDivider} />
+
+                  {/* Visit Address */}
+                  <View style={styles.confirmedInfoRow}>
+                    <View style={styles.confirmedIconWrap}>
+                      <Ionicons name="location-outline" size={18} color="#0F5B43" />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.confirmedRowLabel}>Visit Address</Text>
+                      <Text style={styles.confirmedInfoValue}>{serviceAddress}</Text>
+                    </View>
+                  </View>
                 </View>
-                <Text style={styles.bedsidePinHelp}>
-                  Share this 4-digit code with {providerName} when they arrive at your home to verify identity.
-                </Text>
-              </View>
 
-              <View style={styles.confirmedDivider} />
+                {/* Action Buttons: View My Bookings & Book Another Service */}
+                <View style={styles.confirmedActionsWrap}>
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    style={styles.primaryActionButton}
+                    onPress={handleViewMyBookings}
+                    activeOpacity={0.88}
+                  >
+                    <Text style={styles.primaryActionButtonText}>View My Bookings</Text>
+                  </TouchableOpacity>
 
-              {/* Schedule & Location Details */}
-              <View style={styles.confirmedInfoRow}>
-                <View style={styles.confirmedIconWrap}>
-                  <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.confirmedRowLabel}>Date</Text>
-                  <Text style={styles.confirmedInfoValue}>{bookingConfirmedDate}</Text>
-                </View>
-              </View>
-
-              <View style={styles.confirmedDivider} />
-
-              <View style={styles.confirmedInfoRow}>
-                <View style={styles.confirmedIconWrap}>
-                  <Ionicons name="time-outline" size={18} color="#0F5B43" />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.confirmedRowLabel}>Time Slot</Text>
-                  <Text style={styles.confirmedInfoValue}>{bookingConfirmedTime}</Text>
-                </View>
-              </View>
-
-              <View style={styles.confirmedDivider} />
-
-              <View style={styles.confirmedInfoRow}>
-                <View style={styles.confirmedIconWrap}>
-                  <Ionicons name="location-outline" size={18} color="#0F5B43" />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.confirmedRowLabel}>Visit Address</Text>
-                  <Text style={styles.confirmedInfoValue}>{serviceAddress}</Text>
-                </View>
-              </View>
-            </View>
-
-            {/* 3. Next Steps Timeline */}
-            <View style={styles.nextStepsCard}>
-              <Text style={styles.nextStepsHeading}>What happens next?</Text>
-
-              <View style={styles.timelineItem}>
-                <View style={styles.timelineDotActive} />
-                <View style={styles.timelineTextCol}>
-                  <Text style={styles.timelineTitle}>1. Confirmation SMS & Email</Text>
-                  <Text style={styles.timelineSub}>Demo request saved locally for this session.</Text>
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    style={styles.secondaryActionButton}
+                    onPress={handleBookAnotherService}
+                    activeOpacity={0.85}
+                  >
+                    <Text style={styles.secondaryActionButtonText}>Book Another Service</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-
-              <View style={styles.timelineItem}>
-                <View style={styles.timelineDot} />
-                <View style={styles.timelineTextCol}>
-                  <Text style={styles.timelineTitle}>2. Doctor Pre-Visit Call</Text>
-                  <Text style={styles.timelineSub}>Clinician contact requires a live service.</Text>
-                </View>
-              </View>
-
-              <View style={styles.timelineItem}>
-                <View style={styles.timelineDot} />
-                <View style={styles.timelineTextCol}>
-                  <Text style={styles.timelineTitle}>3. Home Consultation</Text>
-                  <Text style={styles.timelineSub}>Comprehensive checkup, prescription & guidance.</Text>
-                </View>
-              </View>
-            </View>
-
-            {/* 4. Action Buttons */}
-            <View style={styles.confirmedActionsWrap}>
-              <TouchableOpacity accessibilityRole="button"
-                style={styles.primaryActionButton}
-                onPress={handleViewMyBookings}
-                activeOpacity={0.88}
-              >
-                <Text style={styles.primaryActionButtonText}>View My Bookings</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity accessibilityRole="button"
-                style={styles.secondaryLinkButton}
-                onPress={handleBookAnotherService}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.secondaryLinkButtonText}>Book Another Service</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
@@ -2720,66 +2683,145 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     fontFamily: Typography.fontFamily.sans,
   },
+  confirmedScrollContent: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 40,
+    alignItems: 'center',
+  },
   unifiedConfirmedCard: {
     width: '100%',
+    maxWidth: 420,
     backgroundColor: '#FFFFFF',
-    borderRadius: 22,
+    borderRadius: 24,
     borderWidth: 1.2,
     borderColor: '#DCE9E1',
-    padding: 16,
-    marginBottom: 20,
+    overflow: 'hidden',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 14,
+    elevation: 4,
+    marginBottom: 20,
   },
-  confirmedDoctorHero: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 4,
-    paddingBottom: 8,
-  },
-  confirmedDoctorAvatarLarge: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
+  confirmedHeroImageWrapper: {
+    width: '100%',
+    height: 215,
     backgroundColor: '#EAF5EE',
-    borderWidth: 3,
-    borderColor: '#EAF6EE',
-    marginBottom: 10,
+  },
+  confirmedHeroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  confirmedCardBody: {
+    padding: 18,
   },
   confirmedDoctorNameLarge: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '700',
-    color: '#102820',
+    color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
-    textAlign: 'center',
+    letterSpacing: -0.3,
+    marginBottom: 2,
   },
   confirmedDoctorRoleLarge: {
     fontSize: 13.5,
-    color: '#0F5B43',
-    fontWeight: '600',
+    color: '#475569',
+    fontWeight: '500',
     fontFamily: Typography.fontFamily.sans,
-    textAlign: 'center',
-    marginTop: 2,
+    marginBottom: 12,
+  },
+  confirmedRefBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F8F5',
+    borderWidth: 1,
+    borderColor: '#D4EBE0',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 10,
+  },
+  confirmedRefLabel: {
+    fontSize: 12.5,
+    fontWeight: '500',
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  confirmedRefVerticalDivider: {
+    width: 1,
+    height: 14,
+    backgroundColor: '#CBD5E1',
+    marginHorizontal: 10,
+  },
+  confirmedRefCode: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+    flex: 1,
   },
   embeddedBedsidePinBox: {
     width: '100%',
-    backgroundColor: '#F3F9F6',
+    backgroundColor: '#F7FCF9',
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#CCE8DA',
+    borderWidth: 1.2,
+    borderColor: '#D1E7DD',
     paddingVertical: 14,
-    paddingHorizontal: 12,
-    marginVertical: 12,
+    paddingHorizontal: 14,
+    marginBottom: 16,
+  },
+  bedsidePinHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 10,
+  },
+  bedsidePinHeaderDivider: {
+    width: 1,
+    height: 14,
+    backgroundColor: '#CBD5E1',
+    marginHorizontal: 8,
+  },
+  bedsidePinTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  pinDigitsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  pinDigitBox: {
+    flex: 1,
+    height: 48,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1.2,
+    borderColor: '#94A3B8',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  pinDigitText: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  confirmedInfoSection: {
+    marginBottom: 18,
   },
   confirmedIconWrap: {
-    width: 32,
-    height: 32,
+    width: 36,
+    height: 36,
     borderRadius: 10,
-    backgroundColor: '#EAF5EE',
+    backgroundColor: '#EAF6ED',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -2796,13 +2838,13 @@ const styles = StyleSheet.create({
   confirmedInfoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   confirmedInfoValue: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: 13.5,
+    fontWeight: '700',
     color: '#102820',
-    lineHeight: 19,
+    lineHeight: 18,
     fontFamily: Typography.fontFamily.sans,
   },
   confirmedDivider: {
@@ -2812,16 +2854,21 @@ const styles = StyleSheet.create({
   },
   confirmedActionsWrap: {
     width: '100%',
-    gap: 12,
+    gap: 10,
+    marginTop: 4,
   },
-  secondaryLinkButton: {
-    paddingVertical: 12,
+  secondaryActionButton: {
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: '#EAF5EE',
+    borderWidth: 1.2,
+    borderColor: '#0F5B43',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  secondaryLinkButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
+  secondaryActionButtonText: {
+    fontSize: 14.5,
+    fontWeight: '700',
     color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
   },
@@ -4086,62 +4133,7 @@ const styles = StyleSheet.create({
     color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
   },
-  bedsidePinCard: {
-    width: '100%',
-    backgroundColor: '#EAF5EE',
-    borderRadius: 20,
-    borderWidth: 1.2,
-    borderColor: '#CCE4D5',
-    padding: 18,
-    marginBottom: 16,
-    alignItems: 'center',
-  },
-  bedsidePinHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 12,
-  },
-  bedsidePinTitle: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#0F5B43',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  pinDigitsRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 12,
-  },
-  pinDigitBox: {
-    width: 44,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.5,
-    borderColor: '#0F5B43',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#0F5B43',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  pinDigitText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#0F5B43',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  bedsidePinHelp: {
-    fontSize: 11.5,
-    color: '#4B6358',
-    textAlign: 'center',
-    fontFamily: Typography.fontFamily.sans,
-    lineHeight: 16,
-    maxWidth: 290,
-  },
+
   confirmedDoctorRow: {
     flexDirection: 'row',
     alignItems: 'center',
