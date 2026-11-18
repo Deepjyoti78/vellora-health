@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Typography } from '../../constants/theme';
@@ -25,7 +25,7 @@ export default function TabLayout() {
           bottom: bottomMargin,
           left: 18,
           right: 18,
-          height: 56, // Sleek, compact navbar height
+          height: 56, // Sleek, compact navbar height - strictly maintained
           backgroundColor: '#0F5B43', // Dark forest green
           borderRadius: 28,
           borderWidth: 1.2,
@@ -46,15 +46,6 @@ export default function TabLayout() {
           alignItems: 'center',
           paddingVertical: 0,
         },
-        tabBarLabelStyle: {
-          fontFamily: Typography.fontFamily.sans,
-          fontSize: 10,
-          fontWeight: '600',
-          marginTop: 1,
-          marginBottom: 0,
-          lineHeight: 12,
-          letterSpacing: 0.1,
-        },
       }}
     >
       {/* 1. Home Tab */}
@@ -62,11 +53,22 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
+          tabBarLabel: ({ focused, color }) => (
+            <Text
+              style={[
+                styles.tabLabel,
+                { color },
+                focused ? styles.tabLabelActive : styles.tabLabelInactive,
+              ]}
+            >
+              Home
+            </Text>
+          ),
           tabBarIcon: ({ focused }) => (
             <View style={[styles.iconWrapper, focused && styles.activeIconPill]}>
               <Ionicons
                 name={focused ? 'home' : 'home-outline'}
-                size={19}
+                size={21}
                 color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
@@ -79,11 +81,22 @@ export default function TabLayout() {
         name="bookings"
         options={{
           title: 'Booking',
+          tabBarLabel: ({ focused, color }) => (
+            <Text
+              style={[
+                styles.tabLabel,
+                { color },
+                focused ? styles.tabLabelActive : styles.tabLabelInactive,
+              ]}
+            >
+              Booking
+            </Text>
+          ),
           tabBarIcon: ({ focused }) => (
             <View style={[styles.iconWrapper, focused && styles.activeIconPill]}>
               <Ionicons
                 name={focused ? 'calendar' : 'calendar-outline'}
-                size={19}
+                size={21}
                 color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
@@ -96,11 +109,22 @@ export default function TabLayout() {
         name="services"
         options={{
           title: 'Services',
+          tabBarLabel: ({ focused, color }) => (
+            <Text
+              style={[
+                styles.tabLabel,
+                { color },
+                focused ? styles.tabLabelActive : styles.tabLabelInactive,
+              ]}
+            >
+              Services
+            </Text>
+          ),
           tabBarIcon: ({ focused }) => (
             <View style={[styles.iconWrapper, focused && styles.activeIconPill]}>
               <Ionicons
                 name={focused ? 'grid' : 'grid-outline'}
-                size={19}
+                size={21}
                 color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
@@ -113,11 +137,22 @@ export default function TabLayout() {
         name="account"
         options={{
           title: 'Profile',
+          tabBarLabel: ({ focused, color }) => (
+            <Text
+              style={[
+                styles.tabLabel,
+                { color },
+                focused ? styles.tabLabelActive : styles.tabLabelInactive,
+              ]}
+            >
+              Profile
+            </Text>
+          ),
           tabBarIcon: ({ focused }) => (
             <View style={[styles.iconWrapper, focused && styles.activeIconPill]}>
               <Ionicons
                 name={focused ? 'person' : 'person-outline'}
-                size={19}
+                size={21}
                 color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
@@ -140,11 +175,35 @@ const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 34,
-    height: 22,
-    borderRadius: 11,
+    width: 36,
+    height: 24,
+    borderRadius: 12,
   },
   activeIconPill: {
     backgroundColor: 'rgba(255, 255, 255, 0.22)',
+  },
+  tabLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10.5,
+    marginTop: 2,
+    marginBottom: 0,
+    lineHeight: 14,
+    letterSpacing: 0.15,
+    textAlign: 'center',
+    ...(Platform.OS === 'web'
+      ? ({
+          overflow: 'visible',
+          textOverflow: 'clip',
+          whiteSpace: 'nowrap',
+        } as any)
+      : {}),
+  },
+  tabLabelActive: {
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  tabLabelInactive: {
+    fontWeight: '500',
+    color: '#C2E5D9',
   },
 });
