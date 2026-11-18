@@ -44,6 +44,7 @@ const SCHEDULE_TIMES = [
   '04:00 PM',
   '05:00 PM',
   '06:00 PM',
+  '07:00 PM',
 ];
 
 const RESCHEDULE_TIMES = [
@@ -2475,13 +2476,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    rowGap: 10,
+    rowGap: 8,
     marginTop: 4,
   },
   timeSlotPill: {
     width: '31%',
-    paddingVertical: 12,
-    borderRadius: 14,
+    paddingVertical: 11,
+    borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.2,
@@ -3282,36 +3283,37 @@ const styles = StyleSheet.create({
   },
 
   // -------------------------------------------------------------
-  // Reschedule Calendar (Step 7 - Image 3)
+  // Reschedule & Step 2 Calendar
   // -------------------------------------------------------------
   calendarCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
     borderWidth: 1.2,
     borderColor: '#DCE9E1',
-    padding: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
   },
   calendarHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: 8,
     paddingHorizontal: 6,
   },
   calendarMonthText: {
-    fontSize: 15,
+    fontSize: 14.5,
     fontWeight: '600',
     color: '#102820',
     fontFamily: Typography.fontFamily.sans,
   },
   calendarWeekdaysRow: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: 6,
   },
   calendarWeekdayLabel: {
     width: '14.28%',
     textAlign: 'center',
-    fontSize: 11.5,
+    fontSize: 11,
     fontWeight: '500',
     color: '#64748B',
     fontFamily: Typography.fontFamily.sans,
@@ -3319,20 +3321,20 @@ const styles = StyleSheet.create({
   calendarDaysGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    rowGap: 8,
+    rowGap: 3,
   },
   calendarDayCell: {
     width: '14.28%',
-    height: 38,
+    height: 31,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 14,
+    borderRadius: 10,
   },
   calendarDayCellActive: {
     backgroundColor: '#0F5B43',
   },
   calendarDayText: {
-    fontSize: 13.5,
+    fontSize: 12.5,
     fontWeight: '400',
     color: '#102820',
     fontFamily: Typography.fontFamily.sans,
