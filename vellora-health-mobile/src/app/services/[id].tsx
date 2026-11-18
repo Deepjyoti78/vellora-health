@@ -20,6 +20,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path } from 'react-native-svg';
 import { Colors, Typography, Spacing, Shadows } from '../../constants/theme';
 import { CORE_SERVICES, formatCurrency } from '../../data/mockData';
+import FloatingBottomNavBar from '../../components/common/FloatingBottomNavBar';
 
 const Palette = {
   primary: '#0F5B43',        // Primary forest green
@@ -764,60 +765,8 @@ export default function ServiceDetailScreen() {
         </View>
       </Modal>
 
-      {/* Floating Bottom Navigation Bar matching (tabs) layout */}
-      <View style={styles.floatingNavBar}>
-        <TouchableOpacity
-          style={styles.navBarItem}
-          onPress={() => router.push('/(tabs)')}
-          activeOpacity={0.8}
-          accessibilityRole="button"
-          accessibilityLabel="Home"
-        >
-          <View style={styles.navBarIconWrapper}>
-            <Ionicons name="home-outline" size={21} color="#C2E5D9" />
-          </View>
-          <Text style={[styles.navBarLabel, styles.navBarLabelInactive]}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navBarItem}
-          onPress={() => router.push('/(tabs)/bookings')}
-          activeOpacity={0.8}
-          accessibilityRole="button"
-          accessibilityLabel="Booking"
-        >
-          <View style={styles.navBarIconWrapper}>
-            <Ionicons name="calendar-outline" size={21} color="#C2E5D9" />
-          </View>
-          <Text style={[styles.navBarLabel, styles.navBarLabelInactive]}>Booking</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navBarItem}
-          onPress={() => router.push('/(tabs)/services')}
-          activeOpacity={0.8}
-          accessibilityRole="button"
-          accessibilityLabel="Services"
-        >
-          <View style={[styles.navBarIconWrapper, styles.navBarActiveIconPill]}>
-            <Ionicons name="grid" size={21} color="#FFFFFF" />
-          </View>
-          <Text style={[styles.navBarLabel, styles.navBarLabelActive]}>Services</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navBarItem}
-          onPress={() => router.push('/(tabs)/account')}
-          activeOpacity={0.8}
-          accessibilityRole="button"
-          accessibilityLabel="Profile"
-        >
-          <View style={styles.navBarIconWrapper}>
-            <Ionicons name="person-outline" size={21} color="#C2E5D9" />
-          </View>
-          <Text style={[styles.navBarLabel, styles.navBarLabelInactive]}>Profile</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Floating Bottom Navigation Bar (Unified Project Navbar) */}
+      <FloatingBottomNavBar activeTab="services" />
     </SafeAreaView>
   );
 }
@@ -1424,60 +1373,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     color: '#64748B',
-  },
-
-  /* Floating Bottom Navigation Bar */
-  floatingNavBar: {
-    position: 'absolute',
-    bottom: Platform.select({ ios: 20, android: 16, default: 16 }),
-    left: 18,
-    right: 18,
-    height: 56,
-    backgroundColor: '#0F5B43',
-    borderRadius: 28,
-    borderWidth: 1.2,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-    elevation: 14,
-    zIndex: 999,
-    shadowColor: '#08251C',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.32,
-    shadowRadius: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingHorizontal: 8,
-  },
-  navBarItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 2,
-  },
-  navBarIconWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 24,
-    marginBottom: 2,
-  },
-  navBarActiveIconPill: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: 14,
-    paddingHorizontal: 10,
-    paddingVertical: 2,
-    height: 26,
-  },
-  navBarLabel: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    letterSpacing: -0.1,
-  },
-  navBarLabelActive: {
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  navBarLabelInactive: {
-    fontWeight: '500',
-    color: '#C2E5D9',
   },
 });
