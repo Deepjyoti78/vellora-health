@@ -48,6 +48,43 @@ const SCHEDULE_TIMES = [
   '07:00 PM',
 ];
 
+interface TimeSlotItem {
+  time: string;
+  available: boolean;
+}
+
+const PICKER_TIME_SLOTS: TimeSlotItem[] = [
+  { time: '5:00 PM', available: true },
+  { time: '5:30 PM', available: false },
+  { time: '6:00 PM', available: true },
+  { time: '6:30 PM', available: true },
+  { time: '7:00 PM', available: true },
+  { time: '7:30 PM', available: true },
+  { time: '8:00 PM', available: true },
+  { time: '8:30 PM', available: false },
+];
+
+const getSlotEndTime = (slot: string) => {
+  const map: Record<string, string> = {
+    '5:00 PM': '5:30 PM',
+    '5:30 PM': '6:00 PM',
+    '6:00 PM': '6:30 PM',
+    '6:30 PM': '6:45 PM',
+    '7:00 PM': '7:30 PM',
+    '7:30 PM': '8:00 PM',
+    '8:00 PM': '8:30 PM',
+    '8:30 PM': '9:00 PM',
+  };
+  return map[slot] || '7:00 PM';
+};
+
+const formatShortDate = (year: number, month: number, day: number) => {
+  const d = new Date(year, month, day);
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${dayNames[d.getDay()]}, ${day} ${monthNames[month]}`;
+};
+
 const RESCHEDULE_TIMES = [
   '09:00 AM',
   '10:00 AM',
@@ -134,10 +171,10 @@ export default function BookingScreen() {
   const [selectedReason, setSelectedReason] = useState('General Consultation');
 
   // Step 2: Schedule & Calendar
-  const [calendarYear, setCalendarYear] = useState(today.getFullYear());
-  const [calendarMonth, setCalendarMonth] = useState(today.getMonth());
-  const [selectedDayNumber, setSelectedDayNumber] = useState(today.getDate());
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState('02:00 PM'); // 02:00 PM
+  const [calendarYear, setCalendarYear] = useState(2026);
+  const [calendarMonth, setCalendarMonth] = useState(10); // November
+  const [selectedDayNumber, setSelectedDayNumber] = useState(13);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('6:30 PM');
 
   const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
   const firstDayRaw = new Date(calendarYear, calendarMonth, 1).getDay();
@@ -384,125 +421,50 @@ export default function BookingScreen() {
   };
 
   // -------------------------------------------------------------
-  // Top Header Component (Centered Official Logo, No Back Button)
+  // Top Header Component (Close X, Centered "Book appointment", No Logo)
   // -------------------------------------------------------------
   const renderHeader = (_showCloseIcon = false) => (
     <View style={styles.topHeader}>
-      <View style={styles.headerLogoContainer}>
-        <Image
-          source={require('../../../assets/images/logo-dark.png')}
-          style={styles.headerBrandLogo}
-          resizeMode="contain"
-        />
-      </View>
+      <TouchableOpacity
+        accessibilityRole="button"
+        accessibilityLabel="Close"
+        onPress={handleBack}
+        style={styles.headerCloseBtn}
+        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+      >
+        <Ionicons name="close" size={24} color="#111827" />
+      </TouchableOpacity>
+      <Text style={styles.headerBookingTitle}>Book appointment</Text>
+      <View style={styles.headerRightSpacer} />
     </View>
   );
 
   // -------------------------------------------------------------
-  // 3-Step Stepper Header (Used in Step 1, 2, and 3)
+  // Modern 4-Step Stepper Header with Horizontal Progress Lines
   // -------------------------------------------------------------
-  const renderProgressStepper = (activeStepNumber: 1 | 2 | 3) => {
+  const renderProgressStepper = (activeStepNumber: 1 | 2 | 3 | 4) => {
+    const stepNames: Record<number, string> = {
+      1: 'Patient details',
+      2: 'Date & time',
+      3: 'Review & summary',
+      4: 'Payment',
+    };
     return (
       <View style={styles.stepperContainer}>
-        {/* Step 1: Details */}
-        <View style={styles.stepColumn}>
-          <View
-            style={[
-              styles.stepBadge,
-              activeStepNumber >= 1 ? styles.stepBadgeGreen : styles.stepBadgeInactive,
-            ]}
-          >
-            {activeStepNumber > 1 ? (
-              <Ionicons name="checkmark" size={16} color="#FFFFFF" />
-            ) : (
-              <Text style={styles.stepBadgeTextActive}>1</Text>
-            )}
-          </View>
-          <Text
-            style={[
-              styles.stepLabel,
-              activeStepNumber === 1 ? styles.stepLabelActive : styles.stepLabelInactive,
-            ]}
-          >
-            Details
-          </Text>
+        <View style={styles.stepperBarsRow}>
+          {[1, 2, 3, 4].map((step) => (
+            <View
+              key={step}
+              style={[
+                styles.stepperBarSegment,
+                step <= activeStepNumber ? styles.stepperBarFilled : styles.stepperBarEmpty,
+              ]}
+            />
+          ))}
         </View>
-
-        {/* Connector 1 -> 2 */}
-        <View
-          style={[
-            styles.stepConnector,
-            activeStepNumber >= 2 ? styles.stepConnectorGreen : styles.stepConnectorInactive,
-          ]}
-        />
-
-        {/* Step 2: Schedule */}
-        <View style={styles.stepColumn}>
-          <View
-            style={[
-              styles.stepBadge,
-              activeStepNumber >= 2 ? styles.stepBadgeGreen : styles.stepBadgeInactive,
-            ]}
-          >
-            {activeStepNumber > 2 ? (
-              <Ionicons name="checkmark" size={16} color="#FFFFFF" />
-            ) : (
-              <Text
-                style={
-                  activeStepNumber >= 2
-                    ? styles.stepBadgeTextActive
-                    : styles.stepBadgeTextInactive
-                }
-              >
-                2
-              </Text>
-            )}
-          </View>
-          <Text
-            style={[
-              styles.stepLabel,
-              activeStepNumber === 2 ? styles.stepLabelActive : styles.stepLabelInactive,
-            ]}
-          >
-            Schedule
-          </Text>
-        </View>
-
-        {/* Connector 2 -> 3 */}
-        <View
-          style={[
-            styles.stepConnector,
-            activeStepNumber >= 3 ? styles.stepConnectorGreen : styles.stepConnectorInactive,
-          ]}
-        />
-
-        {/* Step 3: Review */}
-        <View style={styles.stepColumn}>
-          <View
-            style={[
-              styles.stepBadge,
-              activeStepNumber === 3 ? styles.stepBadgeGreen : styles.stepBadgeInactive,
-            ]}
-          >
-            <Text
-              style={
-                activeStepNumber === 3
-                  ? styles.stepBadgeTextActive
-                  : styles.stepBadgeTextInactive
-              }
-            >
-              3
-            </Text>
-          </View>
-          <Text
-            style={[
-              styles.stepLabel,
-              activeStepNumber === 3 ? styles.stepLabelActive : styles.stepLabelInactive,
-            ]}
-          >
-            Review
-          </Text>
-        </View>
+        <Text style={styles.stepperStepSubtitle}>
+          Step {activeStepNumber} of 4 · {stepNames[activeStepNumber]}
+        </Text>
       </View>
     );
   };
@@ -793,136 +755,168 @@ export default function BookingScreen() {
       )}
 
       {/* ========================================================================= */}
-      {/* 2. STEP 2: CHOOSE DATE & TIME (Image 6)                                  */}
+      {/* 2. STEP 2: CHOOSE DATE & TIME (Modern Clean UI)                           */}
       {/* ========================================================================= */}
       {currentStep === 'schedule' && (
         <View style={styles.screenContainer}>
           {renderHeader(false)}
           <ScrollView
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={styles.scheduleScrollContent}
             showsVerticalScrollIndicator={false}
           >
             {renderProgressStepper(2)}
 
-            <Text style={styles.pageTitle}>Choose Date & Time</Text>
+            <Text style={styles.schedulePageTitle}>Pick a date and time</Text>
 
-            {/* Select Date Section with Full Interactive Calendar */}
-            <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionHeadingText}>Select Date</Text>
-              <Ionicons name="calendar-outline" size={20} color="#102820" />
-            </View>
-
-            <View style={styles.calendarCard}>
-              {/* Calendar Month Header with Prev/Next Controls */}
-              <View style={styles.calendarHeaderRow}>
-                <TouchableOpacity accessibilityRole="button"
+            {/* Month Header Row */}
+            <View style={styles.scheduleMonthRow}>
+              <Text style={styles.scheduleMonthHeading}>
+                {MONTH_NAMES[calendarMonth]} {calendarYear}
+              </Text>
+              <View style={styles.scheduleMonthNavBtns}>
+                <TouchableOpacity
+                  accessibilityRole="button"
                   onPress={handlePrevMonth}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                   activeOpacity={0.7}
                   accessibilityLabel="Previous month"
+                  style={styles.monthNavArrowBtn}
                 >
-                  <Ionicons name="chevron-back" size={20} color="#102820" />
+                  <Ionicons name="chevron-back" size={20} color="#111827" />
                 </TouchableOpacity>
-                <Text style={styles.calendarMonthText}>
-                  {MONTH_NAMES[calendarMonth]} {calendarYear}
-                </Text>
-                <TouchableOpacity accessibilityRole="button"
+                <TouchableOpacity
+                  accessibilityRole="button"
                   onPress={handleNextMonth}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                   activeOpacity={0.7}
                   accessibilityLabel="Next month"
+                  style={styles.monthNavCircleBtn}
                 >
-                  <Ionicons name="chevron-forward" size={20} color="#102820" />
+                  <Ionicons name="chevron-forward" size={18} color="#111827" />
                 </TouchableOpacity>
               </View>
-
-              {/* Weekday Labels (Mon - Sun) */}
-              <View style={styles.calendarWeekdaysRow}>
-                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((w) => (
-                  <Text key={w} style={styles.calendarWeekdayLabel}>
-                    {w}
-                  </Text>
-                ))}
-              </View>
-
-              {/* Full Month Calendar Grid */}
-              <View style={styles.calendarDaysGrid}>
-                {/* Empty cells before 1st of month */}
-                {Array.from({ length: firstDayOffset }).map((_, i) => (
-                  <View key={`empty-${i}`} style={styles.calendarDayCell} />
-                ))}
-
-                {/* Day cells for the month */}
-                {Array.from({ length: daysInMonth }).map((_, i) => {
-                  const d = i + 1;
-                  const isSelected = selectedDayNumber === d;
-                  return (
-                    <TouchableOpacity accessibilityRole="button"
-                      key={d}
-                      onPress={() => handleSelectDay(d)}
-                      activeOpacity={0.75}
-                      style={[
-                        styles.calendarDayCell,
-                        isSelected && styles.calendarDayCellActive,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.calendarDayText,
-                          isSelected && styles.calendarDayTextActive,
-                        ]}
-                      >
-                        {d}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
             </View>
 
-            {/* Select Time Section */}
-            <View style={[styles.sectionHeaderRow, { marginTop: 24 }]}>
-              <Text style={styles.sectionHeadingText}>Select Time</Text>
-            </View>
-
-            {/* Time Slot Grid (3 columns matching Image 6) */}
-            <View style={styles.timeSlotGrid}>
-              {SCHEDULE_TIMES.map((time) => {
-                const isSelected = selectedTimeSlot === time;
+            {/* Horizontal Scrollable Date Strip Carousel */}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalDateStrip}
+            >
+              {Array.from({ length: daysInMonth }, (_, i) => {
+                const d = i + 1;
+                const date = new Date(calendarYear, calendarMonth, d);
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                const dayName = dayNames[date.getDay()];
+                const isSelected = selectedDayNumber === d;
                 return (
-                  <TouchableOpacity accessibilityRole="button"
-                    key={time}
-                    onPress={() => setSelectedTimeSlot(time)}
-                    activeOpacity={0.85}
+                  <TouchableOpacity
+                    key={d}
+                    accessibilityRole="button"
+                    onPress={() => handleSelectDay(d)}
+                    activeOpacity={0.8}
                     style={[
-                      styles.timeSlotPill,
-                      isSelected ? styles.timeSlotPillActive : styles.timeSlotPillInactive,
+                      styles.dateStripCard,
+                      isSelected ? styles.dateStripCardSelected : styles.dateStripCardUnselected,
                     ]}
                   >
                     <Text
                       style={[
-                        styles.timeSlotPillText,
-                        isSelected
-                          ? styles.timeSlotTextActive
-                          : styles.timeSlotTextInactive,
+                        styles.dateStripDayName,
+                        isSelected ? styles.dateStripDayNameSelected : styles.dateStripDayNameUnselected,
                       ]}
                     >
-                      {time}
+                      {dayName}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.dateStripDayNum,
+                        isSelected ? styles.dateStripDayNumSelected : styles.dateStripDayNumUnselected,
+                      ]}
+                    >
+                      {d}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+
+            {/* Time Slots Section Header */}
+            <View style={styles.timeSectionHeaderRow}>
+              <Text style={styles.timeSectionTitle}>Evening chamber · 5:00–9:00 PM</Text>
+              <Text style={styles.timeSectionSlotsLeft}>6 of 8 serials left</Text>
+            </View>
+
+            {/* Time Slot 3-Column Grid */}
+            <View style={styles.cleanTimeSlotGrid}>
+              {PICKER_TIME_SLOTS.map((slot) => {
+                const isSelected = selectedTimeSlot === slot.time;
+                const isAvailable = slot.available;
+                return (
+                  <TouchableOpacity
+                    key={slot.time}
+                    accessibilityRole="button"
+                    disabled={!isAvailable}
+                    onPress={() => {
+                      if (isAvailable) {
+                        setSelectedTimeSlot(slot.time);
+                      }
+                    }}
+                    activeOpacity={0.85}
+                    style={[
+                      styles.cleanTimeSlotCard,
+                      !isAvailable && styles.cleanTimeSlotCardDisabled,
+                      isSelected && isAvailable && styles.cleanTimeSlotCardSelected,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.cleanTimeSlotText,
+                        !isAvailable && styles.cleanTimeSlotTextDisabled,
+                        isSelected && isAvailable && styles.cleanTimeSlotTextSelected,
+                      ]}
+                    >
+                      {slot.time}
                     </Text>
                   </TouchableOpacity>
                 );
               })}
             </View>
+
+            {/* Serial Info Callout */}
+            <View style={styles.serialInfoBox}>
+              <View style={styles.serialInfoRow}>
+                <Ionicons
+                  name="information-circle-outline"
+                  size={20}
+                  color="#0D7A73"
+                  style={{ marginRight: 8, marginTop: 1 }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.serialInfoTitle}>Serial #12</Text>
+                  <Text style={styles.serialInfoSubtitle}>
+                    Estimated consultation {selectedTimeSlot}–{getSlotEndTime(selectedTimeSlot)}. Please arrive 15 minutes early.
+                  </Text>
+                </View>
+              </View>
+            </View>
           </ScrollView>
 
-          {/* Sticky Bottom Action Button */}
-          <View style={styles.bottomActionBar}>
-            <TouchableOpacity accessibilityRole="button"
-              style={styles.primaryActionButton}
+          {/* Sticky Bottom Summary & Continue Button */}
+          <View style={styles.scheduleBottomBar}>
+            <View style={styles.scheduleSummaryRow}>
+              <Text style={styles.scheduleSummaryLabel}>Selected</Text>
+              <Text style={styles.scheduleSummaryValue}>
+                {formatShortDate(calendarYear, calendarMonth, selectedDayNumber)} · {selectedTimeSlot}
+              </Text>
+            </View>
+            <TouchableOpacity
+              accessibilityRole="button"
+              style={styles.cleanContinueButton}
               onPress={handleStep2Continue}
               activeOpacity={0.88}
             >
-              <Text style={styles.primaryActionButtonText}>Continue →</Text>
+              <Text style={styles.cleanContinueButtonText}>Continue</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1111,6 +1105,7 @@ export default function BookingScreen() {
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
+            {renderProgressStepper(4)}
             <Text style={styles.pageTitle}>Payment</Text>
             <Text style={styles.pageSubtitle}>
               Preview your payment preference. No payment is collected in this demo.
@@ -1973,15 +1968,34 @@ const styles = StyleSheet.create({
   },
 
   // -------------------------------------------------------------
-  // Header Bar
+  // Header Bar (Book appointment with Close Button)
   // -------------------------------------------------------------
   topHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 6,
-    backgroundColor: '#FBFAF7',
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  headerCloseBtn: {
+    width: 32,
+    height: 32,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  headerBookingTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111827',
+    fontFamily: Typography.fontFamily.sans,
+    textAlign: 'center',
+  },
+  headerRightSpacer: {
+    width: 32,
   },
   headerLogoContainer: {
     alignItems: 'center',
@@ -1993,15 +2007,35 @@ const styles = StyleSheet.create({
   },
 
   // -------------------------------------------------------------
-  // 3-Step Stepper
+  // 4-Step Stepper with Horizontal Lines
   // -------------------------------------------------------------
   stepperContainer: {
+    marginTop: 14,
+    marginBottom: 20,
+    paddingHorizontal: 16,
+  },
+  stepperBarsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 8,
-    marginBottom: 24,
-    paddingHorizontal: 14,
+    gap: 6,
+    marginBottom: 10,
+  },
+  stepperBarSegment: {
+    flex: 1,
+    height: 3.5,
+    borderRadius: 2,
+  },
+  stepperBarFilled: {
+    backgroundColor: '#0D7A73',
+  },
+  stepperBarEmpty: {
+    backgroundColor: '#E5E7EB',
+  },
+  stepperStepSubtitle: {
+    fontSize: 12.5,
+    fontWeight: '500',
+    color: '#6B7280',
+    fontFamily: Typography.fontFamily.sans,
   },
   stepColumn: {
     alignItems: 'center',
@@ -2057,6 +2091,238 @@ const styles = StyleSheet.create({
   },
   stepConnectorInactive: {
     backgroundColor: '#DCE9E1',
+  },
+
+  // -------------------------------------------------------------
+  // Step 2 Pick Date & Time Styles (Matching User Reference)
+  // -------------------------------------------------------------
+  scheduleScrollContent: {
+    paddingBottom: 120,
+  },
+  schedulePageTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111827',
+    paddingHorizontal: 16,
+    marginBottom: 18,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  scheduleMonthRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginBottom: 14,
+  },
+  scheduleMonthHeading: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111827',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  scheduleMonthNavBtns: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  monthNavArrowBtn: {
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  monthNavCircleBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  horizontalDateStrip: {
+    paddingHorizontal: 16,
+    gap: 8,
+    paddingBottom: 8,
+  },
+  dateStripCard: {
+    width: 54,
+    height: 68,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dateStripCardSelected: {
+    backgroundColor: '#0D7A73',
+    shadowColor: '#0D7A73',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  dateStripCardUnselected: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  dateStripDayName: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginBottom: 4,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  dateStripDayNameSelected: {
+    color: '#FFFFFF',
+  },
+  dateStripDayNameUnselected: {
+    color: '#6B7280',
+  },
+  dateStripDayNum: {
+    fontSize: 16,
+    fontWeight: '700',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  dateStripDayNumSelected: {
+    color: '#FFFFFF',
+  },
+  dateStripDayNumUnselected: {
+    color: '#111827',
+  },
+  timeSectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginTop: 22,
+    marginBottom: 12,
+  },
+  timeSectionTitle: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#111827',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  timeSectionSlotsLeft: {
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: '#0D7A73',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cleanTimeSlotGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    gap: 10,
+    marginBottom: 20,
+  },
+  cleanTimeSlotCard: {
+    width: '31%',
+    paddingVertical: 13,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cleanTimeSlotCardSelected: {
+    backgroundColor: '#0D7A73',
+    borderColor: '#0D7A73',
+  },
+  cleanTimeSlotCardDisabled: {
+    backgroundColor: '#F3F4F6',
+    borderColor: '#E5E7EB',
+  },
+  cleanTimeSlotText: {
+    fontSize: 13.5,
+    fontWeight: '600',
+    color: '#111827',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cleanTimeSlotTextSelected: {
+    color: '#FFFFFF',
+  },
+  cleanTimeSlotTextDisabled: {
+    color: '#9CA3AF',
+  },
+  serialInfoBox: {
+    marginHorizontal: 16,
+    backgroundColor: '#EAF6F0',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#C6E7DD',
+    padding: 14,
+    marginBottom: 24,
+  },
+  serialInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  serialInfoTitle: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 4,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  serialInfoSubtitle: {
+    fontSize: 12.5,
+    color: '#4B5563',
+    lineHeight: 18,
+    fontFamily: Typography.fontFamily.sans,
+  },
+  scheduleBottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  scheduleSummaryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  scheduleSummaryLabel: {
+    fontSize: 13,
+    color: '#6B7280',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  scheduleSummaryValue: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#111827',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cleanContinueButton: {
+    backgroundColor: '#0D7A73',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cleanContinueButtonText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    fontFamily: Typography.fontFamily.sans,
   },
 
   // -------------------------------------------------------------
