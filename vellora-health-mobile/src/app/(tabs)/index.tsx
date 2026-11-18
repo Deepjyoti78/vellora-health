@@ -604,21 +604,7 @@ export default function HomeScreen() {
               })}
             </View>
 
-            {/* Calendar Footer / Legend */}
-            <View style={styles.calendarLegendRow}>
-              <View style={styles.legendItem}>
-                <View style={[styles.legendDot, { backgroundColor: '#059669' }]} />
-                <Text style={styles.legendText}>Confirmed Visit</Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View style={[styles.legendDot, { backgroundColor: '#D97706' }]} />
-                <Text style={styles.legendText}>Scheduled</Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View style={[styles.legendDot, { backgroundColor: Palette.primary }]} />
-                <Text style={styles.legendText}>Selected</Text>
-              </View>
-            </View>
+
           </View>
         </View>
       </ScrollView>
