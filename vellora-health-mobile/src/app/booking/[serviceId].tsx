@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Typography } from '../../constants/theme';
 import { CORE_SERVICES, addBooking, getBookingById, cancelBooking, rescheduleBooking, generateSecurePin } from '../../data/mockData';
 import { useAuth } from '../../context/AuthContext';
@@ -1290,22 +1291,45 @@ export default function BookingScreen() {
       )}
 
       {/* ========================================================================= */}
-      {/* 5. BOOKING CONFIRMED! SCREEN (Single Unified Rounded Card)                */}
+      {/* 5. BOOKING CONFIRMED! SCREEN (Premium Redesigned Single Card)              */}
       {/* ========================================================================= */}
       {currentStep === 'confirmed' && (
         <View style={styles.screenContainer}>
+          {renderHeader(false)}
           <ScrollView
             contentContainerStyle={styles.confirmedScrollContent}
             showsVerticalScrollIndicator={false}
           >
+            {/* Header Notification Badge */}
+            <View style={styles.confirmedTopBadgeWrap}>
+              <View style={styles.confirmedTopBadge}>
+                <Ionicons name="checkmark-circle" size={16} color="#059669" />
+                <Text style={styles.confirmedTopBadgeText}>Doorstep Care Booked</Text>
+              </View>
+            </View>
+
             {/* Single Unified Card: Hero Image on Top, Details & Actions Below */}
             <View style={styles.unifiedConfirmedCard}>
-              {/* Doctor Photographic Hero Banner */}
+              {/* Doctor Photographic Hero Banner with Natural Gradient & Floating Status */}
               <View style={styles.confirmedHeroImageWrapper}>
                 <Image
                   source={getProviderAvatar()}
                   style={styles.confirmedHeroImage}
                   resizeMode="cover"
+                />
+
+                {/* Floating Glass Status Pill on Hero Image */}
+                <View style={styles.floatingStatusBadge}>
+                  <View style={styles.statusPulseDot} />
+                  <Text style={styles.floatingStatusText}>Assignment Pending</Text>
+                </View>
+
+                {/* Smooth Gradient Scrim Transitioning Image into Card */}
+                <LinearGradient
+                  colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.45)', '#FFFFFF']}
+                  locations={[0, 0.65, 1]}
+                  style={styles.heroGradientBottom}
+                  pointerEvents="none"
                 />
               </View>
 
@@ -1313,26 +1337,38 @@ export default function BookingScreen() {
               <View style={styles.confirmedCardBody}>
                 {/* Doctor Name & Specialty */}
                 <Text style={styles.confirmedDoctorNameLarge}>{providerName}</Text>
-                <Text style={styles.confirmedDoctorRoleLarge}>{serviceTitle}</Text>
+                <View style={styles.doctorSpecialtyRow}>
+                  <Ionicons name="shield-checkmark" size={14} color="#059669" />
+                  <Text style={styles.confirmedDoctorRoleLarge}>{serviceTitle}</Text>
+                  <Text style={styles.doctorRoleDot}>•</Text>
+                  <Ionicons name="star" size={13} color="#D97706" />
+                  <Text style={styles.doctorRatingText}>4.9 (1,324)</Text>
+                </View>
 
                 {/* Booking Reference Pill */}
                 <View style={styles.confirmedRefBadge}>
+                  <Ionicons name="receipt-outline" size={15} color="#0F5B43" />
                   <Text style={styles.confirmedRefLabel}>Booking Reference</Text>
                   <View style={styles.confirmedRefVerticalDivider} />
                   <Text style={styles.confirmedRefCode}>{bookingReference}</Text>
-                </View>
-
-                {/* Status Badge */}
-                <View style={styles.confirmedBadgeSmall}>
-                  <Text style={styles.confirmedBadgeSmallText}>Assignment pending</Text>
+                  <TouchableOpacity
+                    onPress={() => Alert.alert('Copied', 'Booking reference copied to clipboard.')}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  >
+                    <Ionicons name="copy-outline" size={15} color="#059669" />
+                  </TouchableOpacity>
                 </View>
 
                 {/* Embedded Bedside Verification PIN Section */}
                 <View style={styles.embeddedBedsidePinBox}>
                   <View style={styles.bedsidePinHeader}>
-                    <Ionicons name="lock-closed-outline" size={18} color="#0F5B43" />
-                    <View style={styles.bedsidePinHeaderDivider} />
-                    <Text style={styles.bedsidePinTitle}>Bedside Verification PIN</Text>
+                    <View style={styles.pinShieldIconWrap}>
+                      <Ionicons name="lock-closed" size={15} color="#0F5B43" />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.bedsidePinTitle}>Bedside Verification PIN</Text>
+                      <Text style={styles.bedsidePinHelp}>Share with clinician at doorstep to verify identity</Text>
+                    </View>
                   </View>
                   <View style={styles.pinDigitsRow}>
                     {['4', '8', '2', '9'].map((digit, idx) => (
@@ -1343,43 +1379,42 @@ export default function BookingScreen() {
                   </View>
                 </View>
 
-                {/* Schedule & Location Details */}
-                <View style={styles.confirmedInfoSection}>
-                  {/* Date */}
-                  <View style={styles.confirmedInfoRow}>
-                    <View style={styles.confirmedIconWrap}>
-                      <Ionicons name="calendar-outline" size={18} color="#0F5B43" />
+                {/* Schedule & Location Details in Structured Ticket Box */}
+                <View style={styles.confirmedScheduleTicket}>
+                  {/* Top Row: Date & Time in 2 Clean Columns */}
+                  <View style={styles.ticketColsRow}>
+                    {/* Date Column */}
+                    <View style={styles.ticketCol}>
+                      <View style={styles.ticketHeaderSmall}>
+                        <Ionicons name="calendar-outline" size={14} color="#0F5B43" />
+                        <Text style={styles.ticketMicroLabel}>DATE</Text>
+                      </View>
+                      <Text style={styles.ticketValueText}>{bookingConfirmedDate}</Text>
                     </View>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.confirmedRowLabel}>Date</Text>
-                      <Text style={styles.confirmedInfoValue}>{bookingConfirmedDate}</Text>
+
+                    <View style={styles.ticketVerticalDivider} />
+
+                    {/* Time Column */}
+                    <View style={styles.ticketCol}>
+                      <View style={styles.ticketHeaderSmall}>
+                        <Ionicons name="time-outline" size={14} color="#0F5B43" />
+                        <Text style={styles.ticketMicroLabel}>TIME SLOT</Text>
+                      </View>
+                      <Text style={styles.ticketValueText}>{bookingConfirmedTime}</Text>
                     </View>
                   </View>
 
-                  <View style={styles.confirmedDivider} />
+                  <View style={styles.ticketHorizontalDivider} />
 
-                  {/* Time Slot */}
-                  <View style={styles.confirmedInfoRow}>
-                    <View style={styles.confirmedIconWrap}>
-                      <Ionicons name="time-outline" size={18} color="#0F5B43" />
+                  {/* Bottom Row: Visit Address */}
+                  <View style={styles.ticketAddressRow}>
+                    <View style={styles.ticketHeaderSmall}>
+                      <Ionicons name="location-outline" size={14} color="#0F5B43" />
+                      <Text style={styles.ticketMicroLabel}>VISIT ADDRESS</Text>
                     </View>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.confirmedRowLabel}>Time Slot</Text>
-                      <Text style={styles.confirmedInfoValue}>{bookingConfirmedTime}</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.confirmedDivider} />
-
-                  {/* Visit Address */}
-                  <View style={styles.confirmedInfoRow}>
-                    <View style={styles.confirmedIconWrap}>
-                      <Ionicons name="location-outline" size={18} color="#0F5B43" />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.confirmedRowLabel}>Visit Address</Text>
-                      <Text style={styles.confirmedInfoValue}>{serviceAddress}</Text>
-                    </View>
+                    <Text style={styles.ticketAddressValueText} numberOfLines={2}>
+                      {serviceAddress}
+                    </Text>
                   </View>
                 </View>
 
@@ -1392,6 +1427,7 @@ export default function BookingScreen() {
                     activeOpacity={0.88}
                   >
                     <Text style={styles.primaryActionButtonText}>View My Bookings</Text>
+                    <Ionicons name="arrow-forward" size={16} color="#FFFFFF" style={{ marginLeft: 6 }} />
                   </TouchableOpacity>
 
                   <TouchableOpacity
@@ -2683,9 +2719,36 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     fontFamily: Typography.fontFamily.sans,
   },
+  confirmedTopBadgeWrap: {
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  confirmedTopBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#EAF6ED',
+    borderWidth: 1,
+    borderColor: '#C2E5D3',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    shadowColor: '#059669',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  confirmedTopBadgeText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: '#059669',
+    letterSpacing: -0.2,
+  },
   confirmedScrollContent: {
     paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingTop: 8,
     paddingBottom: 40,
     alignItems: 'center',
   },
@@ -2693,28 +2756,67 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 420,
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    borderRadius: 26,
     borderWidth: 1.2,
-    borderColor: '#DCE9E1',
+    borderColor: '#E2EBE5',
     overflow: 'hidden',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
-    elevation: 4,
+    shadowColor: '#0A2E23',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 5,
     marginBottom: 20,
   },
   confirmedHeroImageWrapper: {
     width: '100%',
-    height: 215,
+    height: 205,
     backgroundColor: '#EAF5EE',
+    position: 'relative',
   },
   confirmedHeroImage: {
     width: '100%',
     height: '100%',
   },
+  floatingStatusBadge: {
+    position: 'absolute',
+    top: 14,
+    left: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  statusPulseDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#059669',
+  },
+  floatingStatusText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '700',
+    color: '#0F5B43',
+  },
+  heroGradientBottom: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 60,
+  },
   confirmedCardBody: {
-    padding: 18,
+    paddingHorizontal: 18,
+    paddingTop: 6,
+    paddingBottom: 20,
   },
   confirmedDoctorNameLarge: {
     fontSize: 22,
@@ -2722,29 +2824,46 @@ const styles = StyleSheet.create({
     color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
     letterSpacing: -0.3,
-    marginBottom: 2,
+    marginBottom: 3,
+  },
+  doctorSpecialtyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 5,
+    marginBottom: 12,
   },
   confirmedDoctorRoleLarge: {
-    fontSize: 13.5,
+    fontSize: 13,
     color: '#475569',
-    fontWeight: '500',
+    fontWeight: '600',
     fontFamily: Typography.fontFamily.sans,
-    marginBottom: 12,
+  },
+  doctorRoleDot: {
+    fontSize: 12,
+    color: '#94A3B8',
+  },
+  doctorRatingText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#475569',
+    fontFamily: Typography.fontFamily.sans,
   },
   confirmedRefBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F1F8F5',
+    gap: 8,
+    backgroundColor: '#F3F9F6',
     borderWidth: 1,
-    borderColor: '#D4EBE0',
-    borderRadius: 10,
+    borderColor: '#CCE8DA',
+    borderRadius: 14,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    marginBottom: 10,
+    marginBottom: 14,
   },
   confirmedRefLabel: {
-    fontSize: 12.5,
-    fontWeight: '500',
+    fontSize: 12,
+    fontWeight: '600',
     color: '#64748B',
     fontFamily: Typography.fontFamily.sans,
   },
@@ -2752,10 +2871,9 @@ const styles = StyleSheet.create({
     width: 1,
     height: 14,
     backgroundColor: '#CBD5E1',
-    marginHorizontal: 10,
   },
   confirmedRefCode: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: '700',
     color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
@@ -2763,105 +2881,130 @@ const styles = StyleSheet.create({
   },
   embeddedBedsidePinBox: {
     width: '100%',
-    backgroundColor: '#F7FCF9',
-    borderRadius: 16,
+    backgroundColor: '#F3F9F6',
+    borderRadius: 18,
     borderWidth: 1.2,
-    borderColor: '#D1E7DD',
+    borderColor: '#CCE8DA',
     paddingVertical: 14,
     paddingHorizontal: 14,
-    marginBottom: 16,
+    marginBottom: 14,
   },
   bedsidePinHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    gap: 10,
+    marginBottom: 12,
   },
-  bedsidePinHeaderDivider: {
-    width: 1,
-    height: 14,
-    backgroundColor: '#CBD5E1',
-    marginHorizontal: 8,
-  },
-  bedsidePinTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#0F5B43',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  pinDigitsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  pinDigitBox: {
-    flex: 1,
-    height: 48,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    borderWidth: 1.2,
-    borderColor: '#94A3B8',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  pinDigitText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#0F5B43',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  confirmedInfoSection: {
-    marginBottom: 18,
-  },
-  confirmedIconWrap: {
-    width: 36,
-    height: 36,
+  pinShieldIconWrap: {
+    width: 32,
+    height: 32,
     borderRadius: 10,
     backgroundColor: '#EAF6ED',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
   },
-  confirmedSummaryCard: {
-    width: '100%',
+  bedsidePinTitle: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  bedsidePinHelp: {
+    fontSize: 11,
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 1,
+  },
+  pinDigitsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  pinDigitBox: {
+    flex: 1,
+    height: 52,
     backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: '#0F5B43',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0F5B43',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  pinDigitText: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#0F5B43',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  confirmedScheduleTicket: {
+    backgroundColor: '#F8FAF9',
     borderRadius: 18,
     borderWidth: 1.2,
-    borderColor: '#DCE9E1',
-    padding: 16,
-    marginBottom: 28,
+    borderColor: '#E2EBE5',
+    padding: 14,
+    marginBottom: 18,
   },
-  confirmedInfoRow: {
+  ticketColsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 6,
   },
-  confirmedInfoValue: {
+  ticketCol: {
+    flex: 1,
+  },
+  ticketHeaderSmall: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 4,
+  },
+  ticketMicroLabel: {
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#64748B',
+    fontFamily: Typography.fontFamily.sans,
+    letterSpacing: 0.5,
+  },
+  ticketValueText: {
     fontSize: 13.5,
     fontWeight: '700',
     color: '#102820',
-    lineHeight: 18,
     fontFamily: Typography.fontFamily.sans,
   },
-  confirmedDivider: {
+  ticketVerticalDivider: {
+    width: 1,
+    height: 38,
+    backgroundColor: '#DCE9E1',
+    marginHorizontal: 12,
+  },
+  ticketHorizontalDivider: {
     height: 1,
-    backgroundColor: '#F1F5F3',
-    marginVertical: 4,
+    backgroundColor: '#E8F0EC',
+    marginVertical: 10,
+  },
+  ticketAddressRow: {
+    width: '100%',
+  },
+  ticketAddressValueText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#102820',
+    fontFamily: Typography.fontFamily.sans,
+    lineHeight: 18,
   },
   confirmedActionsWrap: {
     width: '100%',
     gap: 10,
-    marginTop: 4,
   },
   secondaryActionButton: {
-    height: 48,
+    backgroundColor: '#FFFFFF',
+    height: 50,
     borderRadius: 16,
-    backgroundColor: '#EAF5EE',
-    borderWidth: 1.2,
+    borderWidth: 1.5,
     borderColor: '#0F5B43',
     alignItems: 'center',
     justifyContent: 'center',
