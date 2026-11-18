@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import { Typography, Shadows } from '../../constants/theme';
 
 const Palette = {
@@ -41,15 +42,15 @@ export const FOUR_CORE_SERVICES: ServiceCategoryCard[] = [
   {
     id: 'doctor-visit',
     title: 'Doctor Visit',
-    subtitle: 'Consult verified doctors at home',
+    subtitle: 'Consult a verified doctor at home.',
     bgImage: require('../../../assets/images/doorstep-1.png'),
-    badgeIcon: 'medkit',
+    badgeIcon: 'home',
     route: '/services/doctor-visit', // Opens All Doctors Page
   },
   {
     id: 'nursing-care',
     title: 'Nursing Care',
-    subtitle: 'Surgical post-op, IV & injections',
+    subtitle: 'Post-op, IV & injection care.',
     bgImage: require('../../../assets/images/nurse-elder-care.png'),
     badgeIcon: 'heart',
     route: '/services/nursing-care', // Opens All Nurses Page
@@ -57,7 +58,7 @@ export const FOUR_CORE_SERVICES: ServiceCategoryCard[] = [
   {
     id: 'caretakers',
     title: 'Attendant Care',
-    subtitle: 'Elderly assistance & 12h/24h shifts',
+    subtitle: 'Elderly support & daily assistance.',
     bgImage: require('../../../assets/images/doorstep-3.png'),
     badgeIcon: 'people',
     route: '/services/caretakers', // Opens All Caregivers Page
@@ -65,7 +66,7 @@ export const FOUR_CORE_SERVICES: ServiceCategoryCard[] = [
   {
     id: 'lab-investigation',
     title: 'Home Lab Tests',
-    subtitle: 'Blood tests & digital reports in 6h',
+    subtitle: 'Blood tests & basic diagnostics.',
     bgImage: require('../../../assets/images/doorstep-2.png'),
     badgeIcon: 'flask',
     route: '/services/home-lab', // Opens All Lab Tests Page
@@ -192,33 +193,45 @@ export default function ServicesScreen() {
               activeOpacity={0.88}
               onPress={() => router.push(svc.route as any)}
             >
-              {/* Layer 1: Background Image */}
+              {/* Layer 1: Photographic Background Image */}
               <Image
                 source={svc.bgImage}
                 style={styles.gridCardBgImage}
                 resizeMode="cover"
               />
 
-              {/* Layer 2: Gradient Contrast Scrim */}
-              <View style={styles.gridCardScrim} />
+              {/* Layer 2: Seamless Deep Scrim Gradient */}
+              <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
+                <Defs>
+                  <LinearGradient id={`scrim-${svc.id}`} x1="0" y1="0" x2="0" y2="1">
+                    <Stop offset="0%" stopColor="#000000" stopOpacity="0.04" />
+                    <Stop offset="38%" stopColor="#0B2B20" stopOpacity="0.32" />
+                    <Stop offset="68%" stopColor="#072018" stopOpacity="0.82" />
+                    <Stop offset="100%" stopColor="#04140F" stopOpacity="0.96" />
+                  </LinearGradient>
+                </Defs>
+                <Rect x="0" y="0" width="100%" height="100%" fill={`url(#scrim-${svc.id})`} />
+              </Svg>
 
               {/* Layer 3: Minimal, Clean Elements Above Image */}
               <View style={styles.gridCardContent}>
-                {/* Top Badge */}
+                {/* Top-Left Doorstep Care Floating Pill */}
                 <View style={styles.gridTagBadge}>
-                  <Ionicons name={svc.badgeIcon} size={11} color="#A7F3D0" style={{ marginRight: 4 }} />
+                  <Ionicons name={svc.badgeIcon} size={13} color="#0F5B43" style={{ marginRight: 4 }} />
                   <Text style={styles.gridTagText}>Doorstep Care</Text>
                 </View>
 
-                {/* Bottom Title & Action Arrow */}
+                {/* Bottom Title, Subtitle & Explore Circle Button */}
                 <View style={styles.gridCardBottomInfo}>
                   <Text style={styles.gridCardHeading}>{svc.title}</Text>
-                  <Text style={styles.gridCardSubtitle} numberOfLines={1}>{svc.subtitle}</Text>
+                  <Text style={styles.gridCardSubtitle} numberOfLines={2}>
+                    {svc.subtitle}
+                  </Text>
 
                   <View style={styles.gridCardActionRow}>
                     <Text style={styles.gridCardActionText}>Explore</Text>
                     <View style={styles.gridExploreCircle}>
-                      <Ionicons name="arrow-forward" size={11} color={Palette.primary} />
+                      <Ionicons name="arrow-forward" size={14} color="#0F5B43" />
                     </View>
                   </View>
                 </View>
@@ -400,22 +413,26 @@ const styles = StyleSheet.create({
     ...(Platform.OS === 'web' ? ({ outlineStyle: 'none', borderWidth: 0 } as any) : {}),
   },
 
-  /* 4. 2x2 Clean Minimal Services Grid */
+  /* 4. 2x2 Clean Minimal Services Grid - Exact Design from Reference */
   servicesGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     rowGap: 14,
-    marginBottom: 18,
+    marginBottom: 20,
   },
   gridCard: {
-    width: '48%',
-    height: 200,
+    width: '48.2%',
+    height: 222,
     borderRadius: 22,
     overflow: 'hidden',
     backgroundColor: '#0F5B43',
     position: 'relative',
-    ...Shadows.card,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 4,
   },
   gridCardBgImage: {
     position: 'absolute',
@@ -426,77 +443,67 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  gridCardScrim: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(8, 32, 23, 0.48)',
-  },
   gridCardContent: {
     position: 'relative',
     flex: 1,
-    padding: 12,
+    padding: 13,
     justifyContent: 'space-between',
   },
   gridTagBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: 'rgba(0, 0, 0, 0.42)',
-    paddingHorizontal: 8,
-    paddingVertical: 3.5,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.22)',
+    backgroundColor: '#E6F4EA',
+    paddingHorizontal: 9,
+    paddingVertical: 4.5,
+    borderRadius: 14,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
   },
   gridTagText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: '#0F5B43',
   },
   gridCardBottomInfo: {
-    backgroundColor: 'rgba(6, 26, 19, 0.75)',
-    borderRadius: 14,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.16)',
+    paddingBottom: 2,
   },
   gridCardHeading: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14.5,
+    fontSize: 17,
     fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: 2,
+    letterSpacing: -0.3,
+    marginBottom: 3,
   },
   gridCardSubtitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '400',
-    color: '#D1E7DD',
-    marginBottom: 6,
+    color: '#E2E8F0',
+    lineHeight: 15,
+    marginBottom: 10,
   },
   gridCardActionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 5,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.15)',
   },
   gridCardActionText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
-    fontWeight: '700',
-    color: '#A7F3D0',
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#C7EADB',
   },
   gridExploreCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: '#FFFFFF',
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#C7EADB',
     alignItems: 'center',
     justifyContent: 'center',
   },
