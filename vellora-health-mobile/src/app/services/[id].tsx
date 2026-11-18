@@ -631,26 +631,69 @@ export default function ServiceDetailScreen() {
                 hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                 accessibilityLabel="Close dialog"
               >
-                <Ionicons name="close" size={18} color="#64748B" />
+                <Ionicons name="close" size={16} color="#0F5B43" />
               </TouchableOpacity>
             </View>
 
             {selectedItem && (
               <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.modalScrollContent}>
-                {/* Doctor / Specialist Header Card */}
+                {/* Doctor / Caregiver / Specialist Header Card with Organic Mint Wave Illustration */}
                 <View style={styles.modalHeaderCard}>
+                  {/* Organic wave illustration in the background behind the text */}
+                  <View style={StyleSheet.absoluteFill} pointerEvents="none">
+                    <Svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 340 145">
+                      <Path
+                        d="M160 0 C210 50 250 15 340 10 L340 145 L240 145 C220 105 245 65 190 35 C170 24 162 10 160 0 Z"
+                        fill="#EAF7EE"
+                        opacity={0.9}
+                      />
+                      <Path
+                        d="M210 0 C250 40 280 20 340 30 L340 95 C295 75 265 40 210 0 Z"
+                        fill="#DCF4E7"
+                        opacity={0.65}
+                      />
+                      <Path
+                        d="M340 60 C290 85 265 110 245 145 L340 145 Z"
+                        fill="#E2F5EA"
+                        opacity={0.8}
+                      />
+                      <Path
+                        d="M340 90 C305 105 285 125 270 145 L340 145 Z"
+                        fill="#D0EEDC"
+                        opacity={0.5}
+                      />
+                    </Svg>
+                  </View>
+
                   <Image
                     source={selectedItem.image}
                     style={styles.modalDoctorAvatar}
                     resizeMode="cover"
                   />
                   <View style={styles.modalDoctorInfo}>
+                    <View style={styles.modalVerifiedBadge}>
+                      <Ionicons name="person-outline" size={12} color="#0F5B43" />
+                      <Text style={styles.modalVerifiedBadgeText}>
+                        {serviceKey === 'caretakers'
+                          ? 'Verified Caregiver'
+                          : serviceKey === 'nursing-care'
+                          ? 'Verified Clinical Nurse'
+                          : serviceKey === 'lab-tests' || serviceKey === 'home-lab'
+                          ? 'Certified Phlebotomist'
+                          : 'Verified Caregiver'}
+                      </Text>
+                    </View>
+
                     <Text style={styles.modalDoctorName}>{selectedItem.name}</Text>
                     <Text style={styles.modalDoctorSpecialty}>{selectedItem.specialty}</Text>
-                    <Text style={styles.modalDoctorExp}>{selectedItem.experience}</Text>
+
+                    <View style={styles.modalExpRow}>
+                      <Ionicons name="briefcase-outline" size={13.5} color="#6B7280" />
+                      <Text style={styles.modalDoctorExp}>{selectedItem.experience}</Text>
+                    </View>
 
                     <View style={styles.modalRatingRow}>
-                      <Ionicons name="star" size={14} color="#F59E0B" />
+                      <Ionicons name="star" size={14.5} color="#F59E0B" />
                       <Text style={styles.modalRatingScore}>{selectedItem.rating.toFixed(1)}</Text>
                       <Text style={styles.modalReviewsCount}>({selectedItem.reviewsCount.toLocaleString()} reviews)</Text>
                     </View>
@@ -666,13 +709,17 @@ export default function ServiceDetailScreen() {
                 {/* Credentials & Details Row */}
                 <View style={styles.modalTwoColRow}>
                   <View style={styles.modalColBox}>
-                    <Ionicons name="school-outline" size={18} color={Palette.primary} style={{ marginBottom: 4 }} />
+                    <View style={styles.modalColIconCircle}>
+                      <Ionicons name="school-outline" size={17} color="#0F5B43" />
+                    </View>
                     <Text style={styles.modalBoxTitle}>Qualifications</Text>
                     <Text style={styles.modalBoxValue}>{selectedItem.qualifications}</Text>
                   </View>
 
                   <View style={styles.modalColBox}>
-                    <Ionicons name="language-outline" size={18} color={Palette.primary} style={{ marginBottom: 4 }} />
+                    <View style={styles.modalColIconCircle}>
+                      <Ionicons name="language-outline" size={17} color="#0F5B43" />
+                    </View>
                     <Text style={styles.modalBoxTitle}>Languages</Text>
                     <Text style={styles.modalBoxValue}>{selectedItem.languages}</Text>
                   </View>
@@ -680,11 +727,19 @@ export default function ServiceDetailScreen() {
 
                 {/* Itemized Pricing */}
                 <View style={styles.modalPricingCard}>
-                  <View>
-                    <Text style={styles.modalPricingLabel}>Visit Consultation Fee</Text>
-                    <Text style={styles.modalPricingSubtext}>Inclusive of travel, PPE & clinical triage</Text>
+                  <View style={styles.modalPricingLeftRow}>
+                    <View style={styles.modalFeeIconWrap}>
+                      <Ionicons name="heart-circle-outline" size={22} color="#0F5B43" />
+                    </View>
+                    <View style={styles.modalFeeDivider} />
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.modalPricingLabel}>Visit Consultation Fee</Text>
+                      <Text style={styles.modalPricingSubtext}>Inclusive of travel, PPE & clinical triage</Text>
+                    </View>
                   </View>
-                  <Text style={styles.modalPriceText}>{formatCurrency(selectedItem.price)}</Text>
+                  <View style={styles.modalFeeBadge}>
+                    <Text style={styles.modalPriceText}>{formatCurrency(selectedItem.price)}</Text>
+                  </View>
                 </View>
 
                 {/* Action Buttons */}
@@ -1139,10 +1194,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 18,
     top: 6,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#F1F5F9',
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#EAF5EE',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1155,141 +1210,202 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 8,
+    borderRadius: 22,
+    padding: 10,
     borderWidth: 1.2,
-    borderColor: '#E2E8F0',
+    borderColor: '#E8ECE6',
     marginBottom: 16,
     gap: 12,
+    position: 'relative',
+    overflow: 'hidden',
     ...Shadows.subtle,
   },
   modalDoctorAvatar: {
     width: 110,
-    height: 120,
-    borderRadius: 14,
+    height: 122,
+    borderRadius: 20,
     backgroundColor: '#F1F5F9',
   },
   modalDoctorInfo: {
     flex: 1,
     justifyContent: 'center',
     paddingRight: 4,
+    gap: 2,
+    zIndex: 2,
+  },
+  modalVerifiedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#EAF6EE',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+    alignSelf: 'flex-start',
+    marginBottom: 4,
+  },
+  modalVerifiedBadgeText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#0F5B43',
   },
   modalDoctorName: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 17,
+    fontSize: 18.5,
     fontWeight: '700',
-    color: Palette.textDark,
-    letterSpacing: -0.2,
+    color: '#111827',
+    letterSpacing: -0.3,
   },
   modalDoctorSpecialty: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13,
-    color: Palette.primary,
+    fontSize: 13.5,
+    color: '#0F5B43',
     fontWeight: '600',
-    marginTop: 2,
+    marginBottom: 2,
+  },
+  modalExpRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 3,
   },
   modalDoctorExp: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 12,
-    color: Palette.textMuted,
-    marginTop: 3,
+    color: '#6B7280',
   },
   modalRatingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    marginTop: 6,
+    gap: 4,
   },
   modalRatingScore: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13,
     fontWeight: '700',
-    color: Palette.textDark,
+    color: '#111827',
   },
   modalReviewsCount: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 11.5,
-    color: Palette.textMuted,
+    color: '#6B7280',
   },
   modalSection: {
     marginBottom: 16,
   },
   modalSectionTitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 14.5,
+    fontSize: 15.5,
     fontWeight: '700',
-    color: Palette.textDark,
+    color: '#111827',
     marginBottom: 6,
   },
   modalAboutText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13,
-    color: '#4A5B53',
-    lineHeight: 18.5,
+    fontSize: 13.5,
+    color: '#4B5563',
+    lineHeight: 19.5,
   },
   modalTwoColRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 12,
     marginBottom: 14,
   },
   modalColBox: {
     flex: 1,
-    backgroundColor: '#F8FAF7',
+    backgroundColor: '#F8FAF9',
     borderRadius: 16,
     borderWidth: 1.2,
     borderColor: '#E8ECE6',
     padding: 12,
   },
+  modalColIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#EAF5EE',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+  },
   modalBoxTitle: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 11,
     fontWeight: '600',
-    color: Palette.textMuted,
-    marginBottom: 2,
+    color: '#6B7280',
+    marginBottom: 3,
   },
   modalBoxValue: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 12.5,
     fontWeight: '600',
-    color: Palette.textDark,
+    color: '#111827',
     lineHeight: 16,
   },
   modalPricingCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#EAF5EE',
+    backgroundColor: '#F3F9F6',
     borderRadius: 16,
     borderWidth: 1.2,
-    borderColor: '#CDE5D7',
-    padding: 15,
-    marginBottom: 18,
+    borderColor: '#CCE8DA',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  modalPricingLeftRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flex: 1,
+  },
+  modalFeeIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#EAF5EE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalFeeDivider: {
+    width: 1,
+    height: 26,
+    backgroundColor: '#D4E8DC',
+    marginHorizontal: 3,
   },
   modalPricingLabel: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13.5,
     fontWeight: '700',
-    color: Palette.textDark,
+    color: '#111827',
   },
   modalPricingSubtext: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 11,
-    color: '#556A61',
-    marginTop: 2,
+    fontSize: 10.5,
+    color: '#6B7280',
+    marginTop: 1,
+  },
+  modalFeeBadge: {
+    backgroundColor: '#EAF6ED',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
   },
   modalPriceText: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: '700',
-    color: Palette.primary,
+    color: '#0F5B43',
   },
   modalBookBtn: {
     height: 52,
     borderRadius: 26,
-    backgroundColor: Palette.primary,
+    backgroundColor: '#0F5B43',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: 6,
     ...Shadows.subtle,
   },
   modalBookBtnText: {
