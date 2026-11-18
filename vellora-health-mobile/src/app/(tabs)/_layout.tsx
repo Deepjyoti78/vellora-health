@@ -19,15 +19,15 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: true,
         tabBarActiveTintColor: '#FFFFFF',
-        tabBarInactiveTintColor: '#A3C6B9',
+        tabBarInactiveTintColor: '#C2E5D9', // High contrast soft mint, crisp & never faded
         tabBarStyle: {
           position: 'absolute',
           bottom: bottomMargin,
           left: 18,
           right: 18,
-          height: 58, // Sleek, reduced height
+          height: 64, // Balanced sleek height with ample clearance for text
           backgroundColor: '#0F5B43', // Dark forest green
-          borderRadius: 29,
+          borderRadius: 32,
           borderWidth: 1.2,
           borderColor: 'rgba(255, 255, 255, 0.18)',
           elevation: 14,
@@ -36,20 +36,23 @@ export default function TabLayout() {
           shadowOffset: { width: 0, height: 6 },
           shadowOpacity: 0.32,
           shadowRadius: 16,
-          paddingTop: 4,
-          paddingBottom: 4,
-          paddingHorizontal: 6,
+          paddingTop: 6,
+          paddingBottom: 8,
+          paddingHorizontal: 8,
         },
         tabBarItemStyle: {
-          height: 48,
+          height: 50,
           justifyContent: 'center',
           alignItems: 'center',
+          paddingVertical: 1,
         },
         tabBarLabelStyle: {
           fontFamily: Typography.fontFamily.sans,
-          fontSize: 10,
+          fontSize: 11,
           fontWeight: '600',
-          marginTop: 1,
+          marginTop: 2,
+          marginBottom: 0,
+          letterSpacing: 0.1,
         },
       }}
     >
@@ -63,7 +66,7 @@ export default function TabLayout() {
               <Ionicons
                 name={focused ? 'home' : 'home-outline'}
                 size={21}
-                color={focused ? '#FFFFFF' : '#A3C6B9'}
+                color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
           ),
@@ -80,7 +83,7 @@ export default function TabLayout() {
               <Ionicons
                 name={focused ? 'calendar' : 'calendar-outline'}
                 size={21}
-                color={focused ? '#FFFFFF' : '#A3C6B9'}
+                color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
           ),
@@ -97,7 +100,7 @@ export default function TabLayout() {
               <Ionicons
                 name={focused ? 'grid' : 'grid-outline'}
                 size={21}
-                color={focused ? '#FFFFFF' : '#A3C6B9'}
+                color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
           ),
@@ -114,7 +117,7 @@ export default function TabLayout() {
               <Ionicons
                 name={focused ? 'person' : 'person-outline'}
                 size={21}
-                color={focused ? '#FFFFFF' : '#A3C6B9'}
+                color={focused ? '#FFFFFF' : '#C2E5D9'}
               />
             </View>
           ),
