@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Typography, Shadows } from '../../constants/theme';
 
 const Palette = {
@@ -200,18 +200,18 @@ export default function ServicesScreen() {
                 resizeMode="cover"
               />
 
-              {/* Layer 2: Soft Gradient Scrim in the bottom text area only */}
-              <Svg height="100%" width="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
-                <Defs>
-                  <LinearGradient id={`scrim-${svc.id}`} x1="0" y1="0" x2="0" y2="1">
-                    <Stop offset="0%" stopColor="#000000" stopOpacity="0.0" />
-                    <Stop offset="52%" stopColor="#000000" stopOpacity="0.0" />
-                    <Stop offset="75%" stopColor="#000000" stopOpacity="0.55" />
-                    <Stop offset="100%" stopColor="#000000" stopOpacity="0.88" />
-                  </LinearGradient>
-                </Defs>
-                <Rect x="0" y="0" width="100%" height="100%" fill={`url(#scrim-${svc.id})`} />
-              </Svg>
+              {/* Layer 2: Soft Gradient Scrim in the bottom text area for crystal-clear readability */}
+              <LinearGradient
+                colors={[
+                  'rgba(0, 0, 0, 0)',
+                  'rgba(0, 0, 0, 0.2)',
+                  'rgba(0, 0, 0, 0.68)',
+                  'rgba(0, 0, 0, 0.92)',
+                ]}
+                locations={[0, 0.32, 0.65, 1]}
+                style={styles.gridCardGradient}
+                pointerEvents="none"
+              />
 
               {/* Layer 3: Minimal, Clean Elements Above Image (Title & 1-Liner Only) */}
               <View style={styles.gridCardContent}>
@@ -428,6 +428,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     height: '100%',
+  },
+  gridCardGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '75%',
   },
   gridCardContent: {
     position: 'relative',
