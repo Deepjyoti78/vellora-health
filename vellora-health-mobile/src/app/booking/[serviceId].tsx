@@ -1291,155 +1291,124 @@ export default function BookingScreen() {
       )}
 
       {/* ========================================================================= */}
-      {/* 5. BOOKING CONFIRMED! SCREEN (Premium Redesigned Single Card)              */}
+      {/* 5. BOOKING CONFIRMED! SCREEN (Clean Minimalist Design as in Image 1)       */}
       {/* ========================================================================= */}
       {currentStep === 'confirmed' && (
         <View style={styles.screenContainer}>
-          {renderHeader(false)}
           <ScrollView
-            contentContainerStyle={styles.confirmedScrollContent}
+            contentContainerStyle={styles.cleanConfirmedScrollContent}
             showsVerticalScrollIndicator={false}
           >
-            {/* Header Notification Badge */}
-            <View style={styles.confirmedTopBadgeWrap}>
-              <View style={styles.confirmedTopBadge}>
-                <Ionicons name="checkmark-circle" size={16} color="#059669" />
-                <Text style={styles.confirmedTopBadgeText}>Doorstep Care Booked</Text>
+            {/* Top Mint Header Card */}
+            <View style={styles.cleanMintHeaderCard}>
+              {/* Circular White Badge with Green Checkmark */}
+              <View style={styles.cleanCheckmarkOuterCircle}>
+                <View style={styles.cleanCheckmarkInnerRing}>
+                  <Ionicons name="checkmark" size={18} color="#0D7A73" />
+                </View>
+              </View>
+
+              <Text style={styles.cleanConfirmedTitle}>Appointment confirmed</Text>
+              <Text style={styles.cleanConfirmedSubtitle}>
+                Booking ID {bookingReference ? (bookingReference.startsWith('VEL-') ? `MC-${bookingReference.slice(-5).toUpperCase()}` : bookingReference) : 'MC-48213'} · details sent by SMS
+              </Text>
+            </View>
+
+            {/* Main White Details Card */}
+            <View style={styles.cleanDetailsCard}>
+              {/* Doctor Row */}
+              <View style={styles.cleanDoctorRow}>
+                <Image
+                  source={getProviderAvatar()}
+                  style={styles.cleanDoctorAvatar}
+                  resizeMode="cover"
+                />
+                <View style={styles.cleanDoctorInfoCol}>
+                  <Text style={styles.cleanDoctorName}>{providerName}</Text>
+                  <Text style={styles.cleanDoctorRole}>{serviceTitle} · MBBS, FCPS</Text>
+                </View>
+              </View>
+
+              <View style={styles.cleanCardDivider} />
+
+              {/* Date & Time Row */}
+              <View style={styles.cleanInfoRow}>
+                <Ionicons name="calendar-outline" size={19} color="#6B7280" style={styles.cleanInfoIcon} />
+                <View style={styles.cleanInfoTextCol}>
+                  <Text style={styles.cleanInfoPrimaryText}>
+                    {bookingConfirmedDate} · {bookingConfirmedTime}
+                  </Text>
+                  <Text style={styles.cleanInfoSecondaryText}>
+                    Doorstep Consultation · est. 30–45 mins
+                  </Text>
+                </View>
+              </View>
+
+              {/* In-Person Visit / Address Row */}
+              <View style={styles.cleanInfoRow}>
+                <Ionicons name="location-outline" size={19} color="#6B7280" style={styles.cleanInfoIcon} />
+                <View style={styles.cleanInfoTextCol}>
+                  <Text style={styles.cleanInfoPrimaryText}>In-person visit</Text>
+                  <Text style={styles.cleanInfoSecondaryText} numberOfLines={2}>
+                    {serviceAddress}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Payment Row */}
+              <View style={styles.cleanInfoRow}>
+                <Ionicons name="card-outline" size={19} color="#6B7280" style={styles.cleanInfoIcon} />
+                <View style={styles.cleanInfoTextCol}>
+                  <Text style={styles.cleanInfoPrimaryText}>Paid {priceLabel || '₹799'}</Text>
+                  <Text style={styles.cleanInfoSecondaryText}>
+                    UPI · TrxID 9F3K2LQ8 (sample)
+                  </Text>
+                </View>
               </View>
             </View>
 
-            {/* Single Unified Card: Hero Image on Top, Details & Actions Below */}
-            <View style={styles.unifiedConfirmedCard}>
-              {/* Doctor Photographic Hero Banner with Natural Gradient & Floating Status */}
-              <View style={styles.confirmedHeroImageWrapper}>
-                <Image
-                  source={getProviderAvatar()}
-                  style={styles.confirmedHeroImage}
-                  resizeMode="cover"
-                />
-
-                {/* Floating Glass Status Pill on Hero Image */}
-                <View style={styles.floatingStatusBadge}>
-                  <View style={styles.statusPulseDot} />
-                  <Text style={styles.floatingStatusText}>Assignment Pending</Text>
-                </View>
-
-                {/* Smooth Gradient Scrim Transitioning Image into Card */}
-                <LinearGradient
-                  colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.45)', '#FFFFFF']}
-                  locations={[0, 0.65, 1]}
-                  style={styles.heroGradientBottom}
-                  pointerEvents="none"
-                />
+            {/* Reminders & Bedside PIN Info Box */}
+            <View style={styles.cleanReminderCard}>
+              <Ionicons name="information-circle-outline" size={20} color="#0D7A73" style={{ marginTop: 1 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.cleanReminderTitle}>
+                  Reminders are on · Doorstep PIN: <Text style={{ fontWeight: '700' }}>4829</Text>
+                </Text>
+                <Text style={styles.cleanReminderSubtitle}>
+                  We'll remind you 1 day and 2 hours before. Share your PIN upon clinician arrival.
+                </Text>
               </View>
+            </View>
 
-              {/* Card Body */}
-              <View style={styles.confirmedCardBody}>
-                {/* Doctor Name & Specialty */}
-                <Text style={styles.confirmedDoctorNameLarge}>{providerName}</Text>
-                <View style={styles.doctorSpecialtyRow}>
-                  <Ionicons name="shield-checkmark" size={14} color="#059669" />
-                  <Text style={styles.confirmedDoctorRoleLarge}>{serviceTitle}</Text>
-                  <Text style={styles.doctorRoleDot}>•</Text>
-                  <Ionicons name="star" size={13} color="#D97706" />
-                  <Text style={styles.doctorRatingText}>4.9 (1,324)</Text>
-                </View>
+            {/* Bottom Action Buttons */}
+            <View style={styles.cleanActionsWrap}>
+              <TouchableOpacity
+                accessibilityRole="button"
+                style={styles.cleanPrimaryBtn}
+                onPress={handleViewMyBookings}
+                activeOpacity={0.88}
+              >
+                <Text style={styles.cleanPrimaryBtnText}>View appointment</Text>
+              </TouchableOpacity>
 
-                {/* Booking Reference Pill */}
-                <View style={styles.confirmedRefBadge}>
-                  <Ionicons name="receipt-outline" size={15} color="#0F5B43" />
-                  <Text style={styles.confirmedRefLabel}>Booking Reference</Text>
-                  <View style={styles.confirmedRefVerticalDivider} />
-                  <Text style={styles.confirmedRefCode}>{bookingReference}</Text>
-                  <TouchableOpacity
-                    onPress={() => Alert.alert('Copied', 'Booking reference copied to clipboard.')}
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                  >
-                    <Ionicons name="copy-outline" size={15} color="#059669" />
-                  </TouchableOpacity>
-                </View>
+              <TouchableOpacity
+                accessibilityRole="button"
+                style={styles.cleanSecondaryBtn}
+                onPress={() => Alert.alert('Calendar Sync', 'This appointment has been added to your calendar.')}
+                activeOpacity={0.85}
+              >
+                <Ionicons name="calendar-outline" size={17} color="#1F2937" style={{ marginRight: 6 }} />
+                <Text style={styles.cleanSecondaryBtnText}>Add to calendar</Text>
+              </TouchableOpacity>
 
-                {/* Embedded Bedside Verification PIN Section */}
-                <View style={styles.embeddedBedsidePinBox}>
-                  <View style={styles.bedsidePinHeader}>
-                    <View style={styles.pinShieldIconWrap}>
-                      <Ionicons name="lock-closed" size={15} color="#0F5B43" />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.bedsidePinTitle}>Bedside Verification PIN</Text>
-                      <Text style={styles.bedsidePinHelp}>Share with clinician at doorstep to verify identity</Text>
-                    </View>
-                  </View>
-                  <View style={styles.pinDigitsRow}>
-                    {['4', '8', '2', '9'].map((digit, idx) => (
-                      <View key={idx} style={styles.pinDigitBox}>
-                        <Text style={styles.pinDigitText}>{digit}</Text>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-
-                {/* Schedule & Location Details in Structured Ticket Box */}
-                <View style={styles.confirmedScheduleTicket}>
-                  {/* Top Row: Date & Time in 2 Clean Columns */}
-                  <View style={styles.ticketColsRow}>
-                    {/* Date Column */}
-                    <View style={styles.ticketCol}>
-                      <View style={styles.ticketHeaderSmall}>
-                        <Ionicons name="calendar-outline" size={14} color="#0F5B43" />
-                        <Text style={styles.ticketMicroLabel}>DATE</Text>
-                      </View>
-                      <Text style={styles.ticketValueText}>{bookingConfirmedDate}</Text>
-                    </View>
-
-                    <View style={styles.ticketVerticalDivider} />
-
-                    {/* Time Column */}
-                    <View style={styles.ticketCol}>
-                      <View style={styles.ticketHeaderSmall}>
-                        <Ionicons name="time-outline" size={14} color="#0F5B43" />
-                        <Text style={styles.ticketMicroLabel}>TIME SLOT</Text>
-                      </View>
-                      <Text style={styles.ticketValueText}>{bookingConfirmedTime}</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.ticketHorizontalDivider} />
-
-                  {/* Bottom Row: Visit Address */}
-                  <View style={styles.ticketAddressRow}>
-                    <View style={styles.ticketHeaderSmall}>
-                      <Ionicons name="location-outline" size={14} color="#0F5B43" />
-                      <Text style={styles.ticketMicroLabel}>VISIT ADDRESS</Text>
-                    </View>
-                    <Text style={styles.ticketAddressValueText} numberOfLines={2}>
-                      {serviceAddress}
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Action Buttons: View My Bookings & Book Another Service */}
-                <View style={styles.confirmedActionsWrap}>
-                  <TouchableOpacity
-                    accessibilityRole="button"
-                    style={styles.primaryActionButton}
-                    onPress={handleViewMyBookings}
-                    activeOpacity={0.88}
-                  >
-                    <Text style={styles.primaryActionButtonText}>View My Bookings</Text>
-                    <Ionicons name="arrow-forward" size={16} color="#FFFFFF" style={{ marginLeft: 6 }} />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    accessibilityRole="button"
-                    style={styles.secondaryActionButton}
-                    onPress={handleBookAnotherService}
-                    activeOpacity={0.85}
-                  >
-                    <Text style={styles.secondaryActionButtonText}>Book Another Service</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <TouchableOpacity
+                accessibilityRole="button"
+                style={styles.cleanTextLinkBtn}
+                onPress={() => router.replace('/(tabs)')}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.cleanTextLinkBtnText}>Back to home</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
@@ -2719,300 +2688,200 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     fontFamily: Typography.fontFamily.sans,
   },
-  confirmedTopBadgeWrap: {
-    alignItems: 'center',
-    marginBottom: 14,
-  },
-  confirmedTopBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#EAF6ED',
-    borderWidth: 1,
-    borderColor: '#C2E5D3',
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    shadowColor: '#059669',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  confirmedTopBadgeText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
-    fontWeight: '700',
-    color: '#059669',
-    letterSpacing: -0.2,
-  },
-  confirmedScrollContent: {
+  cleanConfirmedScrollContent: {
     paddingHorizontal: 16,
-    paddingTop: 8,
+    paddingTop: 16,
     paddingBottom: 40,
     alignItems: 'center',
   },
-  unifiedConfirmedCard: {
+  cleanMintHeaderCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: '#EAF6F0',
+    borderRadius: 22,
+    paddingVertical: 26,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  cleanCheckmarkOuterCircle: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
+    marginBottom: 14,
+  },
+  cleanCheckmarkInnerRing: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2.2,
+    borderColor: '#0D7A73',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cleanConfirmedTitle: {
+    fontSize: 21,
+    fontWeight: '700',
+    color: '#111827',
+    fontFamily: Typography.fontFamily.sans,
+    letterSpacing: -0.3,
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  cleanConfirmedSubtitle: {
+    fontSize: 12.5,
+    color: '#6B7280',
+    fontFamily: Typography.fontFamily.sans,
+    textAlign: 'center',
+  },
+  cleanDetailsCard: {
     width: '100%',
     maxWidth: 420,
     backgroundColor: '#FFFFFF',
-    borderRadius: 26,
-    borderWidth: 1.2,
-    borderColor: '#E2EBE5',
-    overflow: 'hidden',
-    shadowColor: '#0A2E23',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 5,
-    marginBottom: 20,
-  },
-  confirmedHeroImageWrapper: {
-    width: '100%',
-    height: 205,
-    backgroundColor: '#EAF5EE',
-    position: 'relative',
-  },
-  confirmedHeroImage: {
-    width: '100%',
-    height: '100%',
-  },
-  floatingStatusBadge: {
-    position: 'absolute',
-    top: 14,
-    left: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.94)',
     borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    padding: 18,
+    marginBottom: 12,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  statusPulseDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-    backgroundColor: '#059669',
-  },
-  floatingStatusText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11.5,
-    fontWeight: '700',
-    color: '#0F5B43',
-  },
-  heroGradientBottom: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 60,
-  },
-  confirmedCardBody: {
-    paddingHorizontal: 18,
-    paddingTop: 6,
-    paddingBottom: 20,
-  },
-  confirmedDoctorNameLarge: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#0F5B43',
-    fontFamily: Typography.fontFamily.sans,
-    letterSpacing: -0.3,
-    marginBottom: 3,
-  },
-  doctorSpecialtyRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 5,
-    marginBottom: 12,
-  },
-  confirmedDoctorRoleLarge: {
-    fontSize: 13,
-    color: '#475569',
-    fontWeight: '600',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  doctorRoleDot: {
-    fontSize: 12,
-    color: '#94A3B8',
-  },
-  doctorRatingText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#475569',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  confirmedRefBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#F3F9F6',
-    borderWidth: 1,
-    borderColor: '#CCE8DA',
-    borderRadius: 14,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginBottom: 14,
-  },
-  confirmedRefLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#64748B',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  confirmedRefVerticalDivider: {
-    width: 1,
-    height: 14,
-    backgroundColor: '#CBD5E1',
-  },
-  confirmedRefCode: {
-    fontSize: 12.5,
-    fontWeight: '700',
-    color: '#0F5B43',
-    fontFamily: Typography.fontFamily.sans,
-    flex: 1,
-  },
-  embeddedBedsidePinBox: {
-    width: '100%',
-    backgroundColor: '#F3F9F6',
-    borderRadius: 18,
-    borderWidth: 1.2,
-    borderColor: '#CCE8DA',
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-    marginBottom: 14,
-  },
-  bedsidePinHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 12,
-  },
-  pinShieldIconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    backgroundColor: '#EAF6ED',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bedsidePinTitle: {
-    fontSize: 13.5,
-    fontWeight: '700',
-    color: '#0F5B43',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  bedsidePinHelp: {
-    fontSize: 11,
-    color: '#64748B',
-    fontFamily: Typography.fontFamily.sans,
-    marginTop: 1,
-  },
-  pinDigitsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-  },
-  pinDigitBox: {
-    flex: 1,
-    height: 52,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: '#0F5B43',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#0F5B43',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
     elevation: 2,
   },
-  pinDigitText: {
-    fontSize: 22,
-    fontWeight: '800',
+  cleanDoctorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cleanDoctorAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#EAF5EE',
+    marginRight: 12,
+  },
+  cleanDoctorInfoCol: {
+    flex: 1,
+  },
+  cleanDoctorName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#111827',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cleanDoctorRole: {
+    fontSize: 12.5,
+    color: '#6B7280',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 2,
+  },
+  cleanCardDivider: {
+    height: 1,
+    backgroundColor: '#F3F4F6',
+    marginVertical: 14,
+  },
+  cleanInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 14,
+  },
+  cleanInfoIcon: {
+    marginRight: 12,
+    marginTop: 2,
+  },
+  cleanInfoTextCol: {
+    flex: 1,
+  },
+  cleanInfoPrimaryText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1F2937',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cleanInfoSecondaryText: {
+    fontSize: 12,
+    color: '#6B7280',
+    fontFamily: Typography.fontFamily.sans,
+    marginTop: 2,
+    lineHeight: 16,
+  },
+  cleanReminderCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: '#EAF6F0',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#D0E8DC',
+    padding: 14,
+    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  cleanReminderTitle: {
+    fontSize: 13,
+    fontWeight: '600',
     color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
   },
-  confirmedScheduleTicket: {
-    backgroundColor: '#F8FAF9',
-    borderRadius: 18,
-    borderWidth: 1.2,
-    borderColor: '#E2EBE5',
-    padding: 14,
-    marginBottom: 18,
-  },
-  ticketColsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  ticketCol: {
-    flex: 1,
-  },
-  ticketHeaderSmall: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    marginBottom: 4,
-  },
-  ticketMicroLabel: {
-    fontSize: 10.5,
-    fontWeight: '700',
-    color: '#64748B',
+  cleanReminderSubtitle: {
+    fontSize: 11.5,
+    color: '#4B6358',
     fontFamily: Typography.fontFamily.sans,
-    letterSpacing: 0.5,
+    marginTop: 2,
+    lineHeight: 16,
   },
-  ticketValueText: {
-    fontSize: 13.5,
-    fontWeight: '700',
-    color: '#102820',
-    fontFamily: Typography.fontFamily.sans,
-  },
-  ticketVerticalDivider: {
-    width: 1,
-    height: 38,
-    backgroundColor: '#DCE9E1',
-    marginHorizontal: 12,
-  },
-  ticketHorizontalDivider: {
-    height: 1,
-    backgroundColor: '#E8F0EC',
-    marginVertical: 10,
-  },
-  ticketAddressRow: {
+  cleanActionsWrap: {
     width: '100%',
-  },
-  ticketAddressValueText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#102820',
-    fontFamily: Typography.fontFamily.sans,
-    lineHeight: 18,
-  },
-  confirmedActionsWrap: {
-    width: '100%',
+    maxWidth: 420,
     gap: 10,
   },
-  secondaryActionButton: {
-    backgroundColor: '#FFFFFF',
-    height: 50,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: '#0F5B43',
+  cleanPrimaryBtn: {
+    backgroundColor: '#0D7A73',
+    height: 48,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  secondaryActionButtonText: {
+  cleanPrimaryBtnText: {
     fontSize: 14.5,
-    fontWeight: '700',
-    color: '#0F5B43',
+    fontWeight: '600',
+    color: '#FFFFFF',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cleanSecondaryBtn: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.2,
+    borderColor: '#D1D5DB',
+    height: 48,
+    borderRadius: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cleanSecondaryBtnText: {
+    fontSize: 14.5,
+    fontWeight: '600',
+    color: '#1F2937',
+    fontFamily: Typography.fontFamily.sans,
+  },
+  cleanTextLinkBtn: {
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cleanTextLinkBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#0D7A73',
     fontFamily: Typography.fontFamily.sans,
   },
 
