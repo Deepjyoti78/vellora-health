@@ -70,7 +70,7 @@ export default function CreateAccountScreen() {
       return;
     }
     if (!agreeTerms) {
-      setError('Please accept the Terms of Service to continue');
+      setError('Please acknowledge this is a demonstration to continue');
       return;
     }
     setError('');
@@ -186,7 +186,7 @@ export default function CreateAccountScreen() {
               })}
             </View>
 
-            {/* Terms of Service & Privacy Policy Agreement */}
+            {/* Demo terms & Session-only data notice Agreement */}
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
@@ -199,9 +199,7 @@ export default function CreateAccountScreen() {
                 {agreeTerms && <Ionicons name="checkmark" size={15} color={Colors.white} />}
               </View>
               <Text style={styles.checkboxLabel}>
-                I agree to the{' '}
-                <Text style={styles.inlineLink}>Terms of Service</Text> and{' '}
-                <Text style={styles.inlineLink}>Privacy Policy</Text>.
+                I understand this is a demonstration. Account details stay in this app session.
               </Text>
             </TouchableOpacity>
 

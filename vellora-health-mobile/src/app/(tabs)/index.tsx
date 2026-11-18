@@ -426,7 +426,12 @@ export default function HomeScreen() {
             contentContainerStyle={styles.recentVisitsScrollContainer}
           >
             {RECENT_VISIT_DOCTORS.map((doc) => (
-              <View key={doc.id} style={styles.recentVisitCard}>
+              <TouchableOpacity
+                key={doc.id}
+                style={styles.recentVisitCard}
+                activeOpacity={0.9}
+                onPress={() => router.push('/services/doctor-visit')}
+              >
                 {/* Top Doctor Image with ambient overlay badges */}
                 <View style={styles.recentDocImageWrap}>
                   <Image source={doc.image} style={styles.recentDocImage} resizeMode="cover" />
@@ -454,10 +459,13 @@ export default function HomeScreen() {
                   </View>
                 </View>
 
-                {/* Doctor Name */}
-                <Text style={styles.recentDocName} numberOfLines={1}>
-                  {doc.name}
-                </Text>
+                {/* Doctor Name & Navigation Arrow */}
+                <View style={styles.recentDocNameRow}>
+                  <Text style={styles.recentDocName} numberOfLines={1}>
+                    {doc.name}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={15} color="#94A3B8" />
+                </View>
 
                 {/* Doctor Specialty with icon */}
                 <View style={styles.recentDocSpecialtyRow}>
@@ -481,46 +489,7 @@ export default function HomeScreen() {
                     <Text style={styles.timingText}>{doc.time}</Text>
                   </View>
                 </View>
-
-                {/* Action Buttons: Message & Video Call with icons */}
-                <View style={styles.recentDocActionsRow}>
-                  <TouchableOpacity accessibilityRole="button"
-                    style={styles.recentMessageBtn}
-                    activeOpacity={0.8}
-                    onPress={() =>
-                      Alert.alert(
-                        `Message ${doc.name}`,
-                        `Start a secure message consultation with ${doc.name}?`,
-                        [
-                          { text: 'Cancel', style: 'cancel' },
-                          { text: 'Start Message', onPress: () => router.push('/(tabs)/records') },
-                        ]
-                      )
-                    }
-                  >
-                    <Ionicons name="chatbubble-ellipses-outline" size={13} color="#334155" style={{ marginRight: 4 }} />
-                    <Text style={styles.recentMessageBtnText}>Message</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity accessibilityRole="button"
-                    style={styles.recentVideoCallBtn}
-                    activeOpacity={0.8}
-                    onPress={() =>
-                      Alert.alert(
-                        `Video Call with ${doc.name}`,
-                        `Connect to a secure HD telemedicine call with ${doc.name}?`,
-                        [
-                          { text: 'Cancel', style: 'cancel' },
-                          { text: 'Start Video Call', onPress: () => router.push('/services/doctor-visit' as any) },
-                        ]
-                      )
-                    }
-                  >
-                    <Ionicons name="videocam" size={13} color="#FFFFFF" style={{ marginRight: 4 }} />
-                    <Text style={styles.recentVideoCallBtnText}>Video Call</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
@@ -1129,6 +1098,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1E293B',
   },
+  recentDocNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
   recentDocName: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 15,
@@ -1152,7 +1127,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 12,
+    marginBottom: 4,
   },
   timingItem: {
     flexDirection: 'row',
@@ -1194,7 +1169,7 @@ const styles = StyleSheet.create({
     flex: 1.25,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#2563EB',
+    backgroundColor: '#0F5B43', // Greenish instead of bluish
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',

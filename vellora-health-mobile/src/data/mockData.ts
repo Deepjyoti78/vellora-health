@@ -232,17 +232,30 @@ export const RECENT_BOOKINGS: PatientBooking[] = [
 ];
 
 export const generateSecurePin = (): string => {
-  // Generates cryptographically realistic 4-digit PIN for new patient bookings
+  // Demonstration PIN only. Real encounter verification requires a server.
   const pin = Math.floor(1000 + Math.random() * 9000);
   return pin.toString();
 };
 
+let bookingRevision = 0;
+const bookingListeners = new Set<() => void>();
+export const subscribeBookings = (listener: () => void) => {
+  bookingListeners.add(listener);
+  return () => { bookingListeners.delete(listener); };
+};
+export const getBookingRevision = () => bookingRevision;
+const notifyBookings = () => {
+  bookingRevision += 1;
+  bookingListeners.forEach(listener => listener());
+};
+
 export const addBooking = (newBooking: PatientBooking): void => {
   RECENT_BOOKINGS.unshift(newBooking);
+  notifyBookings();
 };
 
 export const getActiveBooking = (): PatientBooking | null => {
-  return RECENT_BOOKINGS.find((b) => b.status !== 'COMPLETED' && b.status !== 'CANCELLED') || RECENT_BOOKINGS[0] || null;
+  return RECENT_BOOKINGS.find((b) => b.status !== 'COMPLETED' && b.status !== 'CANCELLED') || null;
 };
 
 export const getBookingById = (id: string): PatientBooking | undefined => {
@@ -251,9 +264,10 @@ export const getBookingById = (id: string): PatientBooking | undefined => {
 
 export const cancelBooking = (id: string, reason: string): boolean => {
   const bk = RECENT_BOOKINGS.find((b) => b.id === id);
-  if (bk) {
+  if (bk && !['CANCELLED', 'COMPLETED'].includes(bk.status) && reason.trim()) {
     bk.status = 'CANCELLED';
     bk.cancellationReason = reason;
+    notifyBookings();
     return true;
   }
   return false;
@@ -261,10 +275,11 @@ export const cancelBooking = (id: string, reason: string): boolean => {
 
 export const rescheduleBooking = (id: string, newDate: string, newSlot: string): boolean => {
   const bk = RECENT_BOOKINGS.find((b) => b.id === id);
-  if (bk) {
+  if (bk && !['CANCELLED', 'COMPLETED'].includes(bk.status)) {
     bk.scheduledDate = newDate;
     bk.scheduledTimeSlot = newSlot;
     bk.rescheduledCount = (bk.rescheduledCount || 0) + 1;
+    notifyBookings();
     return true;
   }
   return false;
@@ -275,8 +290,9 @@ export const updateBookingStatus = (id: string, status: BookingStatus): boolean 
   if (bk) {
     bk.status = status;
     if (status === 'COMPLETED') {
-      bk.completedAt = '11:45 AM';
+      bk.completedAt = new Date().toLocaleTimeString();
     }
+    notifyBookings();
     return true;
   }
   return false;

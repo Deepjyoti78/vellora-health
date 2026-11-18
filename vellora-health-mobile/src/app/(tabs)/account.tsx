@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,41 +8,48 @@ import {
   TouchableOpacity,
   Alert,
   Platform,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path, Circle } from 'react-native-svg';
 import { Typography, Shadows } from '../../constants/theme';
 import { useAuth } from '../../context/AuthContext';
+import { REGIONAL_CONFIG } from '../../data/mockData';
 
 const Palette = {
   primary: '#0F5B43',        // Primary forest green
+  primaryLight: '#EAF5EE',   // Soft mint accent
+  primaryDark: '#083B2B',    // Dark forest green
   mint: '#EAF5EE',           // Soft mint accent
+  mintDeep: '#D5ECE0',
   bgWarm: '#FBFAF7',         // Warm ivory page background
   surface: '#FFFFFF',        // Card white
   textDark: '#1B2A24',       // Primary text
-  textMuted: '#7A8B84',      // Secondary text
+  textMuted: '#6B7E75',      // Secondary text
   border: '#DCE9E1',         // Clean border
   badgeDot: '#E53E3E',       // Red notification dot
-  logoutRed: '#E11D48',      // Red for logout
+  logoutRed: '#E11D48',      // Rose/Red for logout
+  logoutBg: '#FFF1F2',       // Soft rose background
+  logoutBorder: '#FECDD3',   // Soft rose border
 };
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
 
-  const patientName = user?.name || 'Emma Kapoor';
-  const patientEmail = user?.email || 'emma.kapoor@example.com';
+  const patientName = user?.name || 'Arjun Sharma';
+  const patientEmail = user?.email || 'arjun.sharma@example.com';
 
   const handleLogout = () => {
     Alert.alert(
-      'Log Out',
-      'Are you sure you want to log out of your Velora Health account?',
+      'Sign Out Account',
+      'Are you sure you want to sign out of your Velora Health account? You can log back in anytime.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Log Out',
+          text: 'Sign Out',
           style: 'destructive',
           onPress: () => {
             logout();
@@ -53,54 +60,25 @@ export default function ProfileScreen() {
     );
   };
 
-  const menuItems = [
-    {
-      id: 'bookings',
-      icon: 'calendar-outline' as const,
-      label: 'My Bookings',
-      onPress: () => router.push('/(tabs)/bookings'),
-    },
-    {
-      id: 'records',
-      icon: 'folder-outline' as const,
-      label: 'Health Records',
-      onPress: () => router.push('/(tabs)/records' as any),
-    },
-    {
-      id: 'prescriptions',
-      icon: 'medical-outline' as const,
-      label: 'Prescriptions',
-      onPress: () => router.push('/(tabs)/records' as any),
-    },
-    {
-      id: 'saved',
-      icon: 'bookmark-outline' as const,
-      label: 'Saved Services',
-      onPress: () => router.push('/(tabs)/services'),
-    },
-    {
-      id: 'payment',
-      icon: 'card-outline' as const,
-      label: 'Payment Methods',
-      onPress: () => Alert.alert('Payment Methods', 'UPI, Net Banking, and Cards are verified and linked securely.'),
-    },
-    {
-      id: 'notifications',
-      icon: 'notifications-outline' as const,
-      label: 'Notifications',
-      onPress: () => Alert.alert('Notifications', 'Care visit updates and prescription alerts are enabled via Push and SMS.'),
-    },
-    {
-      id: 'help',
-      icon: 'help-circle-outline' as const,
-      label: 'Help & Support',
-      onPress: () => Alert.alert('24/7 Clinical Concierge', 'Connect with our team at support@velorahealth.com or call 1800-VELORA.'),
-    },
-  ];
+  const handleCallSupport = () => {
+    Alert.alert(
+      '24/7 Care Coordinator',
+      'Would you like to connect with your dedicated clinical coordinator (+91 80 4910 8800)?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Call Now', onPress: () => Linking.openURL(`tel:${REGIONAL_CONFIG.supportPhone}`) },
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <StatusBar style="dark" />
+
+      {/* Ambient Wellness Background Glow Orbs */}
+      <View style={styles.ambientGlowTopRight} pointerEvents="none" />
+      <View style={styles.ambientGlowMidLeft} pointerEvents="none" />
+      <View style={styles.ambientGlowBottomRight} pointerEvents="none" />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -110,7 +88,6 @@ export default function ProfileScreen() {
         {/* 1. TOP BRAND HEADER                                          */}
         {/* ============================================================ */}
         <View style={styles.topBrandBar}>
-          {/* Brand Logo */}
           <TouchableOpacity
             style={styles.brandContainer}
             activeOpacity={0.8}
@@ -128,6 +105,7 @@ export default function ProfileScreen() {
               style={styles.bellBtn}
               activeOpacity={0.75}
               onPress={() => router.push('/(tabs)/bookings')}
+              accessibilityLabel="View notifications"
             >
               <Ionicons name="notifications-outline" size={20} color={Palette.textDark} />
               <View style={styles.bellBadgeDot} />
@@ -136,117 +114,325 @@ export default function ProfileScreen() {
             <TouchableOpacity
               style={styles.plusBtn}
               activeOpacity={0.75}
-              onPress={() => router.push('/(tabs)/bookings')}
+              onPress={() => router.push('/services/doctor-visit')}
+              accessibilityLabel="Book new visit"
             >
-              <Ionicons name="add" size={22} color={Palette.textDark} />
+              <Ionicons name="add" size={22} color={Palette.primary} />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* ============================================================ */}
-        {/* 2. PROFILE HEADER ROW: AVATAR + DETAILS + EDIT PROFILE       */}
+        {/* 2. ILLUSTRATED DIGITAL PATIENT HEALTH CARD                    */}
         {/* ============================================================ */}
-        <View style={styles.profileHeaderCard}>
+        <View style={styles.healthCard}>
+          {/* Decorative Subtle Medical SVG Watermark in Background */}
+          <Svg
+            style={styles.cardWatermarkSvg}
+            width={160}
+            height={160}
+            viewBox="0 0 100 100"
+            fill="none"
+          >
+            <Circle cx="50" cy="50" r="42" stroke="rgba(255, 255, 255, 0.08)" strokeWidth="8" />
+            <Path
+              d="M50 25v50M25 50h50"
+              stroke="rgba(255, 255, 255, 0.12)"
+              strokeWidth="10"
+              strokeLinecap="round"
+            />
+          </Svg>
+
+          {/* Top Row: Brand & ID Badge */}
+          <View style={styles.cardTopRow}>
+            <View style={styles.cardPriorityPill}>
+              <Ionicons name="leaf" size={11} color="#A7F3D0" style={{ marginRight: 4 }} />
+              <Text style={styles.cardPriorityText}>Priority Home Care Pass</Text>
+            </View>
+
+            <Text style={styles.cardMemberId}>#VEL-2025-0842</Text>
+          </View>
+
+          {/* Clinician & Patient Info Row */}
+          <View style={styles.cardPatientRow}>
+            <View style={styles.avatarWrapper}>
+              <Image
+                source={require('../../../assets/images/avatar-indian-1.jpg')}
+                style={styles.patientAvatar}
+                resizeMode="cover"
+              />
+              <View style={styles.avatarVerifiedBadge}>
+                <Ionicons name="checkmark" size={10} color="#FFFFFF" />
+              </View>
+            </View>
+
+            <View style={styles.patientDetailsCol}>
+              <Text style={styles.patientName}>{patientName}</Text>
+              <Text style={styles.patientEmail}>{patientEmail}</Text>
+              <Text style={styles.patientMeta}>34 Yrs • Male • Primary Account</Text>
+            </View>
+          </View>
+
+          {/* Quick Health & Clinical Vitals Chips */}
+          <View style={styles.clinicalChipsRow}>
+            <View style={styles.clinicalChip}>
+              <Text style={styles.clinicalChipLabel}>Blood</Text>
+              <Text style={styles.clinicalChipValue}>O+ Positive</Text>
+            </View>
+
+            <View style={styles.clinicalChip}>
+              <Text style={styles.clinicalChipLabel}>Allergies</Text>
+              <Text style={styles.clinicalChipValue}>None (NKA)</Text>
+            </View>
+
+            <View style={styles.clinicalChip}>
+              <Text style={styles.clinicalChipLabel}>Care Plan</Text>
+              <Text style={styles.clinicalChipValue}>Family Pro</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* ============================================================ */}
+        {/* 3. ILLUSTRATED CARE CONCIERGE BANNER                         */}
+        {/* ============================================================ */}
+        <View style={styles.careConciergeCard}>
           <Image
-            source={require('../../../assets/images/avatar-indian-1.jpg')}
-            style={styles.profileAvatar}
-            resizeMode="cover"
+            source={require('../../../assets/images/home-garden.png')}
+            style={styles.conciergeIllustration}
+            resizeMode="contain"
           />
-
-          <View style={styles.profileInfoCol}>
-            <Text style={styles.profileNameText}>{patientName}</Text>
-            <Text style={styles.profileEmailText}>{patientEmail}</Text>
-
+          <View style={styles.conciergeTextCol}>
+            <View style={styles.conciergeTag}>
+              <Ionicons name="shield-checkmark" size={11} color={Palette.primary} style={{ marginRight: 4 }} />
+              <Text style={styles.conciergeTagText}>Dedicated Care Team</Text>
+            </View>
+            <Text style={styles.conciergeTitle}>Need home health assistance?</Text>
+            <Text style={styles.conciergeSubtitle}>
+              Your assigned coordinator handles fast dispatch, medicine orders & reports.
+            </Text>
             <TouchableOpacity
-              style={styles.editProfileBtn}
+              style={styles.conciergeCallBtn}
               activeOpacity={0.8}
-              onPress={() => Alert.alert('Edit Profile', 'Profile editing is available in your clinical account dashboard.')}
+              onPress={handleCallSupport}
             >
-              <Ionicons name="pencil-outline" size={13} color={Palette.primary} style={{ marginRight: 5 }} />
-              <Text style={styles.editProfileText}>Edit Profile</Text>
+              <Ionicons name="call" size={12} color="#FFFFFF" style={{ marginRight: 5 }} />
+              <Text style={styles.conciergeCallBtnText}>Call Care Coordinator</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* ============================================================ */}
-        {/* 3. QUICK STATS ROW: 3 Bookings | 5 Reports | 2 Health Plans  */}
+        {/* 4. GROUPED CLINICAL & ACCOUNT MENUS                           */}
         {/* ============================================================ */}
-        <View style={styles.statsRow}>
-          {/* Stat 1: Bookings */}
+
+        {/* Group A: Care & Medical Records */}
+        <Text style={styles.menuGroupHeading}>MY CARE & MEDICAL RECORDS</Text>
+        <View style={styles.menuGroupCard}>
+          {/* 1. Bookings */}
           <TouchableOpacity
-            style={styles.statCard}
-            activeOpacity={0.85}
+            style={styles.menuRowItem}
+            activeOpacity={0.7}
             onPress={() => router.push('/(tabs)/bookings')}
           >
-            <Ionicons name="calendar-outline" size={19} color={Palette.primary} style={{ marginBottom: 4 }} />
-            <Text style={styles.statNumber}>3</Text>
-            <Text style={styles.statLabel}>Bookings</Text>
+            <View style={[styles.menuIconCircle, { backgroundColor: '#EAF5EE' }]}>
+              <Ionicons name="calendar-outline" size={18} color={Palette.primary} />
+            </View>
+            <View style={styles.menuItemTextCol}>
+              <Text style={styles.menuLabel}>My Home Bookings</Text>
+              <Text style={styles.menuSublabel}>Track active, upcoming & past doctor visits</Text>
+            </View>
+            <View style={styles.menuBadgePill}>
+              <Text style={styles.menuBadgePillText}>2 Scheduled</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
           </TouchableOpacity>
 
-          {/* Stat 2: Reports */}
+          <View style={styles.menuDivider} />
+
+          {/* 2. Health Records */}
           <TouchableOpacity
-            style={styles.statCard}
-            activeOpacity={0.85}
-            onPress={() => router.push('/(tabs)/records' as any)}
+            style={styles.menuRowItem}
+            activeOpacity={0.7}
+            onPress={() => router.push('/(tabs)/records')}
           >
-            <Ionicons name="document-text-outline" size={19} color={Palette.primary} style={{ marginBottom: 4 }} />
-            <Text style={styles.statNumber}>5</Text>
-            <Text style={styles.statLabel}>Reports</Text>
+            <View style={[styles.menuIconCircle, { backgroundColor: '#EFF6FF' }]}>
+              <Ionicons name="folder-outline" size={18} color="#2563EB" />
+            </View>
+            <View style={styles.menuItemTextCol}>
+              <Text style={styles.menuLabel}>Health Records & e-Prescriptions</Text>
+              <Text style={styles.menuSublabel}>Digital consultation notes, lab tests & Rx PDFs</Text>
+            </View>
+            <View style={[styles.menuBadgePill, { backgroundColor: '#EFF6FF', borderColor: '#BFDBFE' }]}>
+              <Text style={[styles.menuBadgePillText, { color: '#1D4ED8' }]}>4 Files</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
           </TouchableOpacity>
 
-          {/* Stat 3: Health Plans */}
+          <View style={styles.menuDivider} />
+
+          {/* 3. Family Members */}
           <TouchableOpacity
-            style={styles.statCard}
-            activeOpacity={0.85}
-            onPress={() => Alert.alert('Health Plans', 'You are currently enrolled in 2 active care plans: Primary Care & Family Wellness.')}
+            style={styles.menuRowItem}
+            activeOpacity={0.7}
+            onPress={() => Alert.alert('Family Profiles', '3 profiles active: Arjun Sharma (Self), Kavita Sharma (Mother), Ramesh Sharma (Father).')}
           >
-            <Ionicons name="heart-outline" size={19} color={Palette.primary} style={{ marginBottom: 4 }} />
-            <Text style={styles.statNumber}>2</Text>
-            <Text style={styles.statLabel}>Health Plans</Text>
+            <View style={[styles.menuIconCircle, { backgroundColor: '#FEF3C7' }]}>
+              <Ionicons name="people-outline" size={18} color="#D97706" />
+            </View>
+            <View style={styles.menuItemTextCol}>
+              <Text style={styles.menuLabel}>Family Members & Dependents</Text>
+              <Text style={styles.menuSublabel}>Manage care for elderly parents & children</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Group B: Doorstep Details & Preferences */}
+        <Text style={styles.menuGroupHeading}>DOORSTEP DETAILS & PREFERENCES</Text>
+        <View style={styles.menuGroupCard}>
+          {/* Saved Addresses */}
+          <TouchableOpacity
+            style={styles.menuRowItem}
+            activeOpacity={0.7}
+            onPress={() => Alert.alert('Saved Address', '#502, Orchid Residency, Koramangala, Bengaluru - 560034.')}
+          >
+            <View style={[styles.menuIconCircle, { backgroundColor: '#F3E8FF' }]}>
+              <Ionicons name="location-outline" size={18} color="#7E22CE" />
+            </View>
+            <View style={styles.menuItemTextCol}>
+              <Text style={styles.menuLabel}>Saved Doorstep Address</Text>
+              <Text style={styles.menuSublabel}>#502, Orchid Residency, Koramangala</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          {/* Payment Methods */}
+          <TouchableOpacity
+            style={styles.menuRowItem}
+            activeOpacity={0.7}
+            onPress={() => Alert.alert('Payment Methods', 'UPI, Cards, and Cash on Visit are accepted for all doorstep services.')}
+          >
+            <View style={[styles.menuIconCircle, { backgroundColor: '#ECFDF5' }]}>
+              <Ionicons name="card-outline" size={18} color="#059669" />
+            </View>
+            <View style={styles.menuItemTextCol}>
+              <Text style={styles.menuLabel}>Payment Methods & Invoices</Text>
+              <Text style={styles.menuSublabel}>UPI, Credit Cards, Cash on Visit</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          {/* Notifications */}
+          <TouchableOpacity
+            style={styles.menuRowItem}
+            activeOpacity={0.7}
+            onPress={() => Alert.alert('Notifications', 'SMS & WhatsApp appointment arrival notifications are active.')}
+          >
+            <View style={[styles.menuIconCircle, { backgroundColor: '#F1F5F9' }]}>
+              <Ionicons name="notifications-outline" size={18} color="#475569" />
+            </View>
+            <View style={styles.menuItemTextCol}>
+              <Text style={styles.menuLabel}>Visit Notifications & SMS</Text>
+              <Text style={styles.menuSublabel}>Real-time dispatch and arrival updates</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Group C: Support & Security */}
+        <Text style={styles.menuGroupHeading}>SUPPORT & SECURITY</Text>
+        <View style={styles.menuGroupCard}>
+          <TouchableOpacity
+            style={styles.menuRowItem}
+            activeOpacity={0.7}
+            onPress={handleCallSupport}
+          >
+            <View style={[styles.menuIconCircle, { backgroundColor: '#EAF5EE' }]}>
+              <Ionicons name="headset-outline" size={18} color={Palette.primary} />
+            </View>
+            <View style={styles.menuItemTextCol}>
+              <Text style={styles.menuLabel}>24/7 Clinical Care Helpdesk</Text>
+              <Text style={styles.menuSublabel}>Instant helpline +91 80 4910 8800</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          <TouchableOpacity
+            style={styles.menuRowItem}
+            activeOpacity={0.7}
+            onPress={() => Alert.alert('Privacy & Security', 'Your health data is 100% encrypted and compliant with medical privacy standards.')}
+          >
+            <View style={[styles.menuIconCircle, { backgroundColor: '#F1F5F9' }]}>
+              <Ionicons name="shield-checkmark-outline" size={18} color="#334155" />
+            </View>
+            <View style={styles.menuItemTextCol}>
+              <Text style={styles.menuLabel}>Medical Privacy & Terms</Text>
+              <Text style={styles.menuSublabel}>End-to-end encrypted clinical health records</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
           </TouchableOpacity>
         </View>
 
         {/* ============================================================ */}
-        {/* 4. SETTINGS & MENU LIST CARD                                 */}
-        {/* ============================================================ */}
-        <View style={styles.menuContainerCard}>
-          {menuItems.map((item, idx) => (
-            <React.Fragment key={item.id}>
-              <TouchableOpacity
-                style={styles.menuRowItem}
-                activeOpacity={0.7}
-                onPress={item.onPress}
-              >
-                <View style={styles.menuItemLeft}>
-                  <Ionicons name={item.icon} size={19} color={Palette.textDark} style={styles.menuIcon} />
-                  <Text style={styles.menuLabel}>{item.label}</Text>
-                </View>
-
-                <Ionicons name="chevron-forward" size={16} color="#A0AEC0" />
-              </TouchableOpacity>
-
-              {idx < menuItems.length - 1 && <View style={styles.menuDivider} />}
-            </React.Fragment>
-          ))}
-        </View>
-
-        {/* ============================================================ */}
-        {/* 5. LOG OUT ACTION                                            */}
+        {/* 5. PREMIUM REDESIGNED LOGOUT BUTTON                           */}
         {/* ============================================================ */}
         <TouchableOpacity
-          style={styles.logoutBtn}
-          activeOpacity={0.75}
+          style={styles.improvedLogoutCard}
+          activeOpacity={0.82}
           onPress={handleLogout}
         >
-          <Ionicons name="log-out-outline" size={18} color={Palette.logoutRed} style={{ marginRight: 8 }} />
-          <Text style={styles.logoutText}>Log Out</Text>
+          <View style={styles.logoutIconCircle}>
+            <Ionicons name="log-out-outline" size={20} color={Palette.logoutRed} />
+          </View>
+          <View style={styles.logoutTextCol}>
+            <Text style={styles.logoutMainTitle}>Sign Out Account</Text>
+            <Text style={styles.logoutSubtext}>Securely disconnect session from this device</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color="#FDA4AF" />
         </TouchableOpacity>
+
+        <Text style={styles.appVersionText}>Velora Health • Version 1.2.4 (Build 842)</Text>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  /* Ambient Wellness Background Glows */
+  ambientGlowTopRight: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    backgroundColor: 'rgba(15, 91, 67, 0.08)',
+  },
+  ambientGlowMidLeft: {
+    position: 'absolute',
+    top: 340,
+    left: -80,
+    width: 250,
+    height: 250,
+    borderRadius: 125,
+    backgroundColor: 'rgba(52, 211, 153, 0.1)',
+  },
+  ambientGlowBottomRight: {
+    position: 'absolute',
+    bottom: 80,
+    right: -70,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(167, 243, 208, 0.16)',
+  },
+
   safeArea: {
     flex: 1,
     backgroundColor: Palette.bgWarm,
@@ -263,7 +449,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 6,
-    marginBottom: 16,
+    marginBottom: 14,
   },
   brandContainer: {
     justifyContent: 'center',
@@ -310,139 +496,309 @@ const styles = StyleSheet.create({
     ...Shadows.subtle,
   },
 
-  /* 2. Profile Header */
-  profileHeaderCard: {
+  /* 2. Illustrated Health Pass Card */
+  healthCard: {
+    backgroundColor: Palette.primary,
+    borderRadius: 24,
+    padding: 16,
+    marginBottom: 16,
+    position: 'relative',
+    overflow: 'hidden',
+    ...Shadows.card,
+  },
+  cardWatermarkSvg: {
+    position: 'absolute',
+    right: -25,
+    bottom: -25,
+  },
+  cardTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-    gap: 16,
+    justifyContent: 'space-between',
+    marginBottom: 14,
   },
-  profileAvatar: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    borderWidth: 1.5,
-    borderColor: Palette.border,
+  cardPriorityPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
   },
-  profileInfoCol: {
-    flex: 1,
+  cardPriorityText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  cardMemberId: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#A7F3D0',
+    letterSpacing: 0.5,
+  },
+  cardPatientRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  avatarWrapper: {
+    position: 'relative',
+    marginRight: 14,
+  },
+  patientAvatar: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    borderWidth: 2,
+    borderColor: '#A7F3D0',
+  },
+  avatarVerifiedBadge: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 17,
+    height: 17,
+    borderRadius: 8.5,
+    backgroundColor: '#059669',
+    alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: Palette.primary,
   },
-  profileNameText: {
+  patientDetailsCol: {
+    flex: 1,
+  },
+  patientName: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 18,
     fontWeight: '700',
-    color: Palette.textDark,
-    letterSpacing: -0.2,
+    color: '#FFFFFF',
     marginBottom: 2,
   },
-  profileEmailText: {
+  patientEmail: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
+    fontSize: 12,
     fontWeight: '400',
-    color: Palette.textMuted,
-    marginBottom: 8,
+    color: '#D1E7DD',
+    marginBottom: 3,
   },
-  editProfileBtn: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Palette.surface,
-    paddingVertical: 5,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-    borderWidth: 1.2,
-    borderColor: Palette.border,
-    ...Shadows.subtle,
-  },
-  editProfileText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 11.5,
-    fontWeight: '600',
-    color: Palette.textDark,
-  },
-
-  /* 3. Quick Stats Row */
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-    marginBottom: 20,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: Palette.surface,
-    borderRadius: 18,
-    borderWidth: 1.2,
-    borderColor: Palette.border,
-    paddingVertical: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Shadows.subtle,
-  },
-  statNumber: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 16,
-    fontWeight: '700',
-    color: Palette.textDark,
-    marginBottom: 1,
-  },
-  statLabel: {
+  patientMeta: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 11,
     fontWeight: '500',
-    color: Palette.textMuted,
+    color: '#A7F3D0',
+  },
+  clinicalChipsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.15)',
+    paddingTop: 12,
+  },
+  clinicalChip: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderRadius: 12,
+    paddingVertical: 7,
+    paddingHorizontal: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.16)',
+  },
+  clinicalChipLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 9.5,
+    fontWeight: '500',
+    color: '#A7F3D0',
+    marginBottom: 1,
+  },
+  clinicalChipValue: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 
-  /* 4. Menu Card */
-  menuContainerCard: {
-    backgroundColor: Palette.surface,
-    borderRadius: 22,
+  /* 3. Illustrated Care Concierge Banner */
+  careConciergeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
     borderWidth: 1.2,
     borderColor: Palette.border,
-    paddingVertical: 4,
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    padding: 14,
+    marginBottom: 20,
+    ...Shadows.subtle,
+  },
+  conciergeIllustration: {
+    width: 82,
+    height: 82,
+    marginRight: 12,
+  },
+  conciergeTextCol: {
+    flex: 1,
+  },
+  conciergeTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 3,
+  },
+  conciergeTagText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '700',
+    color: Palette.primary,
+  },
+  conciergeTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 2,
+  },
+  conciergeSubtitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '400',
+    color: '#64748B',
+    lineHeight: 15,
+    marginBottom: 8,
+  },
+  conciergeCallBtn: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Palette.primary,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+  },
+  conciergeCallBtnText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+
+  /* 4. Menu Groups */
+  menuGroupHeading: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#64748B',
+    letterSpacing: 0.6,
+    marginBottom: 8,
+    marginTop: 2,
+    paddingLeft: 4,
+  },
+  menuGroupCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
+    paddingHorizontal: 14,
+    marginBottom: 18,
     ...Shadows.subtle,
   },
   menuRowItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 14,
+    paddingVertical: 12,
   },
-  menuItemLeft: {
-    flexDirection: 'row',
+  menuIconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
   },
-  menuIcon: {
-    marginRight: 14,
-    width: 20,
+  menuItemTextCol: {
+    flex: 1,
   },
   menuLabel: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13.5,
-    fontWeight: '500',
-    color: Palette.textDark,
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#0F172A',
+    marginBottom: 1,
+  },
+  menuSublabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '400',
+    color: '#64748B',
+  },
+  menuBadgePill: {
+    backgroundColor: '#DCFCE7',
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
+    marginRight: 6,
+  },
+  menuBadgePillText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#15803D',
   },
   menuDivider: {
     height: 1,
-    backgroundColor: '#F0F4F1',
-    marginLeft: 34,
+    backgroundColor: '#F1F5F9',
+    marginLeft: 48,
   },
 
-  /* 5. Logout Button */
-  logoutBtn: {
+  /* 5. Improved Logout Card */
+  improvedLogoutCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignSelf: 'flex-start',
+    backgroundColor: Palette.logoutBg,
+    borderRadius: 20,
+    borderWidth: 1.2,
+    borderColor: Palette.logoutBorder,
+    padding: 14,
+    marginTop: 6,
+    marginBottom: 14,
+    ...Shadows.subtle,
   },
-  logoutText: {
+  logoutIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FFE4E6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  logoutTextCol: {
+    flex: 1,
+  },
+  logoutMainTitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13.5,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '700',
     color: Palette.logoutRed,
+    marginBottom: 2,
+  },
+  logoutSubtext: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '400',
+    color: '#E11D48',
+    opacity: 0.8,
+  },
+  appVersionText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#94A3B8',
+    textAlign: 'center',
+    marginBottom: 8,
   },
 });

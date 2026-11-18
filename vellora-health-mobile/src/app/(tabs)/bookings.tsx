@@ -20,7 +20,7 @@ import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Typography, Shadows } from '../../constants/theme';
-import { RECENT_BOOKINGS, REGIONAL_CONFIG, subscribeBookings, getBookingRevision } from '../../data/mockData';
+import { RECENT_BOOKINGS, REGIONAL_CONFIG, subscribeBookings, getBookingRevision, rescheduleBooking } from '../../data/mockData';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -175,6 +175,37 @@ export default function BookingsScreen() {
   const [selectedBooking, setSelectedBooking] = useState<BookingItemDisplay | null>(null);
   const sheetAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
+
+  // Dedicated Reschedule Modal State
+  const [rescheduleModalVisible, setRescheduleModalVisible] = useState(false);
+  const [reschedulingBooking, setReschedulingBooking] = useState<BookingItemDisplay | null>(null);
+  const [selectedRescheduleDate, setSelectedRescheduleDate] = useState<string>('Tomorrow, 19 Nov');
+  const [selectedRescheduleSlot, setSelectedRescheduleSlot] = useState<string>('11:00 AM – 11:30 AM');
+  const [rescheduleReason, setRescheduleReason] = useState<string>('Time Conflict');
+
+  const handleOpenReschedule = (booking: BookingItemDisplay | null) => {
+    if (!booking) return;
+    setReschedulingBooking(booking);
+    setSelectedRescheduleDate('Tomorrow, 19 Nov');
+    setSelectedRescheduleSlot('11:00 AM – 11:30 AM');
+    setRescheduleReason('Time Conflict');
+    closeDetailsModal();
+    setRescheduleModalVisible(true);
+  };
+
+  const handleConfirmReschedule = () => {
+    if (!reschedulingBooking) return;
+    const ok = rescheduleBooking(reschedulingBooking.id, selectedRescheduleDate, selectedRescheduleSlot);
+    if (!ok && reschedulingBooking.routeId) {
+      rescheduleBooking(reschedulingBooking.routeId, selectedRescheduleDate, selectedRescheduleSlot);
+    }
+    setRescheduleModalVisible(false);
+    Alert.alert(
+      'Visit Rescheduled Successfully!',
+      `Your doorstep visit for "${reschedulingBooking.serviceTitle}" is now scheduled for ${selectedRescheduleDate} at ${selectedRescheduleSlot}. Your assigned clinician has received the update.`,
+      [{ text: 'OK' }]
+    );
+  };
 
   const openDetailsModal = (booking: BookingItemDisplay) => {
     setSelectedBooking(booking);
@@ -917,21 +948,7 @@ export default function BookingsScreen() {
                         <TouchableOpacity accessibilityRole="button"
                           style={styles.modalRescheduleBtn}
                           activeOpacity={0.8}
-                          onPress={() => {
-                            closeDetailsModal();
-                            router.push({
-                              pathname: `/booking/${selectedBooking.routeId || selectedBooking.id}`,
-                              params: {
-                                step: 'details_view',
-                                serviceTitle: selectedBooking.serviceTitle,
-                                providerName: selectedBooking.providerName,
-                                date: selectedBooking.date,
-                                time: selectedBooking.time,
-                                status: selectedBooking.status,
-                                address: selectedBooking.address,
-                              },
-                            } as any);
-                          }}
+                          onPress={() => handleOpenReschedule(selectedBooking)}
                         >
                           <Ionicons name="calendar-outline" size={16} color={Palette.primary} style={{ marginRight: 6 }} />
                           <Text style={styles.modalRescheduleBtnText}>Reschedule Visit</Text>
@@ -1001,6 +1018,142 @@ export default function BookingsScreen() {
               )}
             </ScrollView>
           </Animated.View>
+        </View>
+      </Modal>
+
+      {/* ============================================================ */}
+      {/* RESCHEDULE VISIT POP-UP MODAL                                */}
+      {/* ============================================================ */}
+      <Modal
+        visible={rescheduleModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setRescheduleModalVisible(false)}
+      >
+        <View style={styles.rescheduleBackdrop}>
+          <View style={styles.rescheduleSheetContainer}>
+            <View style={styles.rescheduleSheetHandle} />
+
+            {/* Header */}
+            <View style={styles.rescheduleHeaderRow}>
+              <View style={{ flex: 1, paddingRight: 8 }}>
+                <Text style={styles.rescheduleSheetTitle}>Reschedule Visit</Text>
+                <Text style={styles.rescheduleSheetSubtitle}>
+                  {reschedulingBooking?.serviceTitle} • {reschedulingBooking?.bookingRef}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.modalCloseCircle}
+                onPress={() => setRescheduleModalVisible(false)}
+              >
+                <Ionicons name="close" size={20} color={Palette.textDark} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 28 }}>
+              {/* Current Scheduled Timing Card */}
+              <View style={styles.currentScheduleCard}>
+                <Ionicons name="calendar" size={18} color="#0F5B43" style={{ marginRight: 8 }} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.currentScheduleLabel}>Currently Scheduled Timing</Text>
+                  <Text style={styles.currentScheduleValue}>
+                    {reschedulingBooking?.date} • {reschedulingBooking?.time}
+                  </Text>
+                </View>
+              </View>
+
+              {/* 1. Date Selector */}
+              <Text style={styles.rescheduleSectionTitle}>1. Choose New Visit Date</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dateScroll}>
+                {[
+                  { label: 'Today', date: 'Today, 18 Nov' },
+                  { label: 'Tomorrow', date: 'Tomorrow, 19 Nov' },
+                  { label: 'Thursday', date: 'Thu, 20 Nov' },
+                  { label: 'Friday', date: 'Fri, 21 Nov' },
+                  { label: 'Saturday', date: 'Sat, 22 Nov' },
+                  { label: 'Sunday', date: 'Sun, 23 Nov' },
+                  { label: 'Monday', date: 'Mon, 24 Nov' },
+                ].map((d) => {
+                  const isSel = selectedRescheduleDate === d.date;
+                  return (
+                    <TouchableOpacity
+                      key={d.date}
+                      style={[styles.rescheduleDatePill, isSel && styles.rescheduleDatePillActive]}
+                      onPress={() => setSelectedRescheduleDate(d.date)}
+                    >
+                      <Text style={[styles.rescheduleDateLabel, isSel && styles.rescheduleDateLabelActive]}>
+                        {d.label}
+                      </Text>
+                      <Text style={[styles.rescheduleDateText, isSel && styles.rescheduleDateTextActive]}>
+                        {d.date.includes(',') ? d.date.split(', ')[1] : d.date}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+
+              {/* 2. Time Slot Selector */}
+              <Text style={styles.rescheduleSectionTitle}>2. Choose Doorstep Time Slot</Text>
+              <View style={styles.slotsGrid}>
+                {[
+                  '09:00 AM – 09:30 AM',
+                  '10:30 AM – 11:00 AM',
+                  '11:00 AM – 11:30 AM',
+                  '02:00 PM – 02:30 PM',
+                  '03:30 PM – 04:00 PM',
+                  '04:30 PM – 05:00 PM',
+                  '06:00 PM – 06:30 PM',
+                  '07:00 PM – 07:30 PM',
+                ].map((slot) => {
+                  const isSel = selectedRescheduleSlot === slot;
+                  return (
+                    <TouchableOpacity
+                      key={slot}
+                      style={[styles.rescheduleSlotPill, isSel && styles.rescheduleSlotPillActive]}
+                      onPress={() => setSelectedRescheduleSlot(slot)}
+                    >
+                      <Ionicons
+                        name="time-outline"
+                        size={12}
+                        color={isSel ? '#FFFFFF' : Palette.primary}
+                        style={{ marginRight: 4 }}
+                      />
+                      <Text style={[styles.rescheduleSlotText, isSel && styles.rescheduleSlotTextActive]}>
+                        {slot}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              {/* 3. Reason for Reschedule */}
+              <Text style={styles.rescheduleSectionTitle}>3. Reason for Rescheduling</Text>
+              <View style={styles.reasonsRow}>
+                {['Time Conflict', 'Doctor Unavailable', 'Personal Emergency', 'Delaying Visit'].map((r) => {
+                  const isSel = rescheduleReason === r;
+                  return (
+                    <TouchableOpacity
+                      key={r}
+                      style={[styles.reasonChip, isSel && styles.reasonChipActive]}
+                      onPress={() => setRescheduleReason(r)}
+                    >
+                      <Text style={[styles.reasonChipText, isSel && styles.reasonChipTextActive]}>{r}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              {/* Action Buttons */}
+              <TouchableOpacity
+                style={styles.confirmRescheduleBtn}
+                activeOpacity={0.85}
+                onPress={handleConfirmReschedule}
+              >
+                <Ionicons name="calendar-outline" size={17} color="#FFFFFF" style={{ marginRight: 6 }} />
+                <Text style={styles.confirmRescheduleBtnText}>Confirm New Visit Timing</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>
@@ -2168,6 +2321,195 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13.5,
     fontWeight: '600',
+    color: '#FFFFFF',
+  },
+
+  /* Reschedule Modal Styles */
+  rescheduleBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    justifyContent: 'flex-end',
+  },
+  rescheduleSheetContainer: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingTop: 12,
+    paddingHorizontal: 20,
+    maxHeight: '88%',
+    ...Shadows.modal,
+  },
+  rescheduleSheetHandle: {
+    width: 40,
+    height: 4.5,
+    borderRadius: 3,
+    backgroundColor: '#CBD5E1',
+    alignSelf: 'center',
+    marginBottom: 12,
+  },
+  rescheduleHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    paddingBottom: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+    marginBottom: 14,
+  },
+  rescheduleSheetTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 2,
+  },
+  rescheduleSheetSubtitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 12.5,
+    fontWeight: '500',
+    color: '#64748B',
+  },
+  currentScheduleCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EAF5EE',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#D4EADE',
+    padding: 12,
+    marginBottom: 16,
+  },
+  currentScheduleLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#4B6B5C',
+    marginBottom: 2,
+  },
+  currentScheduleValue: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#0F5B43',
+  },
+  rescheduleSectionTitle: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 10,
+    marginTop: 4,
+  },
+  dateScroll: {
+    gap: 8,
+    paddingBottom: 16,
+  },
+  rescheduleDatePill: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1.2,
+    borderColor: '#E2E8F0',
+    minWidth: 78,
+    marginRight: 8,
+  },
+  rescheduleDatePillActive: {
+    backgroundColor: Palette.primary,
+    borderColor: Palette.primary,
+  },
+  rescheduleDateLabel: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#64748B',
+    marginBottom: 2,
+  },
+  rescheduleDateLabelActive: {
+    color: '#A7F3D0',
+    fontWeight: '600',
+  },
+  rescheduleDateText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  rescheduleDateTextActive: {
+    color: '#FFFFFF',
+  },
+  slotsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 16,
+  },
+  rescheduleSlotPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 11,
+    paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1.2,
+    borderColor: '#E2E8F0',
+  },
+  rescheduleSlotPillActive: {
+    backgroundColor: Palette.primary,
+    borderColor: Palette.primary,
+  },
+  rescheduleSlotText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: '#334155',
+  },
+  rescheduleSlotTextActive: {
+    color: '#FFFFFF',
+  },
+  reasonsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 20,
+  },
+  reasonChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+    backgroundColor: '#F1F5F9',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  reasonChipActive: {
+    backgroundColor: '#EAF5EE',
+    borderColor: '#0F5B43',
+  },
+  reasonChipText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 11.5,
+    fontWeight: '500',
+    color: '#475569',
+  },
+  reasonChipTextActive: {
+    color: '#0F5B43',
+    fontWeight: '700',
+  },
+  confirmRescheduleBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Palette.primary,
+    height: 48,
+    borderRadius: 24,
+    ...Shadows.subtle,
+  },
+  confirmRescheduleBtnText: {
+    fontFamily: Typography.fontFamily.sans,
+    fontSize: 13.5,
+    fontWeight: '700',
     color: '#FFFFFF',
   },
 });

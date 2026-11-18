@@ -9,6 +9,7 @@ interface AuthContextType {
   loginPhone: (phone: string) => Promise<boolean>;
   verifyOtp: (code: string) => Promise<boolean>;
   logout: () => void;
+  updateProfile: (updates: Partial<UserProfile>) => void;
   pendingPhone: string;
 }
 
@@ -27,7 +28,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const verifyOtp = async (code: string): Promise<boolean> => {
     if (code.trim() === simulatedOtp) {
-      setUser(CURRENT_PATIENT);
+      setUser(previous => ({ ...(previous || CURRENT_PATIENT), phone: pendingPhone }));
       setIsAuthenticated(true);
       return true;
     }
@@ -49,6 +50,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         verifyOtp,
         logout,
         pendingPhone,
+        updateProfile: updates => setUser(previous => ({ ...(previous || CURRENT_PATIENT), ...updates })),
       }}
     >
       {children}

@@ -23,33 +23,33 @@ export default function TabLayout() {
         tabBarStyle: {
           position: 'absolute',
           bottom: bottomMargin,
-          left: 16,
-          right: 16,
-          height: 66,
-          backgroundColor: '#0F5B43', // Exact forest green from Upcoming Appointment card
-          borderRadius: 33,
+          left: 18,
+          right: 18,
+          height: 58, // Sleek, reduced height
+          backgroundColor: '#0F5B43', // Dark forest green
+          borderRadius: 29,
           borderWidth: 1.2,
           borderColor: 'rgba(255, 255, 255, 0.18)',
-          elevation: 16,
+          elevation: 14,
           zIndex: 999,
           shadowColor: '#08251C',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.35,
-          shadowRadius: 18,
-          paddingTop: 5,
-          paddingBottom: 6,
-          paddingHorizontal: 10,
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.32,
+          shadowRadius: 16,
+          paddingTop: 4,
+          paddingBottom: 4,
+          paddingHorizontal: 6,
         },
         tabBarItemStyle: {
-          height: 52,
+          height: 48,
           justifyContent: 'center',
           alignItems: 'center',
         },
         tabBarLabelStyle: {
           fontFamily: Typography.fontFamily.sans,
-          fontSize: 10.5,
+          fontSize: 10,
           fontWeight: '600',
-          marginTop: 2,
+          marginTop: 1,
         },
       }}
     >
@@ -136,11 +136,11 @@ const styles = StyleSheet.create({
   iconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 44,
-    height: 28,
-    borderRadius: 14,
+    width: 38,
+    height: 25,
+    borderRadius: 12.5,
   },
   activeIconPill: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
   },
 });

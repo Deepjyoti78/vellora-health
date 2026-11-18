@@ -22,6 +22,7 @@ export interface UserProfile {
     postalCode: string;
     landmark?: string;
   };
+  demoDependent?: { name: string; relationship: string; age: number };
   emergencyContact?: {
     name: string;
     relationship: string;
@@ -76,7 +77,7 @@ export interface PatientBooking {
   serviceTitle: string;
   patientName: string;
   patientRelationship: string;
-  patientAge: number;
+  patientAge?: number;
   status: BookingStatus;
   scheduledDate: string;
   scheduledTimeSlot: string;

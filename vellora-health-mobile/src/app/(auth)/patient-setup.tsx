@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   Animated,
+  Alert,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,7 +21,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function PatientSetupScreen() {
   const { userName } = useLocalSearchParams<{ userName?: string }>();
-  const { verifyOtp, simulatedOtp } = useAuth();
+  const { verifyOtp, simulatedOtp, updateProfile } = useAuth();
   
   // Current step state: 1 (Who will receive care) or 2 (Family member details if family chosen)
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
@@ -100,8 +101,10 @@ export default function PatientSetupScreen() {
   };
 
   const completeOnboarding = async () => {
+    if (recipient === 'family' && (!familyMemberName.trim() || !/^\d+$/.test(familyMemberAge) || Number(familyMemberAge) < 1 || Number(familyMemberAge) > 120)) { Alert.alert('Family details required', 'Enter a name and an age from 1 to 120.'); return; }
     setLoading(true);
     await verifyOtp(simulatedOtp);
+    updateProfile({ name: userName?.trim() || 'Demo patient', demoDependent: recipient === 'family' ? { name: familyMemberName.trim(), relationship: familyRelation, age: Number(familyMemberAge) } : undefined });
     setLoading(false);
     router.replace('/(tabs)');
   };

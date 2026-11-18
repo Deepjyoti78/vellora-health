@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Typography } from '../../constants/theme';
-import { DOCTOR_ROHAN, addBooking } from '../../data/mockData';
+import { CORE_SERVICES, addBooking, getBookingById, cancelBooking, rescheduleBooking, generateSecurePin } from '../../data/mockData';
+import { useAuth } from '../../context/AuthContext';
 import { PatientBooking } from '../../types';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -33,19 +34,6 @@ export type BookingStep =
   | 'reschedule'   // Image 3: Reschedule Booking
   | 'cancel';      // Image 2: Cancel Booking
 
-interface DayPill {
-  dayName: string;
-  dayNum: string;
-  fullDate: string;
-}
-
-const SCHEDULE_DAYS: DayPill[] = [
-  { dayName: 'Tue', dayNum: '20', fullDate: 'Tue, 20 May 2025' },
-  { dayName: 'Wed', dayNum: '21', fullDate: 'Wed, 21 May 2025' },
-  { dayName: 'Thu', dayNum: '22', fullDate: 'Thu, 22 May 2025' },
-  { dayName: 'Fri', dayNum: '23', fullDate: 'Fri, 23 May 2025' },
-  { dayName: 'Sat', dayNum: '24', fullDate: 'Sat, 24 May 2025' },
-];
 
 const SCHEDULE_TIMES = [
   '09:00 AM',
@@ -82,8 +70,12 @@ const CANCELLATION_REASONS = [
 ];
 
 export default function BookingScreen() {
+  const { user } = useAuth();
+  const savingBooking = useRef(false);
   const params = useLocalSearchParams<{
     serviceId?: string;
+    price?: string;
+    selectedTitle?: string;
     doctorId?: string;
     doctorName?: string;
     specialty?: string;
@@ -96,6 +88,15 @@ export default function BookingScreen() {
     step?: BookingStep;
   }>();
 
+  const existingBooking = getBookingById(params.serviceId || '');
+  const service = CORE_SERVICES.find(item => item.id === (existingBooking?.serviceId || params.serviceId));
+  const quotedPrice = Number(params.price);
+  const totalPrice = existingBooking?.totalPrice ?? (Number.isFinite(quotedPrice) && quotedPrice > 0 ? quotedPrice : service?.priceStartingAt ?? 0);
+  const priceLabel = '₹' + totalPrice.toLocaleString('en-IN');
+  const [savedBookingId, setSavedBookingId] = useState(existingBooking?.id || '');
+  const bookingReference = savedBookingId || existingBooking?.id || params.serviceId || '';
+  const today = new Date();
+  const formatDate = (date: Date) => date.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
   // Determine if this is viewing an existing booking from My Bookings or Dashboard
   const isExistingBooking = Boolean(
     params.step === 'details_view' ||
@@ -111,19 +112,19 @@ export default function BookingScreen() {
 
   // Booking display state
   const [serviceTitle, setServiceTitle] = useState(
-    params.serviceTitle || (params.serviceId === 'nursing' ? 'Home Nursing Care' : 'Home Visit Consultation')
+    existingBooking?.serviceTitle || params.selectedTitle || params.serviceTitle || service?.title || 'Unknown service'
   );
   const [providerName, setProviderName] = useState(
-    params.providerName || params.doctorName || 'Dr. Arjun Mehta'
+    existingBooking?.assignedClinician?.name || params.providerName || params.doctorName || 'Care team selection (demo)'
   );
   const [bookingStatus, setBookingStatus] = useState(
-    params.status || 'Confirmed'
+    existingBooking ? existingBooking.status.toLowerCase().replace(/(^|_)([a-z])/g, (_, space, letter) => (space ? ' ' : '') + letter.toUpperCase()) : params.status || 'Requested'
   );
 
   // Step 1: Details (Image 1)
-  const [fullName, setFullName] = useState('Arjun Mehta');
-  const [phoneNumber, setPhoneNumber] = useState('+91 98765 43210');
-  const [emailAddress, setEmailAddress] = useState('arjun.mehta@gmail.com');
+  const [fullName, setFullName] = useState(user?.name || '');
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone || '');
+  const [emailAddress, setEmailAddress] = useState(user?.email || '');
   const [serviceAddress, setServiceAddress] = useState(
     params.address || 'A-402, Green Valley Apartments,\nBangalore - 560068'
   );
@@ -131,9 +132,9 @@ export default function BookingScreen() {
   const [selectedReason, setSelectedReason] = useState('General Consultation');
 
   // Step 2: Schedule & Calendar
-  const [calendarYear, setCalendarYear] = useState(2025);
-  const [calendarMonth, setCalendarMonth] = useState(4); // 0-indexed: 4 is May
-  const [selectedDayNumber, setSelectedDayNumber] = useState(21); // 21 May 2025 default
+  const [calendarYear, setCalendarYear] = useState(today.getFullYear());
+  const [calendarMonth, setCalendarMonth] = useState(today.getMonth());
+  const [selectedDayNumber, setSelectedDayNumber] = useState(today.getDate());
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('02:00 PM'); // 02:00 PM
 
   const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
@@ -172,7 +173,7 @@ export default function BookingScreen() {
   const [paymentMethod, setPaymentMethod] = useState<'UPI' | 'CARD' | 'NETBANKING' | 'WALLET'>('UPI');
 
   // Step 7: Reschedule (Image 3)
-  const [rescheduleDay, setRescheduleDay] = useState(16); // 16 May 2025 (Image 3)
+  const [rescheduleDay, setRescheduleDay] = useState(today.getDate());
   const [rescheduleTime, setRescheduleTime] = useState('03:00 PM'); // 03:00 PM (Image 3)
 
   // Step 8: Cancel (Image 2)
@@ -181,7 +182,7 @@ export default function BookingScreen() {
 
   // Dynamic booking state
   const [bookingConfirmedDate, setBookingConfirmedDate] = useState(
-    params.date || 'Wed, 21 May 2025'
+    existingBooking?.scheduledDate || params.date || formatDate(today)
   );
   const [bookingConfirmedTime, setBookingConfirmedTime] = useState(
     params.time || '02:00 PM'
@@ -195,8 +196,9 @@ export default function BookingScreen() {
       setCurrentStep('details_view');
     }
     if (params.serviceTitle) setServiceTitle(params.serviceTitle);
-    if (params.providerName || params.doctorName) setProviderName(params.providerName || params.doctorName || 'Dr. Arjun Mehta');
-    if (params.status) setBookingStatus(params.status);
+    if (params.providerName || params.doctorName) setProviderName(params.providerName || params.doctorName || 'Assignment pending');
+    if (existingBooking) setBookingStatus(existingBooking.status.toLowerCase().replace(/(^|_)([a-z])/g, (_, space, letter) => (space ? ' ' : '') + letter.toUpperCase()));
+    else if (params.status) setBookingStatus(params.status);
     if (params.date) setBookingConfirmedDate(params.date);
     if (params.time) setBookingConfirmedTime(params.time);
     if (params.address) setServiceAddress(params.address);
@@ -285,7 +287,7 @@ export default function BookingScreen() {
   };
 
   const handleStep1Continue = () => {
-    if (!fullName.trim() || !phoneNumber.trim()) {
+    if (!service || !fullName.trim() || phoneNumber.replace(/\D/g, '').length < 7 || !serviceAddress.trim()) {
       Alert.alert('Required Fields', 'Please ensure Full Name and Phone Number are entered.');
       return;
     }
@@ -294,6 +296,8 @@ export default function BookingScreen() {
 
   const handleStep2Continue = () => {
     const dateObj = new Date(calendarYear, calendarMonth, selectedDayNumber);
+    const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+    if (dateObj < midnight || dateObj.getMonth() !== calendarMonth) { Alert.alert('Invalid date', 'Choose today or a future date.'); return; }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const dayName = dayNames[dateObj.getDay()];
     const monthShort = MONTH_NAMES[calendarMonth].slice(0, 3);
@@ -308,26 +312,33 @@ export default function BookingScreen() {
   };
 
   const handleStep4Pay = () => {
-    // Save booking to patient mock store
+    if (!service || savedBookingId || savingBooking.current) return;
+    const chosenDate = new Date(calendarYear, calendarMonth, selectedDayNumber);
+    const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+    if (chosenDate < midnight || chosenDate.getMonth() !== calendarMonth) { setCurrentStep('schedule'); return; }
+    savingBooking.current = true;
+    // Save a local demo request without charging a payment method
     const newBooking: PatientBooking = {
-      id: `VEL-2025-${Math.floor(1000 + Math.random() * 9000)}`,
-      serviceId: 'doctor-visit',
-      serviceTitle: 'Home Visit Doctor Consultation',
+      id: `VEL-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      serviceId: service.id,
+      serviceTitle,
       patientName: fullName,
-      patientRelationship: 'Self',
-      patientAge: 34,
-      status: 'CONFIRMED',
+      patientRelationship: patientType === 'myself' ? 'Self' : patientType === 'family' ? 'Family' : 'Senior',
+
+      status: 'REQUESTED',
       scheduledDate: bookingConfirmedDate,
       scheduledTimeSlot: bookingConfirmedTime,
       urgency: 'STANDARD',
-      totalPrice: 1200,
-      securityPin: '4829',
+      totalPrice,
+      securityPin: generateSecurePin(),
       address: serviceAddress.replace('\n', ' '),
-      symptoms: 'Doctor home visit consultation',
-      assignedClinician: DOCTOR_ROHAN,
+      symptoms: selectedReason,
+      paymentMethod: 'Demo request — no charge',
       createdAt: new Date().toISOString(),
     };
     addBooking(newBooking);
+    setSavedBookingId(newBooking.id);
+    setBookingStatus('Requested');
 
     // Show Confirmation screen (Image 7)
     setCurrentStep('confirmed');
@@ -351,7 +362,11 @@ export default function BookingScreen() {
   };
 
   const handleUpdateBooking = () => {
-    const updatedDate = `Fri, ${rescheduleDay} May 2025`;
+    const date = new Date(calendarYear, calendarMonth, rescheduleDay);
+    const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+    if (date < midnight || date.getMonth() !== calendarMonth) { Alert.alert('Invalid date', 'Choose today or a future date.'); return; }
+    const updatedDate = formatDate(date);
+    if (!rescheduleBooking(bookingReference, updatedDate, rescheduleTime)) { Alert.alert('Booking unavailable', 'This booking is not in the local demo session.'); return; }
     setBookingConfirmedDate(updatedDate);
     setBookingConfirmedTime(rescheduleTime);
     Alert.alert('Booking Rescheduled', `Your consultation has been updated to ${updatedDate} at ${rescheduleTime}.`);
@@ -359,6 +374,9 @@ export default function BookingScreen() {
   };
 
   const handleConfirmCancel = () => {
+    if (cancelReason === 'Select a reason') { Alert.alert('Reason required', 'Select a cancellation reason.'); return; }
+    if (!cancelBooking(bookingReference, cancelReason)) { Alert.alert('Booking unavailable', 'This booking is not in the local demo session.'); return; }
+    setBookingStatus('Cancelled');
     Alert.alert('Appointment Cancelled', 'Your home visit doctor appointment has been cancelled successfully.');
     router.replace('/(tabs)/services');
   };
@@ -521,13 +539,13 @@ export default function BookingScreen() {
                     <Ionicons name="sparkles" size={11} color="#0F5B43" style={{ marginRight: 3 }} />
                     <Text style={styles.step1ServiceCategoryText}>Doorstep Care</Text>
                   </View>
-                  <Text style={styles.step1ServicePriceText}>₹1,200</Text>
+                  <Text style={styles.step1ServicePriceText}>{priceLabel}</Text>
                 </View>
                 <Text style={styles.step1ServiceTitle} numberOfLines={1}>
                   {serviceTitle}
                 </Text>
                 <Text style={styles.step1ServiceProvider} numberOfLines={1}>
-                  {providerName} • Consultant Physician
+                  {providerName} • {service?.category || 'Demo service'}
                 </Text>
               </View>
             </View>
@@ -536,7 +554,7 @@ export default function BookingScreen() {
             <View style={styles.patientSelectorCard}>
               <Text style={styles.patientSelectorTitle}>Who is this appointment for?</Text>
               <View style={styles.patientTabsRow}>
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   style={[
                     styles.patientTabPill,
                     patientType === 'myself' && styles.patientTabPillActive,
@@ -544,7 +562,7 @@ export default function BookingScreen() {
                   activeOpacity={0.8}
                   onPress={() => {
                     setPatientType('myself');
-                    setFullName('Arjun Mehta');
+                    setFullName(user?.name || '');
                     setPhoneNumber('+91 98765 43210');
                   }}
                 >
@@ -564,7 +582,7 @@ export default function BookingScreen() {
                   </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   style={[
                     styles.patientTabPill,
                     patientType === 'family' && styles.patientTabPillActive,
@@ -591,7 +609,7 @@ export default function BookingScreen() {
                   </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   style={[
                     styles.patientTabPill,
                     patientType === 'senior' && styles.patientTabPillActive,
@@ -659,7 +677,7 @@ export default function BookingScreen() {
                 </View>
                 <View style={styles.inputVerifiedPill}>
                   <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 3 }} />
-                  <Text style={styles.inputVerifiedText}>Verified</Text>
+                  <Text style={styles.inputVerifiedText}>Demo</Text>
                 </View>
               </View>
 
@@ -682,7 +700,7 @@ export default function BookingScreen() {
                 </View>
                 <View style={styles.inputVerifiedPill}>
                   <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 3 }} />
-                  <Text style={styles.inputVerifiedText}>Verified</Text>
+                  <Text style={styles.inputVerifiedText}>Demo</Text>
                 </View>
               </View>
 
@@ -719,7 +737,7 @@ export default function BookingScreen() {
               </View>
               <View style={styles.reasonChipsRow}>
                 {['General Checkup', 'Fever / Cold', 'Blood Pressure', 'Bedside Care'].map((tag) => (
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     key={tag}
                     style={[
                       styles.reasonChip,
@@ -745,14 +763,14 @@ export default function BookingScreen() {
             <View style={styles.step1TrustBanner}>
               <Ionicons name="shield-checkmark" size={16} color="#0F5B43" style={{ marginRight: 8 }} />
               <Text style={styles.step1TrustText}>
-                100% Background-Verified Clinician • Sterile Kit • Free Rescheduling
+                Demo service request • No payment collected
               </Text>
             </View>
           </ScrollView>
 
           {/* Sticky Bottom Action Button */}
           <View style={styles.bottomActionBar}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.primaryActionButton}
               onPress={handleStep1Continue}
               activeOpacity={0.88}
@@ -786,7 +804,7 @@ export default function BookingScreen() {
             <View style={styles.calendarCard}>
               {/* Calendar Month Header with Prev/Next Controls */}
               <View style={styles.calendarHeaderRow}>
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   onPress={handlePrevMonth}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                   activeOpacity={0.7}
@@ -797,7 +815,7 @@ export default function BookingScreen() {
                 <Text style={styles.calendarMonthText}>
                   {MONTH_NAMES[calendarMonth]} {calendarYear}
                 </Text>
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   onPress={handleNextMonth}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                   activeOpacity={0.7}
@@ -828,7 +846,7 @@ export default function BookingScreen() {
                   const d = i + 1;
                   const isSelected = selectedDayNumber === d;
                   return (
-                    <TouchableOpacity
+                    <TouchableOpacity accessibilityRole="button"
                       key={d}
                       onPress={() => handleSelectDay(d)}
                       activeOpacity={0.75}
@@ -861,7 +879,7 @@ export default function BookingScreen() {
               {SCHEDULE_TIMES.map((time) => {
                 const isSelected = selectedTimeSlot === time;
                 return (
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     key={time}
                     onPress={() => setSelectedTimeSlot(time)}
                     activeOpacity={0.85}
@@ -888,7 +906,7 @@ export default function BookingScreen() {
 
           {/* Sticky Bottom Action Button */}
           <View style={styles.bottomActionBar}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.primaryActionButton}
               onPress={handleStep2Continue}
               activeOpacity={0.88}
@@ -926,11 +944,11 @@ export default function BookingScreen() {
               <View style={styles.reviewDoctorInfo}>
                 <View style={styles.reviewVerifiedBadge}>
                   <Ionicons name="shield-checkmark" size={13} color="#059669" />
-                  <Text style={styles.reviewVerifiedText}>Verified Home Doctor</Text>
+                  <Text style={styles.reviewVerifiedText}>Demo care selection</Text>
                 </View>
                 <Text style={styles.reviewServiceName}>{serviceTitle}</Text>
                 <Text style={styles.reviewDoctorName}>{providerName}</Text>
-                <Text style={styles.reviewDoctorMeta}>MBBS, MD • 8+ Years Experience</Text>
+                <Text style={styles.reviewDoctorMeta}>{params.specialty || service?.category || 'Demo package'}</Text>
               </View>
             </View>
 
@@ -989,7 +1007,7 @@ export default function BookingScreen() {
                 </View>
                 <View style={styles.reviewItemTextCol}>
                   <Text style={styles.reviewItemLabel}>Patient Name</Text>
-                  <Text style={styles.reviewItemValue}>{fullName} (Self, 34 yrs)</Text>
+                  <Text style={styles.reviewItemValue}>{fullName} ({patientType === 'myself' ? 'Self' : patientType === 'family' ? 'Family' : 'Senior'})</Text>
                 </View>
               </View>
 
@@ -1014,8 +1032,8 @@ export default function BookingScreen() {
               </View>
 
               <View style={styles.billRow}>
-                <Text style={styles.billLabel}>Doctor Consultation Fee</Text>
-                <Text style={styles.billValue}>₹1,200</Text>
+                <Text style={styles.billLabel}>Service Fee</Text>
+                <Text style={styles.billValue}>{priceLabel}</Text>
               </View>
 
               <View style={styles.billRow}>
@@ -1034,8 +1052,8 @@ export default function BookingScreen() {
               <View style={styles.reviewInnerDivider} />
 
               <View style={[styles.billRow, { marginTop: 4 }]}>
-                <Text style={styles.billTotalLabel}>Total Payable Amount</Text>
-                <Text style={styles.billTotalValue}>₹1,200</Text>
+                <Text style={styles.billTotalLabel}>Estimated Demo Amount</Text>
+                <Text style={styles.billTotalValue}>{priceLabel}</Text>
               </View>
             </View>
 
@@ -1045,7 +1063,7 @@ export default function BookingScreen() {
               <View style={styles.trustBannerTextCol}>
                 <Text style={styles.trustBannerTitle}>Free Cancellation & Rescheduling</Text>
                 <Text style={styles.trustBannerSub}>
-                  Cancel or change your slot up to 2 hours before the visit with 100% refund.
+                  Cancel or change your slot up to 2 hours before the visit in this demo. No payment is collected.
                 </Text>
               </View>
             </View>
@@ -1054,16 +1072,16 @@ export default function BookingScreen() {
           {/* Sticky Bottom Action Bar with Total on Left */}
           <View style={styles.reviewBottomBar}>
             <View style={styles.reviewBottomPriceCol}>
-              <Text style={styles.reviewBottomPriceLabel}>Total Payable</Text>
-              <Text style={styles.reviewBottomPriceValue}>₹1,200</Text>
+              <Text style={styles.reviewBottomPriceLabel}>Demo Estimate</Text>
+              <Text style={styles.reviewBottomPriceValue}>{priceLabel}</Text>
             </View>
 
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.reviewBottomButton}
               onPress={handleStep3ProceedToPayment}
               activeOpacity={0.88}
             >
-              <Text style={styles.primaryActionButtonText}>Proceed to Payment →</Text>
+              <Text style={styles.primaryActionButtonText}>Review Demo Request →</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1080,25 +1098,25 @@ export default function BookingScreen() {
           >
             <Text style={styles.pageTitle}>Payment</Text>
             <Text style={styles.pageSubtitle}>
-              Complete your booking with 100% safe & encrypted payment.
+              Preview your payment preference. No payment is collected in this demo.
             </Text>
 
             {/* 1. Enhanced Booking Amount Card with Breakdown Pill */}
             <View style={styles.bookingAmountCard}>
               <View style={styles.bookingAmountTopRow}>
                 <View>
-                  <Text style={styles.bookingAmountLabel}>Total Amount Payable</Text>
-                  <Text style={styles.bookingAmountValue}>₹1,200</Text>
+                  <Text style={styles.bookingAmountLabel}>Estimated Demo Amount</Text>
+                  <Text style={styles.bookingAmountValue}>{priceLabel}</Text>
                 </View>
                 <View style={styles.instantRefundBadge}>
                   <Ionicons name="shield-checkmark" size={14} color="#0F5B43" />
-                  <Text style={styles.instantRefundText}>Safe Checkout</Text>
+                  <Text style={styles.instantRefundText}>Demo Checkout</Text>
                 </View>
               </View>
 
               <View style={styles.amountBreakdownPill}>
                 <Text style={styles.amountBreakdownPillText}>
-                  Home Doctor Visit • Dr. Arjun Mehta • {bookingConfirmedDate}
+                  {serviceTitle} • {providerName} • {bookingConfirmedDate}
                 </Text>
               </View>
             </View>
@@ -1106,7 +1124,7 @@ export default function BookingScreen() {
             {/* 2. Interactive Payment Methods List */}
             <View style={styles.paymentOptionsContainer}>
               {/* Option 1: UPI */}
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 onPress={() => setPaymentMethod('UPI')}
                 activeOpacity={0.85}
                 style={[
@@ -1155,7 +1173,7 @@ export default function BookingScreen() {
               <View style={styles.paymentDivider} />
 
               {/* Option 2: Debit / Credit Card */}
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 onPress={() => setPaymentMethod('CARD')}
                 activeOpacity={0.85}
                 style={[
@@ -1180,7 +1198,7 @@ export default function BookingScreen() {
               <View style={styles.paymentDivider} />
 
               {/* Option 3: Net Banking */}
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 onPress={() => setPaymentMethod('NETBANKING')}
                 activeOpacity={0.85}
                 style={[
@@ -1205,7 +1223,7 @@ export default function BookingScreen() {
               <View style={styles.paymentDivider} />
 
               {/* Option 4: Wallets */}
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 onPress={() => setPaymentMethod('WALLET')}
                 activeOpacity={0.85}
                 style={[
@@ -1232,25 +1250,25 @@ export default function BookingScreen() {
             <View style={styles.paymentTrustRow}>
               <View style={styles.paymentTrustItem}>
                 <Ionicons name="lock-closed" size={15} color="#0F5B43" />
-                <Text style={styles.paymentTrustText}>256-Bit SSL Encrypted</Text>
+                <Text style={styles.paymentTrustText}>No charge in this demo</Text>
               </View>
               <View style={styles.paymentTrustItem}>
                 <Ionicons name="shield-checkmark" size={15} color="#0F5B43" />
-                <Text style={styles.paymentTrustText}>PCI-DSS Compliant</Text>
+                <Text style={styles.paymentTrustText}>Payment service unavailable</Text>
               </View>
             </View>
           </ScrollView>
 
           {/* Sticky Bottom Action Button */}
           <View style={styles.bottomActionBar}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.primaryActionButton}
               onPress={handleStep4Pay}
               activeOpacity={0.88}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                 <Ionicons name="lock-closed" size={16} color="#FFFFFF" />
-                <Text style={styles.primaryActionButtonText}>Pay ₹1,200 Securely →</Text>
+                <Text style={styles.primaryActionButtonText}>Save Demo Request →</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -1281,19 +1299,19 @@ export default function BookingScreen() {
               </View>
             </View>
 
-            <Text style={styles.confirmedTitle}>Booking Confirmed!</Text>
+            <Text style={styles.confirmedTitle}>Demo Request Saved</Text>
             <Text style={styles.confirmedSubtitle}>
-              Your home visit consultation has been successfully scheduled.
+              Your demo request has been saved for this session. No payment was taken.
             </Text>
 
             {/* Booking Reference Pill */}
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.bookingRefPill}
               activeOpacity={0.85}
               onPress={handleViewMyBookings}
             >
               <Text style={styles.bookingRefLabel}>Booking Reference:</Text>
-              <Text style={styles.bookingRefCode}>#VEL-2025-8492</Text>
+              <Text style={styles.bookingRefCode}>{bookingReference}</Text>
               <Ionicons name="copy-outline" size={15} color="#0F5B43" />
             </TouchableOpacity>
 
@@ -1316,7 +1334,7 @@ export default function BookingScreen() {
             </View>
 
             {/* 2. Confirmed Summary Card with Doctor Info */}
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.confirmedSummaryCard}
               activeOpacity={0.9}
               onPress={handleViewMyBookings}
@@ -1332,7 +1350,7 @@ export default function BookingScreen() {
                   <Text style={styles.confirmedDoctorName}>{providerName}</Text>
                   <Text style={styles.confirmedDoctorRole}>{serviceTitle}</Text>
                   <View style={styles.confirmedBadgeSmall}>
-                    <Text style={styles.confirmedBadgeSmallText}>Doctor Assigned</Text>
+                    <Text style={styles.confirmedBadgeSmallText}>Assignment pending</Text>
                   </View>
                 </View>
               </View>
@@ -1376,7 +1394,7 @@ export default function BookingScreen() {
                 <View style={styles.timelineDotActive} />
                 <View style={styles.timelineTextCol}>
                   <Text style={styles.timelineTitle}>1. Confirmation SMS & Email</Text>
-                  <Text style={styles.timelineSub}>Details sent to your registered phone & email.</Text>
+                  <Text style={styles.timelineSub}>Demo request saved locally for this session.</Text>
                 </View>
               </View>
 
@@ -1384,7 +1402,7 @@ export default function BookingScreen() {
                 <View style={styles.timelineDot} />
                 <View style={styles.timelineTextCol}>
                   <Text style={styles.timelineTitle}>2. Doctor Pre-Visit Call</Text>
-                  <Text style={styles.timelineSub}>Doctor will call 15 minutes before reaching.</Text>
+                  <Text style={styles.timelineSub}>Clinician contact requires a live service.</Text>
                 </View>
               </View>
 
@@ -1399,7 +1417,7 @@ export default function BookingScreen() {
 
             {/* 4. Action Buttons */}
             <View style={styles.confirmedActionsWrap}>
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 style={styles.primaryActionButton}
                 onPress={handleViewMyBookings}
                 activeOpacity={0.88}
@@ -1407,7 +1425,7 @@ export default function BookingScreen() {
                 <Text style={styles.primaryActionButtonText}>View My Bookings</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 style={styles.secondaryLinkButton}
                 onPress={handleBookAnotherService}
                 activeOpacity={0.7}
@@ -1425,7 +1443,7 @@ export default function BookingScreen() {
         <View style={styles.screenContainer}>
           {/* Top Bar with Back, Logo & Helpdesk */}
           <View style={styles.detailsHeaderBar}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.detailsHeaderBtn}
               activeOpacity={0.7}
               onPress={handleBack}
@@ -1440,7 +1458,7 @@ export default function BookingScreen() {
               resizeMode="contain"
             />
 
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.detailsHeaderBtn}
               activeOpacity={0.7}
               onPress={() => {
@@ -1468,9 +1486,7 @@ export default function BookingScreen() {
               <Text style={styles.pageTitle}>Booking Details</Text>
               <View style={styles.detailsRefBadgeRow}>
                 <Text style={styles.detailsRefCode}>
-                  {typeof params.serviceId === 'string' && params.serviceId.startsWith('bkg-')
-                    ? `#VEL-2025-${params.serviceId.slice(4).toUpperCase()}`
-                    : '#VEL-2025-8492'}
+                  {bookingReference}
                 </Text>
                 <View style={styles.detailsRefDot} />
                 <Text style={styles.detailsRefType}>Doorstep Clinical Care</Text>
@@ -1521,7 +1537,7 @@ export default function BookingScreen() {
                   </View>
                   <View style={styles.doctorPillTag}>
                     <Ionicons name="shield-checkmark-outline" size={11} color="#0F5B43" style={{ marginRight: 3 }} />
-                    <Text style={styles.doctorPillTagText}>Verified Clinician</Text>
+                    <Text style={styles.doctorPillTagText}>Demo clinician selection</Text>
                   </View>
                 </View>
               </View>
@@ -1600,7 +1616,7 @@ export default function BookingScreen() {
                 <View style={styles.detailsDataCol}>
                   <Text style={styles.detailsDataLabel}>Patient Details</Text>
                   <Text style={styles.detailsDataValue}>
-                    {fullName || 'Arjun Sharma'} (Age: 34, Self) • {phoneNumber || '+91 98765 43210'}
+                    {fullName || existingBooking?.patientName || 'Demo patient'} ({existingBooking?.patientRelationship || (patientType === 'myself' ? 'Self' : 'Family')}) • {phoneNumber || '+91 98765 43210'}
                   </Text>
                 </View>
               </View>
@@ -1612,7 +1628,7 @@ export default function BookingScreen() {
                 <Text style={styles.cardHeaderTitleText}>Payment & Receipt</Text>
                 <View style={styles.billingPaidBadge}>
                   <Ionicons name="checkmark-circle" size={13} color="#059669" style={{ marginRight: 4 }} />
-                  <Text style={styles.billingPaidBadgeText}>Paid Online (UPI)</Text>
+                  <Text style={styles.billingPaidBadgeText}>Demo — payment pending</Text>
                 </View>
               </View>
 
@@ -1634,15 +1650,15 @@ export default function BookingScreen() {
               <View style={styles.billRowDivider} />
 
               <View style={styles.billTotalRow}>
-                <Text style={styles.detailsBillTotalLabel}>Total Amount Paid</Text>
-                <Text style={styles.detailsBillTotalValue}>₹1,200</Text>
+                <Text style={styles.detailsBillTotalLabel}>Estimated Amount</Text>
+                <Text style={styles.detailsBillTotalValue}>{priceLabel}</Text>
               </View>
 
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 style={styles.downloadInvoiceBtn}
                 activeOpacity={0.7}
                 onPress={() => {
-                  Alert.alert('Invoice Downloaded', 'Tax invoice #INV-2025-8492 has been saved to your device.');
+                  Alert.alert('Invoice unavailable', 'No tax invoice is issued for a demo request.');
                 }}
               >
                 <Ionicons name="document-text-outline" size={15} color="#0F5B43" style={{ marginRight: 6 }} />
@@ -1683,7 +1699,7 @@ export default function BookingScreen() {
             <View style={styles.detailsActionButtonsCol}>
               {bookingStatus !== 'Cancelled' ? (
                 <>
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     style={styles.rescheduleButton}
                     onPress={handleOpenReschedule}
                     activeOpacity={0.85}
@@ -1692,7 +1708,7 @@ export default function BookingScreen() {
                     <Text style={styles.rescheduleButtonText}>Reschedule Appointment</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     style={styles.cancelBookingButton}
                     onPress={handleOpenCancel}
                     activeOpacity={0.85}
@@ -1705,13 +1721,13 @@ export default function BookingScreen() {
                 <View style={styles.cancelledNoticeCard}>
                   <Ionicons name="information-circle" size={20} color="#DC2626" />
                   <Text style={styles.cancelledNoticeText}>
-                    This appointment has been cancelled. Full refund initiated to original payment source.
+                    This appointment has been cancelled. No payment or refund is processed in this demo.
                   </Text>
                 </View>
               )}
 
               {/* 24/7 Helpline Link */}
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 style={styles.helplineLinkRow}
                 activeOpacity={0.7}
                 onPress={() => Linking.openURL('tel:+918049108800')}
@@ -1744,11 +1760,11 @@ export default function BookingScreen() {
             {/* Month Calendar Picker Card */}
             <View style={styles.calendarCard}>
               <View style={styles.calendarHeaderRow}>
-                <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }} activeOpacity={0.7}>
+                <TouchableOpacity onPress={handlePrevMonth} accessibilityRole="button" accessibilityLabel="Previous month" hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }} activeOpacity={0.7}>
                   <Ionicons name="chevron-back" size={20} color="#102820" />
                 </TouchableOpacity>
-                <Text style={styles.calendarMonthText}>May 2025</Text>
-                <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }} activeOpacity={0.7}>
+                <Text style={styles.calendarMonthText}>{MONTH_NAMES[calendarMonth]} {calendarYear}</Text>
+                <TouchableOpacity accessibilityRole="button" hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }} activeOpacity={0.7}>
                   <Ionicons name="chevron-forward" size={20} color="#102820" />
                 </TouchableOpacity>
               </View>
@@ -1764,10 +1780,11 @@ export default function BookingScreen() {
 
               {/* Calendar Grid (Days 12 to 25 matching Image 3) */}
               <View style={styles.calendarDaysGrid}>
-                {[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25].map((d) => {
+                {Array.from({ length: firstDayOffset }, (_, index) => <View key={`offset-${index}`} style={styles.calendarDayCell} />)}
+                {Array.from({ length: daysInMonth }, (_, index) => index + 1).map((d) => {
                   const isSelected = rescheduleDay === d;
                   return (
-                    <TouchableOpacity
+                    <TouchableOpacity accessibilityRole="button"
                       key={d}
                       onPress={() => setRescheduleDay(d)}
                       activeOpacity={0.75}
@@ -1799,7 +1816,7 @@ export default function BookingScreen() {
               {RESCHEDULE_TIMES.map((time) => {
                 const isSelected = rescheduleTime === time;
                 return (
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     key={time}
                     onPress={() => setRescheduleTime(time)}
                     activeOpacity={0.85}
@@ -1826,7 +1843,7 @@ export default function BookingScreen() {
 
           {/* Sticky Bottom Action Button */}
           <View style={styles.bottomActionBar}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.primaryActionButton}
               onPress={handleUpdateBooking}
               activeOpacity={0.88}
@@ -1886,7 +1903,7 @@ export default function BookingScreen() {
             <Text style={styles.cancelReasonLabel}>
               Reason for cancellation (optional)
             </Text>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.cancelReasonSelectBox}
               onPress={() => setShowCancelReasonModal(true)}
               activeOpacity={0.8}
@@ -1904,7 +1921,7 @@ export default function BookingScreen() {
 
             {/* Action Buttons: Red Cancel Booking & Outline Keep Booking */}
             <View style={styles.cancelActionButtonsCol}>
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 style={styles.confirmCancelButton}
                 onPress={handleConfirmCancel}
                 activeOpacity={0.85}
@@ -1912,7 +1929,7 @@ export default function BookingScreen() {
                 <Text style={styles.confirmCancelButtonText}>Cancel Booking</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 style={styles.keepBookingButton}
                 onPress={() => setCurrentStep('details_view')}
                 activeOpacity={0.85}
@@ -1929,7 +1946,7 @@ export default function BookingScreen() {
             animationType="fade"
             onRequestClose={() => setShowCancelReasonModal(false)}
           >
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.modalBackdrop}
               activeOpacity={1}
               onPress={() => setShowCancelReasonModal(false)}
@@ -1937,7 +1954,7 @@ export default function BookingScreen() {
               <View style={styles.modalContentCard}>
                 <Text style={styles.modalHeading}>Select Cancellation Reason</Text>
                 {CANCELLATION_REASONS.map((reason) => (
-                  <TouchableOpacity
+                  <TouchableOpacity accessibilityRole="button"
                     key={reason}
                     style={styles.modalReasonOption}
                     onPress={() => {

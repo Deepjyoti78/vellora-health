@@ -410,7 +410,9 @@ export default function ServiceDetailScreen() {
       pathname: `/booking/${config.serviceId}` as any,
       params: {
         doctorId: item.id,
-        doctorName: item.name,
+        price: String(item.price),
+        selectedTitle: config.serviceId === 'lab-tests' ? item.name : undefined,
+        doctorName: config.serviceId === 'lab-tests' ? undefined : item.name,
         specialty: item.specialty,
       },
     });
@@ -430,8 +432,8 @@ export default function ServiceDetailScreen() {
 
       {/* Top Header Bar with Clean Centered Logo & Right Support Action */}
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={handleBack}
+        <TouchableOpacity accessibilityRole="button"
+          accessibilityLabel="Go back" onPress={handleBack}
           activeOpacity={0.7}
           style={styles.backButton}
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
@@ -448,7 +450,7 @@ export default function ServiceDetailScreen() {
           />
         </View>
 
-        <TouchableOpacity
+        <TouchableOpacity accessibilityRole="button"
           style={styles.headerHelpBtn}
           activeOpacity={0.7}
           onPress={() => {
@@ -490,13 +492,13 @@ export default function ServiceDetailScreen() {
               returnKeyType="search"
             />
             {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+              <TouchableOpacity accessibilityRole="button" accessibilityLabel="Clear service search" onPress={() => setSearchQuery('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
                 <Ionicons name="close-circle" size={18} color={Palette.textMuted} />
               </TouchableOpacity>
             )}
           </View>
 
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.filterButton}
             activeOpacity={0.75}
             onPress={() => {
@@ -517,7 +519,7 @@ export default function ServiceDetailScreen() {
           {config.categories.map((cat) => {
             const isSelected = selectedCategory === cat;
             return (
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 key={cat}
                 onPress={() => setSelectedCategory(cat)}
                 activeOpacity={0.8}
@@ -542,7 +544,7 @@ export default function ServiceDetailScreen() {
         {/* 2-Column Cards Grid */}
         <View style={styles.itemsGrid}>
           {filteredItems.map((item) => (
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               key={item.id}
               activeOpacity={0.88}
               onPress={() => setSelectedItem(item)}
@@ -593,7 +595,7 @@ export default function ServiceDetailScreen() {
         </View>
 
         {/* Direct Booking Primary CTA Button */}
-        <TouchableOpacity
+        <TouchableOpacity accessibilityRole="button"
           style={styles.directBookBtn}
           activeOpacity={0.88}
           onPress={() => {
@@ -620,7 +622,7 @@ export default function ServiceDetailScreen() {
             <Ionicons name="search-outline" size={36} color={Palette.textMuted} />
             <Text style={styles.emptyTitle}>No results found</Text>
             <Text style={styles.emptySubtitle}>Try searching with different keywords or clear filters</Text>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               onPress={() => {
                 setSearchQuery('');
                 setSelectedCategory('All');
@@ -642,8 +644,8 @@ export default function ServiceDetailScreen() {
         animationType="slide"
         onRequestClose={() => setSelectedItem(null)}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
+        <TouchableOpacity accessibilityRole="button"
+          accessibilityLabel="Close service details" style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setSelectedItem(null)}
         >
@@ -709,7 +711,7 @@ export default function ServiceDetailScreen() {
                 </View>
 
                 {/* Action Buttons */}
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   style={styles.modalBookBtn}
                   activeOpacity={0.88}
                   onPress={() => handleBookItem(selectedItem)}
@@ -717,7 +719,7 @@ export default function ServiceDetailScreen() {
                   <Text style={styles.modalBookBtnText}>{config.bookLabel}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   style={styles.modalCloseBtn}
                   activeOpacity={0.7}
                   onPress={() => setSelectedItem(null)}

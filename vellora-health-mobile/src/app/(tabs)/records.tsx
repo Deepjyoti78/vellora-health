@@ -98,17 +98,17 @@ export default function RecordsScreen() {
   }, []);
 
   const handleDownloadReport = (title: string, docType: string) => {
-    setDownloadNotice(`✓ Downloaded ${docType}: ${title.substring(0, 30)}... (PDF saved to Downloads)`);
+    setDownloadNotice(`${docType} export is unavailable in this demo. No file was saved.`);
   };
 
   const handleShareReport = async (record: MedicalRecordItem) => {
     try {
       await Share.share({
         title: record.serviceTitle,
-        message: `Vellora Health Clinical Record:\n${record.serviceTitle}\nPatient: ${record.patientName} (${record.patientRelationship})\nDate: ${record.date}\nClinician: ${record.clinicianName}\nStatus: Verified`,
+        message: `Vellora Health Clinical Record:\n${record.serviceTitle}\nPatient: ${record.patientName} (${record.patientRelationship})\nDate: ${record.date}\nClinician: ${record.clinicianName}\nStatus: Demo record`,
       });
     } catch {
-      setDownloadNotice('Share link copied to clipboard.');
+      setDownloadNotice('Sharing failed. Please try again.');
     }
   };
 
@@ -302,7 +302,7 @@ export default function RecordsScreen() {
 
         {/* Primary Action Buttons */}
         <View style={styles.detailActionRow}>
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.detailPrimaryBtn}
             activeOpacity={0.85}
             onPress={() => handleDownloadReport(record.serviceTitle, 'Lab Report')}
@@ -311,7 +311,7 @@ export default function RecordsScreen() {
             <Text style={styles.detailPrimaryBtnText}>Download Lab PDF</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.detailSecondaryBtn}
             activeOpacity={0.85}
             onPress={() => handleShareReport(record)}
@@ -474,7 +474,7 @@ export default function RecordsScreen() {
 
         {/* Action Buttons */}
         <View style={styles.detailActionRow}>
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.detailPrimaryBtn}
             activeOpacity={0.85}
             onPress={() => handleDownloadReport(record.serviceTitle, 'e-Prescription')}
@@ -483,7 +483,7 @@ export default function RecordsScreen() {
             <Text style={styles.detailPrimaryBtnText}>Download e-Rx PDF</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.detailSecondaryBtn}
             activeOpacity={0.85}
             onPress={() => handleShareReport(record)}
@@ -699,7 +699,7 @@ export default function RecordsScreen() {
             </View>
           </View>
 
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.linkedBookingButton}
             activeOpacity={0.8}
             onPress={() => router.push('/(tabs)/bookings')}
@@ -714,7 +714,7 @@ export default function RecordsScreen() {
 
         {/* Action Buttons */}
         <View style={styles.detailActionRow}>
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.detailPrimaryBtn}
             activeOpacity={0.85}
             onPress={() => handleDownloadReport(record.serviceTitle, isVitals ? 'Vitals Log' : 'Visit Summary')}
@@ -725,7 +725,7 @@ export default function RecordsScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          <TouchableOpacity accessibilityRole="button"
             style={styles.detailSecondaryBtn}
             activeOpacity={0.85}
             onPress={() => handleShareReport(record)}
@@ -770,7 +770,7 @@ export default function RecordsScreen() {
         <View style={styles.patientSelectorSection}>
           <Text style={styles.sectionHeaderSmall}>PATIENT PROFILE</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.patientRow}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={[styles.patientPill, selectedPatientId === 'ALL' && styles.patientPillActive]}
               onPress={() => setSelectedPatientId('ALL')}
               activeOpacity={0.8}
@@ -784,7 +784,7 @@ export default function RecordsScreen() {
               const isActive = selectedPatientId === pat.id;
               const count = MEDICAL_RECORDS.filter((r) => r.patientId === pat.id).length;
               return (
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   key={pat.id}
                   style={[styles.patientPill, isActive && styles.patientPillActive]}
                   onPress={() => setSelectedPatientId(pat.id)}
@@ -804,7 +804,7 @@ export default function RecordsScreen() {
           <Text style={styles.sectionHeaderSmall}>CATEGORIES</Text>
           <View style={styles.categoryGrid}>
             {/* Prescriptions */}
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={[
                 styles.categoryCard,
                 selectedCategory === 'PRESCRIPTION' && styles.categoryCardSelected,
@@ -825,7 +825,7 @@ export default function RecordsScreen() {
             </TouchableOpacity>
 
             {/* Lab Reports */}
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={[
                 styles.categoryCard,
                 selectedCategory === 'LAB_REPORT' && styles.categoryCardSelected,
@@ -846,7 +846,7 @@ export default function RecordsScreen() {
             </TouchableOpacity>
 
             {/* Nursing Vitals */}
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={[
                 styles.categoryCard,
                 selectedCategory === 'VITALS_LOG' && styles.categoryCardSelected,
@@ -867,7 +867,7 @@ export default function RecordsScreen() {
             </TouchableOpacity>
 
             {/* Visit Summaries */}
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={[
                 styles.categoryCard,
                 selectedCategory === 'CARE_SUMMARY' && styles.categoryCardSelected,
@@ -902,7 +902,7 @@ export default function RecordsScreen() {
               clearButtonMode="while-editing"
             />
             {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <TouchableOpacity accessibilityRole="button" onPress={() => setSearchQuery('')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
                 <Ionicons name="close-circle" size={18} color={Colors.textMuted} />
               </TouchableOpacity>
             )}
@@ -919,7 +919,7 @@ export default function RecordsScreen() {
             ].map((pill) => {
               const isActive = selectedCategory === pill.id;
               return (
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   key={pill.id}
                   style={[styles.filterPill, isActive && styles.filterPillActive]}
                   onPress={() => setSelectedCategory(pill.id as CategoryFilter)}
@@ -941,7 +941,7 @@ export default function RecordsScreen() {
               CLINICAL DOCUMENTS ({filteredRecords.length})
             </Text>
             {(selectedCategory !== 'ALL' || selectedPatientId !== 'ALL' || searchQuery.length > 0) && (
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 onPress={() => {
                   setSelectedCategory('ALL');
                   setSelectedPatientId('ALL');
@@ -963,7 +963,7 @@ export default function RecordsScreen() {
               <Text style={styles.emptyStateSub}>
                 There are no clinical documents matching your current filter criteria.
               </Text>
-              <TouchableOpacity
+              <TouchableOpacity accessibilityRole="button"
                 style={styles.emptyStateBtn}
                 onPress={() => {
                   setSelectedCategory('ALL');
@@ -989,7 +989,7 @@ export default function RecordsScreen() {
                 : { label: 'VISIT SUMMARY', bg: '#F0F9FF', text: '#0284C7', icon: 'document-text' as const };
 
               return (
-                <TouchableOpacity
+                <TouchableOpacity accessibilityRole="button"
                   key={item.id}
                   style={styles.recordCard}
                   activeOpacity={0.88}
@@ -1069,7 +1069,7 @@ export default function RecordsScreen() {
         <View style={styles.screenWrapper}>
           {/* Detail View Custom Header */}
           <View style={styles.detailHeaderBar}>
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.backButton}
               activeOpacity={0.7}
               onPress={() => setSelectedRecordId(null)}
@@ -1088,7 +1088,7 @@ export default function RecordsScreen() {
                 : 'Visit Summary'}
             </Text>
 
-            <TouchableOpacity
+            <TouchableOpacity accessibilityRole="button"
               style={styles.headerActionBtn}
               activeOpacity={0.7}
               onPress={() => handleShareReport(currentRecord)}
