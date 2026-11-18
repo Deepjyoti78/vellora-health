@@ -54,38 +54,38 @@ export interface ServiceCardItem {
 // 1. DOCTORS DATA
 const DOCTORS_DATA: ServiceCardItem[] = [
   {
-    id: 'doc-rohan',
-    name: 'Dr. Rohan Mehta',
-    specialty: 'General Physician',
+    id: 'doc-vivian',
+    name: 'Dr. Vivian Green',
+    specialty: 'General Dentist',
     category: 'General',
     experience: '12+ years of experience',
     rating: 4.9,
     reviewsCount: 1324,
-    qualifications: 'MBBS, MD (Internal Medicine)',
+    qualifications: 'BDS, MDS (Oral & Dental Surgery)',
     languages: 'English, Hindi, Kannada',
     price: 799,
-    about: 'Dr. Rohan Mehta is a senior general physician with over 12 years of experience in primary and preventive care, chronic condition management, and holistic at-home health checkups.',
+    about: 'Dr. Vivian Green is a senior dental surgeon with over 12 years of clinical experience in home dental consultations, oral hygiene screening, denture fitting, and preventive oral health.',
     image: require('../../../assets/images/doctor-rohan.png'),
-    tintColor: '#E9EFEB',
+    tintColor: '#E2DFD8',
   },
   {
-    id: 'doc-maya',
-    name: 'Dr. Maya Patel',
-    specialty: 'Pediatrician',
-    category: 'Pediatrics',
+    id: 'doc-lisa',
+    name: 'Dr. Lisa Tran',
+    specialty: 'ENT Specialist',
+    category: 'General',
     experience: '10+ years of experience',
     rating: 4.9,
     reviewsCount: 980,
-    qualifications: 'MBBS, DCH, MD (Pediatrics)',
+    qualifications: 'MBBS, MS (Otolaryngology)',
     languages: 'English, Hindi, Gujarati',
     price: 849,
-    about: 'Compassionate consultant pediatrician specializing in newborn wellness, pediatric vaccinations, childhood asthma, growth milestones, and acute pediatric care at home.',
-    image: require('../../../assets/images/doctor-maya-patel.jpg'),
-    tintColor: '#DCE7E1',
+    about: 'Experienced ENT specialist providing at-home diagnosis for ear, nose, throat, sinusitis, vertigo, and allergic rhinitis management for children and adults.',
+    image: require('../../../assets/images/avatar-indian-2.jpg'),
+    tintColor: '#8CA2B1',
   },
   {
-    id: 'doc-ethan',
-    name: 'Dr. Ethan Park',
+    id: 'doc-alice',
+    name: 'Dr. Alice Huang',
     specialty: 'Cardiologist',
     category: 'Cardiology',
     experience: '14+ years of experience',
@@ -96,37 +96,37 @@ const DOCTORS_DATA: ServiceCardItem[] = [
     price: 999,
     about: 'Experienced clinical cardiologist focused on home blood pressure monitoring, post-cardiac rehabilitation, ECG analysis, cholesterol management, and preventive heart health.',
     image: require('../../../assets/images/doctor-ethan-park.jpg'),
-    tintColor: '#DFE5E8',
+    tintColor: '#7B8185',
   },
   {
-    id: 'doc-daniel',
-    name: 'Dr. Daniel Reed',
-    specialty: 'Orthopedic Specialist',
-    category: 'Orthopedics',
+    id: 'doc-omar',
+    name: 'Dr. Omar Hassan',
+    specialty: 'Pediatrician',
+    category: 'Pediatrics',
+    experience: '10+ years of experience',
+    rating: 4.9,
+    reviewsCount: 1120,
+    qualifications: 'MBBS, DCH, MD (Pediatrics)',
+    languages: 'English, Hindi, Arabic',
+    price: 849,
+    about: 'Compassionate consultant pediatrician specializing in newborn wellness, pediatric vaccinations, childhood asthma, growth milestones, and acute pediatric care at home.',
+    image: require('../../../assets/images/avatar-indian-1.jpg'),
+    tintColor: '#DCE5ED',
+  },
+  {
+    id: 'doc-lena',
+    name: 'Dr. Lena Petrova',
+    specialty: 'Endocrinologist',
+    category: 'General',
     experience: '15+ years of experience',
     rating: 4.9,
-    reviewsCount: 1150,
-    qualifications: 'MBBS, MS (Orthopedics)',
-    languages: 'English, Hindi, Tamil',
+    reviewsCount: 740,
+    qualifications: 'MBBS, MD, DM (Endocrinology)',
+    languages: 'English, Hindi, Russian',
     price: 899,
-    about: 'Specialized orthopedic surgeon providing at-home mobility rehabilitation, joint and arthritis care, fracture post-op recovery, and fall prevention for senior patients.',
+    about: 'Consultant endocrinologist with deep expertise in thyroid disorders, hormone balancing, diabetes management, metabolic syndromes, and personalized lifestyle guidance.',
     image: require('../../../assets/images/doctor-daniel-reed.jpg'),
-    tintColor: '#E6ECE4',
-  },
-  {
-    id: 'doc-ananya',
-    name: 'Dr. Ananya Sharma',
-    specialty: 'Physician & Diabetologist',
-    category: 'General',
-    experience: '9+ years of experience',
-    rating: 4.8,
-    reviewsCount: 720,
-    qualifications: 'MBBS, Fellowship in Diabetology',
-    languages: 'English, Hindi, Bengali',
-    price: 799,
-    about: 'Dedicated family physician with extensive focus on blood sugar stabilization, metabolic health, preventive lifestyle adjustments, and chronic care routine management.',
-    image: require('../../../assets/images/avatar-indian-7.jpg'),
-    tintColor: '#F0ECE4',
+    tintColor: '#E2E5E8',
   },
   {
     id: 'doc-kenji',
@@ -137,11 +137,11 @@ const DOCTORS_DATA: ServiceCardItem[] = [
     rating: 4.9,
     reviewsCount: 640,
     qualifications: 'MBBS, MD, DM (Neurology)',
-    languages: 'English, Hindi',
+    languages: 'English, Hindi, Japanese',
     price: 949,
     about: 'Consultant neurologist with deep expertise in headache disorders, Parkinson’s and tremor management, post-stroke cognitive assessment, and geriatric neurology at home.',
-    image: require('../../../assets/images/avatar-indian-2.jpg'),
-    tintColor: '#E1E7EA',
+    image: require('../../../assets/images/avatar-indian-10.jpg'),
+    tintColor: '#E8ECEF',
   },
 ];
 
@@ -473,19 +473,21 @@ export default function ServiceDetailScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Screen Header Title & Subtitle */}
+        {/* Screen Header Title */}
         <View style={styles.titleSection}>
           <Text style={styles.mainTitle}>{config.title}</Text>
-          <Text style={styles.mainSubtitle}>{config.subtitle}</Text>
+          {config.subtitle && serviceKey !== 'doctor-visit' ? (
+            <Text style={styles.mainSubtitle}>{config.subtitle}</Text>
+          ) : null}
         </View>
 
         {/* Search Bar with Filter Icon */}
         <View style={styles.searchBarWrapper}>
           <View style={styles.searchBarContainer}>
-            <Ionicons name="search-outline" size={20} color={Palette.textMuted} style={styles.searchIcon} />
+            <Ionicons name="search-outline" size={20} color="#9CA3AF" style={styles.searchIcon} />
             <TextInput
               placeholder="Search here...."
-              placeholderTextColor={Palette.textMuted}
+              placeholderTextColor="#9CA3AF"
               value={searchQuery}
               onChangeText={setSearchQuery}
               style={styles.searchInput}
@@ -493,12 +495,13 @@ export default function ServiceDetailScreen() {
             />
             {searchQuery.length > 0 && (
               <TouchableOpacity accessibilityRole="button" accessibilityLabel="Clear service search" onPress={() => setSearchQuery('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-                <Ionicons name="close-circle" size={18} color={Palette.textMuted} />
+                <Ionicons name="close-circle" size={18} color="#9CA3AF" />
               </TouchableOpacity>
             )}
           </View>
 
           <TouchableOpacity accessibilityRole="button"
+            accessibilityLabel="Filter categories"
             style={styles.filterButton}
             activeOpacity={0.75}
             onPress={() => {
@@ -506,45 +509,48 @@ export default function ServiceDetailScreen() {
               setSelectedCategory(config.categories[nextIndex]);
             }}
           >
-            <Ionicons name="options-outline" size={20} color={Palette.primary} />
+            <Ionicons name="options-outline" size={20} color="#111827" />
           </TouchableOpacity>
         </View>
 
-        {/* Category Filter Pills */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoriesScroll}
-        >
-          {config.categories.map((cat) => {
-            const isSelected = selectedCategory === cat;
-            return (
-              <TouchableOpacity accessibilityRole="button"
-                key={cat}
-                onPress={() => setSelectedCategory(cat)}
-                activeOpacity={0.8}
-                style={[
-                  styles.categoryPill,
-                  isSelected ? styles.categoryPillActive : styles.categoryPillInactive,
-                ]}
-              >
-                <Text
+        {/* Category Filter Pills (Shown if filtered away from All or non-doctor-visit) */}
+        {selectedCategory !== 'All' && (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoriesScroll}
+          >
+            {config.categories.map((cat) => {
+              const isSelected = selectedCategory === cat;
+              return (
+                <TouchableOpacity accessibilityRole="button"
+                  key={cat}
+                  onPress={() => setSelectedCategory(cat)}
+                  activeOpacity={0.8}
                   style={[
-                    styles.categoryPillText,
-                    isSelected ? styles.categoryPillTextActive : styles.categoryPillTextInactive,
+                    styles.categoryPill,
+                    isSelected ? styles.categoryPillActive : styles.categoryPillInactive,
                   ]}
                 >
-                  {cat}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+                  <Text
+                    style={[
+                      styles.categoryPillText,
+                      isSelected ? styles.categoryPillTextActive : styles.categoryPillTextInactive,
+                    ]}
+                  >
+                    {cat}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        )}
 
-        {/* 2-Column Cards Grid */}
+        {/* 2-Column Cards Grid - Exact Modern Portrait Design */}
         <View style={styles.itemsGrid}>
           {filteredItems.map((item) => (
             <TouchableOpacity accessibilityRole="button"
+              accessibilityLabel={`View ${item.name} profile`}
               key={item.id}
               activeOpacity={0.88}
               onPress={() => setSelectedItem(item)}
@@ -553,19 +559,7 @@ export default function ServiceDetailScreen() {
               {/* Specialist / Test Portrait Image */}
               <Image source={item.image} style={styles.itemCardImage} resizeMode="cover" />
 
-              {/* Top Floating Badge: Rating & Availability */}
-              <View style={styles.cardTopBadgeRow}>
-                <View style={styles.cardRatingBadge}>
-                  <Ionicons name="star" size={10} color="#D97706" style={{ marginRight: 2 }} />
-                  <Text style={styles.cardRatingBadgeText}>{item.rating}</Text>
-                </View>
-                <View style={styles.cardAvailableBadge}>
-                  <View style={styles.cardAvailableDot} />
-                  <Text style={styles.cardAvailableText}>Available</Text>
-                </View>
-              </View>
-
-              {/* Floating Bottom Card Badge */}
+              {/* Floating Bottom Card Overlay */}
               <View style={styles.itemBadgeOverlay}>
                 <View style={styles.itemBadgeTextCol}>
                   <Text style={styles.itemBadgeName} numberOfLines={1}>
@@ -574,19 +568,15 @@ export default function ServiceDetailScreen() {
                   <Text style={styles.itemBadgeSpecialty} numberOfLines={1}>
                     {item.specialty}
                   </Text>
-                  <View style={styles.cardPriceRow}>
-                    <Text style={styles.cardPriceText}>₹{item.price}</Text>
-                    <Text style={styles.cardExpText}>• {item.experience.split(' ')[0]}</Text>
-                  </View>
                 </View>
 
                 {/* Up-Right Circle Arrow Button */}
                 <View style={styles.circleArrowBtn}>
                   <Ionicons
-                    name="arrow-forward"
+                    name="arrow-up"
                     size={13}
-                    color={Palette.primary}
-                    style={{ transform: [{ rotate: '-45deg' }] }}
+                    color="#1F2937"
+                    style={{ transform: [{ rotate: '45deg' }] }}
                   />
                 </View>
               </View>
@@ -644,11 +634,12 @@ export default function ServiceDetailScreen() {
         animationType="slide"
         onRequestClose={() => setSelectedItem(null)}
       >
-        <TouchableOpacity accessibilityRole="button"
-          accessibilityLabel="Close service details" style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setSelectedItem(null)}
-        >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={StyleSheet.absoluteFill}
+            activeOpacity={1}
+            onPress={() => setSelectedItem(null)}
+          />
           <View style={styles.modalSheet} onStartShouldSetResponder={() => true}>
             {/* Modal Drag Handle */}
             <View style={styles.modalDragHandle} />
@@ -729,7 +720,7 @@ export default function ServiceDetailScreen() {
               </ScrollView>
             )}
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </SafeAreaView>
   );
@@ -789,17 +780,17 @@ const styles = StyleSheet.create({
   },
   mainTitle: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 24,
-    fontWeight: '600',
-    color: Palette.primary,
-    letterSpacing: -0.3,
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#111827',
+    letterSpacing: -0.5,
     marginBottom: 4,
   },
   mainSubtitle: {
     fontFamily: Typography.fontFamily.sans,
     fontSize: 13,
     fontWeight: '400',
-    color: Palette.textMuted,
+    color: '#6B7280',
     lineHeight: 18,
   },
 
@@ -808,19 +799,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginBottom: 16,
+    marginBottom: 18,
   },
   searchBarContainer: {
     flex: 1,
     height: 48,
-    backgroundColor: Palette.surface,
+    backgroundColor: '#FFFFFF',
     borderRadius: 24,
-    borderWidth: 1.2,
-    borderColor: Palette.border,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    ...Shadows.subtle,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
   },
   searchIcon: {
     marginRight: 8,
@@ -828,8 +823,8 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 13.5,
-    color: Palette.textDark,
+    fontSize: 14,
+    color: '#111827',
     height: '100%',
     ...(Platform.OS === 'web' ? ({ outlineStyle: 'none', borderWidth: 0 } as any) : {}),
   },
@@ -837,12 +832,16 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Palette.surface,
-    borderWidth: 1.2,
-    borderColor: Palette.border,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
     alignItems: 'center',
     justifyContent: 'center',
-    ...Shadows.subtle,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
   },
 
   /* Category Filter Pills */
@@ -850,21 +849,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     paddingBottom: 4,
-    marginBottom: 18,
+    marginBottom: 16,
   },
   categoryPill: {
     paddingVertical: 7,
     paddingHorizontal: 16,
     borderRadius: 20,
-    borderWidth: 1.2,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
   },
   categoryPillActive: {
-    backgroundColor: Palette.primary,
-    borderColor: Palette.primary,
+    backgroundColor: '#111827',
+    borderColor: '#111827',
   },
   categoryPillInactive: {
-    backgroundColor: Palette.surface,
-    borderColor: Palette.border,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E7EB',
   },
   categoryPillText: {
     fontFamily: Typography.fontFamily.sans,
@@ -875,139 +876,77 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   categoryPillTextInactive: {
-    color: Palette.textDark,
+    color: '#4B5563',
     fontWeight: '500',
   },
 
-  /* 2-Column Cards Grid */
+  /* 2-Column Cards Grid - Exact Design from Reference */
   itemsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     rowGap: 14,
-    marginBottom: 16,
+    marginBottom: 20,
   },
   itemCard: {
     width: '48.2%',
-    height: 236,
-    borderRadius: 20,
+    height: 224,
+    borderRadius: 22,
     overflow: 'hidden',
     position: 'relative',
-    borderWidth: 1.2,
-    borderColor: Palette.border,
-    ...Shadows.subtle,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
   itemCardImage: {
     width: '100%',
     height: '100%',
-  },
-  cardTopBadgeRow: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    right: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    zIndex: 2,
-  },
-  cardRatingBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFFEE',
-    paddingHorizontal: 6,
-    paddingVertical: 2.5,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#EAEFE9',
-    ...Shadows.subtle,
-  },
-  cardRatingBadgeText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 10.5,
-    fontWeight: '600',
-    color: '#D97706',
-  },
-  cardAvailableBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#EAF6EDEE',
-    paddingHorizontal: 6,
-    paddingVertical: 2.5,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#C7E4D1',
-  },
-  cardAvailableDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-    backgroundColor: '#059669',
-    marginRight: 4,
-  },
-  cardAvailableText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 9.5,
-    fontWeight: '500',
-    color: '#059669',
   },
   itemBadgeOverlay: {
     position: 'absolute',
     bottom: 8,
     left: 8,
     right: 8,
-    backgroundColor: '#FFFFFFFA',
-    borderRadius: 14,
-    paddingVertical: 7,
-    paddingHorizontal: 9,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingVertical: 9,
+    paddingHorizontal: 11,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: '#E8ECE6',
-    ...Shadows.subtle,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 4,
   },
   itemBadgeTextCol: {
     flex: 1,
-    paddingRight: 4,
+    paddingRight: 6,
+    justifyContent: 'center',
   },
   itemBadgeName: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 12.5,
-    fontWeight: '600',
-    color: Palette.textDark,
-    lineHeight: 16,
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#111827',
+    letterSpacing: -0.2,
+    marginBottom: 2,
   },
   itemBadgeSpecialty: {
     fontFamily: Typography.fontFamily.sans,
-    fontSize: 10,
-    fontWeight: '400',
-    color: Palette.textMuted,
-    marginTop: 1,
-    lineHeight: 13,
-  },
-  cardPriceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 3,
-  },
-  cardPriceText: {
-    fontFamily: Typography.fontFamily.sans,
     fontSize: 11,
-    fontWeight: '600',
-    color: Palette.primary,
-  },
-  cardExpText: {
-    fontFamily: Typography.fontFamily.sans,
-    fontSize: 9.5,
-    color: Palette.textMuted,
-    marginLeft: 3,
+    fontWeight: '400',
+    color: '#6B7280',
+    lineHeight: 14,
   },
   circleArrowBtn: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: Palette.mint,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#F3F4F6',
     alignItems: 'center',
     justifyContent: 'center',
   },
