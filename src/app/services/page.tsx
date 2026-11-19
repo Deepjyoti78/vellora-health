@@ -25,7 +25,12 @@ import {
   Heart,
   ShieldCheck,
   Home,
-  FileText,
+  FileCheck,
+  CalendarCheck,
+  Syringe,
+  Bath,
+  Footprints,
+  Bandage,
 } from 'lucide-react';
 
 interface CategoryFeatureChip {
@@ -60,7 +65,7 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
       label: 'Home Visit',
     },
     features: [
-      { icon: Calendar, label: 'Home Consultation' },
+      { icon: CalendarCheck, label: 'Home Consultation' },
       { icon: Users, label: 'Follow-up Care' },
       { icon: Heart, label: 'Chronic Care' },
     ],
@@ -78,9 +83,9 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
       label: 'At-Home Care',
     },
     features: [
-      { icon: Pill, label: 'Medication Support' },
+      { icon: Syringe, label: 'Medication Support' },
       { icon: Activity, label: 'Vital Monitoring' },
-      { icon: ShieldCheck, label: 'Post-Procedure' },
+      { icon: Bandage, label: 'Post-Procedure Care' },
     ],
     href: '/services/nursing-care',
     filterCategories: ['NURSING_CARE'],
@@ -96,9 +101,9 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
       label: 'Daily Support',
     },
     features: [
-      { icon: Sparkles, label: 'Daily Assistance' },
-      { icon: Activity, label: 'Mobility Support' },
-      { icon: Heart, label: 'Companionship' },
+      { icon: Bath, label: 'Daily Assistance' },
+      { icon: Footprints, label: 'Mobility Support' },
+      { icon: Heart, label: 'Companionship & Care' },
     ],
     href: '/services/rehab-critical-care',
     filterCategories: ['CARETAKER'],
@@ -115,7 +120,7 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
     },
     features: [
       { icon: Home, label: 'Home Collection' },
-      { icon: FileText, label: 'Accurate Reports' },
+      { icon: FileCheck, label: 'Accurate Reports' },
       { icon: ShieldCheck, label: 'Trusted Labs' },
     ],
     href: '/services/diagnostics-labs',
@@ -454,10 +459,10 @@ export default function ServicesPage() {
                             return (
                               <div
                                 key={fIdx}
-                                className="flex flex-col items-center justify-center rounded-xl bg-[#F0F7F3] border border-[#D8ECE1] py-1.5 px-0.5 sm:px-1 text-center transition-colors group-hover:bg-[#EAF5EF] min-h-[50px] overflow-hidden"
+                                className="flex flex-col items-center justify-center rounded-xl sm:rounded-2xl bg-[#F2F7F4] border border-[#CCE0D4] py-2 px-0.5 sm:px-1 text-center transition-all duration-200 group-hover:border-[#AFD2BD] group-hover:bg-[#EBF5EF] min-h-[52px] overflow-hidden"
                               >
-                                <FeatIcon className="h-3.5 w-3.5 text-[#065F46] mb-1 stroke-[2] shrink-0" />
-                                <span className="text-[9px] sm:text-[9.5px] font-semibold text-[#18392B] leading-none text-center whitespace-nowrap tracking-tight w-full truncate px-0.5">
+                                <FeatIcon className="h-4 w-4 text-[#064E3B] mb-1.5 stroke-[2.2] shrink-0" />
+                                <span className="text-[10px] sm:text-[10.5px] font-bold text-[#0A261C] leading-tight text-center whitespace-nowrap tracking-tight w-full truncate px-0.5">
                                   {feat.label}
                                 </span>
                               </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -19,6 +19,99 @@ import {
   Activity,
   Users,
 } from 'lucide-react';
+
+function AnimatedMetric({
+  type,
+  label,
+  detail,
+  fallback,
+}: {
+  type: 'range' | 'percent' | 'digit' | 'rating';
+  label: string;
+  detail: string;
+  fallback: string;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [displayValue, setDisplayValue] = useState(() => {
+    if (type === 'range') return '0–0 min';
+    if (type === 'percent') return '0%';
+    if (type === 'digit') return '0-Digit';
+    return '0.0 / 5';
+  });
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    let startTime: number | null = null;
+    let animFrame: number;
+    let hasAnimated = false;
+
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+    const duration = 1800; // 1.8s smooth count-up
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutCubic(progress);
+
+      if (type === 'range') {
+        const v1 = Math.round(45 * eased);
+        const v2 = Math.round(60 * eased);
+        setDisplayValue(`${v1}–${v2} min`);
+      } else if (type === 'percent') {
+        const v = Math.round(100 * eased);
+        setDisplayValue(`${v}%`);
+      } else if (type === 'digit') {
+        const v = Math.round(4 * eased);
+        setDisplayValue(`${v}-Digit`);
+      } else if (type === 'rating') {
+        const v = (4.9 * eased).toFixed(1);
+        setDisplayValue(`${v} / 5`);
+      }
+
+      if (progress < 1) {
+        animFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !hasAnimated) {
+          hasAnimated = true;
+          animFrame = requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      if (animFrame) cancelAnimationFrame(animFrame);
+    };
+  }, [type]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="rounded-[20px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-[#B8DCDE] transition-all scroll-reveal-card"
+    >
+      <p className="font-heading text-2xl sm:text-3xl font-bold text-[#064E3B] tracking-tight tabular-nums">
+        {displayValue}
+      </p>
+      <p className="mt-1 font-heading text-sm font-semibold text-[#15212B]">
+        {label}
+      </p>
+      <p className="mt-0.5 text-xs text-slate-500">
+        {detail}
+      </p>
+    </div>
+  );
+}
 
 export default function AboutPage() {
   const leadership = [
@@ -71,11 +164,16 @@ export default function AboutPage() {
     },
   ];
 
-  const clinicalMetrics = [
-    { value: '45–60 min', label: 'Average In-Home Visit', detail: 'Unhurried, thorough bedside exams' },
-    { value: '100%', label: 'Council-Verified Clinicians', detail: 'MBBS/MD & registered nurses only' },
-    { value: '4-Digit', label: 'Bedside PIN Verification', detail: 'Mandatory identity security check' },
-    { value: '4.9 / 5', label: 'Patient Satisfaction', detail: 'Rated across 135k+ care visits' },
+  const clinicalMetrics: Array<{
+    type: 'range' | 'percent' | 'digit' | 'rating';
+    label: string;
+    detail: string;
+    fallback: string;
+  }> = [
+    { type: 'range', fallback: '45–60 min', label: 'Average In-Home Visit', detail: 'Unhurried, thorough bedside exams' },
+    { type: 'percent', fallback: '100%', label: 'Council-Verified Clinicians', detail: 'MBBS/MD & registered nurses only' },
+    { type: 'digit', fallback: '4-Digit', label: 'Bedside PIN Verification', detail: 'Mandatory identity security check' },
+    { type: 'rating', fallback: '4.9 / 5', label: 'Patient Satisfaction', detail: 'Rated across 135k+ care visits' },
   ];
 
   return (
@@ -142,23 +240,16 @@ export default function AboutPage() {
 
         {/* ================= MAIN CONTENT (SEAMLESS TRANSITION WITH NO HARSH DIVIDERS) ================= */}
         <main className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-16 sm:space-y-20">
-          {/* Key Clinical Impact Metrics Bar - Staggered cascade */}
+          {/* Key Clinical Impact Metrics Bar - Rolling counter on scroll */}
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 stagger-container">
             {clinicalMetrics.map((metric, idx) => (
-              <div
+              <AnimatedMetric
                 key={idx}
-                className="rounded-[20px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-[#B8DCDE] transition-all scroll-reveal-card"
-              >
-                <p className="font-heading text-2xl sm:text-3xl font-bold text-[#064E3B] tracking-tight">
-                  {metric.value}
-                </p>
-                <p className="mt-1 font-heading text-sm font-semibold text-[#15212B]">
-                  {metric.label}
-                </p>
-                <p className="mt-0.5 text-xs text-slate-500">
-                  {metric.detail}
-                </p>
-              </div>
+                type={metric.type}
+                label={metric.label}
+                detail={metric.detail}
+                fallback={metric.fallback}
+              />
             ))}
           </section>
 
