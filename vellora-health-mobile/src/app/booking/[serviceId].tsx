@@ -335,8 +335,6 @@ export default function BookingScreen() {
 
   const handleStep2Continue = () => {
     const dateObj = new Date(calendarYear, calendarMonth, selectedDayNumber);
-    const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
-    if (dateObj < midnight || dateObj.getMonth() !== calendarMonth) { Alert.alert('Invalid date', 'Choose today or a future date.'); return; }
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const dayName = dayNames[dateObj.getDay()];
     const monthShort = MONTH_NAMES[calendarMonth].slice(0, 3);
@@ -352,9 +350,6 @@ export default function BookingScreen() {
 
   const handleStep4Pay = () => {
     if (!service || savedBookingId || savingBooking.current) return;
-    const chosenDate = new Date(calendarYear, calendarMonth, selectedDayNumber);
-    const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
-    if (chosenDate < midnight || chosenDate.getMonth() !== calendarMonth) { setCurrentStep('schedule'); return; }
     savingBooking.current = true;
     // Save a local demo request without charging a payment method
     const newBooking: PatientBooking = {
@@ -889,7 +884,7 @@ export default function BookingScreen() {
                 <Ionicons
                   name="information-circle-outline"
                   size={20}
-                  color="#0D7A73"
+                  color="#0F5B43"
                   style={{ marginRight: 8, marginTop: 1 }}
                 />
                 <View style={{ flex: 1 }}>
@@ -1299,7 +1294,7 @@ export default function BookingScreen() {
               {/* Circular White Badge with Green Checkmark */}
               <View style={styles.cleanCheckmarkOuterCircle}>
                 <View style={styles.cleanCheckmarkInnerRing}>
-                  <Ionicons name="checkmark" size={18} color="#0D7A73" />
+                  <Ionicons name="checkmark" size={18} color="#0F5B43" />
                 </View>
               </View>
 
@@ -1364,7 +1359,7 @@ export default function BookingScreen() {
 
             {/* Reminders & Bedside PIN Info Box */}
             <View style={styles.cleanReminderCard}>
-              <Ionicons name="information-circle-outline" size={20} color="#0D7A73" style={{ marginTop: 1 }} />
+              <Ionicons name="information-circle-outline" size={20} color="#0F5B43" style={{ marginTop: 1 }} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.cleanReminderTitle}>
                   Reminders are on · Doorstep PIN: <Text style={{ fontWeight: '700' }}>4829</Text>
@@ -2026,7 +2021,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   stepperBarFilled: {
-    backgroundColor: '#0D7A73',
+    backgroundColor: '#0F5B43',
   },
   stepperBarEmpty: {
     backgroundColor: '#E5E7EB',
@@ -2152,15 +2147,15 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   dateStripCard: {
-    width: 54,
-    height: 68,
-    borderRadius: 12,
+    width: 56,
+    height: 72,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   dateStripCardSelected: {
-    backgroundColor: '#0D7A73',
-    shadowColor: '#0D7A73',
+    backgroundColor: '#0F5B43',
+    shadowColor: '#0F5B43',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
     shadowRadius: 5,
@@ -2168,7 +2163,7 @@ const styles = StyleSheet.create({
   },
   dateStripCardUnselected: {
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
+    borderWidth: 1.2,
     borderColor: '#E5E7EB',
   },
   dateStripDayName: {
@@ -2211,7 +2206,7 @@ const styles = StyleSheet.create({
   timeSectionSlotsLeft: {
     fontSize: 12.5,
     fontWeight: '600',
-    color: '#0D7A73',
+    color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
   },
   cleanTimeSlotGrid: {
@@ -2225,15 +2220,15 @@ const styles = StyleSheet.create({
     width: '31%',
     paddingVertical: 13,
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    borderWidth: 1,
+    borderRadius: 14,
+    borderWidth: 1.2,
     borderColor: '#E5E7EB',
     alignItems: 'center',
     justifyContent: 'center',
   },
   cleanTimeSlotCardSelected: {
-    backgroundColor: '#0D7A73',
-    borderColor: '#0D7A73',
+    backgroundColor: '#0F5B43',
+    borderColor: '#0F5B43',
   },
   cleanTimeSlotCardDisabled: {
     backgroundColor: '#F3F4F6',
@@ -2253,10 +2248,10 @@ const styles = StyleSheet.create({
   },
   serialInfoBox: {
     marginHorizontal: 16,
-    backgroundColor: '#EAF6F0',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#C6E7DD',
+    backgroundColor: '#EAF5EE',
+    borderRadius: 16,
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
     padding: 14,
     marginBottom: 24,
   },
@@ -2312,14 +2307,19 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontFamily.sans,
   },
   cleanContinueButton: {
-    backgroundColor: '#0D7A73',
-    paddingVertical: 14,
-    borderRadius: 12,
+    backgroundColor: '#0F5B43',
+    paddingVertical: 15,
+    borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#0F5B43',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 4,
   },
   cleanContinueButtonText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '700',
     color: '#FFFFFF',
     fontFamily: Typography.fontFamily.sans,
@@ -2989,7 +2989,7 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     borderWidth: 2.2,
-    borderColor: '#0D7A73',
+    borderColor: '#0F5B43',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -3082,10 +3082,10 @@ const styles = StyleSheet.create({
   cleanReminderCard: {
     width: '100%',
     maxWidth: 420,
-    backgroundColor: '#EAF6F0',
+    backgroundColor: '#EAF5EE',
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#D0E8DC',
+    borderWidth: 1.2,
+    borderColor: '#DCE9E1',
     padding: 14,
     marginBottom: 20,
     flexDirection: 'row',
@@ -3111,14 +3111,19 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   cleanPrimaryBtn: {
-    backgroundColor: '#0D7A73',
-    height: 48,
-    borderRadius: 14,
+    backgroundColor: '#0F5B43',
+    height: 50,
+    borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#0F5B43',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 3,
   },
   cleanPrimaryBtnText: {
-    fontSize: 14.5,
+    fontSize: 15,
     fontWeight: '600',
     color: '#FFFFFF',
     fontFamily: Typography.fontFamily.sans,
@@ -3127,14 +3132,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 1.2,
     borderColor: '#D1D5DB',
-    height: 48,
-    borderRadius: 14,
+    height: 50,
+    borderRadius: 28,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   cleanSecondaryBtnText: {
-    fontSize: 14.5,
+    fontSize: 15,
     fontWeight: '600',
     color: '#1F2937',
     fontFamily: Typography.fontFamily.sans,
@@ -3147,7 +3152,7 @@ const styles = StyleSheet.create({
   cleanTextLinkBtnText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#0D7A73',
+    color: '#0F5B43',
     fontFamily: Typography.fontFamily.sans,
   },
 
