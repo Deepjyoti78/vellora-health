@@ -42,6 +42,8 @@ function QuickEnquiryContent() {
       router.replace(`/book/service/${serviceParam}`);
     } else if (doctorParam) {
       router.replace(`/book/doctor/${doctorParam}`);
+    } else {
+      router.replace('/services');
     }
   }, [searchParams, router]);
 

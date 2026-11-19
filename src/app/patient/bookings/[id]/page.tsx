@@ -188,6 +188,8 @@ export default function BookingDetailPage({
 
   const currentStageIndex = getStageIndex(booking.status);
   const isCancelled = booking.status === 'CANCELLED';
+  const isCompletedStage = currentStageIndex === 6; // 7th stage (COMPLETED)
+  const isInProgressOrPrior = currentStageIndex >= 0 && currentStageIndex < 6; // 1st to 6th stage (Requested through In Progress)
 
   // Category badge label
   const categoryBadgeLabel =
@@ -267,20 +269,32 @@ export default function BookingDetailPage({
               <div className="relative shrink-0 flex items-center self-start md:self-center">
                 {/* Ambient Soft Glow Behind */}
                 <div
-                  className={`absolute inset-0 blur-xl rounded-full scale-125 pointer-events-none ${
-                    isCancelled ? 'bg-rose-200/50' : 'bg-[#A7F3D0]/60'
+                  className={`absolute inset-0 blur-xl rounded-full scale-125 pointer-events-none transition-all duration-300 ${
+                    isCancelled
+                      ? 'bg-rose-200/50'
+                      : isCompletedStage
+                      ? 'bg-[#38BDF8]/35'
+                      : 'bg-amber-300/45'
                   }`}
                 />
 
                 {/* Subtle Decorative Sparkles (+) */}
                 {!isCancelled && (
                   <>
-                    <span className="absolute -top-3.5 left-4 text-[#10B981] text-xs font-bold select-none pointer-events-none">+</span>
-                    <span className="absolute -top-1 -left-2 text-[#34D399] text-[10px] font-bold select-none pointer-events-none">+</span>
-                    <span className="absolute -bottom-2 -right-1 text-[#10B981] text-sm font-bold select-none pointer-events-none">+</span>
+                    <span className={`absolute -top-3.5 left-4 text-xs font-bold select-none pointer-events-none ${
+                      isCompletedStage ? 'text-[#10B981]' : 'text-[#F59E0B]'
+                    }`}>+</span>
+                    <span className={`absolute -top-1 -left-2 text-[10px] font-bold select-none pointer-events-none ${
+                      isCompletedStage ? 'text-[#0284C7]' : 'text-[#D97706]'
+                    }`}>+</span>
+                    <span className={`absolute -bottom-2 -right-1 text-sm font-bold select-none pointer-events-none ${
+                      isCompletedStage ? 'text-[#10B981]' : 'text-[#F59E0B]'
+                    }`}>+</span>
 
                     {/* Faint stethoscope outline */}
-                    <div className="absolute -right-6 -top-4 opacity-35 pointer-events-none text-[#059669]">
+                    <div className={`absolute -right-6 -top-4 opacity-35 pointer-events-none ${
+                      isCompletedStage ? 'text-[#059669]' : 'text-[#D97706]'
+                    }`}>
                       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
                         <path d="M4.5 3v5a4.5 4.5 0 0 0 9 0V3" />
                         <path d="M9 12.5v2a3.5 3.5 0 0 0 7 0v-2" />
@@ -290,17 +304,23 @@ export default function BookingDetailPage({
                   </>
                 )}
 
-                {/* The Pill Badge */}
+                {/* The Pill Badge - Warm yellowish for 1st to 6th stage (Requested through In Progress), Greenish-Blue for 7th stage (Completed) */}
                 <div
-                  className={`relative z-10 flex items-center gap-3 rounded-full border px-6 sm:px-7 py-2.5 sm:py-3 shadow-[0_4px_20px_rgba(16,185,129,0.12)] ${
+                  className={`relative z-10 flex items-center gap-3 rounded-full border px-6 sm:px-7 py-2.5 sm:py-3 shadow-md transition-all duration-300 ${
                     isCancelled
                       ? 'bg-gradient-to-r from-rose-50 to-rose-100 border-rose-200 text-rose-800'
-                      : 'bg-gradient-to-r from-[#F0FDF4] via-[#E8FAF0] to-[#DCFCE7] border-[#A7F3D0] text-[#064E3B]'
+                      : isCompletedStage
+                      ? 'bg-gradient-to-r from-[#ECFDF5] via-[#E0F2FE] to-[#D1FAE5] border-[#38BDF8]/60 text-[#064E3B] shadow-[0_4px_20px_rgba(14,165,233,0.18)]'
+                      : 'bg-gradient-to-r from-[#FFFDF2] via-[#FEF9C3] to-[#FEF08A] border-[#FACC15] text-[#854D0E] shadow-[0_4px_20px_rgba(234,179,8,0.2)]'
                   }`}
                 >
                   <div
                     className={`flex h-8 w-8 items-center justify-center rounded-full text-white shadow-xs ${
-                      isCancelled ? 'bg-rose-600' : 'bg-[#059669]'
+                      isCancelled
+                        ? 'bg-rose-600'
+                        : isCompletedStage
+                        ? 'bg-gradient-to-br from-[#059669] to-[#0284C7]'
+                        : 'bg-[#D97706]'
                     }`}
                   >
                     {isCancelled ? (
@@ -365,6 +385,7 @@ export default function BookingDetailPage({
                         const isDone = idx < currentStageIndex;
                         const isCurrent = idx === currentStageIndex;
                         const isCompletedOrActive = idx <= currentStageIndex;
+                        const isFinalStage = idx === 6;
 
                         return (
                           <div key={stage.key} className="relative flex flex-col items-center text-center">
@@ -372,7 +393,11 @@ export default function BookingDetailPage({
                             {idx < stages.length - 1 && (
                               <div
                                 className={`absolute top-4 left-1/2 w-full h-[2px] -translate-y-1/2 z-0 ${
-                                  idx < currentStageIndex ? 'bg-[#059669]' : 'bg-[#E2E8F0]'
+                                  idx < currentStageIndex
+                                    ? idx === 5
+                                      ? 'bg-gradient-to-r from-[#D97706] to-[#059669]'
+                                      : 'bg-[#D97706]'
+                                    : 'bg-[#E2E8F0]'
                                 }`}
                               />
                             )}
@@ -381,9 +406,13 @@ export default function BookingDetailPage({
                             <div
                               className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all ${
                                 isDone
-                                  ? 'bg-[#059669] text-white shadow-xs'
+                                  ? isFinalStage
+                                    ? 'bg-gradient-to-br from-[#059669] to-[#0284C7] text-white shadow-xs'
+                                    : 'bg-[#D97706] text-white shadow-xs'
                                   : isCurrent
-                                  ? 'bg-[#059669] text-white ring-4 ring-[#ECFDF5] shadow-xs'
+                                  ? isFinalStage
+                                    ? 'bg-gradient-to-br from-[#059669] to-[#0284C7] text-white ring-4 ring-[#E0F2FE] shadow-xs'
+                                    : 'bg-[#D97706] text-white ring-4 ring-[#FEF3C7] shadow-xs'
                                   : 'bg-white border border-[#CBD5E1] text-[#64748B]'
                               }`}
                             >
@@ -398,7 +427,9 @@ export default function BookingDetailPage({
                             <h4
                               className={`mt-3 text-xs sm:text-[13px] leading-tight ${
                                 isCurrent
-                                  ? 'text-[#065F46] font-bold'
+                                  ? isFinalStage
+                                    ? 'text-[#065F46] font-bold'
+                                    : 'text-[#92400E] font-bold'
                                   : isDone
                                   ? 'text-[#15212B] font-bold'
                                   : 'text-[#64748B] font-semibold'
@@ -417,40 +448,88 @@ export default function BookingDetailPage({
                     </div>
                   </div>
 
-                  {/* Mobile Responsive Vertical Tracker */}
-                  <div className="md:hidden space-y-4 pt-1">
-                    <div className="relative pl-6 border-l-2 border-[#E2E8F0] space-y-5">
+                  {/* Mobile Responsive Vertical Flow Tracker with Center-Aligned Line */}
+                  <div className="md:hidden pt-3 pb-2">
+                    <div className="relative pl-11 space-y-6">
+                      {/* Vertical Continuous Line running precisely through center of circles (x = 14px) */}
+                      <div
+                        className="absolute left-[14px] top-3.5 bottom-3.5 w-[2px] -translate-x-1/2 bg-[#E2E8F0] pointer-events-none"
+                        aria-hidden="true"
+                      />
+
+                      {/* Active Progress Connector on mobile */}
+                      {currentStageIndex > 0 && (
+                        <div
+                          className="absolute left-[14px] top-3.5 w-[2px] -translate-x-1/2 pointer-events-none transition-all duration-500"
+                          style={{
+                            height: `${(Math.min(currentStageIndex, stages.length - 1) / (stages.length - 1)) * 100}%`,
+                            background: currentStageIndex === 6
+                              ? 'linear-gradient(to bottom, #D97706 60%, #059669 85%, #0284C7 100%)'
+                              : '#D97706',
+                          }}
+                          aria-hidden="true"
+                        />
+                      )}
+
                       {stages.map((stage, idx) => {
                         const isDone = idx < currentStageIndex;
                         const isCurrent = idx === currentStageIndex;
                         const isCompletedOrActive = idx <= currentStageIndex;
+                        const isFinalStage = idx === 6;
 
                         return (
-                          <div key={stage.key} className="relative flex items-start gap-3">
-                            {/* Node Circle */}
+                          <div key={stage.key} className="relative flex items-start group">
+                            {/* Perfectly Centered Node Circle: 28px width, center at 14px */}
                             <div
-                              className={`absolute -left-[31px] top-0 flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
-                                isCompletedOrActive
-                                  ? 'bg-[#059669] text-white'
+                              className={`absolute left-0 top-0 z-10 flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all shadow-2xs ${
+                                isDone
+                                  ? isFinalStage
+                                    ? 'bg-gradient-to-br from-[#059669] to-[#0284C7] text-white shadow-xs'
+                                    : 'bg-[#D97706] text-white shadow-xs'
+                                  : isCurrent
+                                  ? isFinalStage
+                                    ? 'bg-gradient-to-br from-[#059669] to-[#0284C7] text-white ring-4 ring-[#E0F2FE] shadow-md scale-105'
+                                    : 'bg-[#D97706] text-white ring-4 ring-[#FEF3C7] shadow-md scale-105'
                                   : 'bg-white text-slate-400 border border-slate-300'
                               }`}
                             >
-                              {isCompletedOrActive ? <Check className="h-3 w-3 stroke-[2.5]" /> : idx + 1}
+                              {isCompletedOrActive ? (
+                                <Check className="h-3.5 w-3.5 stroke-[2.8]" />
+                              ) : (
+                                <span>{idx + 1}</span>
+                              )}
                             </div>
 
-                            <div className="pt-0.5">
-                              <h4
-                                className={`text-xs font-semibold ${
-                                  isCurrent
-                                    ? 'text-[#065F46] font-bold'
-                                    : isDone
-                                    ? 'text-[#15212B] font-bold'
-                                    : 'text-slate-400'
-                                }`}
-                              >
-                                {stage.label}
-                              </h4>
-                              <p className="text-[11px] text-slate-500 mt-0.5">{stage.desc}</p>
+                            {/* Content Block */}
+                            <div className="min-w-0 flex-1 pt-0.5">
+                              <div className="flex items-center gap-2">
+                                <h4
+                                  className={`text-xs sm:text-[13px] leading-tight ${
+                                    isCurrent
+                                      ? isFinalStage
+                                        ? 'text-[#065F46] font-bold'
+                                        : 'text-[#92400E] font-bold'
+                                      : isDone
+                                      ? 'text-[#15212B] font-bold'
+                                      : 'text-slate-400 font-semibold'
+                                  }`}
+                                >
+                                  {stage.label}
+                                </h4>
+                                {isCurrent && (
+                                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                    isFinalStage
+                                      ? 'bg-emerald-100 text-emerald-800'
+                                      : 'bg-amber-100 text-amber-800'
+                                  }`}>
+                                    <span className="h-1.5 w-1.5 rounded-full bg-current animate-pulse" />
+                                    <span>Current</span>
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                                {stage.desc}
+                              </p>
                             </div>
                           </div>
                         );

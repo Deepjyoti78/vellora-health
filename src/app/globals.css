@@ -2711,6 +2711,10 @@ h1, h2 {
 .scroll-reveal-card.is-revealed.hover\:-translate-y-1\.5:hover {
   transform: translateY(-6px);
 }
+.scroll-reveal-card.is-revealed:hover.hover\:-translate-y-1,
+.scroll-reveal-card.is-revealed.hover\:-translate-y-1:hover {
+  transform: translateY(-4px);
+}
 .doctor-card.scroll-reveal-card.is-revealed:hover {
   transform: translateY(-4px);
 }

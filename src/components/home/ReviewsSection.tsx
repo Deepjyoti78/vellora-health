@@ -78,8 +78,8 @@ export const ReviewsSection: React.FC = () => {
   return (
     <section className="w-full py-10 sm:py-16 lg:py-20" id="reviews" aria-labelledby="reviewsTitle">
       <div className="w-full sm:container mx-auto max-w-[1540px] px-2 sm:px-5 lg:px-6">
-        {/* Section Heading with Site Typography */}
-        <div className="text-left mb-5 sm:mb-8 px-1 sm:px-0">
+        {/* Section Heading - Font animates smoothly first */}
+        <div className="text-left mb-5 sm:mb-8 px-1 sm:px-0 scroll-reveal" style={{ transitionDelay: '0ms' }}>
           <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] uppercase text-[#065F46] mb-2.5 shadow-2xs">
             <HeartHandshake className="h-3.5 w-3.5 text-[#059669]" />
             <span>COMMUNITY TESTIMONIALS</span>
@@ -95,9 +95,10 @@ export const ReviewsSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Featured Testimonial Card with Tightly Fitted Customer Photo on Left & Autoplay */}
+        {/* Featured Testimonial Card - Card animates smoothly second */}
         <div
-          className="relative overflow-hidden rounded-[20px] sm:rounded-[32px] bg-gradient-to-br from-[#064E3B] via-[#043D2E] to-[#022A20] text-white p-3.5 sm:p-6 lg:p-7 shadow-[0_24px_64px_rgba(2,42,32,0.25)] border border-[#10B981]/30"
+          className="relative overflow-hidden rounded-[20px] sm:rounded-[32px] bg-gradient-to-br from-[#064E3B] via-[#043D2E] to-[#022A20] text-white p-3.5 sm:p-6 lg:p-7 shadow-[0_24px_64px_rgba(2,42,32,0.25)] border border-[#10B981]/30 scroll-reveal-scale"
+          style={{ transitionDelay: '280ms' }}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
@@ -105,8 +106,8 @@ export const ReviewsSection: React.FC = () => {
           <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-emerald-400/10 blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-center">
-            {/* Left Side: Real Customer / Patient Photo tightly fitted to boundary */}
-            <div className="lg:col-span-5 xl:col-span-5">
+            {/* Left Side: Real Customer / Patient Photo - Images come smoothly third */}
+            <div className="lg:col-span-5 xl:col-span-5 scroll-reveal-left" style={{ transitionDelay: '520ms' }}>
               <div className="relative w-full h-[280px] sm:h-[340px] lg:h-[380px] rounded-[18px] sm:rounded-[24px] overflow-hidden border border-white/10 shadow-xl bg-slate-900 group">
                 <img
                   key={current.id}
@@ -128,8 +129,8 @@ export const ReviewsSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Side: Customer Review, Author Info & Slider Navigation */}
-            <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-between py-2 sm:py-3 pr-2 sm:pr-4">
+            {/* Right Side: Customer Review, Author Info & Slider Navigation - Fourth */}
+            <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-between py-2 sm:py-3 pr-2 sm:pr-4 scroll-reveal-right" style={{ transitionDelay: '680ms' }}>
               <div>
                 {/* Quotation Mark Icon */}
                 <div className="mb-2 text-emerald-300/50">

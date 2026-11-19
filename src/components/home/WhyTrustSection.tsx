@@ -52,14 +52,14 @@ export const WhyTrustSection: React.FC = () => {
   return (
     <section id="why-trust" className="w-full py-8 sm:py-14 lg:py-16" aria-labelledby="whyTrustTitle">
       <div className="w-full sm:container mx-auto max-w-[1540px] px-2 sm:px-5 lg:px-6">
-        {/* Main Showcase Card */}
-        <div className="relative overflow-hidden rounded-[20px] sm:rounded-[34px] bg-gradient-to-br from-[#064E3B] via-[#043D2E] to-[#022A20] border border-[#10B981]/30 shadow-[0_24px_64px_rgba(2,42,32,0.35)] p-3.5 sm:p-6 lg:p-7 text-white">
+        {/* Main Showcase Card - Whole card animates smoothly first */}
+        <div className="relative overflow-hidden rounded-[20px] sm:rounded-[34px] bg-gradient-to-br from-[#064E3B] via-[#043D2E] to-[#022A20] border border-[#10B981]/30 shadow-[0_24px_64px_rgba(2,42,32,0.35)] p-3.5 sm:p-6 lg:p-7 text-white scroll-reveal-scale" style={{ transitionDelay: '0ms' }}>
           {/* Subtle Ambient Mint/Emerald Glow Effects */}
           <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
           <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#10B981]/12 blur-3xl pointer-events-none" />
 
-          {/* Section Header */}
-          <div className="text-center max-w-2xl mx-auto mb-5 sm:mb-8 px-1 sm:px-0 scroll-reveal">
+          {/* Section Header - Font animates smoothly after the image */}
+          <div className="text-center max-w-2xl mx-auto mb-5 sm:mb-8 px-1 sm:px-0 scroll-reveal" style={{ transitionDelay: '500ms' }}>
             <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 px-3 py-0.5 sm:px-3.5 sm:py-1 text-[10px] sm:text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-300 mb-2 sm:mb-2.5 shadow-2xs">
               <Sparkles className="h-3 w-3 text-emerald-400" />
               <span>WHY THOUSANDS TRUST VELLORA</span>
@@ -74,8 +74,8 @@ export const WhyTrustSection: React.FC = () => {
 
           {/* Two-Column Layout: Single Group Photo on Left + Clean Feature Cards on Right */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-7 items-stretch">
-            {/* Left Column: Prominent Single Group Photo of Doctors */}
-            <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-center scroll-reveal-left" style={{ transitionDelay: '250ms' }}>
+            {/* Left Column: Prominent Single Group Photo of Doctors - Comes smoothly right after the whole card */}
+            <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-center scroll-reveal-left" style={{ transitionDelay: '280ms' }}>
               <div className="relative w-full h-[380px] sm:h-[440px] lg:h-[490px] xl:h-[520px] rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-2xl bg-[#021A13] group border border-emerald-500/20">
                 <img
                   src="/assets/doctors-group-team.png"
@@ -124,7 +124,7 @@ export const WhyTrustSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Clean Non-Border Feature Cards */}
+            {/* Right Column: Cards & Right-Side Content animate in cascade */}
             <div className="lg:col-span-5 xl:col-span-4 flex flex-col justify-between gap-3 sm:gap-3.5">
               <div className="flex flex-col gap-2.5 sm:gap-3 stagger-container">
                 {TRUST_FEATURES.map((item, index) => {
@@ -133,7 +133,7 @@ export const WhyTrustSection: React.FC = () => {
                   return (
                     <div
                       key={item.id}
-                      style={{ transitionDelay: `${450 + index * 120}ms` }}
+                      style={{ transitionDelay: `${700 + index * 120}ms` }}
                       className="w-full text-left p-3.5 sm:p-4 rounded-[18px] sm:rounded-[20px] bg-white/[0.08] hover:bg-white/[0.14] transition-all duration-300 flex items-center gap-3.5 scroll-reveal-card"
                     >
                       {/* Left Icon Badge - Clean, no white border outline */}
@@ -155,8 +155,8 @@ export const WhyTrustSection: React.FC = () => {
                 })}
               </div>
 
-              {/* Bottom Button matching the reference image */}
-              <div className="pt-2 sm:pt-3 scroll-reveal" style={{ transitionDelay: '930ms' }}>
+              {/* Bottom Button matching the reference image - Comes smoothly after the cards */}
+              <div className="pt-2 sm:pt-3 scroll-reveal" style={{ transitionDelay: '1180ms' }}>
                 <Link
                   href="/doctors"
                   className="inline-flex items-center gap-3 rounded-full bg-white text-[#064E3B] hover:bg-[#F2FBF7] pl-5 pr-2 py-2 text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all group/btn cursor-pointer"

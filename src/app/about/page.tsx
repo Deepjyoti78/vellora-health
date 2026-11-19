@@ -91,8 +91,8 @@ export default function AboutPage() {
 
           <div className="relative mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Background Illustration: In-Home Bedside Doctor Visit (No Box, No Card, Static) */}
-              <div className="hidden lg:flex lg:col-span-3 xl:col-span-3.5 justify-start">
+              {/* Left Background Illustration: In-Home Bedside Doctor Visit */}
+              <div className="hidden lg:flex lg:col-span-3 xl:col-span-3.5 justify-start scroll-reveal-left" style={{ transitionDelay: '250ms' }}>
                 <div className="relative w-full max-w-[340px] flex items-center justify-center">
                   {/* Soft Background Mint Aura */}
                   <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-[#ECFDF5] via-[#D1FAE5]/50 to-transparent blur-2xl opacity-80 pointer-events-none" />
@@ -108,8 +108,8 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              {/* Center Column: Eyebrow & Mission Headline */}
-              <div className="lg:col-span-6 xl:col-span-5 text-center flex flex-col items-center justify-center">
+              {/* Center Column: Eyebrow & Mission Headline - Font animates first */}
+              <div className="lg:col-span-6 xl:col-span-5 text-center flex flex-col items-center justify-center scroll-reveal" style={{ transitionDelay: '0ms' }}>
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-1 text-[11px] font-bold tracking-[0.14em] text-[#065F46] uppercase mb-3.5 shadow-2xs">
                   <Sparkles className="h-3 w-3 stroke-[2.5] text-[#059669]" />
                   <span>OUR CLINICAL PHILOSOPHY &amp; MISSION</span>
@@ -120,8 +120,8 @@ export default function AboutPage() {
                 </h1>
               </div>
 
-              {/* Right Background Illustration: Modern Hospital Standards & Clinical Network (No Box, No Card, Static) */}
-              <div className="hidden lg:flex lg:col-span-3 xl:col-span-3.5 justify-end">
+              {/* Right Background Illustration: Modern Hospital Standards & Clinical Network */}
+              <div className="hidden lg:flex lg:col-span-3 xl:col-span-3.5 justify-end scroll-reveal-right" style={{ transitionDelay: '350ms' }}>
                 <div className="relative w-full max-w-[340px] flex items-center justify-center">
                   {/* Soft Background Mint Aura */}
                   <div className="absolute -inset-2 rounded-full bg-gradient-to-tl from-[#ECFDF5] via-[#D1FAE5]/50 to-transparent blur-2xl opacity-80 pointer-events-none" />
@@ -142,12 +142,12 @@ export default function AboutPage() {
 
         {/* ================= MAIN CONTENT (SEAMLESS TRANSITION WITH NO HARSH DIVIDERS) ================= */}
         <main className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-16 sm:space-y-20">
-          {/* Key Clinical Impact Metrics Bar */}
-          <section className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          {/* Key Clinical Impact Metrics Bar - Staggered cascade */}
+          <section className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 stagger-container">
             {clinicalMetrics.map((metric, idx) => (
               <div
                 key={idx}
-                className="rounded-[20px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-[#B8DCDE] transition-all"
+                className="rounded-[20px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-[#B8DCDE] transition-all scroll-reveal-card"
               >
                 <p className="font-heading text-2xl sm:text-3xl font-bold text-[#064E3B] tracking-tight">
                   {metric.value}
@@ -164,7 +164,7 @@ export default function AboutPage() {
 
           {/* Narrative: Patient-First Healthcare */}
           <section className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 scroll-reveal-left">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#065F46]">
                 <Activity className="h-3.5 w-3.5" />
                 <span>PATIENT-FIRST HEALTHCARE</span>
@@ -214,7 +214,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative overflow-hidden rounded-[24px] border border-[#E2EBE7] bg-white p-2.5 shadow-lg">
+            <div className="lg:col-span-5 relative overflow-hidden rounded-[24px] border border-[#E2EBE7] bg-white p-2.5 shadow-lg scroll-reveal-right" style={{ transitionDelay: '200ms' }}>
               <div className="relative h-80 sm:h-96 w-full overflow-hidden rounded-[18px]">
                 <img
                   src="/assets/compassionate-hospital-care.png"
@@ -236,8 +236,8 @@ export default function AboutPage() {
           </section>
 
           {/* Core Values Pillars */}
-          <section className="rounded-[26px] border border-[#E2EBE7] bg-white p-8 sm:p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
-            <div className="text-center max-w-2xl mx-auto">
+          <section className="rounded-[26px] border border-[#E2EBE7] bg-white p-8 sm:p-12 shadow-[0_4px_24px_rgba(0,0,0,0.02)] scroll-reveal-card">
+            <div className="text-center max-w-2xl mx-auto scroll-reveal">
               <span className="rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#065F46]">
                 HOW WE PROTECT YOU
               </span>
@@ -249,13 +249,13 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 stagger-container">
               {pillars.map((pillar, idx) => {
                 const IconComp = pillar.icon;
                 return (
                   <div
                     key={idx}
-                    className="group rounded-[20px] border border-[#E2EBE7] bg-[#FBFDFD] p-6 shadow-2xs transition-all duration-300 hover:border-[#B8DCDE] hover:bg-white hover:shadow-md hover:-translate-y-1"
+                    className="group rounded-[20px] border border-[#E2EBE7] bg-[#FBFDFD] p-6 shadow-2xs transition-all duration-300 hover:border-[#B8DCDE] hover:bg-white hover:shadow-md hover:-translate-y-1 scroll-reveal-card"
                   >
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#065F46] group-hover:scale-105 transition-transform">
                       <IconComp className="h-5 w-5 stroke-[2.2]" />
@@ -270,7 +270,7 @@ export default function AboutPage() {
 
           {/* Clinical Leadership Team */}
           <section>
-            <div className="text-center max-w-2xl mx-auto">
+            <div className="text-center max-w-2xl mx-auto scroll-reveal">
               <span className="rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#065F46]">
                 MEDICAL GOVERNANCE
               </span>
@@ -282,11 +282,11 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 stagger-container">
               {leadership.map((leader, i) => (
                 <article
                   key={i}
-                  className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E2EBE7] bg-white p-5 shadow-xs transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-lg hover:-translate-y-1"
+                  className="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E2EBE7] bg-white p-5 shadow-xs transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-lg hover:-translate-y-1 scroll-reveal-card"
                 >
                   <div>
                     <div className="relative h-60 w-full overflow-hidden rounded-[16px] bg-slate-100 mb-4 border border-[#E2EBE7]">
@@ -329,7 +329,7 @@ export default function AboutPage() {
           </section>
 
           {/* Provider Recruitment Callout Banner */}
-          <section className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 sm:p-8 shadow-[0_4px_20px_rgba(6,95,70,0.04)] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+          <section className="rounded-[24px] border border-[#D9ECE7] bg-white p-6 sm:p-8 shadow-[0_4px_20px_rgba(6,95,70,0.04)] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 scroll-reveal-card">
             <div className="flex items-start gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
                 <ShieldCheck className="h-6 w-6" />
@@ -356,7 +356,7 @@ export default function AboutPage() {
           </section>
 
           {/* CTA Banner */}
-          <section className="rounded-[26px] bg-[#064E3B] p-8 sm:p-12 text-white relative overflow-hidden shadow-xl">
+          <section className="rounded-[26px] bg-[#064E3B] p-8 sm:p-12 text-white relative overflow-hidden shadow-xl scroll-reveal-scale">
             {/* Soft decorative cross & background pattern */}
             <div className="absolute right-4 top-4 text-emerald-400/20 font-light text-8xl pointer-events-none select-none">
               +

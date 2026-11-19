@@ -193,16 +193,6 @@ export default function PatientDashboardPage() {
                 <p className="text-sm sm:text-base text-[#64748B] font-normal max-w-lg leading-relaxed">
                   Manage your appointments, medical records, and family healthcare in one place.
                 </p>
-
-                <div className="pt-2 flex items-center gap-3">
-                  <Link
-                    href="/services"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#064E3B] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-xs hover:bg-[#065F46] transition-all hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span>Book Appointment</span>
-                  </Link>
-                </div>
               </div>
 
               {/* Right Column: Wide Seamless Lifestyle Illustration (col-span-7) */}
