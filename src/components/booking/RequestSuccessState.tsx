@@ -30,23 +30,23 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
 }) => {
   // Ensure the viewport automatically scrolls smoothly to top when the success card is mounted
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }, []);
 
   const isEnquiry = type === 'QUICK_ENQUIRY';
   const isDoctor = type === 'DOCTOR_CONSULTATION';
 
   const defaultTitle = isEnquiry
-    ? 'Callback Request Received'
+    ? 'Demo Enquiry Saved'
     : isDoctor
-    ? 'Doctor Consultation Requested'
-    : 'Home Care Service Requested';
+    ? 'Demo Consultation Request Saved'
+    : 'Demo Care Request Saved';
 
   const defaultSubtitle = isEnquiry
-    ? 'Thank you for contacting Vellora Health. Our clinical care coordination team has received your enquiry.'
+    ? 'Your enquiry is a demo preview. No message was sent to a care coordinator.'
     : isDoctor
-    ? 'Your doctor consultation request has been received. Our clinical coordinator will verify doctor availability and contact you shortly.'
-    : 'Your care request has been logged in our dispatch stream and is awaiting clinician assignment.';
+    ? 'Your request was saved in this demo session. No clinician was contacted or assigned.'
+    : 'Your request was saved in this demo session. No dispatch or payment was processed.';
 
   return (
     <div className="w-full max-w-2xl mx-auto px-0 sm:px-4 py-2 sm:py-8">
@@ -177,7 +177,7 @@ export const RequestSuccessState: React.FC<RequestSuccessStateProps> = ({
               <>
                 <p className="flex items-start gap-2">
                   <span className="font-bold text-[#065F46]">1.</span>
-                  <span>Our medical dispatch board is currently verifying nearby clinician availability for <strong className="text-[#102820]">{patientName}</strong>.</span>
+                  <span>This session contains a demonstration request for <strong className="text-[#102820]">{patientName}</strong>.</span>
                 </p>
                 <p className="flex items-start gap-2">
                   <span className="font-bold text-[#065F46]">2.</span>

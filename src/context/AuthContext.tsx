@@ -9,8 +9,8 @@ interface AuthContextType {
   currentUser: UserRecord | null;
   isAuthenticated: boolean;
   isAuthLoading: boolean;
-  login: (emailOrPhone: string, preferredRole?: UserRole) => boolean;
-  registerPatient: (data: { name: string; email: string; phone: string }) => UserRecord;
+  login: (emailOrPhone: string, preferredRole?: UserRole, customName?: string) => boolean;
+  registerPatient: (data: { name: string; email: string; phone: string; password?: string }) => UserRecord;
   registerProvider: (data: {
     name: string;
     email: string;
@@ -66,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     try {
       const storedUid = typeof window !== 'undefined'
-        ? sessionStorage.getItem(CLIENT_SESSION_STORAGE_KEY)
+        ? sessionStorage.getItem(CLIENT_SESSION_STORAGE_KEY) || localStorage.getItem('vellora_active_user_id')
         : null;
 
       if (storedUid) {
@@ -76,6 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsAuthenticated(true);
         } else {
           sessionStorage.removeItem(CLIENT_SESSION_STORAGE_KEY);
+          localStorage.removeItem('vellora_active_user_id');
           setCurrentUser(null);
           setIsAuthenticated(false);
         }
@@ -93,21 +94,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = useCallback((emailOrPhone: string, preferredRole?: UserRole): boolean => {
+  const login = useCallback((emailOrPhone: string, preferredRole?: UserRole, customName?: string): boolean => {
     const cleanQuery = emailOrPhone.trim().toLowerCase();
     const cleanDigits = emailOrPhone.replace(/\D/g, '');
     const users = db.getUsers();
 
-    // 1. Match by email or normalized phone
+    // 1. Match by email, name or phone
     let matched = users.find(
       (u) =>
-        u.email.toLowerCase() === cleanQuery ||
-        (cleanDigits.length >= 7 && u.phone.replace(/\D/g, '').endsWith(cleanDigits))
+        (u.email && u.email.toLowerCase() === cleanQuery) ||
+        (u.name && u.name.toLowerCase() === cleanQuery) ||
+        (u.name && cleanQuery.length > 2 && u.name.toLowerCase().includes(cleanQuery)) ||
+        (cleanDigits.length >= 7 && u.phone && u.phone.replace(/\D/g, '').endsWith(cleanDigits))
     );
 
-    // 2. If preferred role specified and not matched yet, match first user with that role
-    if (!matched && preferredRole) {
-      matched = users.find((u) => u.role === preferredRole);
+    // 2. If matched and customName is provided, update name if needed
+    if (matched && customName && customName.trim() && matched.id !== 'pat-1') {
+      matched.name = customName.trim();
+      db.updateUser(matched.id, { name: customName.trim() });
+    }
+
+    // 3. If NOT matched, do NOT fall back to Eleanor Vance unless demo credentials specified!
+    if (!matched) {
+      if (cleanQuery === 'patient@vellora.com' || cleanQuery === 'eleanor' || cleanQuery === 'eleanor vance') {
+        matched = users.find((u) => u.id === 'pat-1');
+      } else {
+        // Create new patient record with entered name/credentials so user identity is preserved
+        const isEmail = cleanQuery.includes('@');
+        let nameToUse = customName && customName.trim() ? customName.trim() : '';
+        if (!nameToUse) {
+          if (isEmail) {
+            nameToUse = cleanQuery
+              .split('@')[0]
+              .replace(/[._-]/g, ' ')
+              .replace(/\b\w/g, (c) => c.toUpperCase());
+          } else if (!cleanDigits || cleanDigits.length < cleanQuery.length / 2) {
+            nameToUse = cleanQuery.replace(/\b\w/g, (c) => c.toUpperCase());
+          } else {
+            nameToUse = 'Patient ' + (cleanDigits.slice(-4) || 'User');
+          }
+        }
+
+        matched = db.createUser({
+          name: nameToUse,
+          email: isEmail ? cleanQuery : '',
+          phone: cleanDigits.length >= 7 ? emailOrPhone.trim() : '',
+          role: preferredRole || 'PATIENT',
+          verificationStatus: 'APPROVED',
+        });
+      }
     }
 
     if (matched) {
@@ -115,6 +150,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsAuthenticated(true);
       try {
         sessionStorage.setItem(CLIENT_SESSION_STORAGE_KEY, matched.id);
+        localStorage.setItem('vellora_active_user_id', matched.id);
       } catch {}
       return true;
     }
@@ -127,10 +163,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthenticated(false);
     try {
       sessionStorage.removeItem(CLIENT_SESSION_STORAGE_KEY);
+      localStorage.removeItem('vellora_active_user_id');
     } catch {}
   }, []);
 
   const switchRole = useCallback((role: UserRole) => {
+    // If current user is already in this role, keep current user
+    if (currentUser && currentUser.role === role) {
+      return;
+    }
     const users = db.getUsers();
     const matched = users.find((u) => u.role === role);
     if (matched) {
@@ -138,24 +179,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsAuthenticated(true);
       try {
         sessionStorage.setItem(CLIENT_SESSION_STORAGE_KEY, matched.id);
+        localStorage.setItem('vellora_active_user_id', matched.id);
       } catch {}
     }
-  }, []);
+  }, [currentUser]);
 
-  const registerPatient = useCallback((data: { name: string; email: string; phone: string }): UserRecord => {
-    const newUser = db.createUser({
-      name: data.name.trim(),
-      email: data.email.trim(),
-      phone: data.phone.trim(),
-      role: 'PATIENT',
-      verificationStatus: 'APPROVED',
-    });
-    setCurrentUser(newUser);
+  const registerPatient = useCallback((data: { name: string; email: string; phone: string; password?: string }): UserRecord => {
+    const cleanEmail = data.email.trim().toLowerCase();
+    const cleanDigits = data.phone.replace(/\D/g, '');
+    const users = db.getUsers();
+
+    // Check if user with same email or phone already exists
+    let existing = users.find(
+      (u) =>
+        (cleanEmail && u.email && u.email.toLowerCase() === cleanEmail) ||
+        (cleanDigits.length >= 7 && u.phone && u.phone.replace(/\D/g, '').endsWith(cleanDigits))
+    );
+
+    let user: UserRecord;
+    if (existing) {
+      existing.name = data.name.trim();
+      if (data.email) existing.email = data.email.trim();
+      if (data.phone) existing.phone = data.phone.trim();
+      db.updateUser(existing.id, { name: data.name.trim(), email: data.email.trim(), phone: data.phone.trim() });
+      user = existing;
+    } else {
+      user = db.createUser({
+        name: data.name.trim(),
+        email: data.email.trim(),
+        phone: data.phone.trim(),
+        role: 'PATIENT',
+        verificationStatus: 'APPROVED',
+      });
+    }
+
+    setCurrentUser(user);
     setIsAuthenticated(true);
     try {
-      sessionStorage.setItem(CLIENT_SESSION_STORAGE_KEY, newUser.id);
+      sessionStorage.setItem(CLIENT_SESSION_STORAGE_KEY, user.id);
+      localStorage.setItem('vellora_active_user_id', user.id);
     } catch {}
-    return newUser;
+    return user;
   }, []);
 
   const registerProvider = useCallback((data: {

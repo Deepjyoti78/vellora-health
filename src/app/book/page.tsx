@@ -121,35 +121,11 @@ function QuickEnquiryContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F9F7] flex flex-col justify-between">
-      {/* Integrated Booking Header */}
-      <header className="border-b border-[#E2EBE7] bg-white">
-        <div className="container max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BackButton href="/services" label="Back" />
-            <Link
-              href="/"
-              className="inline-flex items-center group"
-              aria-label="Velora Healthcare Home"
-            >
-              <img
-                src="/assets/logo-dark.png"
-                alt="Velora Healthcare"
-                className="h-7 sm:h-8 w-auto object-contain group-hover:opacity-90 transition-opacity"
-              />
-            </Link>
-          </div>
-
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#CBDCD5] bg-white px-3.5 py-1.5 text-xs font-bold text-[#102820] hover:bg-[#F2F8F5] transition-all shadow-2xs"
-          >
-            <span>Exit to Home</span>
-          </Link>
+    <div className="min-h-screen bg-[#F5F9F7] flex flex-col justify-between py-6 sm:py-10">
+      <main className="flex-1 flex flex-col items-center justify-center py-6 sm:py-10 px-4">
+        <div className="w-full max-w-lg mb-3">
+          <BackButton href="/services" label="Back to Services" />
         </div>
-      </header>
-
-      <main className="flex-1 flex items-center justify-center py-10 sm:py-16 px-4">
         {submittedRecord ? (
           <RequestSuccessState
             type="QUICK_ENQUIRY"

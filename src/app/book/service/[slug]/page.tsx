@@ -4,6 +4,7 @@ import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { db, ServiceRecord } from '@/lib/db';
+import { bookingDate, isValidBookingDate } from '@/lib/booking-date';
 import { useAuth } from '@/context/AuthContext';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
 import { BackButton } from '@/components/common/BackButton';
@@ -44,7 +45,7 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
 
   // STEP 1 State: Care & Location
   const [pinCode, setPinCode] = useState('94107');
-  const [coverageStatus, setCoverageStatus] = useState<string>('Service available in your area (Standard 60-min arrival)');
+  const [coverageStatus, setCoverageStatus] = useState<string>('Demo coverage estimate — availability requires confirmation');
   const [selectedOption, setSelectedOption] = useState<string>(
     service.supportedOptions[0] || 'Standard Procedure'
   );
@@ -55,7 +56,7 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
   const [relationship, setRelationship] = useState('Parent');
   const [contactPhone, setContactPhone] = useState(currentUser?.phone || '');
   const [preferredDate, setPreferredDate] = useState(
-    new Date(Date.now() + 86400000).toISOString().split('T')[0]
+    bookingDate(1)
   );
   const [preferredTimeSlot, setPreferredTimeSlot] = useState(
     'Morning (08:00 AM – 12:00 PM)'
@@ -98,6 +99,10 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
 
   const handleNextFromStep2 = () => {
     setErrorMsg('');
+    if (!isValidBookingDate(preferredDate)) {
+      setErrorMsg('Please choose a valid appointment date today or later.');
+      return;
+    }
     if (!patientName.trim()) {
       setErrorMsg('Please enter the patient full name.');
       return;
@@ -116,6 +121,11 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
   const handleSubmitBooking = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+    if (!isValidBookingDate(preferredDate)) {
+      setErrorMsg('Please choose a valid appointment date today or later.');
+      setStep(2);
+      return;
+    }
 
     if (!consent) {
       setErrorMsg('Please confirm your request and bedside arrival consent.');
@@ -176,9 +186,10 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
   const pageTitle = isDoctorVisit ? 'Booking Home Visit Doctor' : `Booking ${service.name}`;
 
   return (
-    <div className="min-h-screen bg-[#F5F9F7] py-4 sm:py-10">
-      {/* Main Form Content */}
-      <main className="max-w-2xl mx-auto px-2.5 sm:px-6">
+    <div className="min-h-screen bg-[#F5F9F7]">
+      <div className="py-6 sm:py-12">
+        {/* Main Form Content */}
+        <main className="max-w-2xl mx-auto px-2.5 sm:px-6">
         {submittedBooking ? (
           <RequestSuccessState
             type="SERVICE_REQUEST"
@@ -273,7 +284,7 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
                         onChange={(e) => {
                           setPinCode(e.target.value);
                           if (e.target.value.length >= 4) {
-                            setCoverageStatus('Service available in your area (Standard 60-min arrival)');
+                            setCoverageStatus('Demo coverage estimate — availability requires confirmation');
                           } else {
                             setCoverageStatus('');
                           }
@@ -481,7 +492,7 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
                         <input
                           type="date"
                           value={preferredDate}
-                          min={new Date().toISOString().split('T')[0]}
+                          min={bookingDate()}
                           onChange={(e) => setPreferredDate(e.target.value)}
                           className="w-full rounded-xl border border-[#E2EBE7] bg-[#F5F9F7] py-2.5 pl-10 pr-3.5 text-xs font-semibold text-[#102820] focus:bg-white focus:border-[#064E3B] focus:outline-none"
                         />
@@ -723,5 +734,6 @@ export default function ServiceBookingPage({ params }: ServiceBookingPageProps) 
         )}
       </main>
     </div>
-  );
+  </div>
+);
 }

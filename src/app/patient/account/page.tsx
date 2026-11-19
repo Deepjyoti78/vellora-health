@@ -126,14 +126,14 @@ function PatientAccountContent() {
 
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
-    setSettingsSaved(true);
+    alert('Preference changes are a demo preview and are not saved across sessions.');
     setTimeout(() => setSettingsSaved(false), 3000);
   };
 
   const handlePasswordChange = (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentPassword || !newPassword) return;
-    setPasswordSuccess(true);
+    alert('Password changes require an authentication service. No password has been changed in this demo.');
     setCurrentPassword('');
     setNewPassword('');
     setTimeout(() => setPasswordSuccess(false), 3500);
@@ -564,7 +564,7 @@ function PatientAccountContent() {
                 <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2.5">
                   <button
                     type="button"
-                    onClick={() => alert('Your comprehensive clinical record (PDF/EHR) has been generated and downloaded.')}
+                    onClick={() => alert('Record export is unavailable in this demo. No file was created.')}
                     className="inline-flex items-center justify-center gap-2 rounded-full border border-[#064E3B] bg-white py-2 px-4 text-xs font-bold text-[#064E3B] hover:bg-[#F2F8F5] transition-colors"
                   >
                     <FileDown className="h-3.5 w-3.5" />

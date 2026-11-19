@@ -98,6 +98,8 @@ export const ProviderLayout: React.FC<{ children: React.ReactNode }> = ({ childr
     router.push('/provider/dashboard');
   };
 
+  if (!currentUser || !['DOCTOR', 'NURSE', 'CARETAKER', 'PHYSIOTHERAPIST', 'PHLEBOTOMIST'].includes(currentUser.role)) return <main className="min-h-screen grid place-content-center gap-4 text-center"><h1>Clinician demo access required</h1><Link href="/provider/login">Open clinician sign in</Link></main>;
+
   return (
     <div className="min-h-screen bg-[#F7FAF9] text-[#15212B] font-sans antialiased">
       {/* Top Navbar: Spacious, Clean & Breathable */}

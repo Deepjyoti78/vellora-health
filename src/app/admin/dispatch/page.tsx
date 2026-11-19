@@ -76,7 +76,7 @@ export default function AdminDispatchPage() {
     e.preventDefault();
     if (!selectedBooking || !selectedProviderId) return;
 
-    db.assignProvider(selectedBooking.id, selectedProviderId);
+    if (!db.assignProvider(selectedBooking.id, selectedProviderId, true)) { setSuccessMessage('Assignment unavailable. Choose an approved clinician matching this service.'); return; }
     db.createJobOffer({
       bookingId: selectedBooking.id,
       providerId: selectedProviderId,
@@ -88,7 +88,7 @@ export default function AdminDispatchPage() {
       status: 'OFFERED',
     });
     setBookings([...db.getBookings()]);
-    setSuccessMessage(`Assigned clinician to ${selectedBooking.bookingNumber}! Dispatch offer dispatched.`);
+    setSuccessMessage(`Assigned clinician to ${selectedBooking.bookingNumber}! Offer recorded in this demo session.`);
     setTimeout(() => {
       setSuccessMessage('');
       setSelectedBooking(null);

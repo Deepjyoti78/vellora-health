@@ -88,19 +88,9 @@ export const ServicesSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="services"
-      className="relative bg-white pt-10 sm:pt-14 lg:pt-16 pb-10 sm:pb-14 lg:pb-16 shadow-[0_10px_35px_rgba(0,0,0,0.02)]"
+      className="relative bg-transparent pt-12 sm:pt-16 lg:pt-20 pb-8 sm:pb-12 lg:pb-14"
       aria-labelledby="servicesTitle"
     >
-      {/* Soft atmospheric ambient glow shadow effect in background - Hidden on mobile to prevent whitish bleed */}
-      <div
-        className="hidden md:block pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-[720px] h-[340px] rounded-full bg-gradient-to-b from-[#E8F8F2]/60 via-[#ECFDF5]/30 to-transparent blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="hidden md:block pointer-events-none absolute bottom-0 right-0 w-[500px] h-[300px] rounded-full bg-[#EBF7F2]/40 blur-3xl"
-        aria-hidden="true"
-      />
-
       {/* Main Container - Aligns pixel-for-pixel with "Meet Our Medical Specialists" */}
       <div className="container relative">
         {/* Section Heading Row */}
@@ -110,12 +100,12 @@ export const ServicesSection: React.FC = () => {
           }`}
         >
           <div>
-            <p className="eyebrow flex items-center gap-2">
+            <p className="eyebrow flex items-center gap-2 text-[#065F46] font-bold tracking-wider">
               <span>COMPREHENSIVE HEALTHCARE AT HOME</span>
-              <span className="md:hidden inline-block h-[1.5px] w-6 bg-[#07583F]/60" />
+              <span className="md:hidden inline-block h-[1.5px] w-6 bg-[#065F46]/60" />
             </p>
-            <h2 id="servicesTitle">Our Services</h2>
-            <p className="section-lead">
+            <h2 id="servicesTitle" className="text-[#11191B] font-extrabold tracking-tight">Treatment We Offers</h2>
+            <p className="section-lead text-[#55696D]">
               <span className="md:hidden">
                 From routine checkups to specialized treatment, our care team brings expert healthcare to your home.
               </span>
@@ -154,7 +144,7 @@ export const ServicesSection: React.FC = () => {
               <Link
                 key={service.id}
                 href={service.href}
-                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-full md:max-w-none h-[315px] sm:h-[335px] lg:h-[375px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7]/50 shadow-[0_12px_28px_rgba(16,39,35,0.08)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.22)] hover:border-white/35 transition-all duration-300 hover:-translate-y-2 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#059669] ${
+                className={`group relative flex-none w-[80vw] max-w-[310px] sm:w-[320px] md:w-full md:max-w-none h-[315px] sm:h-[335px] lg:h-[375px] rounded-[24px] sm:rounded-[26px] overflow-hidden snap-start border border-[#E2EBE7] shadow-[0_10px_28px_rgba(16,39,35,0.06)] hover:shadow-[0_16px_36px_rgba(6,78,59,0.18)] hover:border-[#10B981]/50 transition-all duration-300 hover:-translate-y-2 focus:outline-none focus-visible:ring-3 focus-visible:ring-[#10B981] ${
                   isVisible
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-8 scale-[0.98]'

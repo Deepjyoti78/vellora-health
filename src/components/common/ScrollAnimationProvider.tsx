@@ -5,8 +5,8 @@ import React, { useEffect } from 'react';
 export const ScrollAnimationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     // If user prefers reduced motion or browser has no IntersectionObserver, reveal all
-    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
-      document.querySelectorAll('.scroll-reveal, .scroll-reveal-card').forEach((el) => {
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.scroll-reveal, .scroll-reveal-card, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale').forEach((el) => {
         el.classList.add('is-revealed');
       });
       return;

@@ -2061,7 +2061,7 @@ const initialClinicalNotes: ClinicalNoteRecord[] = [
 
 // In-Memory Data Store with LocalStorage synchronization
 class DataStore {
-  private users: UserRecord[] = initialUsers;
+  private users: UserRecord[] = [...initialUsers];
   private services: ServiceRecord[] = initialServices;
   private bookings: BookingRecord[] = initialBookings;
   private prescriptions: PrescriptionRecord[] = initialPrescriptions;
@@ -2076,6 +2076,29 @@ class DataStore {
   private jobOffers: JobOfferRecord[] = initialJobOffers;
   private clinicalNotes: ClinicalNoteRecord[] = initialClinicalNotes;
 
+  constructor() {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('vellora_custom_users');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            parsed.forEach((customU: UserRecord) => {
+              const existingIdx = this.users.findIndex(
+                (u) => u.id === customU.id || (customU.email && u.email && u.email.toLowerCase() === customU.email.toLowerCase())
+              );
+              if (existingIdx !== -1) {
+                this.users[existingIdx] = { ...this.users[existingIdx], ...customU };
+              } else {
+                this.users.unshift(customU);
+              }
+            });
+          }
+        }
+      } catch {}
+    }
+  }
+
   // Users
   getUsers() { return this.users; }
   getUserById(id: string) { return this.users.find(u => u.id === id); }
@@ -2087,13 +2110,21 @@ class DataStore {
     return docs.find(d => {
       if (d.id.toLowerCase() === identifier.toLowerCase()) return true;
       const docClean = d.name.toLowerCase().replace(/^dr\.?\s*/, '').replace(/[^a-z0-9]/g, '');
-      return docClean === clean || d.name.toLowerCase().includes(identifier.toLowerCase());
+      return docClean === clean || d.name.toLowerCase() === identifier.toLowerCase();
     });
   }
   updateUser(id: string, updates: Partial<UserRecord>) {
     const idx = this.users.findIndex(u => u.id === id);
     if (idx !== -1) {
       this.users[idx] = { ...this.users[idx], ...updates };
+      if (typeof window !== 'undefined') {
+        try {
+          const customUsers = this.users.filter(
+            (u) => u.id !== 'pat-1' && !u.id.startsWith('doc-') && !u.id.startsWith('nurse-') && u.id !== 'admin-1'
+          );
+          localStorage.setItem('vellora_custom_users', JSON.stringify(customUsers));
+        } catch {}
+      }
       return this.users[idx];
     }
     return null;
@@ -2110,7 +2141,20 @@ class DataStore {
       rating: 5.0,
       ...data,
     };
-    this.users.push(newUser);
+    const idx = this.users.findIndex((u) => u.id === newUser.id);
+    if (idx !== -1) {
+      this.users[idx] = newUser;
+    } else {
+      this.users.unshift(newUser);
+    }
+    if (typeof window !== 'undefined') {
+      try {
+        const customUsers = this.users.filter(
+          (u) => u.id !== 'pat-1' && !u.id.startsWith('doc-') && !u.id.startsWith('nurse-') && u.id !== 'admin-1'
+        );
+        localStorage.setItem('vellora_custom_users', JSON.stringify(customUsers));
+      } catch {}
+    }
     return newUser;
   }
 
@@ -2134,7 +2178,7 @@ class DataStore {
   getBookingsByPatient(patientId: string) { return this.bookings.filter(b => b.patientId === patientId); }
   getBookingsByProvider(providerId: string) { return this.bookings.filter(b => b.providerId === providerId); }
   createBooking(booking: Omit<BookingRecord, 'id' | 'bookingNumber' | 'createdAt' | 'discountAmount' | 'paymentMethod'> & { discountAmount?: number; paymentMethod?: string }) {
-    const id = `bkg-${Date.now()}`;
+    const id = `bkg-${globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2)}`;
     const bookingNumber = `VEL-2026-${Math.floor(1000 + Math.random() * 9000)}`;
     const newRecord: BookingRecord = {
       ...booking,
@@ -2149,17 +2193,23 @@ class DataStore {
   }
   updateBookingStatus(id: string, status: BookingRecord['status'], note?: string) {
     const booking = this.getBookingById(id);
-    if (booking) {
+    const allowed: Record<BookingRecord['status'], BookingRecord['status'][]> = {
+      REQUESTED: ['CONFIRMED', 'ASSIGNED', 'CANCELLED'], CONFIRMED: ['ASSIGNED', 'CANCELLED'],
+      ASSIGNED: ['ON_THE_WAY', 'CANCELLED'], ON_THE_WAY: ['ARRIVED', 'CANCELLED'],
+      ARRIVED: ['IN_PROGRESS', 'CANCELLED'], IN_PROGRESS: ['COMPLETED', 'CANCELLED'], COMPLETED: [], CANCELLED: [],
+    };
+    if (booking && (booking.status === status || allowed[booking.status].includes(status))) {
       booking.status = status;
       if (note) booking.notes = note;
       return booking;
     }
     return null;
   }
-  assignProvider(bookingId: string, providerId: string) {
+  assignProvider(bookingId: string, providerId: string, allowReassignment = false) {
     const booking = this.getBookingById(bookingId);
     const provider = this.getUserById(providerId);
-    if (booking && provider) {
+    const eligibleRoles: Record<string, string> = { DOCTOR_VISIT: 'DOCTOR', NURSING_CARE: 'NURSE', CARETAKER: 'CARETAKER', LAB_TESTS: 'PHLEBOTOMIST', PHYSIOTHERAPY: 'PHYSIOTHERAPIST' };
+    if (booking && provider && provider.verificationStatus === 'APPROVED' && (!eligibleRoles[booking.category] || eligibleRoles[booking.category] === provider.role) && !['CANCELLED', 'COMPLETED'].includes(booking.status) && (!booking.providerId || booking.providerId === providerId || allowReassignment)) {
       booking.providerId = provider.id;
       booking.providerName = provider.name;
       booking.providerRole = provider.role;
@@ -2416,11 +2466,8 @@ class DataStore {
   respondToJobOffer(offerId: string, accept: boolean) {
     const offer = this.jobOffers.find(o => o.id === offerId);
     if (offer) {
+      if (accept && !this.assignProvider(offer.bookingId, offer.providerId)) return null;
       offer.status = accept ? 'ACCEPTED' : 'DECLINED';
-      if (accept) {
-        // Assign booking to this provider
-        this.assignProvider(offer.bookingId, offer.providerId);
-      }
       return offer;
     }
     return null;

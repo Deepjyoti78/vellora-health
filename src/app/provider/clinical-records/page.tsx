@@ -38,55 +38,48 @@ function ClinicalRecordsContent() {
   );
 
   const [selectedBookingId, setSelectedBookingId] = useState(bookingIdParam || 'bkg-101');
-  const [patientName, setPatientName] = useState('Eleanor Vance');
+  const [patientName, setPatientName] = useState('');
   const [title, setTitle] = useState('Comprehensive In-Home Clinical Evaluation');
-  const [summary, setSummary] = useState('Patient presented with mild respiratory symptoms and mild fatigue. Vital signs stable, chest auscultation clear bilaterally.');
-  const [observations, setObservations] = useState('Patient is resting comfortably at home. Advised continued rest, hydration, and completion of prescribed antibiotic regimen.');
+  const [summary, setSummary] = useState('');
+  const [observations, setObservations] = useState('');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   // Doctor: Prescription
-  const [medications, setMedications] = useState([
-    { name: 'Amoxicillin-Clavulanate', dosage: '875/125 mg', frequency: 'Twice daily with meals', duration: '7 Days' },
-    { name: 'Benzonatate', dosage: '100 mg', frequency: 'Three times daily as needed', duration: '5 Days' },
-  ]);
+  const [medications, setMedications] = useState<{ name: string; dosage: string; frequency: string; duration: string }[]>([]);
   const [newMedName, setNewMedName] = useState('');
   const [newMedDosage, setNewMedDosage] = useState('');
   const [newMedFreq, setNewMedFreq] = useState('Twice daily');
   const [newMedDur, setNewMedDur] = useState('5 Days');
 
   // Nurse: Vitals
-  const [bp, setBp] = useState('120/78');
-  const [pulse, setPulse] = useState('72');
-  const [spo2, setSpo2] = useState('99');
-  const [temp, setTemp] = useState('98.6');
-  const [glucose, setGlucose] = useState('95');
+  const [bp, setBp] = useState('');
+  const [pulse, setPulse] = useState('');
+  const [spo2, setSpo2] = useState('');
+  const [temp, setTemp] = useState('');
+  const [glucose, setGlucose] = useState('');
 
   // Caretaker: Tasks
   const [caretakerTasks, setCaretakerTasks] = useState([
-    { task: 'Assisted Morning Bed-to-Chair Transfer', done: true },
-    { task: 'Breakfast Meal & Hydration Support', done: true },
-    { task: 'Scheduled Oral Medication Reminders', done: true },
-    { task: 'Assisted 15-Minute Indoor Walking Session', done: true },
-    { task: 'Vitals & General Comfort Check', done: true },
+    { task: 'Assisted Morning Bed-to-Chair Transfer', done: false },
+    { task: 'Breakfast Meal & Hydration Support', done: false },
+    { task: 'Scheduled Oral Medication Reminders', done: false },
+    { task: 'Assisted 15-Minute Indoor Walking Session', done: false },
+    { task: 'Vitals & General Comfort Check', done: false },
   ]);
 
   // Physiotherapist: Rehab exercises
-  const [rehabExercises, setRehabExercises] = useState([
-    'Passive Range of Motion (ROM) - Right Knee (3 sets x 10 reps)',
-    'Isometric Quadriceps Activation (10-second holds x 10 reps)',
-    'Supported Bed-to-Stand Balance Retraining (5 minutes)',
-  ]);
+  const [rehabExercises, setRehabExercises] = useState<string[]>([]);
   const [newExercise, setNewExercise] = useState('');
 
   // Phlebotomist: Specimen Barcode & Cold-chain
   const [specimenBarcode, setSpecimenBarcode] = useState(`VEL-LAB-${Math.floor(100000 + Math.random() * 900000)}`);
-  const [coldChainConfirmed, setColdChainConfirmed] = useState(true);
+  const [coldChainConfirmed, setColdChainConfirmed] = useState(false);
 
   // Past Notes List
   const [pastNotes, setPastNotes] = useState<ClinicalNoteRecord[]>([]);
 
   const loadPastNotes = () => {
-    setPastNotes([...db.getClinicalNotes()]);
+    setPastNotes([...db.getClinicalNotes({ providerId: currentUser?.id || '' })]);
   };
 
   useEffect(() => {
@@ -98,7 +91,7 @@ function ClinicalRecordsContent() {
         setPatientName(b.patientName);
       }
     }
-  }, [bookingIdParam]);
+  }, [bookingIdParam, currentUser?.id]);
 
   const handleAddMedication = () => {
     if (!newMedName) return;
@@ -120,10 +113,14 @@ function ClinicalRecordsContent() {
   const handleSaveRecord = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const encounter = db.getBookingById(selectedBookingId);
+    if (!encounter || !currentUser || !summary.trim()) { alert('Select a valid encounter and enter a clinical summary.'); return; }
+    if (encounter.providerId !== currentUser.id) { alert('Choose an encounter assigned to your demo clinician.'); return; }
+    if (currentUser.role !== activeRoleTab) { alert('Select your clinician role before saving a demo note.'); return; }
     const note = db.createClinicalNote({
       bookingId: selectedBookingId,
-      patientId: 'patient-1',
-      patientName,
+      patientId: encounter.patientId,
+      patientName: encounter.beneficiaryName,
       providerId: currentUser?.id || 'doc-1',
       providerName: currentUser?.name || 'Dr. Maya Patel',
       providerRole: activeRoleTab,
@@ -132,13 +129,13 @@ function ClinicalRecordsContent() {
       observations,
       tasksCompleted: activeRoleTab === 'CARETAKER' ? caretakerTasks.filter((t) => t.done).map((t) => t.task) : undefined,
       vitalsRecorded:
-        activeRoleTab === 'NURSE' || activeRoleTab === 'DOCTOR'
+        (activeRoleTab === 'NURSE' || activeRoleTab === 'DOCTOR') && [pulse, spo2, temp, glucose].every(value => value.trim() && Number.isFinite(Number(value)))
           ? {
               bp,
-              pulse: Number(pulse) || 72,
-              spo2: Number(spo2) || 99,
-              temp: Number(temp) || 98.6,
-              glucose: Number(glucose) || 95,
+              pulse: Number(pulse),
+              spo2: Number(spo2),
+              temp: Number(temp),
+              glucose: Number(glucose),
             }
           : undefined,
       specimenBarcode: activeRoleTab === 'PHLEBOTOMIST' ? specimenBarcode : undefined,
@@ -238,6 +235,7 @@ function ClinicalRecordsContent() {
                       type="text"
                       required
                       value={patientName}
+                      readOnly
                       onChange={(e) => setPatientName(e.target.value)}
                       className="w-full rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] px-3.5 py-2 text-xs sm:text-sm font-bold text-[#102723]"
                     />
@@ -247,7 +245,7 @@ function ClinicalRecordsContent() {
                     <input
                       type="text"
                       value={selectedBookingId}
-                      onChange={(e) => setSelectedBookingId(e.target.value)}
+                      onChange={(e) => { setSelectedBookingId(e.target.value); const encounter = db.getBookingById(e.target.value); setPatientName(encounter?.beneficiaryName || ''); }}
                       className="w-full rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] px-3.5 py-2 text-xs sm:text-sm font-mono font-bold text-[#065F46]"
                     />
                   </div>

@@ -56,7 +56,7 @@ export default function AdminSettingsPage() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    setSavedSuccess(true);
+    alert('Settings preview only. Platform configuration is unchanged in this demo.');
     setTimeout(() => setSavedSuccess(false), 2500);
   };
 

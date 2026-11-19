@@ -48,9 +48,7 @@ export default function ProviderJobRequestsPage() {
   }, [providerId]);
 
   const handleAcceptOffer = (offer: JobOfferRecord) => {
-    db.respondToJobOffer(offer.id, true);
-    db.assignProvider(offer.bookingId, providerId);
-    db.updateBookingStatus(offer.bookingId, 'ASSIGNED');
+    if (!db.respondToJobOffer(offer.id, true)) { alert('This demo offer is no longer eligible for assignment.'); loadData(); return; }
 
     setAcceptedId(offer.bookingId);
     setTimeout(() => {
@@ -64,8 +62,7 @@ export default function ProviderJobRequestsPage() {
   };
 
   const handleClaimBooking = (booking: BookingRecord) => {
-    db.assignProvider(booking.id, providerId);
-    db.updateBookingStatus(booking.id, 'ASSIGNED');
+    if (!db.assignProvider(booking.id, providerId)) { alert('This visit requires an approved clinician with the matching role.'); loadData(); return; }
 
     setAcceptedId(booking.id);
     setTimeout(() => {

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
@@ -16,24 +16,35 @@ import {
   ArrowRight,
   Search,
   X,
-  ShieldCheck,
   Clock,
   Sparkles,
   Layers,
   User,
   Pill,
+  Calendar,
+  Heart,
+  ShieldCheck,
+  Home,
+  FileText,
 } from 'lucide-react';
+
+interface CategoryFeatureChip {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}
 
 interface CategoryCardItem {
   id: string;
   title: string;
   description: string;
   image: string;
-  servicesCount: string;
-  countNumber: number;
   icon: React.ComponentType<{ className?: string }>;
+  badge: {
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+  };
+  features: CategoryFeatureChip[];
   href: string;
-  buttonLabel: string;
   filterCategories: string[];
 }
 
@@ -41,74 +52,74 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
   {
     id: 'doctor-visit',
     title: 'Doctor Visit',
-    description: 'Consult with licensed doctors at home for checkups, follow-ups, and ongoing care.',
+    description: 'Consult with experienced doctors at home for checkups, follow-ups and ongoing care.',
     image: '/assets/chatgpt-card-1.webp',
-    servicesCount: '10 Services',
-    countNumber: 10,
     icon: Stethoscope,
+    badge: {
+      icon: ShieldCheck,
+      label: 'Home Visit',
+    },
+    features: [
+      { icon: Calendar, label: 'Home Consultation' },
+      { icon: Users, label: 'Follow-up Care' },
+      { icon: Heart, label: 'Chronic Care' },
+    ],
     href: '/services/doctor-consultations',
-    buttonLabel: 'Book Now →',
     filterCategories: ['DOCTOR_VISIT'],
   },
   {
     id: 'nursing-care',
     title: 'Nursing Care',
-    description: 'Professional at-home nursing support, from basic care to long-duration needs.',
+    description: 'Professional nursing support at home for daily care, recovery and long-term needs.',
     image: '/assets/chatgpt-card-5.webp',
-    servicesCount: '12 Services',
-    countNumber: 12,
     icon: HeartPulse,
+    badge: {
+      icon: HeartPulse,
+      label: 'At-Home Care',
+    },
+    features: [
+      { icon: Pill, label: 'Medication Support' },
+      { icon: Activity, label: 'Vital Monitoring' },
+      { icon: ShieldCheck, label: 'Post-Procedure Care' },
+    ],
     href: '/services/nursing-care',
-    buttonLabel: 'Explore Services →',
     filterCategories: ['NURSING_CARE'],
   },
   {
-    id: 'physiotherapy',
-    title: 'Physiotherapy',
-    description: 'Expert physiotherapy at home to restore mobility, strength, and comfort.',
-    image: '/assets/chatgpt-card-6.webp',
-    servicesCount: '10 Services',
-    countNumber: 10,
-    icon: Activity,
-    href: '/services/rehab-critical-care',
-    buttonLabel: 'Book Now →',
-    filterCategories: ['REHAB_THERAPY'],
-  },
-  {
-    id: 'diagnostics-labs',
-    title: 'Home Diagnostics & Labs',
-    description: 'Routine and specialized blood tests with safe, sterile doorstep sample collection.',
-    image: '/assets/chatgpt-card-7.webp',
-    servicesCount: '12 Services',
-    countNumber: 12,
-    icon: FlaskConical,
-    href: '/services/diagnostics-labs',
-    buttonLabel: 'Book Now →',
-    filterCategories: ['LAB_TESTS'],
-  },
-  {
     id: 'caretakers',
-    title: 'Patient Caretakers',
-    description: 'Compassionate support, daily living assistance, and bedside companionship for loved ones.',
-    image: '/assets/chatgpt-card-10.webp',
-    servicesCount: '8 Services',
-    countNumber: 8,
+    title: 'Caretaker Care',
+    description: 'Trained caregivers for daily living support, companionship and personal assistance.',
+    image: '/assets/chatgpt-card-9.webp',
     icon: Users,
+    badge: {
+      icon: Users,
+      label: 'Daily Support',
+    },
+    features: [
+      { icon: Sparkles, label: 'Daily Assistance' },
+      { icon: Activity, label: 'Mobility Support' },
+      { icon: Heart, label: 'Companionship & Care' },
+    ],
     href: '/services/rehab-critical-care',
-    buttonLabel: 'Book Now →',
     filterCategories: ['CARETAKER'],
   },
   {
-    id: 'critical-care',
-    title: 'Critical Care at Home',
-    description: 'ICU-trained nursing, medical equipment setups, and round-the-clock vital monitoring.',
-    image: '/assets/chatgpt-card-2.webp',
-    servicesCount: '6 Services',
-    countNumber: 6,
-    icon: Zap,
-    href: '/services/rehab-critical-care',
-    buttonLabel: 'Book Now →',
-    filterCategories: ['CRITICAL_CARE'],
+    id: 'diagnostics-labs',
+    title: 'Lab Investigation',
+    description: 'Safe and convenient sample collection at home with reliable, accurate lab reports.',
+    image: '/assets/chatgpt-card-7.webp',
+    icon: FlaskConical,
+    badge: {
+      icon: FlaskConical,
+      label: 'At Home Collection',
+    },
+    features: [
+      { icon: Home, label: 'Home Collection' },
+      { icon: FileText, label: 'Accurate Reports' },
+      { icon: ShieldCheck, label: 'Trusted Labs' },
+    ],
+    href: '/services/diagnostics-labs',
+    filterCategories: ['LAB_TESTS'],
   },
 ];
 
@@ -166,26 +177,9 @@ export default function ServicesPage() {
                 <span>OUR SERVICES</span>
               </div>
 
-              {/* Main Heading with curved mint accent line under Home */}
+              {/* Main Heading without underline under Home */}
               <h1 className="font-heading text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#102820] tracking-tight leading-[1.14] mb-5 sm:mb-6 animate-fade-in-up animate-delay-2">
-                Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your{' '}
-                <span className="relative inline-block">
-                  Home
-                  <svg
-                    className="absolute -bottom-1 left-0 w-full h-2.5 text-[#34D399]/70 pointer-events-none"
-                    viewBox="0 0 100 20"
-                    fill="none"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M3 14 C 30 18, 70 18, 97 10"
-                      stroke="currentColor"
-                      strokeWidth="3.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </span>
+                Expert Healthcare,<br className="hidden sm:inline" /> Delivered to Your Home
               </h1>
 
               {/* Search Bar Container with Enhanced Floating Shadow */}
@@ -382,119 +376,116 @@ export default function ServicesPage() {
             {/* Header Row */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 animate-fade-in-up animate-delay-2">
               <div>
-                <h2 className="font-heading text-2xl sm:text-[30px] font-bold text-[#15212B] tracking-tight">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="inline-block h-0.5 w-5 bg-[#065F46]" />
+                  <span className="text-xs font-bold tracking-[0.14em] uppercase text-[#065F46]">OUR SERVICES</span>
+                </div>
+                <h2 className="font-heading text-2xl sm:text-[32px] font-extrabold text-[#11231D] tracking-tight">
                   Explore Care Categories
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-normal">
-                  Find the right healthcare services for you and your family.
+                  Find the right healthcare service for you and your family, all at home.
                 </p>
               </div>
 
               {/* Total Services Count Badge */}
               <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EBF7F2] border border-[#CBE9DC] px-3.5 py-1.5 text-xs font-bold text-[#065F46] shadow-2xs w-fit">
                 <Layers className="h-3.5 w-3.5 text-[#065F46]" />
-                <span>{allServices.length} Total Services Available</span>
+                <span>{CATEGORIES_DATA.length} Total Services Available</span>
               </div>
             </div>
 
-            {/* 2-Column on Mobile, 3-Column on Desktop Category Card Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+            {/* Responsive Category Card Grid: 1 Column on Mobile, 2 on Tablet, 4 on Desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
               {CATEGORIES_DATA.map((cat, idx) => {
                 const CategoryIcon = cat.icon;
+                const BadgeIcon = cat.badge.icon;
                 return (
                   <div
                     key={cat.id}
-                    style={{ animationDelay: `${idx * 90 + 120}ms` }}
-                    className="group flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[20px] border border-[#E2EBE7] bg-white shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)] transition-all duration-300 animate-card-slide-up card-hover-lift"
+                    style={{ animationDelay: `${idx * 80 + 100}ms` }}
+                    className="group flex flex-col justify-between overflow-hidden rounded-[24px] border border-[#E2EBE7] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_16px_36px_rgba(6,78,59,0.09)] hover:border-[#065F46]/35 transition-all duration-300 animate-card-slide-up hover:-translate-y-1"
                   >
-                    {/* Top Image with Badges */}
-                    <Link href={cat.href} className="relative h-[125px] sm:h-[185px] lg:h-[200px] w-full overflow-hidden bg-slate-100 block">
-                      <img
-                        src={cat.image}
-                        alt={cat.title}
-                        loading="eager"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
-                      />
-
-                      {/* Mobile Top-Left Icon Badge */}
-                      <div className="sm:hidden absolute top-2.5 left-2.5 h-7 w-7 rounded-lg bg-white/95 backdrop-blur-xs flex items-center justify-center text-[#065F46] shadow-2xs border border-white/60">
-                        <CategoryIcon className="h-3.5 w-3.5" />
-                      </div>
-
-                      {/* Floating Service Count Badge */}
-                      <div className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 rounded-full bg-white/95 backdrop-blur-xs px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10.5px] sm:text-[11.5px] font-bold text-slate-800 shadow-2xs border border-slate-100">
-                        {cat.servicesCount}
-                      </div>
-                    </Link>
-
-                    {/* Lower Bar: Spacious & Uncramped on Mobile, Full Layout on Desktop */}
-                    <div className="p-3 sm:p-4.5 flex flex-col justify-between flex-1 bg-white min-h-[92px] sm:min-h-[96px]">
-                      <div className="flex items-center sm:gap-3 min-w-0">
-                        {/* Desktop Only Mint Icon Box */}
-                        <div className="hidden sm:flex h-11 w-11 rounded-xl bg-[#E6F4EE] items-center justify-center text-[#065F46] shrink-0 border border-[#D1EADC]">
-                          <CategoryIcon className="h-5 w-5" />
-                        </div>
-                        {/* Text Content - Full Width & Clean on Mobile */}
-                        <div className="min-w-0 w-full">
-                          <Link href={cat.href}>
-                            <h3 className="font-bold text-[13.5px] sm:text-[17px] text-[#102820] leading-snug group-hover:text-[#065F46] transition-colors line-clamp-2">
-                              {cat.title}
-                            </h3>
-                          </Link>
-                          {/* Desktop Only Description */}
-                          <p className="hidden sm:block text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
-                            {cat.description}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Action Pill Button */}
-                      <Link
-                        href={cat.href}
-                        className="mt-2.5 sm:mt-0 inline-flex items-center justify-center gap-1 rounded-full bg-[#064E3B] hover:bg-[#043328] text-white px-3 sm:px-3.5 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold whitespace-nowrap shadow-2xs group-hover:bg-[#059669] transition-all w-full sm:w-auto shrink-0"
-                      >
-                        <span className="sm:hidden">{cat.buttonLabel.includes('Explore') ? 'Explore →' : 'Book Now →'}</span>
-                        <span className="hidden sm:inline">{cat.buttonLabel}</span>
+                    {/* Top Image with Top-Left Pill Badge */}
+                    <div className="relative h-[195px] sm:h-[210px] w-full overflow-hidden bg-slate-100">
+                      <Link href={cat.href} className="block h-full w-full">
+                        <img
+                          src={cat.image}
+                          alt={cat.title}
+                          loading="eager"
+                          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                        />
                       </Link>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
+
+                      {/* Top-Left Category Badge Pill */}
+                      <div className="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-md px-3 py-1 text-xs font-semibold text-[#065F46] shadow-2xs border border-white/80">
+                        <BadgeIcon className="h-3.5 w-3.5 text-[#059669]" />
+                        <span>{cat.badge.label}</span>
+                      </div>
+                    </div>
+
+                    {/* Floating Center Icon */}
+                    <div className="relative -mt-6 mb-1 flex justify-center z-10 pointer-events-none">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-[#D1E6DC] text-[#065F46] shadow-[0_4px_16px_rgba(6,78,59,0.12)] transition-transform duration-300 group-hover:scale-110 pointer-events-auto">
+                        <CategoryIcon className="h-5.5 w-5.5 stroke-[2]" />
+                      </div>
+                    </div>
+
+                    {/* Card Body with Generous, Balanced Spacing */}
+                    <div className="px-5 pb-5 pt-1 sm:px-5.5 sm:pb-6 sm:pt-1.5 flex flex-col justify-between flex-1 bg-white">
+                      <div>
+                        {/* Title */}
+                        <Link href={cat.href} className="group-hover:text-[#065F46] transition-colors block">
+                          <h3 className="font-heading text-lg sm:text-[19px] font-bold text-[#102820] leading-snug tracking-tight mb-1.5">
+                            {cat.title}
+                          </h3>
+                        </Link>
+
+                        {/* Description */}
+                        <p className="text-xs sm:text-[13px] text-slate-500 leading-relaxed min-h-[38px] line-clamp-2">
+                          {cat.description}
+                        </p>
+
+                        {/* 3 Micro Feature Chips with proper breathing room */}
+                        <div className="mt-3.5 sm:mt-4 grid grid-cols-3 gap-2">
+                          {cat.features.map((feat, fIdx) => {
+                            const FeatIcon = feat.icon;
+                            return (
+                              <div
+                                key={fIdx}
+                                className="flex flex-col items-center justify-center rounded-xl bg-[#F0F7F3] border border-[#D8ECE1] py-2 px-1 text-center transition-colors group-hover:bg-[#EAF5EF] min-h-[58px]"
+                              >
+                                <FeatIcon className="h-4 w-4 text-[#065F46] mb-1 stroke-[2] shrink-0" />
+                                <span className="text-[10px] sm:text-[10.5px] font-semibold text-[#18392B] leading-tight text-center line-clamp-2">
+                                  {feat.label}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Bottom Action Buttons: NO separation line, Book Now shows services inside category */}
+                      <div className="mt-4 sm:mt-5 grid grid-cols-2 gap-2.5">
+                        <Link
+                          href={cat.href}
+                          className="inline-flex items-center justify-center rounded-full border border-[#CBDCD5] bg-white hover:bg-[#F2F8F5] text-[#102820] py-2.5 px-3 text-xs sm:text-[13px] font-bold transition-all shadow-2xs hover:border-[#065F46]/40 text-center"
+                        >
+                          Learn More
+                        </Link>
+                        <Link
+                          href={cat.href}
+                          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-[#064E3B] hover:bg-[#065F46] text-white py-2.5 px-3 text-xs sm:text-[13px] font-bold shadow-2xs hover:shadow-xs transition-all duration-200 group/btn text-center"
+                        >
+                          <span>Book Now</span>
+                          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 );
               })}
-            </div>
-
-            {/* Subtle Reassurance Trust Banner */}
-            <div className="mt-12 rounded-[22px] border border-[#E2EBE7] bg-white p-5 sm:p-6 shadow-xs">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-                <div className="flex items-start gap-3 pt-2 md:pt-0">
-                  <div className="rounded-xl bg-[#ECFDF5] p-2 text-[#065F46] shrink-0">
-                    <ShieldCheck className="h-5 w-5 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#102820]">100% Verified Clinicians</h4>
-                    <p className="mt-0.5 text-xs text-slate-500">Board-certified doctors, RNs, and certified phlebotomists.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 pt-4 md:pt-0 md:pl-5">
-                  <div className="rounded-xl bg-[#ECFDF5] p-2 text-[#065F46] shrink-0">
-                    <Check className="h-5 w-5 stroke-[2.5]" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#102820]">Bedside Safety PIN</h4>
-                    <p className="mt-0.5 text-xs text-slate-500">4-digit identity code verification before clinician enters your home.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 pt-4 md:pt-0 md:pl-5">
-                  <div className="rounded-xl bg-[#ECFDF5] p-2 text-[#065F46] shrink-0">
-                    <Zap className="h-5 w-5 stroke-[2]" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#102820]">Upfront Transparent Rates</h4>
-                    <p className="mt-0.5 text-xs text-slate-500">Clear pricing with zero hidden facility or equipment surcharge.</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </section>
         )}

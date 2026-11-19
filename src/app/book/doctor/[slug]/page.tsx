@@ -4,6 +4,7 @@ import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { db, UserRecord } from '@/lib/db';
+import { bookingDate, isValidBookingDate } from '@/lib/booking-date';
 import { useAuth } from '@/context/AuthContext';
 import { RequestSuccessState } from '@/components/booking/RequestSuccessState';
 import { BackButton } from '@/components/common/BackButton';
@@ -38,9 +39,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
   const { currentUser } = useAuth();
 
   const doctor: UserRecord | undefined =
-    db.getDoctorBySlugOrId(slug) ||
-    db.getUserById(slug) ||
-    db.getUsersByRole('DOCTOR')[0];
+    db.getDoctorBySlugOrId(slug);
 
   if (!doctor) {
     notFound();
@@ -52,13 +51,13 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
   // STEP 1 State: Doctor & Appointment
   const [consultType, setConsultType] = useState<'HOME_VISIT' | 'TELECONSULT'>('HOME_VISIT');
   const [dateOption, setDateOption] = useState<'TODAY' | 'TOMORROW' | 'CUSTOM'>('TODAY');
-  const todayStr = new Date().toISOString().split('T')[0];
-  const tomorrowStr = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+  const todayStr = bookingDate();
+  const tomorrowStr = bookingDate(1);
   const [customDate, setCustomDate] = useState(tomorrowStr);
   const [timeSlot, setTimeSlot] = useState<'MORNING' | 'AFTERNOON' | 'EVENING'>('MORNING');
   const [pinCode, setPinCode] = useState('94107');
   const [pinStatus, setPinStatus] = useState<string>(
-    'Confirmed: Within doorstep coverage radius (30–45 min clinician arrival)'
+    'Demo coverage estimate — availability requires confirmation'
   );
 
   // STEP 2 State: Patient Details
@@ -121,6 +120,10 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
   // Step 1 Validation
   const handleNextFromStep1 = () => {
     setErrorMsg('');
+    if (dateOption === 'CUSTOM' && !isValidBookingDate(customDate)) {
+      setErrorMsg('Please choose a valid appointment date today or later.');
+      return;
+    }
     if (consultType === 'HOME_VISIT') {
       if (!pinCode.trim() || pinCode.trim().length < 4) {
         setErrorMsg('Please enter a valid 5-digit PIN or postal code for doorstep verification.');
@@ -155,6 +158,11 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
   // Step 3 Submission
   const handleSubmitBooking = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (dateOption === 'CUSTOM' && !isValidBookingDate(customDate)) {
+      setErrorMsg('Please choose a valid appointment date today or later.');
+      setStep(1);
+      return;
+    }
     if (!consent) {
       setErrorMsg('Please confirm your consent to proceed with scheduling.');
       return;
@@ -175,9 +183,9 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
 
       const fullScheduledDate =
         dateOption === 'TODAY'
-          ? todayStr
+          ? bookingDate()
           : dateOption === 'TOMORROW'
-          ? tomorrowStr
+          ? bookingDate(1)
           : customDate;
 
       const newBooking = db.createBooking({
@@ -225,15 +233,16 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F9F7] py-8 sm:py-12">
-      {/* Main Body */}
-      <main className="container max-w-5xl mx-auto px-4 sm:px-6">
+    <div className="min-h-screen bg-[#F5F9F7]">
+      <div className="py-6 sm:py-12">
+        {/* Main Body */}
+        <main className="container max-w-5xl mx-auto px-4 sm:px-6">
         {submittedBooking ? (
           <RequestSuccessState
             type="DOCTOR_CONSULTATION"
             referenceNumber={submittedBooking.referenceNumber}
-            title="Consultation Request Received"
-            subtitle={`Your request for ${doctor.name.startsWith('Dr.') ? doctor.name : 'Dr. ' + doctor.name} has been placed. Our clinical care desk is verifying doctor availability.`}
+            title="Demo Consultation Request Saved"
+            subtitle="Saved for this demo session. No clinician was contacted and no payment was taken."
             patientName={submittedBooking.patientName}
             phone={submittedBooking.phone}
             primaryActionHref="/doctors"
@@ -534,7 +543,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
                               value={pinCode}
                               onChange={(e) => {
                                 setPinCode(e.target.value);
-                                setPinStatus('Area verified: Active doctor dispatch fleet in coverage radius');
+                                setPinStatus('Demo coverage estimate — availability requires confirmation');
                               }}
                               placeholder="e.g. 94107"
                               maxLength={6}
@@ -996,10 +1005,10 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
                       <ShieldCheck className="h-5 w-5 shrink-0 stroke-[2.2] mt-0.5" />
                       <div>
                         <p className="font-bold text-[#064E3B]">
-                          Doctor Verification in Progress
+                          Demo Request Preview
                         </p>
                         <p className="mt-0.5 text-[11px] text-[#065F46]/90 leading-relaxed">
-                          Our clinical care coordinator will review Dr. {doctor.name.split(' ')[1] || doctor.name}&apos;s schedule and call you within 15–30 minutes to confirm the exact visit arrival time.
+                          Availability and arrival times require a live service. This demo does not dispatch clinicians.
                         </p>
                       </div>
                     </div>
@@ -1146,6 +1155,7 @@ export default function DoctorBookingPage({ params }: DoctorBookingPageProps) {
         </div>
       )}
     </main>
+    </div>
   </div>
 );
 }

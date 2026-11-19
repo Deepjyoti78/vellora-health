@@ -380,22 +380,47 @@ export default function DoctorsPage() {
 
         {/* ================= DOCTOR CARDS GRID ================= */}
         <section className="mt-5 sm:mt-6 pb-14 sm:pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {displayedDoctors.map((doc, idx) => {
-              const delayClass =
-                idx === 0
-                  ? 'animate-delay-1'
-                  : idx === 1
-                  ? 'animate-delay-2'
-                  : idx === 2
-                  ? 'animate-delay-3'
-                  : 'animate-delay-4';
+          {displayedDoctors.length === 0 ? (
+            <div className="py-14 px-4 text-center bg-white border border-[#E2EBE7] rounded-[24px] max-w-md mx-auto shadow-xs my-8 animate-fade-in">
+              <div className="h-12 w-12 rounded-full bg-[#ECFDF5] text-[#065F46] flex items-center justify-center mx-auto mb-3">
+                <Search className="h-5 w-5 stroke-[2]" />
+              </div>
+              <h3 className="text-base font-bold text-[#102820]">
+                No specialists found
+              </h3>
+              <p className="mt-1 text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
+                {searchQuery
+                  ? `No doctor matching "${searchQuery}". Try searching by condition, name, or another specialty.`
+                  : 'No specialists currently listed in this category.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory('ALL');
+                }}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#064E3B] px-4 py-2 text-xs font-bold text-white hover:bg-[#065F46] transition-colors shadow-xs cursor-pointer"
+              >
+                <span>Reset Filters &amp; View All Specialists</span>
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+              {displayedDoctors.map((doc, idx) => {
+                const delayClass =
+                  idx === 0
+                    ? 'animate-delay-1'
+                    : idx === 1
+                    ? 'animate-delay-2'
+                    : idx === 2
+                    ? 'animate-delay-3'
+                    : 'animate-delay-4';
 
-              return (
-                <div
-                  key={doc.id}
-                  className={`group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E6EBE9] bg-white p-5 sm:p-5.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-lg hover:-translate-y-0.5 animate-fade-in-up ${delayClass} card-hover-lift`}
-                >
+                return (
+                  <div
+                    key={doc.id}
+                    className={`group flex flex-col justify-between overflow-hidden rounded-[20px] border border-[#E6EBE9] bg-white p-5 sm:p-5.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-[#B8DCDE] hover:shadow-lg hover:-translate-y-0.5 animate-fade-in-up ${delayClass} card-hover-lift`}
+                  >
                   <div>
                     {/* Doctor Photo & Badges Header */}
                     <div className="flex items-start gap-3.5">
@@ -480,6 +505,7 @@ export default function DoctorsPage() {
               );
             })}
           </div>
+          )}
         </section>
       </main>
 

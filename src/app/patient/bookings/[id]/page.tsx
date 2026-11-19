@@ -134,7 +134,8 @@ export default function BookingDetailPage({
   const { id } = use(params);
   const router = useRouter();
   const { currentUser } = useAuth();
-  const booking = db.getBookingById(id);
+  const candidate = db.getBookingById(id);
+  const booking = candidate?.patientId === currentUser?.id ? candidate : undefined;
 
   // Review & Collapsible Details state
   const [showFullDetails, setShowFullDetails] = useState<boolean>(false);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { use, useState } from 'react';
+import React, { use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -16,7 +16,11 @@ export default function ProviderAppointmentCockpitPage({
   const { id } = use(params);
   const router = useRouter();
   const { currentUser } = useAuth();
-  const [booking, setBooking] = useState<BookingRecord | undefined>(db.getBookingById(id));
+  const [booking, setBooking] = useState<BookingRecord | undefined>();
+  useEffect(() => {
+    const candidate = db.getBookingById(id);
+    setBooking(candidate?.providerId === currentUser?.id ? candidate : undefined);
+  }, [id, currentUser?.id]);
 
   // Security PIN Verification
   const [pinInput, setPinInput] = useState('');
@@ -24,50 +28,35 @@ export default function ProviderAppointmentCockpitPage({
   const [pinError, setPinError] = useState('');
 
   // Doctor Clinical Documentation
-  const [diagnosis, setDiagnosis] = useState('Acute Bronchitis & Upper Respiratory Infection');
-  const [medications, setMedications] = useState([
-    {
-      name: 'Amoxicillin-Clavulanate',
-      dosage: '875/125 mg',
-      frequency: 'Twice daily with meals',
-      duration: '7 Days',
-      instructions: 'Complete full antibiotic course.',
-    },
-    {
-      name: 'Benzonatate',
-      dosage: '100 mg',
-      frequency: 'Three times daily as needed',
-      duration: '5 Days',
-      instructions: 'Swallow whole with a full glass of water for cough.',
-    },
-  ]);
+  const [diagnosis, setDiagnosis] = useState('');
+  const [medications, setMedications] = useState<{ name: string; dosage: string; frequency: string; duration: string; instructions: string }[]>([]);
   const [newMedName, setNewMedName] = useState('');
   const [newMedDosage, setNewMedDosage] = useState('');
   const [newMedFreq, setNewMedFreq] = useState('Once daily');
   const [newMedDur, setNewMedDur] = useState('5 Days');
-  const [advice, setAdvice] = useState('Maintain proper hydration, rest, and monitor pulse oximetry twice daily.');
+  const [advice, setAdvice] = useState('');
   const [rxIssued, setRxIssued] = useState(false);
 
   // Nurse Vitals Documentation
-  const [bp, setBp] = useState('122/78');
-  const [hr, setHr] = useState(72);
-  const [spo2, setSpo2] = useState(99);
-  const [temp, setTemp] = useState(98.6);
-  const [glucose, setGlucose] = useState(94);
-  const [respRate, setRespRate] = useState(16);
-  const [nurseNotes, setNurseNotes] = useState('Patient is alert, responsive, and comfortable. Wound dressing replaced with sterile gauze.');
+  const [bp, setBp] = useState('');
+  const [hr, setHr] = useState('');
+  const [spo2, setSpo2] = useState('');
+  const [temp, setTemp] = useState('');
+  const [glucose, setGlucose] = useState('');
+  const [respRate, setRespRate] = useState('');
+  const [nurseNotes, setNurseNotes] = useState('');
   const [vitalsSaved, setVitalsSaved] = useState(false);
 
   // Phlebotomist Documentation
   const [barcode, setBarcode] = useState(`VEL-BC-${Math.floor(100000 + Math.random() * 900000)}`);
   const [specimenType, setSpecimenType] = useState('Venous Whole Blood (EDTA + Serum)');
-  const [coldChainOk, setColdChainOk] = useState(true);
+  const [coldChainOk, setColdChainOk] = useState(false);
   const [specimenSaved, setSpecimenSaved] = useState(false);
 
   // Caretaker Documentation
-  const [mobilityAssisted, setMobilityAssisted] = useState(true);
-  const [nutritionAssisted, setNutritionAssisted] = useState(true);
-  const [caretakerNotes, setCaretakerNotes] = useState('Patient had breakfast and walked 200m in the living area. Medications taken on time.');
+  const [mobilityAssisted, setMobilityAssisted] = useState(false);
+  const [nutritionAssisted, setNutritionAssisted] = useState(false);
+  const [caretakerNotes, setCaretakerNotes] = useState('');
   const [shiftSaved, setShiftSaved] = useState(false);
 
   if (!booking) {
@@ -94,7 +83,7 @@ export default function ProviderAppointmentCockpitPage({
 
   const handleVerifyPin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput === '4829' || pinInput.length === 4) {
+    if (pinInput === '4829') {
       setPinVerified(true);
       setPinError('');
       handleUpdateStatus('IN_PROGRESS');
@@ -104,12 +93,12 @@ export default function ProviderAppointmentCockpitPage({
   };
 
   const handleAddMedication = () => {
-    if (!newMedName.trim()) return;
+    if (!newMedName.trim() || !newMedDosage.trim()) return;
     setMedications([
       ...medications,
       {
         name: newMedName.trim(),
-        dosage: newMedDosage.trim() || 'Standard Dose',
+        dosage: newMedDosage.trim(),
         frequency: newMedFreq,
         duration: newMedDur,
         instructions: 'Take as directed by doctor.',
@@ -120,6 +109,7 @@ export default function ProviderAppointmentCockpitPage({
   };
 
   const handleIssueRx = () => {
+    if (!currentUser || !diagnosis.trim() || medications.length === 0) return;
     db.createPrescription({
       bookingId: booking.id,
       patientId: booking.patientId,
@@ -133,17 +123,18 @@ export default function ProviderAppointmentCockpitPage({
   };
 
   const handleSaveVitals = () => {
+    if (![hr, spo2, temp, glucose, respRate].every(value => value.trim() && Number.isFinite(Number(value)) && Number(value) > 0) || Number(spo2) > 100) return;
     db.createVitals({
       bookingId: booking.id,
       patientId: booking.patientId,
       patientName: booking.beneficiaryName,
       recordedBy: currentUser ? `${currentUser.name} (${currentUser.role})` : 'Clinician',
       bloodPressure: bp,
-      heartRate: hr,
-      spo2: spo2,
-      temperature: temp,
-      bloodGlucose: glucose,
-      respiratoryRate: respRate,
+      heartRate: Number(hr),
+      spo2: Number(spo2),
+      temperature: Number(temp),
+      bloodGlucose: Number(glucose),
+      respiratoryRate: Number(respRate),
       clinicalNotes: nurseNotes,
     });
     setVitalsSaved(true);
@@ -401,7 +392,7 @@ export default function ProviderAppointmentCockpitPage({
                     onClick={handleIssueRx}
                     className="rounded-xl bg-[#116b70] px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#0d5559]"
                   >
-                    {rxIssued ? 'Update Digital Prescription' : 'Release Official Prescription'}
+                    {rxIssued ? 'Update Digital Prescription' : 'Save Demo Prescription'}
                   </button>
                 </div>
               </div>
@@ -441,7 +432,7 @@ export default function ProviderAppointmentCockpitPage({
                     <input
                       type="number"
                       value={hr}
-                      onChange={(e) => setHr(Number(e.target.value))}
+                      onChange={(e) => setHr(e.target.value)}
                       className="mt-1 block w-full rounded-lg border border-gray-300 p-2 font-mono"
                     />
                   </div>
@@ -450,7 +441,7 @@ export default function ProviderAppointmentCockpitPage({
                     <input
                       type="number"
                       value={spo2}
-                      onChange={(e) => setSpo2(Number(e.target.value))}
+                      onChange={(e) => setSpo2(e.target.value)}
                       className="mt-1 block w-full rounded-lg border border-gray-300 p-2 font-mono"
                     />
                   </div>
@@ -460,7 +451,7 @@ export default function ProviderAppointmentCockpitPage({
                       type="number"
                       step="0.1"
                       value={temp}
-                      onChange={(e) => setTemp(Number(e.target.value))}
+                      onChange={(e) => setTemp(e.target.value)}
                       className="mt-1 block w-full rounded-lg border border-gray-300 p-2 font-mono"
                     />
                   </div>
@@ -469,7 +460,7 @@ export default function ProviderAppointmentCockpitPage({
                     <input
                       type="number"
                       value={glucose}
-                      onChange={(e) => setGlucose(Number(e.target.value))}
+                      onChange={(e) => setGlucose(e.target.value)}
                       className="mt-1 block w-full rounded-lg border border-gray-300 p-2 font-mono"
                     />
                   </div>
@@ -478,7 +469,7 @@ export default function ProviderAppointmentCockpitPage({
                     <input
                       type="number"
                       value={respRate}
-                      onChange={(e) => setRespRate(Number(e.target.value))}
+                      onChange={(e) => setRespRate(e.target.value)}
                       className="mt-1 block w-full rounded-lg border border-gray-300 p-2 font-mono"
                     />
                   </div>

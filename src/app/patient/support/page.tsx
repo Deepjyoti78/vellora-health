@@ -167,7 +167,7 @@ export default function PatientSupportPage() {
 
                 {submitted && (
                   <p className="text-xs font-bold text-emerald-700">
-                    Ticket created successfully! A care coordinator will reply shortly.
+                    Demo ticket saved for this session. No coordinator notification was sent.
                   </p>
                 )}
 

@@ -24,7 +24,7 @@ export default function ProviderEarningsPage() {
   const totalEarned = payouts.reduce((sum, p) => sum + p.netPayout, 0) + 1485;
 
   const handleInstantPayout = () => {
-    setInstantPayoutDone(true);
+    alert('Payouts require a live payment service. No transfer was made.');
     setTimeout(() => setInstantPayoutDone(false), 5000);
   };
 

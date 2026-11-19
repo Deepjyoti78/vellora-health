@@ -19,14 +19,12 @@ export default function AdminFinancePage() {
   const [approvedBatch, setApprovedBatch] = useState(false);
 
   const handleApprove = (id: string) => {
-    db.updatePayoutStatus(id, 'PAID');
+    alert('Payouts require a live payment service. No transfer was made.');
     setPayouts([...db.getPayouts()]);
   };
 
   const handleApproveAll = () => {
-    payouts.forEach((p) => {
-      if (p.status === 'PENDING') db.updatePayoutStatus(p.id, 'PAID');
-    });
+    alert('Demo payout review only. No transfers were made.');
     setPayouts([...db.getPayouts()]);
     setApprovedBatch(true);
     setTimeout(() => setApprovedBatch(false), 2500);
@@ -66,7 +64,7 @@ export default function AdminFinancePage() {
 
         {approvedBatch && (
           <div className="rounded-xl bg-[#ECFDF5] p-3.5 border border-[#D1FAE5] text-xs font-bold text-[#065F46] animate-in fade-in">
-            Batch approved successfully! Automated ACH direct deposit instructions dispatched to Federal Reserve ACH network.
+            Demo batch reviewed. No payment instructions were sent.
           </div>
         )}
 

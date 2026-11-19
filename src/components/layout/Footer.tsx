@@ -61,6 +61,13 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
+        {/* Clinical Accreditation & Emergency Notice Strip */}
+        <div className="mt-10 pt-6 border-t border-white/10 text-center">
+          <p className="text-[11px] text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            <strong className="text-gray-300">Emergency Medical Notice:</strong> Vellora Healthcare provides scheduled, elective, and ongoing in-home primary care, nursing, attendant care, and diagnostic specimen collection. In case of acute or life-threatening medical emergencies (e.g., severe chest pain, stroke symptoms, shortness of breath, loss of consciousness), please dial 911 / 112 or proceed directly to the nearest emergency room.
+          </p>
+        </div>
+
         <div className="footer-bottom">
           <span>© <span id="footerYear">{currentYear}</span> Vellora Health. Design prototype.</span>
           <Link href="/" className="back-to-top">

@@ -6,6 +6,7 @@ import { TRUST_DATA } from '@/data/site-content';
 import { useBooking } from '@/context/BookingContext';
 import { Header } from '@/components/layout/Header';
 import { Icon } from '@/components/common/Icon';
+import { ChevronRight } from 'lucide-react';
 
 const AnimatedCounter: React.FC<{
   target: number;
@@ -68,7 +69,7 @@ export const HeroSection: React.FC = () => {
               ))}
             </div>
             <span>
-              Trusted by <strong>135K+ people</strong>
+              Talk to our <strong>best doctors</strong>
             </span>
           </div>
 
@@ -87,15 +88,18 @@ export const HeroSection: React.FC = () => {
             <button
               type="button"
               onClick={() => openBooking()}
-              className="button button-white button-sm"
+              className="hero-btn-book group"
+              aria-label="Book appointment"
             >
-              <Icon name="calendar" size="xs" /> Book Appointment{' '}
-              <Icon name="arrow-right" size="xs" />
+              <span>Book appointment</span>
+              <span className="hero-btn-arrow-circle">
+                <ChevronRight className="h-4 w-4 text-white stroke-[2.5] transition-transform duration-200 group-hover:translate-x-0.5" />
+              </span>
             </button>
             <Link
               href="/doctors"
               prefetch={true}
-              className="button button-outline button-sm"
+              className="button button-outline button-sm hero-btn-secondary"
             >
               <Icon name="search" size="xs" /> Find a Doctor
             </Link>

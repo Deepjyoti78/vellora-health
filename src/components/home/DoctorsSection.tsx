@@ -11,15 +11,15 @@ export const DoctorsSection: React.FC = () => {
   const { openBooking } = useBooking();
 
   return (
-    <section id="doctors" className="section section-doctors" aria-labelledby="doctorsTitle">
+    <section id="specialists" className="section section-doctors py-14 sm:py-18" aria-labelledby="specialistsTitle">
       <div className="container">
-        <div className="section-heading-row scroll-reveal">
+        <div className="section-heading-row scroll-reveal mb-10">
           <div>
-            <p className="eyebrow">LICENSED HOME CARE CLINICIANS</p>
-            <h2 id="doctorsTitle">
+            <p className="eyebrow text-[#065F46] font-bold tracking-wider uppercase">LICENSED HOME CARE CLINICIANS</p>
+            <h2 id="specialistsTitle" className="font-heading text-3xl font-extrabold text-[#11191B] md:text-5xl tracking-tight leading-tight">
               Meet Our Medical<br />Specialists &amp; Physicians
             </h2>
-            <p className="section-lead">
+            <p className="section-lead text-[#55696D]">
               Board-certified doctors dedicated to compassionate, unhurried examinations right at your bedside.
             </p>
           </div>
@@ -39,33 +39,38 @@ export const DoctorsSection: React.FC = () => {
           aria-label="Doctor profiles"
         >
           {DOCTORS_DATA.map((doctor) => (
-            <article key={doctor.id} className="doctor-card scroll-reveal-card">
+            <article
+              key={doctor.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => openBooking({ doctor: doctor.name })}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  openBooking({ doctor: doctor.name });
+                }
+              }}
+              aria-label={`Book appointment with ${doctor.name}`}
+              className="doctor-card scroll-reveal-card border border-[#E5EAE7] hover:border-[#10B981]/60 transition-all shadow-md hover:shadow-xl cursor-pointer group"
+            >
               <img
                 src={doctor.image}
                 alt={doctor.alt}
                 loading="eager"
               />
-              <span className="doctor-rating">
+              <span className="doctor-rating bg-black/70 backdrop-blur-md text-amber-300 border border-white/20">
                 <Icon name="star" size="xs" /> {doctor.rating}
               </span>
               <div className="doctor-card-content">
-                <p className="doctor-overline">{doctor.specialty}</p>
-                <h3>{doctor.name}</h3>
-                <p>{doctor.quote}</p>
-                <button
-                  type="button"
-                  className="doctor-card-cta"
-                  aria-label={`Request an appointment with ${doctor.name}`}
-                  onClick={() => openBooking({ doctor: doctor.name })}
-                >
-                  <Icon name="arrow-right" />
-                </button>
+                <p className="doctor-overline text-emerald-400">{doctor.specialty}</p>
+                <h3 className="text-white font-bold">{doctor.name}</h3>
+                <p className="text-slate-300">{doctor.quote}</p>
               </div>
             </article>
           ))}
         </div>
 
-        <p className="demo-note">Illustrative doctor profiles for the website prototype.</p>
+        <p className="demo-note text-[#687476] mt-6">Illustrative doctor profiles for the website prototype.</p>
       </div>
     </section>
   );

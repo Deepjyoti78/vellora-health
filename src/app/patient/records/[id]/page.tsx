@@ -3,6 +3,7 @@
 import React, { use } from 'react';
 import Link from 'next/link';
 import { db } from '@/lib/db';
+import { useAuth } from '@/context/AuthContext';
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Icon } from '@/components/common/Icon';
 import { BackButton } from '@/components/common/BackButton';
@@ -13,7 +14,9 @@ export default function LabReportDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const report = db.getLabReportById(id);
+  const { currentUser } = useAuth();
+  const candidate = db.getLabReportById(id);
+  const report = candidate?.patientId === currentUser?.id ? candidate : undefined;
 
   if (!report) {
     return (

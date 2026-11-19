@@ -108,10 +108,9 @@ export default function ContactPage() {
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-white">
                     <Icon name="check" size="md" />
                   </div>
-                  <h3 className="mt-4 text-xl font-bold text-teal-950">Inquiry Received</h3>
+                  <h3 className="mt-4 text-xl font-bold text-teal-950">Demo message preview</h3>
                   <p className="mt-2 text-xs text-teal-800 max-w-md mx-auto leading-relaxed">
-                    Thank you for reaching out to Vellora Health. Our care coordination desk has logged your request and will contact you via phone or email promptly.
-                  </p>
+                    Thank you for reaching out to Vellora Health. This demo does not send messages. Please use the listed contact details to reach the team.</p>
                   <div className="mt-6 flex justify-center gap-4">
                     <button
                       type="button"

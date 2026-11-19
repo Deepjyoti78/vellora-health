@@ -124,6 +124,66 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
             </Link>
           );
         })}
+
+        {/* Mobile Navigation Footer & Auth Integration */}
+        <div className="md:hidden mt-2.5 pt-2.5 border-t border-white/15 flex flex-col gap-2">
+          {isAuthenticated && currentUser ? (
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 px-2 py-1 text-white">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#064E3B] text-[10px] font-bold text-white border border-[#34D399]/40">
+                  {getInitials(currentUser.name)}
+                </span>
+                <span className="text-xs font-bold truncate text-white">
+                  {currentUser.name}
+                </span>
+              </div>
+              <Link
+                href={
+                  currentUser.role === 'ADMIN'
+                    ? '/admin/dashboard'
+                    : currentUser.role === 'DOCTOR' || currentUser.role === 'NURSE'
+                    ? '/provider/dashboard'
+                    : '/patient/dashboard'
+                }
+                onClick={closeMenu}
+                className="flex items-center justify-center gap-1.5 rounded-lg bg-[#064E3B] px-3 py-2 text-xs font-bold text-white shadow-2xs hover:bg-[#065F46]"
+              >
+                <LayoutDashboard className="h-3.5 w-3.5" />
+                <span>My Dashboard</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  closeMenu();
+                  logout();
+                }}
+                className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 text-center"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Log Out</span>
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                closeMenu();
+                setIsAuthOpen(true);
+              }}
+              className="flex items-center justify-center gap-2 rounded-lg bg-[#064E3B] border border-[#34D399]/40 px-3 py-2 text-xs font-bold text-white shadow-xs hover:bg-[#065F46]"
+            >
+              <User className="h-3.5 w-3.5" />
+              <span>Sign In / Create Account</span>
+            </button>
+          )}
+
+          <a
+            href="tel:+18005550199"
+            className="flex items-center justify-center gap-1.5 py-1 text-[11px] font-semibold text-teal-300 hover:text-white"
+          >
+            <span>24/7 Helpline: 1-800-VELORA</span>
+          </a>
+        </div>
       </nav>
 
       {/* Desktop Header Actions: Unauthenticated (Sign In) vs Authenticated (Profile Dropdown) */}
@@ -151,7 +211,11 @@ export const Header: React.FC<{ theme?: 'dark' | 'light' }> = ({ theme = 'light'
                   {getInitials(currentUser.name)}
                 </span>
               )}
-              <span className="inline-block max-w-[80px] sm:max-w-[105px] truncate text-xs font-bold text-[#102820]">
+              {/* On mobile: only first letter (e.g. 'D'); On desktop: full name */}
+              <span className="profile-name-initial inline-block md:hidden text-xs font-bold text-[#102820]">
+                {currentUser.name.trim().charAt(0).toUpperCase()}
+              </span>
+              <span className="profile-name-full hidden md:inline-block max-w-[105px] truncate text-xs font-bold text-[#102820]">
                 {currentUser.name.split(' ')[0]}
               </span>
               <ChevronDown

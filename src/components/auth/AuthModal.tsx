@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { db } from '@/lib/db';
 import {
   X,
   Mail,
@@ -16,6 +17,9 @@ import {
   ArrowRight,
   ShieldCheck,
   Sparkles,
+  RotateCcw,
+  ArrowLeft,
+  Check,
 } from 'lucide-react';
 
 interface AuthModalProps {
@@ -25,6 +29,8 @@ interface AuthModalProps {
   redirectUrl?: string;
 }
 
+type AuthStep = 'form' | 'otp' | 'confirmed';
+
 export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
@@ -32,14 +38,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   redirectUrl,
 }) => {
   const router = useRouter();
-  const { login, switchRole, validateInternalRedirect } = useAuth();
+  const { login, registerPatient, simulatedOtp } = useAuth();
   const [mounted, setMounted] = useState(false);
 
+  // Workflow state: form -> otp -> confirmed
+  const [step, setStep] = useState<AuthStep>('form');
   const [mode, setMode] = useState<'signin' | 'signup'>(defaultMode);
+
+  // Form input states
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  // OTP states
+  const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '']);
+  const otpInputsRef = useRef<(HTMLInputElement | null)[]>([]);
+  const [resendTimer, setResendTimer] = useState<number>(30);
+  const [confirmedUserName, setConfirmedUserName] = useState('');
+
+  // Status & loading states
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +65,36 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Sync defaultMode when modal re-opens
+  useEffect(() => {
+    if (isOpen) {
+      setMode(defaultMode);
+      setStep('form');
+      setErrorMsg('');
+      setSuccessMsg('');
+      setOtpDigits(['', '', '', '']);
+      setResendTimer(30);
+    }
+  }, [isOpen, defaultMode]);
+
+  // Resend countdown timer
+  useEffect(() => {
+    if (step !== 'otp' || resendTimer <= 0) return;
+    const interval = setInterval(() => {
+      setResendTimer((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [step, resendTimer]);
+
+  // Focus first OTP input when transitioning to OTP step
+  useEffect(() => {
+    if (step === 'otp') {
+      setTimeout(() => {
+        otpInputsRef.current[0]?.focus();
+      }, 100);
+    }
+  }, [step]);
 
   // Prevent background scroll and support Escape key
   useEffect(() => {
@@ -70,67 +118,160 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   if (!mounted || !isOpen) return null;
 
-  const handleSignIn = (e: React.FormEvent) => {
+  // Step 1: Submit Form (Sign In or Sign Up) -> Transitions to OTP
+  const handleSubmitForm = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
 
-    if (!emailOrPhone.trim()) {
-      setErrorMsg('Please enter your email or registered phone number.');
-      return;
-    }
-    if (!password.trim()) {
-      setErrorMsg('Please enter your password.');
-      return;
+    if (mode === 'signup') {
+      if (!fullName.trim() || fullName.trim().length < 2) {
+        setErrorMsg('Please enter your full name (at least 2 characters).');
+        return;
+      }
+      if (!emailOrPhone.trim()) {
+        setErrorMsg('Please enter a valid mobile number or email address.');
+        return;
+      }
+      if (!password.trim() || password.length < 6) {
+        setErrorMsg('Password must be at least 6 characters.');
+        return;
+      }
+    } else {
+      if (!emailOrPhone.trim()) {
+        setErrorMsg('Please enter your email, registered phone number, or name.');
+        return;
+      }
+      if (!password.trim()) {
+        setErrorMsg('Please enter your password.');
+        return;
+      }
     }
 
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      login(emailOrPhone, 'PATIENT');
-      switchRole('PATIENT');
-
-      setSuccessMsg('Welcome back! Signed in to your patient account.');
-      setTimeout(() => {
-        onClose();
-        if (redirectUrl) {
-          router.push(validateInternalRedirect(redirectUrl, '/patient/dashboard'));
-        }
-      }, 500);
-    }, 450);
+      setStep('otp');
+      setResendTimer(30);
+      setSuccessMsg(`Verification code sent to ${emailOrPhone.trim()}`);
+    }, 400);
   };
 
-  const handleSignUp = (e: React.FormEvent) => {
+  // OTP digit input handler
+  const handleDigitChange = (index: number, val: string) => {
+    const cleaned = val.replace(/\D/g, '').slice(-1);
+    const updated = [...otpDigits];
+    updated[index] = cleaned;
+    setOtpDigits(updated);
+    setErrorMsg('');
+
+    if (cleaned && index < 3) {
+      otpInputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const handleDigitKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
+      otpInputsRef.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 4);
+    if (pasted.length > 0) {
+      const updated = ['', '', '', ''];
+      for (let i = 0; i < 4; i++) {
+        updated[i] = pasted[i] || '';
+      }
+      setOtpDigits(updated);
+      const nextIdx = Math.min(pasted.length, 3);
+      otpInputsRef.current[nextIdx]?.focus();
+    }
+  };
+
+  const handleFillDemoOtp = () => {
+    setOtpDigits(['4', '8', '2', '9']);
+    setErrorMsg('');
+    setTimeout(() => {
+      otpInputsRef.current[3]?.focus();
+    }, 50);
+  };
+
+  const handleResendOtp = () => {
+    if (resendTimer > 0) return;
+    setResendTimer(30);
+    setOtpDigits(['', '', '', '']);
+    setErrorMsg('');
+    setSuccessMsg('A new verification code has been dispatched: 4829');
+    setTimeout(() => {
+      otpInputsRef.current[0]?.focus();
+    }, 50);
+  };
+
+  // Step 2: Verify OTP -> Transitions to Confirmed -> Redirects to Home
+  const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    setSuccessMsg('');
 
-    if (!fullName.trim()) {
-      setErrorMsg('Please enter your full name.');
+    const enteredOtp = otpDigits.join('');
+    if (enteredOtp.length < 4) {
+      setErrorMsg('Please enter all 4 digits of the verification code.');
       return;
     }
-    if (!emailOrPhone.trim()) {
-      setErrorMsg('Please enter a valid mobile number or email.');
-      return;
-    }
-    if (!password.trim() || password.length < 6) {
-      setErrorMsg('Password must be at least 6 characters.');
+
+    // Accept valid demo code 4829 or 1234
+    if (enteredOtp !== simulatedOtp && enteredOtp !== '4829' && enteredOtp !== '1234') {
+      setErrorMsg('Invalid verification code. Please enter demo code 4829.');
       return;
     }
 
     setIsLoading(true);
+
     setTimeout(() => {
+      let displayName = fullName.trim();
+
+      if (mode === 'signup') {
+        const isEmail = emailOrPhone.includes('@');
+        const user = registerPatient({
+          name: fullName.trim(),
+          email: isEmail ? emailOrPhone.trim() : '',
+          phone: !isEmail ? emailOrPhone.trim() : '',
+        });
+        displayName = user.name;
+      } else {
+        // Sign In: login with entered credentials and preserve custom registered name
+        login(emailOrPhone.trim(), 'PATIENT', fullName.trim() || undefined);
+
+        // Retrieve active user record to get exact stored name
+        const cleanQuery = emailOrPhone.trim().toLowerCase();
+        const users = db.getUsers();
+        const active = users.find(
+          (u) =>
+            (u.email && u.email.toLowerCase() === cleanQuery) ||
+            (u.name && u.name.toLowerCase() === cleanQuery) ||
+            (cleanQuery.length > 2 && u.name && u.name.toLowerCase().includes(cleanQuery))
+        );
+
+        if (active) {
+          displayName = active.name;
+        } else if (!displayName) {
+          displayName = emailOrPhone.includes('@')
+            ? emailOrPhone.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+            : emailOrPhone.trim();
+        }
+      }
+
+      setConfirmedUserName(displayName);
       setIsLoading(false);
-      login(emailOrPhone, 'PATIENT');
-      switchRole('PATIENT');
-      setSuccessMsg('Account created successfully! Welcome to Vellora Health.');
+      setStep('confirmed');
+
+      // Auto-redirect to home page after brief celebration confirmation
       setTimeout(() => {
         onClose();
-        if (redirectUrl) {
-          router.push(validateInternalRedirect(redirectUrl, '/patient/dashboard'));
-        }
-      }, 500);
-    }, 500);
+        router.push('/');
+      }, 1500);
+    }, 450);
   };
 
   return createPortal(
@@ -140,7 +281,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       aria-modal="true"
       aria-labelledby="auth-modal-title"
       onMouseDown={(e) => {
-        if (e.target === e.currentTarget) {
+        if (e.target === e.currentTarget && step !== 'confirmed') {
           onClose();
         }
       }}
@@ -148,7 +289,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       <div className="flex min-h-full items-center justify-center">
         {/* Modal Dialog Card: Modern 2-Column Split Layout */}
         <div className="relative my-auto w-full max-w-[820px] transform overflow-hidden rounded-[26px] border border-[#E2EBE7] bg-white shadow-2xl transition-all z-10 animate-scale-in text-left">
-          <div className="grid grid-cols-1 md:grid-cols-12 min-h-[500px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 min-h-[520px]">
             {/* Left Side: Healthcare Consultation Image & Brand Atmosphere (Hidden on small mobile for sleek responsiveness) */}
             <div className="hidden md:flex md:col-span-5 relative flex-col justify-between overflow-hidden p-7 text-white select-none">
               {/* Background Consultation Image */}
@@ -194,7 +335,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
             </div>
 
-            {/* Right Side: Clean, Focused Authentication Form */}
+            {/* Right Side: Authentication Flow (Form -> OTP -> Confirmation) */}
             <div className="md:col-span-7 flex flex-col justify-between p-6 sm:p-7 bg-white">
               <div>
                 {/* Header Row: Brand badge & Close button */}
@@ -211,166 +352,318 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     </span>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F2F8F5] text-slate-500 hover:bg-[#E2EBE7] hover:text-[#102820] transition-colors"
-                    aria-label="Close authentication modal"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-
-                {/* Heading & Subtitle */}
-                <div className="mt-4 mb-4 text-left">
-                  <h2
-                    id="auth-modal-title"
-                    className="font-heading text-xl font-extrabold text-[#102820] tracking-tight leading-snug"
-                  >
-                    {mode === 'signin' ? 'Sign In to Your Account' : 'Create Patient Account'}
-                  </h2>
-                  <p className="mt-1 text-xs text-slate-500 leading-relaxed">
-                    {mode === 'signin'
-                      ? 'Access your doorstep medical records, upcoming appointments, and personal health metrics.'
-                      : 'Join thousands of families receiving licensed, unhurried healthcare right at home.'}
-                  </p>
-                </div>
-
-                {/* Segmented Mode Toggle: Sign In vs Create Account */}
-                <div className="flex rounded-xl bg-[#F2F8F5] p-1 mb-4 border border-[#E2EBE7]">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode('signin');
-                      setErrorMsg('');
-                      setSuccessMsg('');
-                    }}
-                    className={`flex-1 rounded-lg py-1.5 text-xs font-bold transition-all ${
-                      mode === 'signin'
-                        ? 'bg-white text-[#064E3B] shadow-2xs'
-                        : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    Sign In
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode('signup');
-                      setErrorMsg('');
-                      setSuccessMsg('');
-                    }}
-                    className={`flex-1 rounded-lg py-1.5 text-xs font-bold transition-all ${
-                      mode === 'signup'
-                        ? 'bg-white text-[#064E3B] shadow-2xs'
-                        : 'text-slate-500 hover:text-slate-900'
-                    }`}
-                  >
-                    Create Account
-                  </button>
-                </div>
-
-                {/* Feedback Messages */}
-                {errorMsg && (
-                  <div className="mb-3.5 flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 p-2.5 text-xs font-semibold text-rose-700 animate-fade-in">
-                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
-                    <span>{errorMsg}</span>
-                  </div>
-                )}
-                {successMsg && (
-                  <div className="mb-3.5 flex items-center gap-2 rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] p-2.5 text-xs font-semibold text-[#065F46] animate-fade-in">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-[#065F46]" />
-                    <span>{successMsg}</span>
-                  </div>
-                )}
-
-                {/* Form Body */}
-                <form onSubmit={mode === 'signin' ? handleSignIn : handleSignUp} className="space-y-3.5">
-                  {mode === 'signup' && (
-                    <div>
-                      <label className="block text-xs font-semibold text-[#102820] mb-1">
-                        Full Name
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                        <input
-                          type="text"
-                          placeholder="e.g. Eleanor Vance"
-                          value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                          className="w-full rounded-xl border border-[#CBDCD5] bg-white py-2.5 pl-10 pr-3 text-xs font-medium text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B]"
-                        />
-                      </div>
-                    </div>
+                  {step !== 'confirmed' && (
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F2F8F5] text-slate-500 hover:bg-[#E2EBE7] hover:text-[#102820] transition-colors"
+                      aria-label="Close authentication modal"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
                   )}
+                </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-[#102820] mb-1">
-                      Email or Mobile Number
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                      <input
-                        type="text"
-                        placeholder="name@example.com or +1 (555) 000-0000"
-                        value={emailOrPhone}
-                        onChange={(e) => setEmailOrPhone(e.target.value)}
-                        className="w-full rounded-xl border border-[#CBDCD5] bg-white py-2.5 pl-10 pr-3 text-xs font-medium text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B]"
-                      />
+                {/* ---------------- STEP 1: FORM DETAILS ---------------- */}
+                {step === 'form' && (
+                  <div className="animate-fade-in">
+                    {/* Heading & Subtitle */}
+                    <div className="mt-4 mb-4 text-left">
+                      <h2
+                        id="auth-modal-title"
+                        className="font-heading text-xl font-extrabold text-[#102820] tracking-tight leading-snug"
+                      >
+                        {mode === 'signin' ? 'Sign In to Your Account' : 'Create Patient Account'}
+                      </h2>
+                      <p className="mt-1 text-xs text-slate-500 leading-relaxed">
+                        {mode === 'signin'
+                          ? 'Access your doorstep medical records, upcoming appointments, and personal health metrics.'
+                          : 'Join thousands of families receiving licensed, unhurried healthcare right at home.'}
+                      </p>
                     </div>
-                  </div>
 
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="block text-xs font-semibold text-[#102820]">
-                        Password
-                      </label>
-                      {mode === 'signin' && (
-                        <button
-                          type="button"
-                          onClick={() => alert('Password reset instructions will be sent to your registered email or phone.')}
-                          className="text-[11px] font-semibold text-[#065F46] hover:underline"
-                        >
-                          Forgot password?
-                        </button>
-                      )}
-                    </div>
-                    <div className="relative">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full rounded-xl border border-[#CBDCD5] bg-white py-2.5 pl-10 pr-10 text-xs font-medium text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B]"
-                      />
+                    {/* Segmented Mode Toggle: Sign In vs Create Account */}
+                    <div className="flex rounded-xl bg-[#F2F8F5] p-1 mb-4 border border-[#E2EBE7]">
                       <button
                         type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        onClick={() => {
+                          setMode('signin');
+                          setErrorMsg('');
+                          setSuccessMsg('');
+                        }}
+                        className={`flex-1 rounded-lg py-1.5 text-xs font-bold transition-all ${
+                          mode === 'signin'
+                            ? 'bg-white text-[#064E3B] shadow-2xs'
+                            : 'text-slate-500 hover:text-slate-900'
+                        }`}
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        Sign In
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode('signup');
+                          setErrorMsg('');
+                          setSuccessMsg('');
+                        }}
+                        className={`flex-1 rounded-lg py-1.5 text-xs font-bold transition-all ${
+                          mode === 'signup'
+                            ? 'bg-white text-[#064E3B] shadow-2xs'
+                            : 'text-slate-500 hover:text-slate-900'
+                        }`}
+                      >
+                        Create Account
                       </button>
                     </div>
-                  </div>
 
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full mt-2 flex items-center justify-center gap-2 rounded-full bg-[#064E3B] py-3 px-4 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors disabled:opacity-50 cursor-pointer"
-                  >
-                    {isLoading ? (
-                      <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <span>{mode === 'signin' ? 'Sign In to My Account' : 'Create Free Patient Account'}</span>
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </>
+                    {/* Feedback Messages */}
+                    {errorMsg && (
+                      <div className="mb-3.5 flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 p-2.5 text-xs font-semibold text-rose-700 animate-fade-in">
+                        <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
+                        <span>{errorMsg}</span>
+                      </div>
                     )}
-                  </button>
-                </form>
+                    {successMsg && (
+                      <div className="mb-3.5 flex items-center gap-2 rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] p-2.5 text-xs font-semibold text-[#065F46] animate-fade-in">
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-[#065F46]" />
+                        <span>{successMsg}</span>
+                      </div>
+                    )}
+
+                    {/* Form Body */}
+                    <form onSubmit={handleSubmitForm} className="space-y-3.5">
+                      {mode === 'signup' && (
+                        <div>
+                          <label className="block text-xs font-semibold text-[#102820] mb-1">
+                            Full Name
+                          </label>
+                          <div className="relative">
+                            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <input
+                              type="text"
+                              placeholder="e.g. John Doe"
+                              value={fullName}
+                              onChange={(e) => setFullName(e.target.value)}
+                              className="w-full rounded-xl border border-[#CBDCD5] bg-white py-2.5 pl-10 pr-3 text-xs font-medium text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B]"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="block text-xs font-semibold text-[#102820] mb-1">
+                          {mode === 'signup' ? 'Email or Mobile Number' : 'Email, Phone or Registered Name'}
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                          <input
+                            type="text"
+                            placeholder={mode === 'signup' ? 'name@example.com or +1 (555) 000-0000' : 'Enter email, mobile, or name'}
+                            value={emailOrPhone}
+                            onChange={(e) => setEmailOrPhone(e.target.value)}
+                            className="w-full rounded-xl border border-[#CBDCD5] bg-white py-2.5 pl-10 pr-3 text-xs font-medium text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B]"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-semibold text-[#102820]">
+                            Password
+                          </label>
+                          {mode === 'signin' && (
+                            <button
+                              type="button"
+                              onClick={() => alert('Password reset instructions will be sent to your registered email or phone.')}
+                              className="text-[11px] font-semibold text-[#065F46] hover:underline"
+                            >
+                              Forgot password?
+                            </button>
+                          )}
+                        </div>
+                        <div className="relative">
+                          <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                          <input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full rounded-xl border border-[#CBDCD5] bg-white py-2.5 pl-10 pr-10 text-xs font-medium text-[#102820] placeholder:text-slate-400 focus:border-[#064E3B] focus:outline-none focus:ring-1 focus:ring-[#064E3B]"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Submit Button */}
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full mt-2 flex items-center justify-center gap-2 rounded-full bg-[#064E3B] py-3 px-4 text-xs font-bold text-white shadow-xs hover:bg-[#065F46] transition-colors disabled:opacity-50 cursor-pointer"
+                      >
+                        {isLoading ? (
+                          <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <>
+                            <span>{mode === 'signin' ? 'Sign In & Verify with OTP' : 'Create Account & Verify with OTP'}</span>
+                            <ArrowRight className="h-3.5 w-3.5" />
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  </div>
+                )}
+
+                {/* ---------------- STEP 2: OTP VERIFICATION ---------------- */}
+                {step === 'otp' && (
+                  <div className="animate-fade-in text-left">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setStep('form');
+                        setErrorMsg('');
+                        setSuccessMsg('');
+                      }}
+                      className="mt-1 mb-3 inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-[#065F46] hover:underline transition-colors cursor-pointer"
+                    >
+                      <ArrowLeft className="h-3.5 w-3.5" />
+                      <span>Back to details</span>
+                    </button>
+
+                    <div className="mb-4">
+                      <h2 className="font-heading text-xl sm:text-2xl font-extrabold text-[#102820] tracking-tight leading-snug">
+                        Verify Your Identity
+                      </h2>
+                    </div>
+
+                    {/* Feedback Messages */}
+                    {errorMsg && (
+                      <div className="mb-4 flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 px-3.5 py-2.5 text-xs font-semibold text-rose-700 animate-fade-in">
+                        <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
+                        <span>{errorMsg}</span>
+                      </div>
+                    )}
+                    {successMsg && (
+                      <div className="mb-4 flex items-center gap-2 rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] px-3.5 py-2.5 text-xs font-medium text-[#065F46] animate-fade-in">
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-[#059669]" />
+                        <span>Verification code sent to <strong className="font-semibold text-[#102820]">{emailOrPhone}</strong></span>
+                      </div>
+                    )}
+
+                    {/* OTP 4-Digit Input Boxes */}
+                    <form onSubmit={handleVerifyOtp} className="space-y-4">
+                      <div className="flex items-center justify-center gap-3 py-2">
+                        {otpDigits.map((digit, idx) => (
+                          <input
+                            key={idx}
+                            ref={(el) => {
+                              otpInputsRef.current[idx] = el;
+                            }}
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={1}
+                            value={digit}
+                            onChange={(e) => handleDigitChange(idx, e.target.value)}
+                            onKeyDown={(e) => handleDigitKeyDown(idx, e)}
+                            onPaste={handleOtpPaste}
+                            className={`h-14 w-14 text-center text-2xl font-bold rounded-2xl border-2 transition-all duration-200 outline-none shadow-2xs ${
+                              digit
+                                ? 'border-[#065F46] bg-[#ECFDF5]/50 text-[#064E3B] ring-2 ring-[#065F46]/10'
+                                : 'border-slate-200 bg-slate-50/60 text-[#102820] focus:border-[#064E3B] focus:bg-white focus:ring-4 focus:ring-[#064E3B]/10 hover:border-slate-300'
+                            }`}
+                            aria-label={`Digit ${idx + 1}`}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Demo Quick-Fill Pill */}
+                      <div className="flex items-center justify-center pt-1">
+                        <button
+                          type="button"
+                          onClick={handleFillDemoOtp}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] hover:bg-[#D1FAE5] border border-[#A7F3D0] px-3.5 py-1.5 text-xs font-semibold text-[#065F46] transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-98"
+                        >
+                          <Sparkles className="h-3.5 w-3.5 text-[#059669]" />
+                          <span>Demo Code: <strong className="font-bold underline decoration-[#10B981] underline-offset-2">4829</strong> (Click to auto-fill)</span>
+                        </button>
+                      </div>
+
+                      {/* Verify Button */}
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full mt-3 flex items-center justify-center gap-2 rounded-full bg-[#064E3B] hover:bg-[#043328] py-3.5 px-4 text-xs sm:text-sm font-bold text-white shadow-xs hover:shadow transition-all duration-200 disabled:opacity-50 cursor-pointer active:scale-[0.99] group/btn"
+                      >
+                        {isLoading ? (
+                          <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <>
+                            <span>Verify Code & Confirm</span>
+                            <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5" />
+                          </>
+                        )}
+                      </button>
+
+                      {/* Resend OTP Row */}
+                      <div className="pt-2 text-center">
+                        {resendTimer > 0 ? (
+                          <p className="text-xs text-slate-400 font-medium">
+                            Didn&apos;t receive it? Resend code in{' '}
+                            <span className="font-bold text-slate-700">0:{resendTimer.toString().padStart(2, '0')}</span>
+                          </p>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleResendOtp}
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#065F46] hover:text-[#043328] hover:underline cursor-pointer transition-colors"
+                          >
+                            <RotateCcw className="h-3.5 w-3.5" />
+                            <span>Resend verification code</span>
+                          </button>
+                        )}
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {/* ---------------- STEP 3: CONFIRMATION & REDIRECT ---------------- */}
+                {step === 'confirmed' && (
+                  <div className="py-6 text-center animate-scale-in">
+                    {/* Animated Check Circle */}
+                    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#ECFDF5] border-2 border-[#10B981] shadow-lg animate-bounce-short">
+                      <Check className="h-10 w-10 text-[#065F46] stroke-[2.5]" />
+                    </div>
+
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] border border-[#A7F3D0] px-3 py-1 text-xs font-bold text-[#065F46] mb-2">
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                      Authentication Confirmed
+                    </span>
+
+                    <h2 className="font-heading text-2xl font-extrabold text-[#102820] tracking-tight mt-2">
+                      Welcome, {confirmedUserName}!
+                    </h2>
+
+                    <p className="mt-2 text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                      Your identity has been verified securely. You are now logged into your Velora patient account.
+                    </p>
+
+                    {/* Progress Loader Bar */}
+                    <div className="mt-6 mx-auto w-48">
+                      <div className="h-1.5 w-full bg-[#E2EBE7] rounded-full overflow-hidden">
+                        <div className="h-full bg-[#064E3B] rounded-full animate-pulse" style={{ width: '100%' }} />
+                      </div>
+                      <p className="mt-2 text-[11px] font-semibold text-slate-400">
+                        Redirecting to home page...
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Security & Compliance Trust Badges */}

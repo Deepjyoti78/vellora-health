@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 import { Menu } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
@@ -10,7 +12,11 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const { currentUser, isAuthLoading } = useAuth();
   const isDashboard = pathname === '/admin/dashboard' || pathname === '/admin';
+
+  if (isAuthLoading) return null;
+  if (currentUser?.role !== 'ADMIN') return <main className="min-h-screen grid place-content-center gap-4 text-center"><h1>Admin demo access required</h1><p>Choose the Admin demo role to preview this portal.</p><Link href="/">Return home</Link></main>;
 
   return (
     <div className="min-h-screen bg-[#F5F9F7] flex font-sans text-[#102820]">

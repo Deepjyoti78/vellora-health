@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { db, ServiceRecord } from '@/lib/db';
+import { bookingDate, isValidBookingDate } from '@/lib/booking-date';
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Icon } from '@/components/common/Icon';
 import { BackButton } from '@/components/common/BackButton';
@@ -30,7 +31,7 @@ export default function PatientBookPage() {
   const [newCity, setNewCity] = useState<string>('San Francisco');
   const [newZip, setNewZip] = useState<string>('94107');
 
-  const [scheduledDate, setScheduledDate] = useState<string>('2026-11-18');
+  const [scheduledDate, setScheduledDate] = useState<string>(() => bookingDate(1));
   const [timeSlot, setTimeSlot] = useState<string>('09:00 AM - 11:00 AM');
   const [clinicalNotes, setClinicalNotes] = useState<string>('');
 
@@ -64,6 +65,7 @@ export default function PatientBookPage() {
 
   const handleConfirmBooking = () => {
     if (!currentUser) return;
+    if (!isValidBookingDate(scheduledDate)) { setStep(3); return; }
 
     setIsSubmitting(true);
 
@@ -110,8 +112,8 @@ export default function PatientBookPage() {
         totalAmount: finalTotal,
         discountAmount: appliedDiscount,
         couponCode: appliedDiscount > 0 ? couponCode.toUpperCase() : undefined,
-        paymentStatus: paymentMethod === 'CARD' ? 'PAID' : 'PENDING',
-        paymentMethod: paymentMethod === 'CARD' ? 'Credit / Debit Card (Stripe)' : paymentMethod === 'INSURANCE' ? 'Insurance Pre-Authorization' : 'Pay After Care Delivery',
+        paymentStatus: 'PENDING',
+        paymentMethod: paymentMethod === 'CARD' ? 'Card selection (demo, no charge)' : paymentMethod === 'INSURANCE' ? 'Insurance Pre-Authorization' : 'Pay After Care Delivery',
         notes: clinicalNotes,
       });
 
@@ -470,6 +472,8 @@ export default function PatientBookPage() {
                   <label className="text-xs font-semibold text-gray-700">Appointment Date</label>
                   <input
                     type="date"
+                    min={bookingDate()}
+                    required
                     value={scheduledDate}
                     onChange={(e) => setScheduledDate(e.target.value)}
                     className="mt-1 block w-full rounded-lg border border-gray-300 p-2.5 text-sm font-medium"
@@ -515,7 +519,7 @@ export default function PatientBookPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setStep(4)}
+                onClick={() => { if (isValidBookingDate(scheduledDate)) setStep(4); }}
                 className="flex items-center gap-2 rounded-xl bg-[#116b70] px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-[#0d5559] transition-colors"
               >
                 Review & Payment
@@ -705,7 +709,7 @@ export default function PatientBookPage() {
                     onClick={handleConfirmBooking}
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#116b70] py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#0d5559] disabled:opacity-50 transition-colors"
                   >
-                    {isSubmitting ? 'Confirming with Dispatch...' : `Confirm & Book ($${finalTotal})`}
+                    {isSubmitting ? 'Saving demo request...' : `Save Demo Request (${finalTotal})`}
                   </button>
                   <button
                     type="button"

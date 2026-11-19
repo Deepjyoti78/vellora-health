@@ -69,10 +69,10 @@ export default function ProviderOnboardingPage() {
 
   // Documents
   const [documents] = useState([
-    { id: 'doc-1', title: 'Government Photo ID Card', type: 'GOVT_ID', fileName: 'Govt_National_ID.pdf', size: '1.8 MB', uploaded: true },
-    { id: 'doc-2', title: 'Medical / Nursing Council License', type: 'COUNCIL_CERTIFICATE', fileName: 'Medical_Council_License_2026.pdf', size: '2.4 MB', uploaded: true },
-    { id: 'doc-3', title: 'Degree & Graduation Certificate', type: 'DEGREE_CERTIFICATE', fileName: 'Degree_Certification.pdf', size: '3.1 MB', uploaded: true },
-    { id: 'doc-4', title: 'Criminal Background Check Clearance', type: 'BACKGROUND_CHECK', fileName: 'Police_Clearance_Record.pdf', size: '1.2 MB', uploaded: true },
+    { id: 'doc-1', title: 'Government Photo ID Card', type: 'GOVT_ID', fileName: 'Govt_National_ID.pdf', size: '1.8 MB', uploaded: false },
+    { id: 'doc-2', title: 'Medical / Nursing Council License', type: 'COUNCIL_CERTIFICATE', fileName: 'Medical_Council_License_2026.pdf', size: '2.4 MB', uploaded: false },
+    { id: 'doc-3', title: 'Degree & Graduation Certificate', type: 'DEGREE_CERTIFICATE', fileName: 'Degree_Certification.pdf', size: '3.1 MB', uploaded: false },
+    { id: 'doc-4', title: 'Criminal Background Check Clearance', type: 'BACKGROUND_CHECK', fileName: 'Police_Clearance_Record.pdf', size: '1.2 MB', uploaded: false },
   ]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -112,7 +112,7 @@ export default function ProviderOnboardingPage() {
         qualification: qualifications,
         specialty,
         serviceLocations: selectedLocations.length > 0 ? selectedLocations : ['Springfield Metro'],
-        documents: documents.map((d) => ({
+        documents: documents.filter(d => d.uploaded).map((d) => ({
           id: d.id,
           title: d.title,
           type: d.type,
@@ -120,7 +120,7 @@ export default function ProviderOnboardingPage() {
           status: 'PENDING' as const,
           uploadedAt: new Date().toISOString(),
         })),
-        adminNotes: 'Submitted via multi-step onboarding wizard. Ready for CMO review.',
+        adminNotes: 'Submitted via multi-step onboarding wizard. Demo application, credential upload unavailable.',
       };
 
       if (existing) {
@@ -538,7 +538,7 @@ export default function ProviderOnboardingPage() {
                         </div>
                         <div>
                           <p className="text-xs font-bold text-[#102723]">{doc.title}</p>
-                          <p className="text-[10px] text-slate-500">{doc.fileName} • {doc.size}</p>
+                          <p className="text-[10px] text-slate-500">{doc.uploaded ? doc.fileName + ' • ' + doc.size : 'Document upload requires a live service'}</p>
                         </div>
                       </div>
                       <span className="inline-flex items-center gap-1 rounded-full bg-[#ECFDF5] border border-[#D1FAE5] px-2.5 py-0.5 text-[10px] font-bold text-[#065F46]">
@@ -551,7 +551,7 @@ export default function ProviderOnboardingPage() {
 
                 <div className="rounded-xl border border-[#D9ECE7] bg-[#F7FBF9] p-4 text-xs text-slate-600 space-y-2">
                   <div className="flex items-start gap-2.5">
-                    <input type="checkbox" required defaultChecked className="mt-0.5 rounded text-[#065F46] focus:ring-[#065F46]" />
+                    <input type="checkbox" required  className="mt-0.5 rounded text-[#065F46] focus:ring-[#065F46]" />
                     <p className="leading-snug">
                       <strong className="text-[#102723]">Clinical Attestation:</strong> I hereby certify that the medical licenses and degrees provided are authentic, unencumbered, and in good standing.
                     </p>

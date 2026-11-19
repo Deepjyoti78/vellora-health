@@ -13,12 +13,18 @@ export const RoleSwitcher: React.FC = () => {
   const router = useRouter();
 
   const roles = [
-    { label: 'Patient (Eleanor Vance)', role: 'PATIENT' as const, path: '/patient/dashboard' },
+    {
+      label: currentUser?.role === 'PATIENT'
+        ? `Patient (${currentUser.name})`
+        : 'Patient (Demo: Eleanor Vance)',
+      role: 'PATIENT' as const,
+      path: '/patient/dashboard'
+    },
     { label: 'Doctor (Dr. Maya Patel)', role: 'DOCTOR' as const, path: '/provider/dashboard' },
     { label: 'Nurse (Sarah Jenkins)', role: 'NURSE' as const, path: '/provider/dashboard' },
     { label: 'Caretaker (James Thornton)', role: 'CARETAKER' as const, path: '/provider/dashboard' },
     { label: 'Phlebotomist (Alex Rivera)', role: 'PHLEBOTOMIST' as const, path: '/provider/dashboard' },
-    { label: 'Super Admin', role: 'ADMIN' as const, path: '/admin/dashboard' },
+    { label: 'Super Admin Desk', role: 'ADMIN' as const, path: '/admin/dashboard' },
   ];
 
   return (
