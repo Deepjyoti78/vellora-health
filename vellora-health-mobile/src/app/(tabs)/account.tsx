@@ -48,7 +48,7 @@ export default function ProfileScreen() {
     } catch (err) {
       console.warn('Logout error', err);
     }
-    router.replace('/(tabs)');
+    router.replace('/(auth)/welcome');
   };
 
   const handleCallSupport = () => {
