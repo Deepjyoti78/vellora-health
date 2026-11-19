@@ -450,7 +450,7 @@ export default function BookingDetailPage({
 
                   {/* Mobile Responsive Vertical Flow Tracker with Center-Aligned Line */}
                   <div className="md:hidden pt-3 pb-2">
-                    <div className="relative pl-11 space-y-6">
+                    <div className="relative space-y-6">
                       {/* Vertical Continuous Line running precisely through center of circles (x = 14px) */}
                       <div
                         className="absolute left-[14px] top-3.5 bottom-3.5 w-[2px] -translate-x-1/2 bg-[#E2E8F0] pointer-events-none"
@@ -478,10 +478,10 @@ export default function BookingDetailPage({
                         const isFinalStage = idx === 6;
 
                         return (
-                          <div key={stage.key} className="relative flex items-start group">
+                          <div key={stage.key} className="relative flex items-start gap-3.5 group">
                             {/* Perfectly Centered Node Circle: 28px width, center at 14px */}
                             <div
-                              className={`absolute left-0 top-0 z-10 flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all shadow-2xs ${
+                              className={`relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-all shadow-2xs ${
                                 isDone
                                   ? isFinalStage
                                     ? 'bg-gradient-to-br from-[#059669] to-[#0284C7] text-white shadow-xs'

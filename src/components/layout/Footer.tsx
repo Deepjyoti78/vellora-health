@@ -69,7 +69,11 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="footer-bottom">
-          <span>© <span id="footerYear">{currentYear}</span> Vellora Health. Design prototype.</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400">
+            <span>© <span id="footerYear">{currentYear}</span> Vellora Health.</span>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Care</Link>
+          </div>
           <Link href="/" className="back-to-top">
             Back to top ↑
           </Link>
