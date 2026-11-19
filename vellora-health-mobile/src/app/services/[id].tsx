@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   Platform,
   Linking,
   Alert,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -391,6 +392,68 @@ export default function ServiceDetailScreen() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedItem, setSelectedItem] = useState<ServiceCardItem | null>(null);
 
+  // Page entrance animation
+  const pageFade = useRef(new Animated.Value(0)).current;
+  const pageSlide = useRef(new Animated.Value(14)).current;
+
+  // Modal spring & backdrop animation
+  const modalAnim = useRef(new Animated.Value(320)).current;
+  const modalBackdrop = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(pageFade, {
+        toValue: 1,
+        duration: 320,
+        useNativeDriver: true,
+      }),
+      Animated.spring(pageSlide, {
+        toValue: 0,
+        friction: 8,
+        tension: 80,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [serviceKey]);
+
+  useEffect(() => {
+    if (selectedItem) {
+      Animated.parallel([
+        Animated.timing(modalBackdrop, {
+          toValue: 1,
+          duration: 220,
+          useNativeDriver: true,
+        }),
+        Animated.spring(modalAnim, {
+          toValue: 0,
+          friction: 8,
+          tension: 75,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      modalAnim.setValue(320);
+      modalBackdrop.setValue(0);
+    }
+  }, [selectedItem]);
+
+  const closeModal = () => {
+    Animated.parallel([
+      Animated.timing(modalBackdrop, {
+        toValue: 0,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+      Animated.timing(modalAnim, {
+        toValue: 320,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setSelectedItem(null);
+    });
+  };
+
   // Filter items by search query and category
   const filteredItems = useMemo(() => {
     return config.data.filter((item) => {
@@ -467,10 +530,17 @@ export default function ServiceDetailScreen() {
         </View>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <Animated.View
+        style={{
+          flex: 1,
+          opacity: pageFade,
+          transform: [{ translateY: pageSlide }],
+        }}
       >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
         {/* Screen Header Title */}
         <View style={styles.titleSection}>
           <Text style={styles.mainTitle}>{config.title}</Text>
@@ -605,6 +675,7 @@ export default function ServiceDetailScreen() {
           </View>
         )}
       </ScrollView>
+      </Animated.View>
 
       {/* ============================================================ */}
       {/* BOTTOM SHEET DETAIL MODAL (Item / Doctor / Nurse Profile)    */}
@@ -612,22 +683,28 @@ export default function ServiceDetailScreen() {
       <Modal
         visible={!!selectedItem}
         transparent
-        animationType="slide"
-        onRequestClose={() => setSelectedItem(null)}
+        animationType="none"
+        onRequestClose={closeModal}
       >
-        <View style={styles.modalOverlay}>
+        <Animated.View style={[styles.modalOverlay, { opacity: modalBackdrop }]}>
           <TouchableOpacity
             style={StyleSheet.absoluteFill}
             activeOpacity={1}
-            onPress={() => setSelectedItem(null)}
+            onPress={closeModal}
           />
-          <View style={styles.modalSheet} onStartShouldSetResponder={() => true}>
+          <Animated.View
+            style={[
+              styles.modalSheet,
+              { transform: [{ translateY: modalAnim }] },
+            ]}
+            onStartShouldSetResponder={() => true}
+          >
             {/* Modal Drag Handle & Top Close Button */}
             <View style={styles.modalHeaderTopBar}>
               <View style={styles.modalDragHandle} />
               <TouchableOpacity
                 style={styles.modalCloseCircle}
-                onPress={() => setSelectedItem(null)}
+                onPress={closeModal}
                 activeOpacity={0.7}
                 hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                 accessibilityLabel="Close dialog"
@@ -755,14 +832,14 @@ export default function ServiceDetailScreen() {
                 <TouchableOpacity accessibilityRole="button"
                   style={styles.modalCloseBtn}
                   activeOpacity={0.7}
-                  onPress={() => setSelectedItem(null)}
+                  onPress={closeModal}
                 >
                   <Text style={styles.modalCloseBtnText}>Close</Text>
                 </TouchableOpacity>
               </ScrollView>
             )}
-          </View>
-        </View>
+          </Animated.View>
+        </Animated.View>
       </Modal>
 
       {/* Floating Bottom Navigation Bar (Unified Project Navbar) */}

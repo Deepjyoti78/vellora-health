@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Typography } from '../../constants/theme';
@@ -50,6 +50,88 @@ const NAV_ITEMS: NavItemConfig[] = [
   },
 ];
 
+const AnimatedNavBarItem: React.FC<{
+  item: NavItemConfig;
+  isFocused: boolean;
+  onPress: () => void;
+}> = ({ item, isFocused, onPress }) => {
+  const scaleAnim = useRef(new Animated.Value(isFocused ? 1.05 : 1)).current;
+  const pillOpacity = useRef(new Animated.Value(isFocused ? 1 : 0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: isFocused ? 1.08 : 1,
+        friction: 6,
+        tension: 90,
+        useNativeDriver: true,
+      }),
+      Animated.timing(pillOpacity, {
+        toValue: isFocused ? 1 : 0,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [isFocused]);
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.92,
+      friction: 5,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: isFocused ? 1.08 : 1,
+      friction: 5,
+      tension: 100,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <TouchableOpacity
+      style={styles.navBarItem}
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      activeOpacity={0.9}
+      accessibilityRole="button"
+      accessibilityLabel={item.label}
+    >
+      <Animated.View
+        style={[
+          styles.navBarIconWrapper,
+          { transform: [{ scale: scaleAnim }] },
+        ]}
+      >
+        <Animated.View
+          style={[
+            styles.navBarActiveIconPill,
+            { opacity: pillOpacity },
+          ]}
+        />
+        <Ionicons
+          name={isFocused ? item.activeIcon : item.inactiveIcon}
+          size={21}
+          color={isFocused ? '#FFFFFF' : '#C2E5D9'}
+        />
+      </Animated.View>
+      <Text
+        style={[
+          styles.navBarLabel,
+          isFocused ? styles.navBarLabelActive : styles.navBarLabelInactive,
+        ]}
+        numberOfLines={1}
+      >
+        {item.label}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
 export const FloatingBottomNavBar: React.FC<FloatingBottomNavBarProps> = ({
   activeTab = 'services',
   onTabPress,
@@ -64,41 +146,14 @@ export const FloatingBottomNavBar: React.FC<FloatingBottomNavBarProps> = ({
 
   return (
     <View style={styles.floatingNavBar}>
-      {NAV_ITEMS.map((item) => {
-        const isFocused = activeTab === item.key;
-        return (
-          <TouchableOpacity
-            key={item.key}
-            style={styles.navBarItem}
-            onPress={() => handlePress(item)}
-            activeOpacity={0.8}
-            accessibilityRole="button"
-            accessibilityLabel={item.label}
-          >
-            <View
-              style={[
-                styles.navBarIconWrapper,
-                isFocused && styles.navBarActiveIconPill,
-              ]}
-            >
-              <Ionicons
-                name={isFocused ? item.activeIcon : item.inactiveIcon}
-                size={21}
-                color={isFocused ? '#FFFFFF' : '#C2E5D9'}
-              />
-            </View>
-            <Text
-              style={[
-                styles.navBarLabel,
-                isFocused ? styles.navBarLabelActive : styles.navBarLabelInactive,
-              ]}
-              numberOfLines={1}
-            >
-              {item.label}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
+      {NAV_ITEMS.map((item) => (
+        <AnimatedNavBarItem
+          key={item.key}
+          item={item}
+          isFocused={activeTab === item.key}
+          onPress={() => handlePress(item)}
+        />
+      ))}
     </View>
   );
 };
@@ -134,15 +189,19 @@ const styles = StyleSheet.create({
   navBarIconWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 24,
+    height: 26,
     marginBottom: 2,
+    position: 'relative',
+    paddingHorizontal: 12,
   },
   navBarActiveIconPill: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
     borderRadius: 14,
-    paddingHorizontal: 10,
-    paddingVertical: 2,
-    height: 26,
   },
   navBarLabel: {
     fontFamily: Typography.fontFamily.sans,

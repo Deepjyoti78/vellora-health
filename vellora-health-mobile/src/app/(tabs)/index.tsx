@@ -1,4 +1,4 @@
-import React, { useSyncExternalStore, useState, useMemo } from 'react';
+import React, { useSyncExternalStore, useState, useMemo, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Modal,
   Platform,
   Alert,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -129,6 +130,26 @@ export default function HomeScreen() {
   const [calendarYear, setCalendarYear] = useState<number>(new Date().getFullYear());
   const [selectedDate, setSelectedDate] = useState<number>(new Date().getDate());
 
+  // Dashboard entrance animation
+  const dashboardFade = useRef(new Animated.Value(0)).current;
+  const dashboardSlide = useRef(new Animated.Value(16)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(dashboardFade, {
+        toValue: 1,
+        duration: 350,
+        useNativeDriver: true,
+      }),
+      Animated.spring(dashboardSlide, {
+        toValue: 0,
+        friction: 8,
+        tension: 70,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   const handlePrevMonth = () => {
     if (calendarMonth === 0) {
       setCalendarMonth(11);
@@ -230,10 +251,17 @@ export default function HomeScreen() {
       <View style={styles.ambientGlowMidLeft} pointerEvents="none" />
       <View style={styles.ambientGlowBottomRight} pointerEvents="none" />
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <Animated.View
+        style={{
+          flex: 1,
+          opacity: dashboardFade,
+          transform: [{ translateY: dashboardSlide }],
+        }}
       >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
         {/* ============================================================ */}
         {/* 1. TOP BRAND HEADER: LEAF LOGO + "Velora Health" & ACTIONS   */}
         {/* ============================================================ */}
@@ -608,6 +636,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </ScrollView>
+      </Animated.View>
     </SafeAreaView>
   );
 }

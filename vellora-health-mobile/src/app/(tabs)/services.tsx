@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -72,6 +73,95 @@ export const FOUR_CORE_SERVICES: ServiceCategoryCard[] = [
     route: '/services/home-lab', // Opens All Lab Tests Page
   },
 ];
+
+const AnimatedServiceCard: React.FC<{
+  svc: ServiceCategoryCard;
+  index: number;
+}> = ({ svc, index }) => {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(20)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 350,
+        delay: index * 70,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        friction: 7,
+        tension: 80,
+        delay: index * 70,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [index]);
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.96,
+      friction: 6,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      friction: 6,
+      tension: 100,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <Animated.View
+      style={[
+        styles.gridCard,
+        {
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
+        },
+      ]}
+    >
+      <TouchableOpacity
+        style={StyleSheet.absoluteFill}
+        activeOpacity={0.92}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={() => router.push(svc.route as any)}
+      >
+        <Image
+          source={svc.bgImage}
+          style={styles.gridCardBgImage}
+          resizeMode="cover"
+        />
+        <LinearGradient
+          colors={[
+            'rgba(0, 0, 0, 0)',
+            'rgba(0, 0, 0, 0.2)',
+            'rgba(0, 0, 0, 0.68)',
+            'rgba(0, 0, 0, 0.92)',
+          ]}
+          locations={[0, 0.32, 0.65, 1]}
+          style={styles.gridCardGradient}
+          pointerEvents="none"
+        />
+        <View style={styles.gridCardContent}>
+          <View style={styles.gridCardBottomInfo}>
+            <Text style={styles.gridCardHeading}>{svc.title}</Text>
+            <Text style={styles.gridCardSubtitle} numberOfLines={2}>
+              {svc.subtitle}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 export default function ServicesScreen() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -186,43 +276,8 @@ export default function ServicesScreen() {
         {/* 4. EXACT 4 MINIMAL, CLEAN CARDS (2 ROWS x 2 CARDS)           */}
         {/* ============================================================ */}
         <View style={styles.servicesGrid}>
-          {filteredServices.map((svc) => (
-            <TouchableOpacity
-              key={svc.id}
-              style={styles.gridCard}
-              activeOpacity={0.88}
-              onPress={() => router.push(svc.route as any)}
-            >
-              {/* Layer 1: Photographic Background Image */}
-              <Image
-                source={svc.bgImage}
-                style={styles.gridCardBgImage}
-                resizeMode="cover"
-              />
-
-              {/* Layer 2: Soft Gradient Scrim in the bottom text area for crystal-clear readability */}
-              <LinearGradient
-                colors={[
-                  'rgba(0, 0, 0, 0)',
-                  'rgba(0, 0, 0, 0.2)',
-                  'rgba(0, 0, 0, 0.68)',
-                  'rgba(0, 0, 0, 0.92)',
-                ]}
-                locations={[0, 0.32, 0.65, 1]}
-                style={styles.gridCardGradient}
-                pointerEvents="none"
-              />
-
-              {/* Layer 3: Minimal, Clean Elements Above Image (Title & 1-Liner Only) */}
-              <View style={styles.gridCardContent}>
-                <View style={styles.gridCardBottomInfo}>
-                  <Text style={styles.gridCardHeading}>{svc.title}</Text>
-                  <Text style={styles.gridCardSubtitle} numberOfLines={2}>
-                    {svc.subtitle}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+          {filteredServices.map((svc, index) => (
+            <AnimatedServiceCard key={svc.id} svc={svc} index={index} />
           ))}
         </View>
 
