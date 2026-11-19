@@ -80,7 +80,7 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
     features: [
       { icon: Pill, label: 'Medication Support' },
       { icon: Activity, label: 'Vital Monitoring' },
-      { icon: ShieldCheck, label: 'Post-Procedure Care' },
+      { icon: ShieldCheck, label: 'Post-Procedure' },
     ],
     href: '/services/nursing-care',
     filterCategories: ['NURSING_CARE'],
@@ -98,7 +98,7 @@ const CATEGORIES_DATA: CategoryCardItem[] = [
     features: [
       { icon: Sparkles, label: 'Daily Assistance' },
       { icon: Activity, label: 'Mobility Support' },
-      { icon: Heart, label: 'Companionship & Care' },
+      { icon: Heart, label: 'Companionship' },
     ],
     href: '/services/rehab-critical-care',
     filterCategories: ['CARETAKER'],
@@ -396,7 +396,7 @@ export default function ServicesPage() {
             </div>
 
             {/* Responsive Category Card Grid: 1 Column on Mobile, 2 on Tablet, 4 on Desktop */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 lg:gap-3.5">
               {CATEGORIES_DATA.map((cat, idx) => {
                 const CategoryIcon = cat.icon;
                 const BadgeIcon = cat.badge.icon;
@@ -432,12 +432,12 @@ export default function ServicesPage() {
                       </div>
                     </div>
 
-                    {/* Card Body with Generous, Balanced Spacing */}
-                    <div className="px-5 pb-5 pt-1 sm:px-5.5 sm:pb-6 sm:pt-1.5 flex flex-col justify-between flex-1 bg-white">
+                    {/* Card Body with Refined, Tight Spacing */}
+                    <div className="px-3.5 pb-4 pt-1 sm:px-4 sm:pb-4.5 sm:pt-1 flex flex-col justify-between flex-1 bg-white">
                       <div>
                         {/* Title */}
                         <Link href={cat.href} className="group-hover:text-[#065F46] transition-colors block">
-                          <h3 className="font-heading text-lg sm:text-[19px] font-bold text-[#102820] leading-snug tracking-tight mb-1.5">
+                          <h3 className="font-heading text-lg sm:text-[19px] font-bold text-[#102820] leading-snug tracking-tight mb-1">
                             {cat.title}
                           </h3>
                         </Link>
@@ -447,17 +447,17 @@ export default function ServicesPage() {
                           {cat.description}
                         </p>
 
-                        {/* 3 Micro Feature Chips with proper breathing room */}
-                        <div className="mt-3.5 sm:mt-4 grid grid-cols-3 gap-2">
+                        {/* 3 Micro Feature Chips with Single-Line Text */}
+                        <div className="mt-3 sm:mt-3.5 grid grid-cols-3 gap-1.5 sm:gap-2">
                           {cat.features.map((feat, fIdx) => {
                             const FeatIcon = feat.icon;
                             return (
                               <div
                                 key={fIdx}
-                                className="flex flex-col items-center justify-center rounded-xl bg-[#F0F7F3] border border-[#D8ECE1] py-2 px-1 text-center transition-colors group-hover:bg-[#EAF5EF] min-h-[58px]"
+                                className="flex flex-col items-center justify-center rounded-xl bg-[#F0F7F3] border border-[#D8ECE1] py-1.5 px-0.5 sm:px-1 text-center transition-colors group-hover:bg-[#EAF5EF] min-h-[50px] overflow-hidden"
                               >
-                                <FeatIcon className="h-4 w-4 text-[#065F46] mb-1 stroke-[2] shrink-0" />
-                                <span className="text-[10px] sm:text-[10.5px] font-semibold text-[#18392B] leading-tight text-center line-clamp-2">
+                                <FeatIcon className="h-3.5 w-3.5 text-[#065F46] mb-1 stroke-[2] shrink-0" />
+                                <span className="text-[9px] sm:text-[9.5px] font-semibold text-[#18392B] leading-none text-center whitespace-nowrap tracking-tight w-full truncate px-0.5">
                                   {feat.label}
                                 </span>
                               </div>
@@ -466,17 +466,17 @@ export default function ServicesPage() {
                         </div>
                       </div>
 
-                      {/* Bottom Action Buttons: NO separation line, Book Now shows services inside category */}
-                      <div className="mt-4 sm:mt-5 grid grid-cols-2 gap-2.5">
+                      {/* Bottom Action Buttons: Clean rounded-full action pills */}
+                      <div className="mt-3.5 sm:mt-4 grid grid-cols-2 gap-2">
                         <Link
                           href={cat.href}
-                          className="inline-flex items-center justify-center rounded-full border border-[#CBDCD5] bg-white hover:bg-[#F2F8F5] text-[#102820] py-2.5 px-3 text-xs sm:text-[13px] font-bold transition-all shadow-2xs hover:border-[#065F46]/40 text-center"
+                          className="inline-flex items-center justify-center rounded-full border border-[#CBDCD5] bg-white hover:bg-[#F2F8F5] text-[#102820] py-2 px-2.5 text-xs sm:text-[12.5px] font-bold transition-all shadow-2xs hover:border-[#065F46]/40 text-center"
                         >
                           Learn More
                         </Link>
                         <Link
                           href={cat.href}
-                          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-[#064E3B] hover:bg-[#065F46] text-white py-2.5 px-3 text-xs sm:text-[13px] font-bold shadow-2xs hover:shadow-xs transition-all duration-200 group/btn text-center"
+                          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-[#064E3B] hover:bg-[#065F46] text-white py-2 px-2.5 text-xs sm:text-[12.5px] font-bold shadow-2xs hover:shadow-xs transition-all duration-200 group/btn text-center"
                         >
                           <span>Book Now</span>
                           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
